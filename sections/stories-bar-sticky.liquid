@@ -1,0 +1,95 @@
+{% comment %}
+Section : Stories Bar Sticky Configurable (préremplie)
+{% endcomment %}
+
+{% assign sort_order = section.settings.sort_order %}
+<div class="stories-bar-wrapper{% if request.page_type == 'index' %} animate-slide-in{% endif %}">
+  <div class="stories-bar">
+    {% assign stories = section.blocks %}
+    {% if sort_order == 'alphabetical' %}
+      {% assign stories = section.blocks | sort: 'settings.title' %}
+    {% endif %}
+
+    {% assign size = section.settings.icon_size | default: 90 %}
+    {% for block in stories %}
+      <a href="{{ block.settings.link }}" class="animated-stories-link" style="--i:{{ forloop.index }}">
+        {% if block.settings.image != blank %}
+          <img
+            src="{{ block.settings.image | image_url: width: size, height: size, crop: 'center' }}"
+            alt="{{ block.settings.title | escape }}"
+            width="{{ size }}"
+            height="{{ size }}"
+            loading="lazy"
+          >
+        {% endif %}
+        <div
+          class="tooltip-bubble"
+          role="tooltip"
+          style="background-color: {{ section.settings.tooltip_bg }}; opacity: {{ section.settings.tooltip_opacity }};">
+          {{ block.settings.title }}
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Stories Bar Sticky",
+  "settings": [
+    {
+      "type": "select",
+      "id": "icon_size",
+      "label": "Taille des icônes (px)",
+      "default": "90",
+      "options": [
+        { "value": "60", "label": "60px" },
+        { "value": "90", "label": "90px" },
+        { "value": "120", "label": "120px" }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "tooltip_bg",
+      "label": "Couleur de fond de l'infobulle",
+      "default": "#0F6378"
+    },
+    {
+      "type": "range",
+      "id": "tooltip_opacity",
+      "label": "Opacité de l'infobulle",
+      "min": 0.1,
+      "max": 1,
+      "step": 0.1,
+      "default": 1
+    },
+    {
+      "type": "select",
+      "id": "sort_order",
+      "label": "Ordre d'affichage des icônes",
+      "default": "manual",
+      "options": [
+        { "value": "manual", "label": "Ordre manuel" },
+        { "value": "alphabetical", "label": "Ordre alphabétique" }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "story",
+      "name": "Story",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Nom de la collection", "default": "SPA" },
+        { "type": "image_picker", "id": "image", "label": "Icône" },
+        { "type": "url", "id": "link", "label": "Lien vers la collection" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Stories Bar Sticky",
+      "blocks": []
+    }
+  ]
+}
+{% endschema %}

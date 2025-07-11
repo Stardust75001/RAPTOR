@@ -1,0 +1,222 @@
+{% comment %}
+Section produit avancée avec galerie interactive et blocs dynamiques
+{% endcomment %}
+
+<div class="product-section py-{{ section.settings.pt }} pb-{{ section.settings.pb }}">
+  <div class="{{ section.settings.container }}">
+    <div class="row">
+
+      <!-- Galerie produit -->
+      <div class="col-lg-6 mb-4">
+        {% if product.images.size > 0 %}
+          <div class="product-gallery">
+            <div class="main-image mb-3 text-center">
+              <img id="main-product-image"
+                   src="{{ product.featured_image | img_url: '1024x1024' }}"
+                   alt="{{ product.title }}"
+                   class="img-fluid rounded"
+                   style="max-height: 500px; object-fit: contain; cursor: zoom-in;"
+                   onclick="openImagePopup('{{ product.featured_image | img_url: 'master' }}')">
+            </div>
+            {% if product.images.size > 1 %}
+              <div class="thumbnail-images d-flex flex-wrap justify-content-center gap-2">
+                {% for image in product.images %}
+                  <img src="{{ image | img_url: '100x100' }}"
+                       alt="{{ product.title }}"
+                       class="img-thumbnail"
+                       style="width: 60px; height: 60px; object-fit: cover; cursor: pointer;"
+                       onclick="document.getElementById('main-product-image').src='{{ image | img_url: '1024x1024' }}';
+                                document.getElementById('main-product-image').setAttribute('onclick', 'openImagePopup(\\'{{ image | img_url: 'master' }}\\')');">
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        {% else %}
+          {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg img-fluid' }}
+        {% endif %}
+      </div>
+
+      <!-- Détails produit -->
+      <div class="col-lg-6">
+        <div class="product-details">
+          {% for block in section.blocks %}
+            <div class="product-block mb-3" {{ block.shopify_attributes }}>
+              {% case block.type %}
+              
+                {% when 'vendor' %}
+                  {% if product.vendor != blank %}
+                    <p class="vendor text-muted mb-2">{{ product.vendor }}</p>
+                  {% endif %}
+
+                {% when 'title' %}
+                  <h1 class="{{ block.settings.title_size }} mb-3">{{ product.title }}</h1>
+
+                {% when 'price' %}
+                  <div class="price-section mb-4">
+                    <span class="{{ block.settings.price_size }} text-primary">
+                      {{ product.price | money }}
+                    </span>
+                    {% if product.compare_at_price > product.price %}
+                      <span class="text-muted text-decoration-line-through ms-2">
+                        {{ product.compare_at_price | money }}
+                      </span>
+                    {% endif %}
+                  </div>
+
+                {% when 'description' %}
+                  {% if product.description != blank %}
+                    <div class="product-description mb-4">
+                      {{ product.description }}
+                    </div>
+                  {% endif %}
+
+                {% when 'variants' %}
+                  {% if product.variants.size > 1 %}
+                    {% form 'product', product %}
+                      {% for option in product.options_with_values %}
+                        <div class="variant-option mb-3">
+                          <label class="form-label">{{ option.name }}</label>
+                          <select class="form-select" name="options[{{ option.name }}]">
+                            {% for value in option.values %}
+                              <option value="{{ value }}">{{ value }}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      {% endfor %}
+                    {% endform %}
+                  {% endif %}
+
+                {% when 'buy_buttons' %}
+                  {% form 'product', product %}
+                    <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                    <div class="quantity-section mb-3">
+                      <label class="form-label">Quantité</label>
+                      <input type="number" name="quantity" value="1" min="1" class="form-control" style="width: 100px;">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
+                      {% if product.available %}
+                        {{ block.settings.button_text | default: 'Ajouter au panier' }}
+                      {% else %}
+                        Épuisé
+                      {% endif %}
+                    </button>
+                  {% endform %}
+
+                {% when 'trust_badges' %}
+                  <div class="trust-badges mb-4">
+                    <div class="row text-center">
+                      <div class="col-4">
+                        <small class="text-muted">
+                          <i class="fas fa-shield-alt"></i><br>Paiement sécurisé
+                        </small>
+                      </div>
+                      <div class="col-4">
+                        <small class="text-muted">
+                          <i class="fas fa-truck"></i><br>Livraison rapide
+                        </small>
+                      </div>
+                      <div class="col-4">
+                        <small class="text-muted">
+                          <i class="fas fa-undo"></i><br>Retours faciles
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+
+                {% when 'custom_text' %}
+                  {% if block.settings.text != blank %}
+                    <div class="custom-text mb-4">
+                      {{ block.settings.text }}
+                    </div>
+                  {% endif %}
+
+                {% when 'spacer' %}
+                  <div class="spacer mb-{{ block.settings.space_size }}"></div>
+
+              {% endcase %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Script pour zoom popup -->
+<script>
+  function openImagePopup(src) {
+    const popup = window.open("", "_blank");
+    popup.document.write(`
+      <html><head><title>Zoom</title></head>
+      <body style="margin:0;display:flex;align-items:center;justify-content:center;background:#000;">
+        <img src="${src}" style="max-width:100%;max-height:100vh;">
+      </body></html>
+    `);
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Produit avancé",
+  "settings": [
+    {
+      "type": "text",
+      "id": "container",
+      "label": "Classe container",
+      "default": "container"
+    },
+    {
+      "type": "range",
+      "id": "pt",
+      "label": "Padding top",
+      "min": 0, "max": 20, "step": 1, "default": 5
+    },
+    {
+      "type": "range",
+      "id": "pb",
+      "label": "Padding bottom",
+      "min": 0, "max": 20, "step": 1, "default": 5
+    }
+  ],
+  "blocks": [
+    { "type": "vendor", "name": "Vendeur", "limit": 1, "settings": [] },
+    { "type": "title", "name": "Titre", "limit": 1, "settings": [
+      { "type": "select", "id": "title_size", "label": "Taille du titre", "default": "h1",
+        "options": [ { "value": "h1", "label": "H1" }, { "value": "h2", "label": "H2" }, { "value": "h3", "label": "H3" } ]
+      }
+    ]},
+    { "type": "price", "name": "Prix", "limit": 1, "settings": [
+      { "type": "select", "id": "price_size", "label": "Taille du prix", "default": "h4",
+        "options": [ { "value": "h3", "label": "Large" }, { "value": "h4", "label": "Moyen" }, { "value": "h5", "label": "Petit" } ]
+      }
+    ]},
+    { "type": "description", "name": "Description", "limit": 1, "settings": [] },
+    { "type": "variants", "name": "Sélecteur de variantes", "limit": 1, "settings": [] },
+    { "type": "buy_buttons", "name": "Boutons d'achat", "limit": 1, "settings": [
+      { "type": "text", "id": "button_text", "label": "Texte du bouton", "default": "Ajouter au panier" }
+    ]},
+    { "type": "trust_badges", "name": "Badges de confiance", "limit": 1, "settings": [] },
+    { "type": "custom_text", "name": "Texte personnalisé", "settings": [
+      { "type": "richtext", "id": "text", "label": "Texte" }
+    ]},
+    { "type": "spacer", "name": "Espacement", "settings": [
+      { "type": "range", "id": "space_size", "label": "Taille de l'espacement", "min": 1, "max": 10, "step": 1, "default": 3 }
+    ]}
+  ],
+  "presets": [
+    {
+      "name": "Produit avancé",
+      "blocks": [
+        { "type": "vendor" },
+        { "type": "title" },
+        { "type": "price" },
+        { "type": "description" },
+        { "type": "variants" },
+        { "type": "buy_buttons" },
+        { "type": "trust_badges" }
+      ]
+    }
+  ]
+}
+{% endschema %}

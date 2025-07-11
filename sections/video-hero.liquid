@@ -1,0 +1,344 @@
+{% liquid 
+    assign pt = section.settings.pt | prepend: 'pt-'
+    assign pb = section.settings.pb | prepend: 'pb-'
+    assign mt = section.settings.mt | prepend: 'mt-'
+    assign mb = section.settings.mb | prepend: 'mb-'
+%}
+
+<section id="video-hero-{{ section.id }}" class="video-hero {{ section.settings.bg_color }} {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+    <div class="video-hero-wrapper position-relative">
+        <div class="video-container">
+            {% if section.settings.video_hosted != blank %}
+                <video 
+                    class="video-hero-video w-100 h-100" 
+                    autoplay 
+                    muted 
+                    loop 
+                    playsinline
+                    {% if section.settings.video_poster %}poster="{{ section.settings.video_poster | image_url: width: 1920 }}"{% endif %}>
+                    <source src="{{ section.settings.video_hosted }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            {% elsif section.settings.video_url != blank %}
+                {% if section.settings.video_url contains 'youtube' %}
+                    <iframe 
+                        class="video-hero-video w-100 h-100"
+                        src="https://www.youtube.com/embed/{{ section.settings.video_url | split: 'v=' | last | split: '&' | first }}?autoplay=1&mute=1&loop=1&playlist={{ section.settings.video_url | split: 'v=' | last | split: '&' | first }}&controls=0&rel=0&modestbranding=1"
+                        frameborder="0" 
+                        allow="autoplay; encrypted-media" 
+                        allowfullscreen>
+                    </iframe>
+                {% elsif section.settings.video_url contains 'vimeo' %}
+                    <iframe 
+                        class="video-hero-video w-100 h-100"
+                        src="https://player.vimeo.com/video/{{ section.settings.video_url | split: '/' | last }}?autoplay=1&muted=1&loop=1&background=1&controls=0"
+                        frameborder="0" 
+                        allow="autoplay; fullscreen; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                {% endif %}
+            {% else %}
+                <div class="video-placeholder bg-secondary d-flex align-items-center justify-content-center">
+                    <div class="text-center text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="5,3 19,12 5,21"></polygon>
+                        </svg>
+                        <p class="mt-2">Add your video</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        
+        {% if section.settings.overlay_opacity > 0 %}
+            <div class="video-overlay" style="background: rgba(0,0,0,{{ section.settings.overlay_opacity | divided_by: 100.0 }});"></div>
+        {% endif %}
+        
+        <div class="video-content position-absolute w-100 h-100 d-flex align-items-center">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto text-center">
+                        {% unless section.settings.heading == blank %}
+                            <h1 class="video-hero-title {{ section.settings.heading_size }} {{ section.settings.text_color }} mb-4">
+                                {{ section.settings.heading }}
+                            </h1>
+                        {% endunless %}
+                        
+                        {% unless section.settings.subheading == blank %}
+                            <p class="video-hero-subtitle {{ section.settings.subheading_size }} {{ section.settings.text_color }} mb-5">
+                                {{ section.settings.subheading }}
+                            </p>
+                        {% endunless %}
+                        
+                        {% unless section.settings.button_text == blank %}
+                            <a href="{{ section.settings.button_link | default: '#' }}" class="btn {{ section.settings.button_style }} {{ section.settings.button_size }}">
+                                {{ section.settings.button_text }}
+                            </a>
+                        {% endunless %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    #video-hero-{{ section.id }} {
+        height: {{ section.settings.section_height }}vh;
+        overflow: hidden;
+    }
+    
+    #video-hero-{{ section.id }} .video-hero-wrapper {
+        height: 100%;
+    }
+    
+    #video-hero-{{ section.id }} .video-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+    }
+    
+    #video-hero-{{ section.id }} .video-hero-video {
+        object-fit: cover;
+        object-position: center;
+    }
+    
+    #video-hero-{{ section.id }} .video-placeholder {
+        height: 100%;
+    }
+    
+    #video-hero-{{ section.id }} .video-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+    }
+    
+    #video-hero-{{ section.id }} .video-content {
+        z-index: 3;
+    }
+    
+    #video-hero-{{ section.id }} .video-hero-title {
+        animation: fadeInUp 1s ease-out;
+    }
+    
+    #video-hero-{{ section.id }} .video-hero-subtitle {
+        animation: fadeInUp 1s ease-out 0.3s both;
+    }
+    
+    #video-hero-{{ section.id }} .btn {
+        animation: fadeInUp 1s ease-out 0.6s both;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @media (max-width: 768px) {
+        #video-hero-{{ section.id }} {
+            height: {{ section.settings.section_height_mobile }}vh;
+        }
+    }
+</style>
+
+{% schema %}
+{
+  "name": "Video Hero",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Video Hero Section"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Heading Size",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "display-1", "label": "Display 1" },
+        { "value": "display-2", "label": "Display 2" }
+      ],
+      "default": "display-1"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Create an immersive experience with video backgrounds"
+    },
+    {
+      "type": "select",
+      "id": "subheading_size",
+      "label": "Subheading Size",
+      "options": [
+        { "value": "fs-6", "label": "Small" },
+        { "value": "fs-5", "label": "Medium" },
+        { "value": "fs-4", "label": "Large" },
+        { "value": "fs-3", "label": "Extra Large" }
+      ],
+      "default": "fs-5"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button Style",
+      "options": [
+        { "value": "btn-primary", "label": "Primary" },
+        { "value": "btn-secondary", "label": "Secondary" },
+        { "value": "btn-outline-primary", "label": "Outline Primary" },
+        { "value": "btn-outline-secondary", "label": "Outline Secondary" },
+        { "value": "btn-outline-light", "label": "Outline Light" }
+      ],
+      "default": "btn-primary"
+    },
+    {
+      "type": "select",
+      "id": "button_size",
+      "label": "Button Size",
+      "options": [
+        { "value": "btn-sm", "label": "Small" },
+        { "value": "", "label": "Medium" },
+        { "value": "btn-lg", "label": "Large" }
+      ],
+      "default": "btn-lg"
+    },
+    {
+      "type": "video",
+      "id": "video_hosted",
+      "label": "Hosted Video"
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "Video URL",
+      "info": "YouTube or Vimeo URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "video_poster",
+      "label": "Video Poster Image"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay Opacity",
+      "min": 0,
+      "max": 90,
+      "step": 10,
+      "default": 30,
+      "unit": "%"
+    },
+    {
+      "type": "select",
+      "id": "text_color",
+      "label": "Text Color",
+      "options": [
+        { "value": "text-white", "label": "White" },
+        { "value": "text-dark", "label": "Dark" },
+        { "value": "text-primary", "label": "Primary" },
+        { "value": "text-secondary", "label": "Secondary" }
+      ],
+      "default": "text-white"
+    },
+    {
+      "type": "range",
+      "id": "section_height",
+      "label": "Section Height",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "default": 100,
+      "unit": "vh"
+    },
+    {
+      "type": "range",
+      "id": "section_height_mobile",
+      "label": "Section Height (Mobile)",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "default": 70,
+      "unit": "vh"
+    },
+    {
+      "type": "select",
+      "id": "bg_color",
+      "label": "Background Color",
+      "options": [
+        { "value": "", "label": "None" },
+        { "value": "bg-light", "label": "Light" },
+        { "value": "bg-dark", "label": "Dark" },
+        { "value": "bg-primary", "label": "Primary" }
+      ],
+      "default": ""
+    },
+    {
+      "type": "range",
+      "id": "pt",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "pb",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mt",
+      "label": "Margin Top",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mb",
+      "label": "Margin Bottom",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video Hero"
+    }
+  ]
+}
+{% endschema %}

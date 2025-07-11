@@ -1,0 +1,50 @@
+{% if settings.cart_shipping_protect_show %}
+    {% liquid 
+        assign product = settings.cart_shipping_protect_product
+    
+        assign in_cart_line_item = nil
+    
+        for line_item in cart.items
+            if line_item.product.handle == product.handle
+                assign in_cart_line_item = line_item
+            endif
+        endfor
+    
+        assign price = product.price | money
+    %}
+    
+    <div id="cart-shipping-protection" class="my-4">
+        <div class="d-flex align-items-center rte description">
+            {% unless settings.cart_protection_img == blank %}
+                <div class="cart-protection-image me-4">
+                    <img
+                        class="img-fluid rounded"
+                        src="{{ settings.cart_protection_img.src | image_url: width: 90, height: 90, crop: 'center' }}"
+                        alt="{{ settings.cart_protection_img.alt | escape }}"
+                        width="60"
+                        height="60"
+                        loading="lazy">
+                </div>
+            {% endunless %}
+            <div class="cart-protection-description flex-grow-1 rte fs-6">
+                <label class="form-check-label" for="cart-shipping-protection-checkbox">
+                    {{ settings.shipping_protection_text | replace: '[price]', price }}
+                </label>
+            </div>
+            <div class="form-check form-switch ms-4">
+                <input 
+                    id="cart-shipping-protection-checkbox"
+                    class="form-check-input" 
+                    type="checkbox" 
+                    onchange="onChangeCartShippingProtection(this, event)"
+                    value="{{ product.variants.first.id }}"
+                    {% if in_cart_line_item != nil %}
+                        checked
+                        data-line-item-key="{{ in_cart_line_item.key }}"
+                    {% endif %}
+                >
+                
+            </div>
+        </div>
+    </div>
+{% endif %}

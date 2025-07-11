@@ -1,0 +1,33 @@
+{% layout 'theme' %}
+
+<div class="container my-9">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <nav aria-label="breadcrumb" class="mb-5">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{{ routes.root_url }}">{{ 'general.breadcrumbs.home' | t }}</a></li>
+          <li class="breadcrumb-item active" aria-current="page">{{ page.title }}</li>
+        </ol>
+      </nav>
+      
+      <h1 class="mb-4">{{ page.title }}</h1>
+      
+      {% if page.content != blank %}
+        <div class="rte">
+          {{ page.content }}
+        </div>
+      {% else %}
+        <div class="alert alert-info">
+          <h4>{{ 'general.policy.default_title' | t }}</h4>
+          <p>{{ 'general.policy.default_content' | t }}</p>
+        </div>
+      {% endif %}
+      
+      <div class="mt-5">
+        <p class="text-muted small">
+          {{ 'general.policy.last_updated' | t: date: page.updated_at | date: "%B %d, %Y" }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

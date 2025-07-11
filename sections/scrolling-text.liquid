@@ -1,0 +1,346 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid
+  assign pt = section.settings.pt | prepend: 'pt-'
+  assign pb = section.settings.pb | prepend: 'pb-'
+  assign mt = section.settings.mt | prepend: 'mt-'
+  assign mb = section.settings.mb | prepend: 'mb-'
+
+  assign bg_color = section.settings.bg_color
+
+  if section.settings.bg_gradient
+    assign bg_color = bg_color | append: ' bg-gradient'
+  endif
+
+  case section.settings.font_size
+      when 'xsmall'
+          assign font_size = '1.125rem'
+          assign font_size_desktop = '1.5rem'
+      when 'small'
+          assign font_size = '2.5rem'
+          assign font_size_desktop = '3.75rem'
+      when 'medium'
+          assign font_size = '3.75rem'
+          assign font_size_desktop = '5rem'
+      when 'large'
+          assign font_size = '5rem'
+          assign font_size_desktop = '8.75rem'
+      when 'xlarge'
+          assign font_size = '7.5rem'
+          assign font_size_desktop = '12.5rem'
+  endcase
+  
+%}
+
+{% style %}  
+  #scrolling-{{ section.id }} ul {
+    font-size: {{ font_size }};
+  }
+  
+  @media screen and (min-width: 700px) {
+    #scrolling-{{ section.id }} ul {
+      font-size: {{ font_size_desktop }};
+    }
+  }
+    
+  #scrolling-{{ section.id }} .text-gradient {
+    background-image: var(--gradient);
+    color: {{ section.settings.stroke_color }};
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+  
+  #scrolling-{{ section.id }} .text-stroke {
+    -webkit-text-stroke: 1.2px currentColor;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  #scrolling-{{ section.id }} .text-3d {
+    text-shadow:
+      0 1px 0 #CCC,
+      0 2px 0 #CCC,
+      0 3px 0 #CCC,
+      0 4px 0 #CCC,
+      0 5px 0 #CCC,
+      0 6px 0 transparent,
+      0 7px 0 transparent,
+      0 8px 10px rgba(0, 0, 0, 0.4);
+  }
+  
+  #scrolling-{{ section.id }} .text-flaming {
+    text-shadow: 0 -1px 4px #FFF, 0 -2px 10px #ff0, 0 -10px 20px #ff8000, 0 -18px 40px #F00;
+    margin-top: 0.75rem!important;
+  }
+  
+  #scrolling-{{ section.id }} .text-distant {
+    text-shadow: 1px 3px 0 #969696, 1px 13px 5px #aba8a8;
+  }
+{% endstyle %}
+
+<section 
+    id="scrolling-{{ section.id }}" 
+    class="scrolling overflow-hidden {{ bg_color }} {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+    <ul 
+        class="list-unstyled mb-0 {{ section.settings.font_size }}"
+        data-animation-duration="{{ section.settings.animation_duration }}"
+        data-scrolling-direction="{{ section.settings.scrolling_direction }}"
+        data-section-id="{{ section.id }}"
+        aria-label="{{ section.settings.list_label }}">
+        {% for block in section.blocks %}
+            <li class="text-gradient text-stroke fw-bold {{ block.settings.text_style }} px-{{ section.settings.gap }} {{ block.settings.text_transform }} {{ block.settings.scrolling_text_font_family }}"
+                style="color:{{ block.settings.stroke_color }}; --gradient:{{ block.settings.text_gradient }}; -webkit-text-fill-color:{{ block.settings.text_color }};"
+                {{ block.shopify_attributes }}>
+                {{ block.settings.text }}
+            </li>
+        {% endfor %}
+    </ul>
+</section>
+
+{% schema %}
+{
+    "name": "Texte Défilant",
+    "settings": [
+        {
+            "type": "paragraph", 
+            "content": "Documentation FR : [Texte défilant by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/sections\/texte-defilant)"
+        },
+        {
+            "type": "header",
+            "content": "General"
+        },
+        {
+            "type": "select",
+            "id": "bg_color",
+            "label": "Couleur d'arrière-plan",
+            "default": "bg-dark text-white",
+            "options": [
+                { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+                { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+                { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+                { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
+                { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+                { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Sombre" },
+                { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" },
+                { "group": "Alerte", "value": "bg-success text-white", "label": "Succès" },
+                { "group": "Alerte", "value": "bg-warning text-dark", "label": "Avertissement" },
+                { "group": "Alerte", "value": "bg-danger text-white", "label": "Danger" },
+                { "group": "Alerte", "value": "bg-info text-white", "label": "Info" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "bg_gradient",
+            "label": "Dégradé d'arrière-plan",
+            "default": false,
+            "info": "Ne s'applique pas aux couleurs claires"
+        },
+        {
+            "type": "select",
+            "id": "font_size",
+            "label": "Taille du texte",
+            "default": "large",
+            "options": [
+                { "value": "xlarge", "label": "Super Grand" },
+                { "value": "large", "label": "Très Grand" },
+                { "value": "medium", "label": "Grand" },
+                { "value": "small", "label": "Moyen" },
+                { "value": "xsmall", "label": "Petit" }
+            ]
+        },
+        {
+            "type": "text",
+            "id": "list_label",
+            "label": "Libellé de la liste",
+            "default": "Caractéristiques promotionnelles",
+            "info": "Utilisé à des fins d'accessibilité"
+        },
+        {
+            "type": "header",
+            "content": "Effect"
+        },
+        {
+            "type": "range",
+            "id": "animation_duration",
+            "label": "Vitesse",
+            "min": 0,
+            "max": 120,
+            "step": 2,
+            "default": 60,
+            "unit": "sec",
+            "info": "Vitesse de défilement automatique"
+        },
+        {
+            "type": "select",
+            "id": "scrolling_direction",
+            "label": "Sens de défilement",
+            "default": "left",
+            "info": "Sens de défilement automatique",
+            "options": [
+                { "value": "left", "label": "Gauche" },
+                { "value": "right", "label": "Droite" }
+
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Gap",
+            "info": "Espacement entre les éléments."
+        },
+        {
+            "type": "range",
+            "id": "gap",
+            "label": "Espacement",
+            "min": 0,
+            "max": 12,
+            "step": 1,
+            "default": 6
+        },
+        {
+            "type": "header",
+            "content": "Espacement de la section"
+        },
+        {
+            "type": "range",
+            "id": "pt",
+            "label": "Padding supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "pb",
+            "label": "Padding inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mt",
+            "label": "Marge supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mb",
+            "label": "Marge inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        }
+    ],
+    "blocks": [
+        {
+            "type": "item",
+            "name": "Item",
+            "limit": 5,
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "text",
+                    "label": "Texte"
+                },
+                {
+                    "type": "select",
+                    "id": "text_transform",
+                    "label": "Transformation de texte",
+                    "default": "text-capitalize",
+                    "options": [
+                        { "value": "", "label": "Normal" },
+                        { "value": "text-capitalize", "label": "Capitale" },
+                        { "value": "text-lowercase", "label": "Minuscule" },
+                        { "value": "text-uppercase", "label": "Majuscule" }
+        
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "scrolling_text_font_family",
+                    "label": "Police d'écriture",
+                    "default": "",
+                    "options": [
+                        { "value": "", "label": "Par défaut" },
+                        { "value": "headings-font-family", "label": "Titres" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "text_style",
+                    "label": "Style de texte",
+                    "default": "",
+                    "options": [
+                        { "value": "", "label": "Normal" },
+                        { "value": "text-flaming", "label": "Flamme" },
+                        { "value": "text-3d", "label": "3D" },
+                        { "value": "text-distant", "label": "Distant" }
+        
+                    ]
+                },
+                {
+                    "type": "header",
+                    "content": "Couleurs",
+                    "info": "Le dégradé remplace les couleurs unies lorsqu'il est défini. Le contour du texte dégradé et l'arrière-plan dégradé ne peuvent pas être combinés."
+                },
+                {
+                    "type": "color",
+                    "id": "text_color",
+                    "label": "Couleur du texte",
+                    "default": "#F56900"
+                },
+                {
+                    "type": "color",
+                    "id": "stroke_color",
+                    "label": "Couleur du contour texte"
+                },
+                {
+                    "type": "color_background",
+                    "id": "text_gradient",
+                    "label": "Dégradé du texte"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Texte Défilant",
+            "category": "General",
+            "blocks": [
+                {
+                    "type": "item",
+                    "settings": {
+                        "text": "Un message promotionnel"
+                    }
+                },
+                {
+                    "type": "item",
+                    "settings": {
+                        "text": "Encore un autre message promotionnel"
+                    }
+                },
+                {
+                    "type": "item",
+                    "settings": {
+                        "text": "Essayez d'être bref"
+                    }
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

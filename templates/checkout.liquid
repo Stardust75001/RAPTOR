@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>{{ 'checkout.order_status.title' | t: order_number: order.order_number }}</title>
+  
+  {{ content_for_header }}
+  
+  <link href="{{ 'vendor-bootstrap.min.css' | asset_url }}" rel="stylesheet">
+  <link href="{{ 'order-status.css' | asset_url }}" rel="stylesheet">
+</head>
+<body>
+  <div class="container my-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="text-center mb-5">
+          <div class="order-success-icon mb-3">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-success">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22,4 12,14.01 9,11.01"></polyline>
+            </svg>
+          </div>
+          <h1 class="h2 mb-2">{{ 'checkout.order_status.thank_you' | t }}</h1>
+          <p class="lead">{{ 'checkout.order_status.order_confirmed' | t }}</p>
+        </div>
+        
+        <div class="card mb-4">
+          <div class="card-body">
+            <h3 class="card-title">{{ 'checkout.order_status.order_details' | t }}</h3>
+            <p><strong>{{ 'checkout.order_status.order_number' | t }}:</strong> {{ order.order_number }}</p>
+            <p><strong>{{ 'checkout.order_status.date' | t }}:</strong> {{ order.created_at | date: "%B %d, %Y" }}</p>
+            <p><strong>{{ 'checkout.order_status.total' | t }}:</strong> {{ order.total_price | money }}</p>
+            
+            {% if order.email %}
+              <p><strong>{{ 'checkout.order_status.email' | t }}:</strong> {{ order.email }}</p>
+            {% endif %}
+            
+            {% if order.phone %}
+              <p><strong>{{ 'checkout.order_status.phone' | t }}:</strong> {{ order.phone }}</p>
+            {% endif %}
+          </div>
+        </div>
+        
+        {% if order.shipping_address %}
+          <div class="card mb-4">
+            <div class="card-body">
+              <h3 class="card-title">{{ 'checkout.order_status.shipping_address' | t }}</h3>
+              {{ order.shipping_address | format_address }}
+            </div>
+          </div>
+        {% endif %}
+        
+        <div class="text-center">
+          <a href="{{ shop.url }}" class="btn btn-primary">{{ 'checkout.order_status.continue_shopping' | t }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

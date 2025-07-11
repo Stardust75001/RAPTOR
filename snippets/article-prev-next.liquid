@@ -1,0 +1,56 @@
+{% liquid
+        case section.settings.img_orientation_prev_next_nav
+            when 'square'
+                assign img_width  = 90
+                assign img_height = 90
+            when 'landscape'
+                assign img_width  = 90
+                assign img_height = 72
+            when 'potrait'
+                assign img_width  = 72
+                assign img_height = 90
+        endcase
+    %}
+
+{% if blog.previous_article or blog.next_article %}
+    <div id="article-prev-next" class="">
+        <div id="article-prev-next-prev">
+            {% if blog.previous_article %}
+                <a 
+                    href="{{ blog.previous_article.url }}"
+                    data-bs-toggle="tooltip" 
+                    data-bs-placement="top"
+                    data-bs-html="true"
+                    data-bs-delay="300"
+                    data-bs-title="{{ blog.previous_article.title }}">
+                    <img 
+                        class="article-item-img img-fluid rounded {{ section.settings.img_thumbnail_prev_next_nav }} {{ section.settings.shadow_sp_prev_next_nav }} {{ section.settings.border_color_prev_next_nav }}"
+                        src="{{ blog.previous_article.image | image_url: width: img_width, height: img_height, crop: 'center' }}" 
+                        alt="{{ blog.previous_article.image.alt | escape }}"
+                        width="{{ img_width }}"
+                        height="{{ img_height }}"
+                        loading="lazy">
+                </a>
+            {% endif %}
+        </div>
+        {% if blog.next_article %}
+            <div id="article-prev-next-next">
+                <a 
+                    href="{{ blog.next_article.url }}"
+                    data-bs-toggle="tooltip" 
+                    data-bs-placement="top"
+                    data-bs-html="true"
+                    data-bs-delay="300"
+                    data-bs-title="{{ blog.next_article.title }} <br> {{ blog.next_article.price | money }}">
+                    <img 
+                        class="article-item-img img-fluid rounded {{ section.settings.img_thumbnail_prev_next_nav }} {{ section.settings.shadow_sp_prev_next_nav }} {{ section.settings.border_color_prev_next_nav }}"
+                        src="{{ blog.next_article.image | image_url: width: img_width, height: img_height, crop: 'center' }}" 
+                        alt="{{ blog.next_article.image.alt }}"
+                        width="{{ img_width }}"
+                        height="{{ img_height }}"
+                        loading="lazy">
+                </a>
+            </div>
+        {% endif %}
+    </div>
+{% endif %}

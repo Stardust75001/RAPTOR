@@ -1,0 +1,44 @@
+{% liquid 
+    if request.page_type == 'cart' 
+        assign show_feature = section.settings.show_note
+    else
+        assign show_feature = settings.cart_drawer_show_note
+    endif
+%}
+
+{% if show_feature %}
+    <div id="cart-note" class="mb-2">
+        <button 
+            class="btn btn-sm d-flex align-items-center justify-content-center w-100 {{ settings.cart_drawer_note_btn_color }}"
+            type="button" 
+            data-bs-toggle="collapse" 
+            data-bs-target="#cart-note-collapse" 
+            aria-expanded="false"
+            aria-controls="cart-note-collapse">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-card-text me-4" viewBox="0 0 16 16">
+                <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
+                <path d="M3 5.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 8zm0 2.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5z"/>
+            </svg>
+            {{ 'cart.note_label' | t }}
+        </button>
+        <div id="cart-note-collapse" class="collapse">
+            <div class="pt-4 pb-6">
+                <textarea
+                    id="cart-note-input"
+                    class="form-control mb-3" 
+                    rows="4"
+                    name="note"
+                    placeholder="{{ 'cart.note_placeholder' | t }}"
+                    aria-label="{{ 'cart.note_placeholder' | t }}">{{ cart.note }}</textarea> {%- comment -%} Live this line as this to prevent empty spaces {%- endcomment -%}
+                <button 
+                    type="button"
+                    class="cart-note-btn btn btn-secondary btn-sm w-100"
+                    data-text-note-saved="{{ 'cart.note_saved' | t }}"
+                    data-text-btn-save="{{ 'cart.note_button' | t }}"
+                    onclick="handleCartNoteSave(this, event)">
+                    {{ 'cart.note_button' | t }}
+                </button>
+            </div>
+        </div>
+    </div>
+{% endif %}

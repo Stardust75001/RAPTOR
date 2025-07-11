@@ -1,0 +1,460 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid 
+    assign pt = section.settings.pt | prepend: 'pt-'
+    assign pb = section.settings.pb | prepend: 'pb-'
+    assign mt = section.settings.mt | prepend: 'mt-'
+    assign mb = section.settings.mb | prepend: 'mb-'
+
+    assign bg_color = section.settings.bg_color
+
+    if section.settings.bg_gradient
+        assign bg_color = bg_color | append: ' bg-gradient'
+    endif
+
+    assign visibility = ''
+
+    if section.settings.visibility_xs == false
+        assign visibility = 'd-none'
+    endif
+
+    if section.settings.visibility_md
+        assign visibility = ' d-md-block' | prepend: visibility
+    else 
+        assign visibility = ' d-md-none' | prepend: visibility
+    endif
+
+    if section.settings.visibility_lg
+        assign visibility = ' d-lg-block' | prepend: visibility
+    else 
+        assign visibility = ' d-lg-none' | prepend: visibility
+    endif
+%}
+
+<style>
+    .animated-stories .img-wrapper {
+        width: {{ section.settings.item_img_size | plus: 21 }}px; 
+        height: {{ section.settings.item_img_size | plus: 21 }}px;
+    }
+    .animated-stories .cercle  {
+        stroke: {{ section.settings.item_stroke_color_start }};
+        stroke-width: {{ section.settings.item_stroke_width }};
+    }
+    @keyframes stories_anime_trait_bordure {
+        from {
+            stroke: {{ section.settings.item_stroke_color_start }} /* #f56900 */;
+            stroke-dasharray: 1;
+        }
+        to {
+            stroke: {{ section.settings.item_stroke_color_end }}; /* #c99700 */
+            transform:rotate(180deg);
+            stroke-dasharray: 8;
+        }
+    }
+
+{% for block in section.blocks %}
+    {% if block.settings.video %}
+      .glightbox-mobile .glightbox-container .gslide-desc {
+          color: white !important;
+      }
+      
+      .gslide-description .gslide-desc {
+          font-size: 1rem !important;
+          text-align: center;
+      }
+    {% endif %}
+{% endfor %}
+</style>
+
+{% for block in section.blocks %}
+{% if block.settings.video != nil %}
+    <link href="{{ 'vendor-glightbox.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+    <script src="{{ 'vendor-glightbox.min.js' | asset_url }}" defer></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            GLightbox({
+                selector: '[data-gallery="animated-stories"]',
+                loop: true,
+                autoplayVideos: true
+            })
+        })
+    </script>
+{% endif %}
+{% endfor %}
+
+<section
+    id="animated-stories-{{ section.id }}" 
+    class="animated-stories text-center enter-view position-relative overflow-hidden {{ bg_color }} {{ pt }} {{ pb }} {{ mt }} {{ mb }} {{ visibility }}">
+    <ul 
+        class="stories-list list-unstyled d-flex justify-content-md-center overflow-auto px-2 pb-4 mb-0"
+        aria-label="{{ section.settings.list_label }}">
+        {% for block in section.blocks %}
+            <li class="mx-n1" {{ block.shopify_attributes }}>
+                <div 
+                    class="{% unless section.settings.animation == '' %}animate__animated opacity-0 {{ section.settings.animation_speed }}{% endunless %}"
+                     data-animate-class="{{ section.settings.animation }}"
+                     style="animation-delay: {{ forloop.index0 | times: 150 }}ms;">
+                    <a 
+                        class="animated-stories-link text-decoration-none {% if bg_color contains 'text-white' %}text-current-color{% endif %}"
+                        {% if block.settings.video != nil %}
+                            href="{{ block.settings.video.sources[1].url }}"
+                            class="glightbox" 
+                            data-gallery="animated-stories"
+                            data-desc-position="top"
+                            data-description="{{ block.settings.title }}"
+                        {% elsif block.settings.url != nil %}
+                            href="{{ block.settings.url }}"
+                        {% else %}
+                            href="{{ block.settings.image | image_url: width: 2040 }}"
+                            class="glightbox" 
+                            data-gallery="animated-stories"
+                            data-desc-position="top"
+                            data-description="{{ block.settings.title }}"
+                        {% endif %}
+                        >
+                        <div class="img-wrapper position-relative d-flex">
+                            {% if block.settings.image != blank %}
+                                <img 
+                                    class="img-fluid p-2" 
+                                    src="{{ block.settings.image | image_url: width: section.settings.item_img_size, height: section.settings.item_img_size, crop: 'center' }}"
+                                    alt="{{ block.settings.image.alt | escape }}"
+                                    width="{{ section.settings.item_img_size }}"
+                                    height="{{ section.settings.item_img_size }}"
+                                    loading="lazy">
+                            {% elsif block.settings.video != blank %}
+                                {% assign video_class = 'p-2' %}
+                                {{ block.settings.video | video_tag: class: video_class, image_size: '800x', autoplay: block.settings.autoplay, loop: 'loop', muted: 'muted', width: section.settings.item_img_size, height: section.settings.item_img_size, crop: 'center' }}
+                                {% unless block.settings.autoplay %}
+                                    <div class="play-button">
+                                        <svg class="play-button" x="25" y="25" width="50" height="50" viewBox="0 0 100 100">
+                                            <filter id="dropshadow" height="150%" width="150%">
+                                            <feGaussianBlur in="SourceAlpha" stdDeviation="5"></feGaussianBlur>
+                                            <feOffset dx="4" dy="4" result="offsetblur"></feOffset>
+                                            <feComponentTransfer>
+                                            <feFuncA type="linear" slope="0.4"></feFuncA>
+                                            </feComponentTransfer>
+                                            <feMerge>
+                                            <feMergeNode></feMergeNode>
+                                            <feMergeNode in="SourceGraphic"></feMergeNode>
+                                            </feMerge>
+                                            </filter> 
+                                            <g><g>
+                                            <path style="filter: url(#dropshadow);" fill="#ffffff" class="stplay-button0" d="M 27.28 25 c 0.26 0 0.54 0 0.8 0 c 1.1 0.12 1.96 0.8 2.86 1.32 c 3.14 1.74 6.28 3.52 9.4 5.28 c 3.88 2.2 7.78 4.38 11.66 6.56 c 4.1 2.3 8.22 4.62 12.32 6.92 c 1.82 1.02 3.66 2.04 5.48 3.1 c 0.98 0.58 1.54 1.4 1.48 2.58 c -0.06 0.92 -0.52 1.6 -1.26 2.1 c -1.02 0.66 -2.1 1.22 -3.16 1.82 c -2.52 1.42 -5.02 2.82 -7.54 4.24 c -3.1 1.74 -6.22 3.5 -9.32 5.24 c -3.4 1.92 -6.78 3.82 -10.18 5.74 c -3.52 1.98 -7.02 3.94 -10.54 5.92 c -0.38 0.22 -0.8 0.28 -1.22 0.38 c -0.26 0 -0.54 0 -0.8 0 c -1.58 -0.3 -2.26 -1.14 -2.26 -2.76 c 0 -15.22 0 -30.42 0 -45.64 c 0 -0.46 0.02 -0.9 0.22 -1.32 c 0.44 -0.9 1.08 -1.42 2.06 -1.48 Z"></path>
+                                            </g></g>
+                                        </svg>
+                                    </div>
+                                {% endunless %}
+                            {% else %}
+                                {% capture current %}{% cycle 1, 2, 3, 4 %}{% endcapture %}
+                                {{ 'collection-apparel-' | append: current | placeholder_svg_tag: 'placeholder-svg rounded-pill' }}
+                            {% endif %}
+                                <svg class="cercle" viewBox="0 0 100 100">  
+                                    <circle cx="50" cy="50" r="40" />
+                                </svg>
+                        </div>
+                        <{{ block.settings.heading_tag }} class="title mt-n2 mb-0 {{ section.settings.item_title_size }}">
+                            {{ block.settings.title }}
+                        </{{ block.settings.heading_tag }}>
+                    </a>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</section>
+
+{% schema %}
+{
+  "name": "🏆 Stories Animées",
+  "settings": [
+    {
+        "type": "header",
+        "content": "🏆 Application Stories Animées",
+        "info": "👉 Application Version Shopiweb Premium"
+    },
+    {
+        "type": "paragraph",
+        "content": "Documentation FR : [Stories Animées by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/sections\/stories-animees)"
+    },
+    {
+        "type": "header",
+        "content": "Général"
+    },
+    {
+        "type": "select",
+        "id": "bg_color",
+        "label": "Couleur de l'arrière plan",
+        "default": "bg-body text-body",
+        "options": [
+            { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+            { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+            { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+            { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
+            { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+            { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Sombre" },
+            { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" }
+        ]
+    },
+    {
+        "type": "checkbox",
+        "id": "bg_gradient",
+        "label": "Dégradé d'arrière-plan",
+        "default": false,
+        "info": "Ne s'applique pas aux couleurs claires"
+    },
+    {
+        "type": "text",
+        "id": "list_label",
+        "label": "Libellé de la liste",
+        "default": "Collections en vedette",
+        "info": "Utilisé à des fins d'accessibilité"
+    },
+    {
+        "type": "header",
+        "content": "Item"
+    },
+    {
+        "type": "text",
+        "id": "item_img_size",
+        "label": "Largeur/hauteur de l'image (px)",
+        "default": "70"
+    },
+    {
+        "type": "range",
+        "id": "item_stroke_width",
+        "label": "Largeur du trait",
+        "default": 2,
+        "min": 1,
+        "max": 4,
+        "step": 1
+    },
+    {
+        "type": "color",
+        "id": "item_stroke_color_start",
+        "label": "Début de la couleur du trait",
+        "default": "#F56900"
+    },
+    {
+        "type": "color",
+        "id": "item_stroke_color_end",
+        "label": "Fin de la couleur du trait",
+        "default": "#C99700"
+    },
+    {
+        "type": "select",
+        "id": "item_title_size",
+        "label": "Taille du titre",
+        "default": "fs-6",
+        "options": [
+            { "group": "Texte Standard", "value": "fs-1", "label": "Extra Grand" },
+            { "group": "Texte Standard", "value": "fs-2", "label": "Super Grand" },
+            { "group": "Texte Standard", "value": "fs-3", "label": "Très Grand" },
+            { "group": "Texte Standard", "value": "fs-4", "label": "Grand" },
+            { "group": "Texte Standard", "value": "fs-5", "label": "Moyen" },
+            { "group": "Texte Standard", "value": "fs-6", "label": "Petit" },
+            { "group": "Texte Standard", "value": "extra-small", "label": "Très petit" }
+        ]
+    },
+    {
+        "type": "header",
+        "content": "Visibilité",
+        "info": "Afficher/masquer cette section en fonction de la résolution de l'écran"
+    },
+    {
+        "type": "checkbox",
+        "id": "visibility_xs",
+        "label": "Afficher sur mobile",
+        "default": true
+    },
+    {
+        "type": "checkbox",
+        "id": "visibility_md",
+        "label": "Afficher sur tablette",
+        "default": true
+    },
+    {
+        "type": "checkbox",
+        "id": "visibility_lg",
+        "label": "Afficher sur le bureau",
+        "default": true
+    },
+    {
+        "type": "header",
+        "content": "Animation"
+    },
+    {
+        "type": "select",
+        "id": "animation",
+        "label": "Effet d'animation",
+        "default": "animate__fadeInRightBig",
+        "options": [
+            { "group": "Désactivé", "value": "", "label": "Pas d'animation" },
+            { "group": "Retour", "value": "animate__backInDown", "label": "Back In Down" },
+            { "group": "Retour", "value": "animate__backInLeft", "label": "Back In Left" },
+            { "group": "Retour", "value": "animate__backInRight", "label": "Back In Right" },
+            { "group": "Retour", "value": "animate__backInUp", "label": "Back In Up" },
+            { "group": "Rebond", "value": "animate__bounceIn", "label": "Bounce In" },
+            { "group": "Rebond", "value": "animate__bounceInDown", "label": "Bounce-in-down" },
+            { "group": "Rebond", "value": "animate__bounceInLeft", "label": "Bounce-in-left" },
+            { "group": "Rebond", "value": "animate__bounceInRight", "label": "Bounce-in-right" },
+            { "group": "Rebond", "value": "animate__bounceInUp", "label": "Bounce-in-up" },
+            { "group": "Fondu", "value": "animate__fadeIn", "label": "Fade In" },
+            { "group": "Fondu", "value": "animate__fadeInDown", "label": "Fade-in-down" },
+            { "group": "Fondu", "value": "animate__fadeInDownBig", "label": "Fade-in-down Big" },
+            { "group": "Fondu", "value": "animate__fadeInLeft", "label": "Fade-in-left" },
+            { "group": "Fondu", "value": "animate__fadeInLeftBig", "label": "Fade-in-left Big" },
+            { "group": "Fondu", "value": "animate__fadeInRight", "label": "Fade-in-right" },
+            { "group": "Fondu", "value": "animate__fadeInRightBig", "label": "Fade-in-right Big" },
+            { "group": "Fondu", "value": "animate__fadeInUp", "label": "Fade-in-up" },
+            { "group": "Fondu", "value": "animate__fadeInUpBig", "label": "Fade-in-up Big" },
+            { "group": "Fondu", "value": "animate__fadeInTopLeft", "label": "Fade-in Top Left" },
+            { "group": "Fondu", "value": "animate__fadeInTopRight", "label": "Fade-in Top Right" },
+            { "group": "Fondu", "value": "animate__fadeInBottomLeft", "label": "Fade-in Bottom Left" },
+            { "group": "Fondu", "value": "animate__fadeInBottomRight", "label": "Fade-in Bottom Right" },
+            { "group": "Flip", "value": "animate__flip", "label": "Flip" },
+            { "group": "Flip", "value": "animate__flipInX", "label": "Flip In X" },
+            { "group": "Flip", "value": "animate__flipInY", "label": "Flip In Y" },
+            { "group": "Flip", "value": "animate__flipOutX", "label": "Flip Out X" },
+            { "group": "Flip", "value": "animate__flipOutY", "label": "Flip Out Y" },
+            { "group": "Vitesse Lumière", "value": "animate__lightSpeedInRight", "label": "Light Speed In Right" },
+            { "group": "Vitesse Lumière", "value": "animate__lightSpeedInLeft", "label": "Light Speed In Left" },
+            { "group": "Rotation", "value": "animate__rotateIn", "label": "Rotate In" },
+            { "group": "Rotation", "value": "animate__rotateInDownLeft", "label": "Rotate In Down Left" },
+            { "group": "Rotation", "value": "animate__rotateInDownRight", "label": "Rotate In Down Right" },
+            { "group": "Rotation", "value": "animate__rotateInUpLeft", "label": "Rotate In Up Left" },
+            { "group": "Rotation", "value": "animate__rotateInUpRight", "label": "Rotate In Up Right" },
+            { "group": "Zoom", "value": "animate__zoomIn", "label": "Zoom In" },
+            { "group": "Zoom", "value": "animate__zoomInDown", "label": "Zoom In Down" },
+            { "group": "Zoom", "value": "animate__zoomInLeft", "label": "Zoom In Left" },
+            { "group": "Zoom", "value": "animate__zoomInRight", "label": "Zoom In Right" },
+            { "group": "Zoom", "value": "animate__zoomInUp", "label": "Zoom In Up" },
+            { "group": "Glissement", "value": "animate__slideInDown", "label": "Slide In Down" },
+            { "group": "Glissement", "value": "animate__slideInLeft", "label": "Slide In Left" },
+            { "group": "Glissement", "value": "animate__slideInRight", "label": "Slide In Right" },
+            { "group": "Glissement", "value": "animate__slideInUp", "label": "Slide In Up" }
+        ]
+    },
+    {
+        "type": "select",
+        "id": "animation_speed",
+        "label": "Vitesse d'animation",
+        "default": "animate__fast",
+        "options": [
+            { "value": "animate__slower", "label": "Plus lent" },
+            { "value": "animate__slow", "label": "Lent" },
+            { "value": "", "label": "Normal" },
+            { "value": "animate__fast", "label": "Rapide" },
+            { "value": "animate__faster", "label": "Plus rapide" }
+
+        ]
+    },
+    {
+        "type": "header",
+        "content": "Espacement de la section"
+    },
+    {
+        "type": "range",
+        "id": "pt",
+        "label": "Padding supérieure",
+        "min": 0,
+        "max": 20,
+        "step": 1,
+        "default": 0
+    },
+    {
+        "type": "range",
+        "id": "pb",
+        "label": "Padding inférieure",
+        "min": 0,
+        "max": 20,
+        "step": 1,
+        "default": 0
+    },
+    {
+        "type": "range",
+        "id": "mt",
+        "label": "Marge supérieure",
+        "min": 0,
+        "max": 20,
+        "step": 1,
+        "default": 0
+    },
+    {
+        "type": "range",
+        "id": "mb",
+        "label": "Marge inférieure",
+        "min": 0,
+        "max": 20,
+        "step": 1,
+        "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Media",
+      "settings": [
+        {
+            "type": "header",
+            "content": "🏆 Bloc Media",
+            "info": "👉 Bloc Version Shopiweb Premium"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Titre"
+        },
+        {
+            "type": "select",
+            "id": "heading_tag",
+            "label": "Balise titre (SEO)",
+            "default": "h6",
+            "options": [
+                { "value": "h1", "label": "h1" },
+                { "value": "h2", "label": "h2" },
+                { "value": "h3", "label": "h3" },
+                { "value": "h4", "label": "h4" },
+                { "value": "h5", "label": "h5" },
+                { "value": "h6", "label": "h6" },
+                { "value": "span", "label": "Aucune" }
+            ]
+        },
+        {
+            "type": "url",
+            "id": "url",
+            "label": "URL"
+        },
+        {
+            "type": "video",
+            "id": "video",
+            "label": "Vidéo"
+        },
+        {
+            "type": "checkbox",
+            "id": "autoplay",
+            "label": "Autoplay",
+            "default": true,
+            "info": "Si activé, la vidéo démarrera automatiquement et l'icône de lecture ne s'affichera pas."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "🏆 Stories Animées",
+      "category": "Image"
+    }
+  ]
+}
+{% endschema %}

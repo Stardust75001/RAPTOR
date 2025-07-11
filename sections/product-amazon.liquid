@@ -1,0 +1,45 @@
+<div class="product-amazon-wrapper" style="display: flex; flex-wrap: wrap; gap: 24px;">
+  <!-- Image principale -->
+  <div style="flex: 1 1 40%; max-width: 500px;">
+    {% if product.featured_image %}
+      <img src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.title | escape }}" style="width: 100%; border: 1px solid #ddd; padding: 10px;" loading="lazy">
+    {% endif %}
+  </div>
+
+  <!-- Infos produit -->
+  <div style="flex: 1 1 50%;">
+    <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 10px;">{{ product.title }}</h1>
+
+    {% if product.compare_at_price > product.price %}
+      <p style="color: #B12704; font-size: 22px; margin: 0;">
+        {{ product.price | money }}
+        <span style="text-decoration: line-through; color: #565959; font-size: 16px; margin-left: 8px;">
+          {{ product.compare_at_price | money }}
+        </span>
+      </p>
+    {% else %}
+      <p style="font-size: 22px; color: #B12704;">{{ product.price | money }}</p>
+    {% endif %}
+
+    <div style="margin: 20px 0; font-size: 16px; color: #111;">
+      {{ product.description }}
+    </div>
+
+    <form method="post" action="/cart/add">
+      <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+
+      {% if product.variants.size > 1 %}
+        <label for="variant-select" style="font-weight: bold;">Choisir une option :</label><br>
+        <select id="variant-select" name="id" style="padding: 8px; margin: 10px 0;">
+          {% for variant in product.variants %}
+            <option value="{{ variant.id }}">{{ variant.title }}</option>
+          {% endfor %}
+        </select>
+      {% endif %}
+
+      <button type="submit" style="background-color: #FFA41C; color: black; border: none; padding: 12px 24px; font-weight: bold; font-size: 16px; cursor: pointer;">
+        Ajouter au panier
+      </button>
+    </form>
+  </div>
+</div>

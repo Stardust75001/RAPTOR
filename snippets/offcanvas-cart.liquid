@@ -1,0 +1,350 @@
+{% assign shipping_enabled = settings.cart_shipping_protect_show %}
+{% unless settings.cart_drawer_disable %}
+    {% unless request.page_type == 'cart' %}
+    
+        {% liquid
+            case settings.offcanvas_img_orientation
+                when 'square'
+                    assign img_width  = 600
+                    assign img_height = 600
+                when 'landscape'
+                    assign img_width  = 600
+                    assign img_height = 480
+                when 'portrait'
+                    assign img_width  = 480
+                    assign img_height = 600
+            endcase
+
+            if settings.cart_shipping_protect_show
+                assign shipping_protect_item = settings.cart_shipping_protect_product
+            endif
+        %}
+    
+        <div 
+            id="offcanvas-cart" 
+            class="offcanvas offcanvas-end offcanvas-mobile-full {{ settings.offcanvas_opening_direction }}" 
+            tabindex="-1" 
+            aria-labelledby="offcanvas-cart-label"
+            data-shipping-protection-enabled="{{ settings.cart_shipping_protect_show }}"
+            data-shipping-protection-auto-initialize="{{ settings.cart_shipping_protect_auto_initialize }}"
+            data-shipping-protection-variant-id="{{ settings.cart_shipping_protect_product.variants.first.id }}">
+            <div class="offcanvas-header {{ settings.offcanvas_header_bg }}">
+                <h2 
+                    id="offcanvas-cart-label" 
+                    class="offcanvas-title {{ settings.offcanvas_header_title_size }}">
+                    {{ 'cart.title' | t }}
+                </h2>
+                <button 
+                    class="btn-close {% if settings.offcanvas_header_bg contains 'text-white' %}btn-close-white{% endif %}" 
+                    type="button" 
+                    data-bs-dismiss="offcanvas" 
+                    aria-label="{{ 'general.accessibility.close' | t }}">
+                </button>
+            </div>
+    
+            {% if settings.show_compte_rebours_panier and cart.item_count > 0 %}
+                {% render 'cart-countdown-timer' %}
+            {% endif %}
+      
+            <div class="offcanvas-body">
+                {% if settings.cart_notice_show %}
+                    <div class="cart-notice description rte small text-center">
+                        {{ settings.cart_notice }}
+                    </div>
+                    <hr class="my-4">
+                {% endif %}
+                {% render 'cart-goal' %}
+                {% render 'cart-testimonials' %}
+                <div
+                    id="offcanvas-cart-alert-error" 
+                    class="offcanvas-cart-alert alert alert-danger fw-500 lh-sm py-3 mb-4" 
+                    role="alert"
+                    hidden>
+                    <div class="d-flex align-items-center small">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="me-3 flex-shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        <span>
+                            {% comment %} Messages injected via JS {% endcomment %}
+                        </span>
+                    </div>
+                </div>
+                <div
+                    id="offcanvas-cart-alert-add" 
+                    class="offcanvas-cart-alert alert alert-success fw-500 py-3 mb-4" 
+                    role="alert" 
+                    hidden>
+                    <div class="d-flex align-items-center small">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="me-3 flex-shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <span data-alert-item-added hidden>
+                            {{ 'cart.alert_item_added' | t }} 
+                        </span>
+                        <span data-alert-items-added hidden>
+                            {{ 'cart.alert_items_added' | t }} 
+                        </span>
+                    </div>
+                </div>
+                <div
+                    id="offcanvas-cart-alert-updated" 
+                    class="offcanvas-cart-alert alert alert-info fw-500 py-3 mb-4" 
+                    role="alert" 
+                    hidden>
+                    <div class="d-flex align-items-center small">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="me-3 flex-shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                        {{ 'cart.alert_cart_updated' | t }} 
+                    </div>
+                </div>
+                {% if cart.item_count == 0 %}
+                    {% unless settings.cart_drawer_empty_product_list == blank %}
+                        <div id="offcanvas-cart-empty-upsell" class="text-muted text-center mt-10 mb-12 small">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="opacity-75 mb-2" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <circle cx="10" cy="20.5" r="1"/><circle cx="18" cy="20.5" r="1"/><path d="M2.5 2.5h3l2.7 12.4a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6l1.6-8.4H7.1"/>
+                            </svg>
+                            {{ 'cart.empty_html' | t }} 
+                        </div>
+                        <h3 class="h6 border-bottom pb-3 mb-4">
+                            {{ 'cart.empty_products_title' | t }}
+                        </h3>
+                        {% render 'offcanvas-product-listing', products: settings.cart_drawer_empty_product_list %}
+                    {% else %}
+                        <div id="offcanvas-cart-empty" class="text-muted">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="opacity-75 mb-2" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <circle cx="10" cy="20.5" r="1"/><circle cx="18" cy="20.5" r="1"/><path d="M2.5 2.5h3l2.7 12.4a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6l1.6-8.4H7.1"/>
+                            </svg>
+                            {{ 'cart.empty_html' | t }} 
+                        </div>
+                    {% endunless %}
+                {% else %}
+                    <ul 
+                        class="product-listing list-unstyled mb-6" 
+                        aria-label="{{ 'general.accessibility.cart_product_list' | t }}">
+                        {% for line_item in cart.items %}
+                            {% unless line_item.product.handle == shipping_protect_item.handle and settings.hide_cart_shipping_protect_item %}
+                                <li class="product-item py-3"
+                                    data-cart-line-item
+                                    data-product-id="{{ line_item.product.id }}"
+                                    data-product-handle="{{ line_item.product.handle }}">
+                                    <div class="row align-items-center mx-n3">
+                                        <div class="col-4 px-3">
+                                            <a class="" href="{{ line_item.url }}">
+                                                <img 
+                                                    class="product-item-img img-fluid rounded {{ settings.offcanvas_img_thumbnail }} {{ settings.offcanvas_shadow_sp }} {{ settings.offcanvas_border_color }}"
+                                                    src="{{ line_item.image.src | image_url: width: img_width, height: img_height, crop: 'center' }}"
+                                                    alt="{{ line_item.image.alt | escape }}" 
+                                                    width="{{ img_width }}"
+                                                    height="{{ img_height }}" 
+                                                    loading="lazy">
+                                            </a>
+                                        </div>
+                                        <div class="col-8 px-3">
+                                            <h3 class="product-item-title h6 mb-1">
+                                                <a href="{{ line_item.url }}" class="link-dark">
+                                                    {{ line_item.product.title }}
+                                                </a>
+                                            </h3>
+                                            {% unless line_item.product.has_only_default_variant %}
+                                                <small class="d-block text-muted mb-1">
+                                                    {{ line_item.variant.title }}
+                                                </small>
+                                            {% endunless %}
+                                            {% unless line_item.selling_plan_allocation == empty %}
+                                                <small class="d-block text-muted mt-n1 mb-1">
+                                                    {{ line_item.selling_plan_allocation.selling_plan.name }}
+                                                </small>
+                                            {% endunless %}
+                                            {% unless line_item.properties == empty %}
+                                                <ul class="list-unstyled text-muted small mb-1">
+                                                    {% for property in line_item.properties %}
+                                                        {% assign first_character_in_key = property.first | slice: 0 %}
+                                                        {% unless first_character_in_key == '_' %} 
+                                                            <li>
+                                                                {% if property.last contains 'https' %}
+                                                                    {{ property.first }}: <a href="{{ property.last }}" target="_blank">{{ 'cart.view_file' | t }}</a>
+                                                                {% else %}
+                                                                    {{ property.first }}: {{ property.last }}
+                                                                {% endif %}
+                                                            </li>
+                                                        {% endunless %}
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endunless %}
+                                            <p class="product-item-price pt-2 mb-4">
+                                                {% if line_item.original_line_price != line_item.final_line_price %}
+                                                    <span class="product-item-price-final">
+                                                        <span class="visually-hidden">
+                                                            {{ 'product.price_sale' | t }} &nbsp;
+                                                        </span>
+                                                        {{ line_item.final_line_price | money }}
+                                                    </span>
+                                                    <span class="product-item-price-compare text-muted ms-1">
+                                                        <span class="visually-hidden">
+                                                            {{ 'product.price_regular' | t }} &nbsp;
+                                                        </span>
+                                                        <s>
+                                                            {{ line_item.original_line_price | money }}
+                                                        </s>
+                                                    </span>
+                                                {% elsif line_item.variant.compare_at_price > line_item.variant.price %}
+                                                    <span class="product-item-price-final">
+                                                        <span class="visually-hidden">
+                                                            {{ 'product.price_sale' | t }} &nbsp;
+                                                        </span>
+                                                        {{ line_item.final_line_price | money }}
+                                                    </span>
+                                                    <span class="product-item-price-compare text-muted ms-1">
+                                                        <span class="visually-hidden">
+                                                            {{ 'product.price_regular' | t }} &nbsp;
+                                                        </span>
+                                                        <s>
+                                                            {{ line_item.variant.compare_at_price | times: line_item.quantity | money }}
+                                                        </s>
+                                                    </span>
+                                                {% else %}
+                                                    <span class="product-item-price-final">
+                                                        {{ line_item.original_line_price | money }}
+                                                    </span>
+                                                {% endif %}
+                                            </p>
+                                            <div class="d-flex align-items-center">
+                                                <div class="quantity-wrapper">
+                                                    <button 
+                                                        class="btn"
+                                                        type="button"
+                                                        data-mode="minus"
+                                                        onclick="onClickQtyPlusMinus(this)" 
+                                                        aria-label="{{ 'general.accessibility.decrease_qty' | t }}">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                                                        </svg>
+                                                    </button>
+                                                    <input 
+                                                        id="updates_{{ line_item.key }}"
+                                                        class="form-control" 
+                                                        name="updates[]"
+                                                        type="text"
+                                                        value="{{ line_item.quantity }}"
+                                                        data-line-item-key="{{ line_item.key }}"
+                                                        data-min-qty="0"
+                                                        aria-label="{{ 'cart.quantity' | t }}"
+                                                        onchange="handleCartQuantityChange(this)">
+                                                    <button 
+                                                        class="btn btn-plus"
+                                                        type="button"
+                                                        data-mode="plus"
+                                                        onclick="onClickQtyPlusMinus(this)"
+                                                        aria-label="{{ 'general.accessibility.increase_qty' | t }}">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                            <line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                                <button 
+                                                    class="btn ms-2"
+                                                    type="button"
+                                                    data-remove-line-item
+                                                    data-line-item-key="{{ line_item.key }}"
+                                                    onclick="handleCartItemRemoval(this)"
+                                                    aria-label="{{ 'cart.remove' | t }}">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="opacity-60" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                        <polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line>
+                                                    </svg>
+                                                </button>
+                                            </div>    
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endunless %}
+                        {% endfor %}
+                    </ul>
+                    {% render 'cart-upsell' %}
+                    <hr class="">
+                    {% render 'cart-note' %}
+                    
+                    {% if settings.cart_drawer_show_shipping_rates %}
+                        <button 
+                            class="btn btn-sm d-flex align-items-center justify-content-center w-100 mb-5 {{ settings.cart_drawer_shipping_rates_btn_color }}"
+                            data-bs-toggle="modal"
+                            data-bs-target="#shipping-rates-modal">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-truck me-4" viewBox="0 0 16 16">
+                                <path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5v-7zm1.294 7.456A1.999 1.999 0 0 1 4.732 11h5.536a2.01 2.01 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456zM12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12v4zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"></path>
+                            </svg>
+                            {{ 'cart.shipping_rates.button_label' | t }}
+                        </button>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div class="offcanvas-footer border-top p-5">
+                {% if cart.item_count == 0 %}
+                    <button class="btn btn-outline-primary w-100" type="button" data-bs-dismiss="offcanvas">
+                        {{ 'cart.continue_shopping' | t }}
+                    </button>
+                {% else %}
+                    <p id="offcanvas-cart-subtotal" class="lead text-center mb-3">
+                        <span class="text-muted">
+                            {{ 'cart.subtotal' | t }}: 
+                        </span>
+                        <span>
+                            {% if cart.items_subtotal_price > cart.total_price %}
+                                <b>
+                                    {{ cart.total_price | money }}
+                                </b>
+                                <span class="visually-hidden">
+                                    {{ 'cart.subtotal_regular' | t }} &nbsp;
+                                </span>
+                                <s class="opacity-75 ms-2">
+                                    {{ cart.items_subtotal_price | money }}
+                                </s>
+                                <span class="visually-hidden">
+                                    {{ 'cart.subtotal_discounted' | t }} &nbsp;
+                                </span>
+                            {% else %}
+                                <b>
+                                    {{ cart.total_price | money }}
+                                </b>
+                            {% endif %}
+                        </span>
+                    </p>
+                    {% if settings.cart_taxes_shipping %}
+                        <p class="fs-6 text-muted text-center mt-n3 mb-4">
+                            {{ 'cart.taxes_shipping_at_checkout_html' | t }}
+                        </p>
+                    {% endif %}
+                    <form action="{{ routes.cart_url }}" class="" method="post">
+                        <button 
+                            class="btn-checkout btn btn-primary w-100 py-3 fs-5 d-flex align-items-center justify-content-center" 
+                            name="checkout" 
+                            type="submit" 
+                            onclick="handleCheckoutButtonClick(this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="me-3" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            {{ 'cart.checkout' | t }}
+                        </button>
+                    </form>
+                    {% if shipping_enabled %}
+                        {% render 'cart-shipping-protection' %}
+                    {% endif %}
+                    {% if settings.cart_drawer_show_cart_link %}
+                        <a class="btn btn-link btn-sm w-100 mt-1 text-dark" href="{{ routes.cart_url }}">
+                            {{ 'cart.view_cart' | t }}
+                        </a>
+                    {% endif %}
+                    {% if settings.cart_drawer_show_payment_icons %}
+                        <div class="payment-icons-wrapper text-center mt-3 mb-n2">
+                            {% render 'payment-icons' %}
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    
+        {% if settings.cart_drawer_show_shipping_rates %}
+            {% render 'cart-shipping-rates-modal' %}
+        {% endif %}
+    
+    {% endunless %}
+{% endunless %}

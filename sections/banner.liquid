@@ -1,0 +1,40 @@
+<section class="shop-banner" style="background-image: url({{ section.settings.background | image_url: width: 2000 }});">
+  <div class="shop-banner-content">
+    {% if section.settings.heading != blank %}
+      <h2>{{ section.settings.heading }}</h2>
+    {% endif %}
+    {% if section.settings.text != blank %}
+      <p>{{ section.settings.text }}</p>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Bannière",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "background",
+      "label": "Image de fond"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Titre",
+      "default": "Titre de la bannière"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Texte",
+      "default": "Texte descriptif ici"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bannière"
+    }
+  ]
+}
+{% endschema %}

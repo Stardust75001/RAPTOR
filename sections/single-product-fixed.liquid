@@ -1,0 +1,132 @@
+{% comment %}
+Section produit unique - Version corrigée
+{% endcomment %}
+
+<div class="single-product-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                {% if product.images.size > 0 %}
+                    <div class="product-gallery">
+                        <div class="main-image">
+                            <img src="{{ product.featured_image | img_url: 'master' }}" 
+                                 alt="{{ product.title }}" 
+                                 class="img-fluid rounded">
+                        </div>
+                        {% if product.images.size > 1 %}
+                            <div class="thumbnail-images mt-3">
+                                {% for image in product.images limit: 4 %}
+                                    <img src="{{ image | img_url: '150x150' }}" 
+                                         alt="{{ product.title }}" 
+                                         class="img-thumbnail me-2" 
+                                         style="width: 80px; height: 80px; object-fit: cover;">
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg img-fluid' }}
+                {% endif %}
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="product-info">
+                    {% if product.vendor != blank %}
+                        <p class="vendor text-muted mb-2">{{ product.vendor }}</p>
+                    {% endif %}
+                    
+                    <h1 class="product-title h2 mb-3">{{ product.title }}</h1>
+                    
+                    <div class="price-section mb-4">
+                        <span class="price h4 text-primary">
+                            {{ product.price | money }}
+                        </span>
+                        {% if product.compare_at_price > product.price %}
+                            <span class="compare-price text-muted text-decoration-line-through ms-2">
+                                {{ product.compare_at_price | money }}
+                            </span>
+                        {% endif %}
+                    </div>
+                    
+                    {% if product.description != blank %}
+                        <div class="product-description mb-4">
+                            {{ product.description }}
+                        </div>
+                    {% endif %}
+                    
+                    {% form 'product', product %}
+                        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                        
+                        {% if product.variants.size > 1 %}
+                            <div class="product-variants mb-3">
+                                {% for option in product.options_with_values %}
+                                    <div class="variant-option mb-2">
+                                        <label class="form-label">{{ option.name }}</label>
+                                        <select class="form-select" name="options[{{ option.name }}]">
+                                            {% for value in option.values %}
+                                                <option value="{{ value }}">{{ value }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        
+                        <div class="add-to-cart-section">
+                            <div class="quantity-selector mb-3">
+                                <label class="form-label">Quantité</label>
+                                <input type="number" name="quantity" value="1" min="1" class="form-control" style="width: 100px;">
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                <i class="fas fa-shopping-cart me-2"></i>
+                                Ajouter au panier
+                            </button>
+                        </div>
+                    {% endform %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "Produit unique",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Configuration générale"
+        },
+        {
+            "type": "text",
+            "id": "container",
+            "label": "Classe container",
+            "default": "container"
+        },
+        {
+            "type": "range",
+            "id": "pt",
+            "label": "Padding top",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 5
+        },
+        {
+            "type": "range",
+            "id": "pb",
+            "label": "Padding bottom",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 5
+        }
+    ],
+    "presets": [
+        {
+            "name": "Produit unique"
+        }
+    ]
+}
+{% endschema %}

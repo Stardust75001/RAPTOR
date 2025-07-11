@@ -1,0 +1,82 @@
+{
+  "sections": {
+    "template-cart": {
+      "type": "template-cart",
+      "settings": {
+        "bg_color": "",
+        "max_width": "1000",
+        "show_note": true,
+        "show_shipping_rates": true,
+        "show_testimonial": true,
+        "show_taxes_shipping": true,
+        "product_img_orientation": "square",
+        "product_img_thumbnail": "img-thumbnail",
+        "product_border_color": "border-primary",
+        "product_border_width": 1,
+        "product_shadow_sp": "shadow-2",
+        "product_title_size": "h5",
+        "pt": 11,
+        "pb": 13,
+        "mt": 0,
+        "mb": 0
+      }
+    },
+    "cec97695-70cf-4ad3-9308-d5839ef3066f": {
+      "type": "featured-products",
+      "settings": {
+        "products": [],
+        "collection": "",
+        "limit": 12,
+        "bg_color": "bg-light text-body",
+        "container": "container",
+        "text_align": "text-center",
+        "title": "Recommended for you",
+        "title_size": "h2",
+        "description": "<p>Add an optional description to this section</p>",
+        "description_size": "fs-5",
+        "product_card_style": "",
+        "product_img_mode": "gallery",
+        "product_img_orientation": "square",
+        "product_img_thumbnail": "img-thumbnail",
+        "product_border_color": "border-primary",
+        "product_shadow_sp": "shadow-4",
+        "product_show_sale_badge": true,
+        "product_sale_badge_color": "bg-success text-white",
+        "product_title_size": "h6",
+        "product_title_truncate": "text-truncate",
+        "product_show_vendor": true,
+        "product_show_color_swatches": true,
+        "product_show_atc_form": true,
+        "product_form_show_inventory": true,
+        "product_show_wishlist_btn": true,
+        "carousel_enable": true,
+        "carousel_arrows": true,
+        "carousel_pagination": true,
+        "carousel_easing": "cubic-bezier(.42,.65,.27,.99)",
+        "carousel_speed": 400,
+        "carousel_autoplay": false,
+        "carousel_interval": 5,
+        "carousel_per_move": "0",
+        "carousel_rewind": true,
+        "breakpoint_xs_partial": true,
+        "breakpoint_xs": 1,
+        "breakpoint_sm": 2,
+        "breakpoint_md": 2,
+        "breakpoint_lg": 3,
+        "breakpoint_xl": 4,
+        "breakpoint_xxl": 4,
+        "btn_text": "See more products",
+        "btn_url": "",
+        "btn_color": "btn-primary",
+        "pt": 10,
+        "pb": 10,
+        "mt": 0,
+        "mb": 0
+      }
+    }
+  },
+  "order": [
+    "template-cart",
+    "cec97695-70cf-4ad3-9308-d5839ef3066f"
+  ]
+}

@@ -1,0 +1,1282 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid
+    assign row_xs = section.settings.breakpoint_xs | prepend: 'row-cols-'
+    assign row_sm = section.settings.breakpoint_sm | prepend: 'row-cols-sm-'
+    assign row_md = section.settings.breakpoint_md | prepend: 'row-cols-md-'
+    assign row_lg = section.settings.breakpoint_lg | prepend: 'row-cols-lg-'
+    assign row_xl = section.settings.breakpoint_xl | prepend: 'row-cols-xl-'
+    assign row_xxl = section.settings.breakpoint_xxl | prepend: 'row-cols-xxl-'
+
+    assign limit = section.settings.limit
+
+    if shop.permanent_domain contains 'shopiweb'
+        assign limit = 18
+    endif
+
+    for filter in collection.filters
+        if filter.type == "price_range"
+           if filter.min_value.value != nil or filter.max_value.value != nil
+                assign active_filter_values = 1 | plus: active_filter_values
+            endif
+        else
+            assign active_filter_values = filter.active_values.size | plus: active_filter_values
+        endif
+    endfor
+
+    assign bundle_tiers = section.settings.bundle_tiers | split: ','
+%}
+
+<link href="{{ 'collection-bundle.css' | asset_url }}" rel="stylesheet">
+
+<script>
+window.shopiweb_bundle = {
+    tiers: '{{ section.settings.bundle_tiers }}',
+}
+</script>
+
+<script src="{{ 'collection-bundle.js' | asset_url }}" defer></script>
+
+<div 
+    id="collection-{{ collection.id }}" 
+    class="collection collection-bundle pb-11 {{ section.settings.text_align }}">
+    {% if section.settings.show_collection_img and collection.image != blank %}
+        <header class="collection-header collection-header-img py-12 py-xl-14 mb-8 mb-lg-9 enter-view">
+            <img
+                class="collection-header-img img-mobile d-lg-none"
+                src="{{ collection.image.src | image_url: width: 960 }}"
+                alt="{{ collection.image.alt | escape }}"
+                width="960"
+                height="{{ 960 | divided_by: collection.image.aspect_ratio | round }}"
+                loading="lazy"
+                style="opacity: {{ section.settings.img_opacity }};">
+            <img
+                class="collection-header-img img-desktop d-none d-lg-block"
+                src="{{ collection.image.src | image_url: width: 1920 }}"
+                alt="{{ collection.image.alt | escape }}"
+                width="1920"
+                height="{{ 1920 | divided_by: collection.image.aspect_ratio | round }}"
+                loading="lazy"
+                style="opacity: {{ section.settings.img_opacity }};">
+            {% if section.settings.img_blur > 0 %}
+                <div class="collection-header-img-blur" style="backdrop-filter: blur({{ section.settings.img_blur }}px);">
+                </div>
+            {% endif %}
+            <div class="container">
+                <div 
+                    class="animate__animated animate__faster opacity-0"
+                    {% if settings.effect_apply_title_enable %}
+                      data-animate-class="{{ settings.animation_title_name }}"
+                      style="animation-delay: 200ms;"
+                    {% endif %}>
+                    <h1 class="collection-title mb-0 {{ section.settings.title_size }}">
+                        {{ collection.title }}
+                        {% if settings.custom_svg_h2 != blank %}
+                          <div class="h2_svg animate__animated animate__faster opacity-0"
+                              {% if settings.effect_apply_svg_enable %} 
+                                data-animate-class="{{ settings.animation_svg_name }}"
+                                style="animation-delay: 400ms;"
+                              {% endif %}
+                          >
+                            <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {{ settings.custom_svg_h2 }}</span>
+                          </div>
+                        {% else %}
+                          {% if settings.svg_h2 != 'none' %}
+                            <div class="h2_svg mb-4 animate__animated animate__faster opacity-0"
+                                  {% if settings.effect_apply_svg_enable %} 
+                                    data-animate-class="{{ settings.animation_svg_name }}"
+                                    style="animation-delay: 400ms;"
+                                  {% endif %}>
+                              <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {% render 'svg-subtitle', svg_h2: settings.svg_h2 %}</span>
+                            </div>
+                          {% endif %}
+                        {% endif %}
+                    </h1>
+                </div>
+                {% if section.settings.show_collection_description and collection.description != blank %}
+                    <div 
+                        class="animate__animated animate__faster opacity-0"
+                        {% if settings.effect_apply_description_enable %} 
+                          data-animate-class="{{ settings.animation_description_name }}"
+                          style="animation-delay: 600ms;"
+                        {% endif %}>
+                        <div class="description rte mt-3 mb-0 {{ section.settings.description_size }}">
+                            {{ collection.description }}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </header>
+    {% else %}
+        <header class="collection-header pt-11 mb-8 mb-lg-9">
+            <div class="container">
+                <h1 class="collection-title mb-0 {{ section.settings.title_size }}">
+                    {{ collection.title }}
+                    {% if settings.custom_svg_h2 != blank %}
+                      <div class="h2_svg">
+                        <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {{ settings.custom_svg_h2 }}</span>
+                      </div>
+                    {% else %}
+                      {% if settings.svg_h2 != 'none' %}
+                        <div class="h2_svg mb-4">
+                          <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {% render 'svg-subtitle', svg_h2: settings.svg_h2 %}</span>
+                        </div>
+                      {% endif %}
+                    {% endif %}
+                </h1>
+                {% if section.settings.show_collection_description and collection.description != blank %}
+                    <div class="description rte mt-2 mb-0 {{ section.settings.description_size }}">
+                        {{ collection.description }}
+                    </div>
+                {% endif %}
+            </div>
+        </header>
+    {% endif %}
+
+    {% if section.settings.show_filters or section.settings.show_sort_by %}
+        <div id="collection-controls" class="mb-6">
+            <div class="{{ section.settings.container }}">
+                <div id="collection-controls-inner" class="bg-light py-4 px-4 rounded">
+                    {% if section.settings.show_filters %}
+                        <div class="d-flex">
+                            <button
+                                class="btn-filters btn d-flex align-items-center {{ section.settings.filters_btn_color }}"
+                                data-bs-toggle="offcanvas" 
+                                data-bs-target="#offcanvas-filters" 
+                                aria-controls="offcanvas-filters"
+                                aria-label="{{ 'collection.btn_filter_products' | t }}"
+                                type="button">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line>
+                                    <line x1="12" y1="21" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12" y2="3"></line>
+                                    <line x1="20" y1="21" x2="20" y2="16"></line>
+                                    <line x1="20" y1="12" x2="20" y2="3"></line>
+                                    <line x1="1" y1="14" x2="7" y2="14"></line>
+                                    <line x1="9" y1="8" x2="15" y2="8"></line>
+                                    <line x1="17" y1="16" x2="23" y2="16"></line>
+                                </svg>
+                                <span class="ms-3">
+                                    {{ 'collection.btn_filter_products' | t }}
+                                </span>
+                                {% if active_filter_values > 0 %}
+                                    <b class="badge bg-secondary ms-3">
+                                        {{ active_filter_values }}
+                                    </b>
+                                {% endif %}
+                            </button>
+                        </div>
+                    {% endif %}
+                    {% if section.settings.show_sort_by %}
+                        <div id="sort-by-wrapper" class="input-group">
+                            <label class="input-group-text" for="sort-by">
+                                {{ 'collection.sort_by' | t }}
+                            </label>
+                            <select id="sort-by" name="sort_by" class="form-select form-select-md" onchange="onChangeCollectionSortBy(value)">
+                                {% for option in collection.sort_options %}
+                                    <option value="{{ option.value }}" {% if option.value == collection.sort_by %}selected{% endif %}>
+                                        {{ option.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <span 
+                            id="collection-sort-by-notice" 
+                            class="visually-hidden" 
+                            aria-live="polite" 
+                            aria-atomic="true" 
+                            data-text-sort-by="{{ 'general.accessibility.sorted_by' | t }}">
+                            {{ 'general.accessibility.sorted_by' | t }}: {{ collection.sort_by }}
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="{{ section.settings.container }}">
+        <div class="row flex-lg-row-reverse">
+            <div class="col-lg-4 col-xxl-3">
+               <div id="card-bundle" class="card mt-lg-4 mb-5 {{ section.settings.bundle_card_shadow_sp }} {{ section.settings.bundle_card_border_color }}">
+                    <h3 class="card-header py-4 {{ section.settings.bundle_card_header_bg }} {{ section.settings.bundle_card_header_title_size }}">
+                        {{ section.settings.bundle_card_header_title }}
+                    </h3>
+                    <div class="card-body">
+                        <div class="bd-pss-wrapper">
+                            <ul class="bd-pss-tiers list-unstyled" aria-hidden="true">
+                                {% for tier in bundle_tiers %}
+                                    {% liquid
+                                        assign max_tier_value = bundle_tiers.last | split: ':' | first
+                                        assign tier_value = tier | split: ':' | first
+                                        assign tier_discount =  tier | split: ':' | last
+                                    %}
+                                    <li style="left: {{ max_tier_value | minus: tier_value | minus: max_tier_value | remove: '-' | times: 100 | divided_by: max_tier_value | round | append: '%' }}">
+                                        {{ tier_value | times: 100 | money_without_trailing_zeros }}
+                                        <div class="opacity-50 small">
+                                            {{ tier_discount | prepend: '-' | append: '%' }}
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <div class="bd-pss progress">
+                                <div 
+                                    class="progress-bar progress-bar-striped progress-bar-animated" 
+                                    role="progressbar" 
+                                    aria-label="{{ 'collection.custom_bundle.progress_label' | t }}" 
+                                    aria-valuenow="0" 
+                                    aria-valuemin="0" 
+                                    aria-valuemax="100" 
+                                    style="width: 0%"
+                                    data-color-uncompleted="{{ section.settings.bundle_progress_color_uncompleted }}"
+                                    data-color-completed="{{ section.settings.bundle_progress_color_completed }}">
+                                </div>
+                            </div>
+                            <p 
+                                class="progress-text small mt-2"
+                                data-text-uncompleted="{{ 'collection.custom_bundle.progress_uncompleted_text' | t }}"
+                                data-text-completed="{{ 'collection.custom_bundle.progress_completed_text' | t }}">
+                                -
+                            </p>
+                            <p class="d-flex justify-content-between fw-bold mb-0">
+                                <span>
+                                    {{ 'collection.custom_bundle.bundle_price' | t }}
+                                </span>
+                                <span data-bundle-price></span>
+                            </p>
+                            <p class="d-flex justify-content-between">
+                                <span>
+                                    {{ 'collection.custom_bundle.you_save' | t }}
+                                </span>
+                                <span data-bundle-discount></span>
+                            </p>
+                            <button
+                                class="bd-button-atc btn w-100 {{ section.settings.bundle_card_btn_atc }}" 
+                                type="button"
+                                data-text-add-to-cart="{{ 'collection.custom_bundle.button_atc_text' | t }}"
+                                disabled
+                                onclick="addBundleContentsToCart(this, event)"
+                                data-redirect-to-checkout="{{ section.settings.bundle_redirect_checkout }}">
+                                {{ 'collection.custom_bundle.button_atc_text' | t }}
+                            </button>
+                            <button
+                                class="bundle-view-contents btn btn-sm w-100 mt-3 {{ section.settings.bundle_card_btn_view_contents }}" 
+                                type="button"
+                                data-bs-target="#modal-bundle-contents"
+                                data-bs-toggle="modal">
+                                {{ 'collection.custom_bundle.button_view_contents_text' | t }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8 col-xxl-9">
+                {% paginate collection.products by limit %}
+                    {% if collection.products.size == 0 %}
+                        <p class="alert alert-warning">
+                            {{ 'collection.empty_html' | t }}
+                        </p>
+                    {% else %}
+                        <button 
+                            id="btn-load-previous"
+                            class="btn btn-outline-secondary btn-sm my-4" 
+                            data-previous-url="{{ paginate.previous.url }}" 
+                            onclick="onClickCollectionLoadPrevious(this, event)"
+                            {% unless paginate.previous %}hidden{% endunless %}>
+                            {{ 'collection.load_previous' | t }}
+                        </button>
+                        <ul class="product-listing list-unstyled row mx-n3 mx-lg-n4 mb-0 {{ section.settings.text_align }} {{ row_xs }} {{ row_sm }} {{ row_md }} {{ row_lg }} {{ row_xl }} {{ row_xxl }}">
+                            {% for product in collection.products %}
+                                {% render 'product-item-bundle', product: product, current_page: paginate.current_page %}
+                            {% endfor %}
+                        </ul>
+                        <div 
+                            id="paging-collection" 
+                            class="text-center mx-auto pt-8 pb-4" aria-hidden="true">
+                            <small class="d-block text-muted mb-3 fst-italic">
+                                {% assign paginate_count = paginate.current_offset | plus: collection.products.size %}
+                                {{ 'collection.paginate_count' | t: count: paginate_count, total: paginate.items }}
+                            </small>
+                            <div class="progress mb-0">
+                                {% assign collection_progress = paginate.items | minus: paginate.items | minus: paginate_count | times: 100.0 | divided_by: paginate.items | round | remove: '-' %}
+                                <div 
+                                    class="progress-bar bg-primary" 
+                                    role="progressbar" 
+                                    style="width: {{ collection_progress }}%;" 
+                                    aria-valuenow="{{ paginate_count }}" 
+                                    aria-valuemin="0" 
+                                    aria-valuemax="{{ paginate.items }}">
+                                </div>
+                            </div>
+                            {% if paginate.next %}
+                                <button 
+                                    class="button-loading-more btn btn-outline-primary d-inline-flex align-items-center mt-5 mb-0" 
+                                    data-next-url="{{ paginate.next.url }}" 
+                                    onclick="onClickCollectionLoadMore(this, event)"
+                                    aria-label="{{ 'general.accessibility.load_more_products' | t }}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="me-2" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+                                    </svg>
+                                    {{ 'collection.load_more' | t }}
+                                </button>
+                            {% endif %}
+                        </div>
+                        <div class="visually-hidden">
+                            {% if paginate.previous %}
+                                <a href="{{ paginate.previous.url }}">
+                                    {{ 'general.accessibility.previous_page' | t }}
+                                </a>
+                            {% endif %}
+                            {% if paginate.next %}
+                                <a href="{{ paginate.next.url }}">
+                                    {{ 'general.accessibility.next_page' | t }}
+                                </a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endpaginate %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% render 'offcanvas-filters' %}
+
+{% liquid 
+    case settings.offcanvas_img_orientation
+        when 'square'
+            assign img_width  = 600
+            assign img_height = 600
+        when 'landscape'
+            assign img_width  = 600
+            assign img_height = 480
+        when 'potrait'
+            assign img_width  = 480
+            assign img_height = 600
+    endcase
+%}
+    
+<div 
+    id="modal-bundle-contents"
+    class="modal fade" 
+    tabindex="-1" 
+    aria-labelledby="modal-bundle-contents-label" 
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="">
+                    <h2
+                        id="modal-bundle-contents-label"
+                        class="modal-title {{ settings.offcanvas_header_title_size }}">
+                        {{ 'collection.custom_bundle.bundle_contents_title' | t }}
+                    </h2>
+                </div>
+                <button 
+                    type="button" 
+                    class="btn-close" 
+                    data-bs-dismiss="modal"
+                    aria-label="{{ 'general.accessibility.close' | t }}">
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="bundle-contents-empty my-5 rte text-center" hidden>
+                    {{ 'collection.custom_bundle.bundle_contents_empty_html' | t }}
+                </div>
+                <ul 
+                    class="product-listing list-unstyled" 
+                    data-img-width="{{ img_width }}"
+                    data-img-height="{{ img_height }}"
+                    data-img-thumbnail="{{ settings.offcanvas_img_thumbnail }} {{ section.settings.product_shadow_sp }} {{ section.settings.product_border_color }}"
+                    data-text-quantity="{{ 'cart.quantity' | t }}"
+                    data-text-decrease-qty="{{ 'general.accessibility.decrease_qty' | t }}"
+                    data-text-increase-qty="{{ 'general.accessibility.increase_qty' | t }}"
+                    data-text-remove="{{ 'cart.remove' | t }}"
+                    hidden>
+                </ul>
+            </div>
+            <div class="modal-footer d-block">
+                <div class="">
+                    <p class="d-flex justify-content-between fw-bold mb-0">
+                        <span>
+                            {{ 'collection.custom_bundle.bundle_price' | t }}
+                        </span>
+                        <span data-bundle-price></span>
+                    </p>
+                    <p class="d-flex justify-content-between">
+                        <span>
+                            {{ 'collection.custom_bundle.you_save' | t }}
+                        </span>
+                        <span data-bundle-discount></span>
+                    </p>
+                    <button
+                        class="bd-button-atc btn w-100 {{ section.settings.bundle_card_btn_atc }}" 
+                        type="button"
+                        data-text-add-to-cart="{{ 'collection.custom_bundle.button_atc_text' | t }}"
+                        disabled
+                        onclick="addBundleContentsToCart(this, event)"
+                        data-redirect-to-checkout="{{ section.settings.bundle_redirect_checkout }}">
+                        {{ 'collection.custom_bundle.button_atc_text' | t }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="sticky-mobile-bundle-card" class="fixed-bottom bg-white text-body pt-4 px-5 pb-6 d-lg-none">
+    <p class="d-flex justify-content-between fw-bold mb-0">
+        <span>
+            {{ 'collection.custom_bundle.bundle_price' | t }}
+        </span>
+        <span data-bundle-price></span>
+    </p>
+    <p class="d-flex justify-content-between mb-4">
+        <span>
+            {{ 'collection.custom_bundle.you_save' | t }}
+        </span>
+        <span data-bundle-discount></span>
+    </p>
+    <button
+        class="bundle-view-contents btn w-100 {{ section.settings.bundle_card_btn_view_contents }}" 
+        type="button"
+        data-bs-target="#modal-bundle-contents"
+        data-bs-toggle="modal">
+        {{ 'collection.custom_bundle.button_view_contents_text' | t }}
+    </button>
+</div>
+
+{% render 'collection-card' %}
+
+{% schema %}
+{
+    "name": "Collection Bundle",
+    "settings": [
+        {
+            "type": "paragraph", 
+            "content": "Documentation FR : [Collection Bundle by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/page-collection\/collection-bundle)"
+        },
+        {
+            "type": "header",
+            "content": "General"
+        },
+        {
+            "type": "text",
+            "id": "bundle_tiers",
+            "label": "Paliers de l'offre groupée",
+            "default": "100:10,200:20,300:40",
+            "info": "Veuillez utiliser le format suivant pour définir vos paliers d'offres groupées et les remises correspondantes : prix total:remise[virgule]. De plus, il est préférable de définir les 'remises automatiques' correspondantes pour chacun de vos paliers."
+        },
+        {
+            "type": "checkbox",
+            "id": "bundle_redirect_checkout",
+            "label": "Rediriger vers le paiement",
+            "default": false,
+            "info": "Activez ce paramètre pour rediriger vos utilisateurs directement vers la caisse plutôt que d'afficher le panier (lorsqu'ils cliquent sur le bouton 'Ajouter le lot au panier')"
+        },
+        {
+            "type": "select",
+            "id": "container",
+            "label": "Conteneur",
+            "default": "container",
+            "options": [
+                { "value": "container", "label": "Conteneur" },
+                { "value": "container-fluid", "label": "Pleine largeur" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "text_align",
+            "label": "Alignement du texte",
+            "default": "text-start",
+            "options": [
+                { "value": "text-start", "label": "Gauche" },
+                { "value": "text-center", "label": "Centre" }
+            ]
+        },
+        {
+            "type": "range",
+            "id": "limit",
+            "label": "Produits par page",
+            "min": 10,
+            "max": 50,
+            "default": 48,
+            "step": 1
+        },
+        {
+            "type": "checkbox",
+            "id": "show_filters",
+            "label": "Afficher les filtres",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "filters_btn_color",
+            "label": "Couleur du bouton",
+            "default": "btn-outline-secondary",
+            "options": [
+                { "group": "Normal", "value": "btn-link", "label": "Lien" },
+                { "group": "Normal", "value": "btn-light", "label": "Claire" },
+                { "group": "Normal", "value": "btn-dark", "label": "Sombre" },
+                { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
+                { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
+                { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
+                { "group": "Normal", "value": "btn-success", "label": "Succès" },
+                { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+                { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
+                { "group": "Normal", "value": "btn-info", "label": "Info" },
+                { "group": "Contour", "value": "btn-outline-light", "label": "Contour Claire" },
+                { "group": "Contour", "value": "btn-outline-dark", "label": "Contour Sombre" },
+                { "group": "Contour", "value": "btn-outline-primary", "label": "Contour Primaire" },
+                { "group": "Contour", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
+                { "group": "Contour", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
+                { "group": "Contour", "value": "btn-outline-success", "label": "Contour Succès" },
+                { "group": "Contour", "value": "btn-outline-danger", "label": "Contour Danger" },
+                { "group": "Contour", "value": "btn-outline-warning", "label": "Contour Avertissement" },
+                { "group": "Contour", "value": "btn-outline-info", "label": "Contour Info" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "show_sort_by",
+            "label": "Afficher 'Trier par'",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "En-tête"
+        },
+        {
+            "type": "checkbox",
+            "id": "show_collection_img",
+            "label": "Afficher l'image",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "img_opacity",
+            "label": "Opacité de l'image",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "default": 0.7
+        },
+        {
+            "type": "range",
+            "id": "img_blur",
+            "label": "Flou de l'image",
+            "min": 0,
+            "max": 10,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "select",
+            "id": "title_size",
+            "label": "Taille du titre",
+            "default": "h1",
+            "options": [
+                { "group": "Titre Supérieur", "value": "display-1", "label": "Extra Extra Grand" },
+                { "group": "Titre Supérieur", "value": "display-2", "label": "Extra Grand" },
+                { "group": "Titre Supérieur", "value": "display-3", "label": "Ultra Grand" },
+                { "group": "Titre Supérieur", "value": "display-4", "label": "Super Grand" },
+                { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "show_collection_description",
+            "label": "Afficher la description de la collection",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "description_size",
+            "label": "Taille de description",
+            "default": "fs-5",
+            "options": [
+                { "group": "Description Standard", "value": "fs-1", "label": "Extra Grand" },
+                { "group": "Description Standard", "value": "fs-2", "label": "Super Grand" },
+                { "group": "Description Standard", "value": "fs-3", "label": "Très Grand" },
+                { "group": "Description Standard", "value": "fs-4", "label": "Grand" },
+                { "group": "Description Standard", "value": "fs-5", "label": "Moyen" },
+                { "group": "Description Standard", "value": "fs-6", "label": "Petit" } 
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Carte Bundle"
+        },
+        {
+            "type": "select",
+            "id": "bundle_card_header_bg",
+            "label": "Couleur d'en-tête de la carte",
+            "default": "bg-dark text-white",
+            "options": [
+                { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+                { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+                { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+                { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
+                { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+                { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Sombre" },
+                { "group": "Par défaut", "value": "", "label": "Corps (body)" },
+                { "group": "Alerte", "value": "bg-success text-white", "label": "Succès" },
+                { "group": "Alerte", "value": "bg-warning text-dark", "label": "Avertissement" },
+                { "group": "Alerte", "value": "bg-danger text-white", "label": "Danger" },
+                { "group": "Alerte", "value": "bg-info text-white", "label": "Info" }
+            ]
+        },
+        {
+            "type": "text",
+            "id": "bundle_card_header_title",
+            "label": "Titre d'en-tête de la carte",
+            "default": "Mon Offre Groupée"
+        },
+        {
+            "type": "select",
+            "id": "bundle_card_header_title_size",
+            "label": "Taille du titre d'en-tête de la carte",
+            "default": "h5",
+            "options": [
+                { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "bundle_card_border_color",
+            "label": "Couleur de la bordure",
+            "options": [
+                { "value": "", "label": "Default" },
+                { "value": "border-primary", "label": "Primaire" },
+                { "value": "border-secondary", "label": "Secondaire" },
+                { "value": "border-tertiary", "label": "Tertiaire" },
+                { "value": "border-dark", "label": "Sombre" },
+                { "value": "border-success", "label": "Succès" },
+                { "value": "border-warning", "label": "Avertissement" },
+                { "value": "border-danger", "label": "Danger" },
+                { "value": "border-info", "label": "Info" }
+            ],
+            "default": ""
+        },
+        {
+            "type": "select",
+            "id": "bundle_card_shadow_sp",
+            "label": "Ombre",
+            "options": [
+                { "value": "shadow-none", "label": "Aucune" },
+                { "value": "shadow-1", "label": "Ombre légère" },
+                { "value": "shadow-2", "label": "Ombre partiel" },
+                { "value": "shadow-3", "label": "Ombre profonde" },
+                { "value": "shadow-4", "label": "Ombre totale" }
+            ],
+            "default": "shadow-2"
+        },
+        {
+            "type": "select",
+            "id": "bundle_card_btn_atc",
+            "label": "Couleur du bouton 'Ajouter le lot au panier'",
+            "default": "btn-primary",
+            "options": [
+                { "group": "Normal", "value": "btn-link", "label": "Lien" },
+                { "group": "Normal", "value": "btn-light", "label": "Claire" },
+                { "group": "Normal", "value": "btn-dark", "label": "Sombre" },
+                { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
+                { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
+                { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
+                { "group": "Normal", "value": "btn-success", "label": "Succès" },
+                { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+                { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
+                { "group": "Normal", "value": "btn-info", "label": "Info" },
+                { "group": "Contour", "value": "btn-outline-light", "label": "Contour Claire" },
+                { "group": "Contour", "value": "btn-outline-dark", "label": "Contour Sombre" },
+                { "group": "Contour", "value": "btn-outline-primary", "label": "Contour Primaire" },
+                { "group": "Contour", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
+                { "group": "Contour", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
+                { "group": "Contour", "value": "btn-outline-success", "label": "Contour Succès" },
+                { "group": "Contour", "value": "btn-outline-danger", "label": "Contour Danger" },
+                { "group": "Contour", "value": "btn-outline-warning", "label": "Contour Avertissement" },
+                { "group": "Contour", "value": "btn-outline-info", "label": "Contour Info" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "bundle_card_btn_view_contents",
+            "label": "Couleur du bouton 'Afficher le contenu du lot'",
+            "default": "btn-outline-secondary",
+            "options": [
+                { "group": "Normal", "value": "btn-link", "label": "Lien" },
+                { "group": "Normal", "value": "btn-light", "label": "Claire" },
+                { "group": "Normal", "value": "btn-dark", "label": "Sombre" },
+                { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
+                { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
+                { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
+                { "group": "Normal", "value": "btn-success", "label": "Succès" },
+                { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+                { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
+                { "group": "Normal", "value": "btn-info", "label": "Info" },
+                { "group": "Contour", "value": "btn-outline-light", "label": "Contour Claire" },
+                { "group": "Contour", "value": "btn-outline-dark", "label": "Contour Sombre" },
+                { "group": "Contour", "value": "btn-outline-primary", "label": "Contour Primaire" },
+                { "group": "Contour", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
+                { "group": "Contour", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
+                { "group": "Contour", "value": "btn-outline-success", "label": "Contour Succès" },
+                { "group": "Contour", "value": "btn-outline-danger", "label": "Contour Danger" },
+                { "group": "Contour", "value": "btn-outline-warning", "label": "Contour Avertissement" },
+                { "group": "Contour", "value": "btn-outline-info", "label": "Contour Info" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Barre de progression du Bundle"
+        },
+        {
+            "type": "select",
+            "id": "bundle_progress_color_uncompleted",
+            "label": "Couleur - Inachevé",
+            "default": "bg-primary",
+            "options": [
+                { "group": "Principal", "value": "bg-primary", "label": "Primaire" },
+                { "group": "Principal", "value": "bg-secondary", "label": "Secondaire" },
+                { "group": "Principal", "value": "bg-tertiary", "label": "Tertiaire" },
+                { "group": "Intermédiaire", "value": "bg-dark", "label": "Sombre" },
+                { "group": "Alerte", "value": "bg-success", "label": "Succès" },
+                { "group": "Alerte", "value": "bg-warning", "label": "Avertissement" },
+                { "group": "Alerte", "value": "bg-danger", "label": "Danger" },
+                { "group": "Alerte", "value": "bg-info", "label": "Info" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "bundle_progress_color_completed",
+            "label": "Couleur - Complété",
+            "default": "bg-success",
+            "options": [
+                { "group": "Principal", "value": "bg-primary", "label": "Primaire" },
+                { "group": "Principal", "value": "bg-secondary", "label": "Secondaire" },
+                { "group": "Principal", "value": "bg-tertiary", "label": "Tertiaire" },
+                { "group": "Intermédiaire", "value": "bg-dark", "label": "Sombre" },
+                { "group": "Alerte", "value": "bg-success", "label": "Succès" },
+                { "group": "Alerte", "value": "bg-warning", "label": "Avertissement" },
+                { "group": "Alerte", "value": "bg-danger", "label": "Danger" },
+                { "group": "Alerte", "value": "bg-info", "label": "Info" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Produit"
+        },
+        {
+            "type": "select",
+            "id": "product_img_mode",
+            "label": "Mode image",
+            "options": [
+                { "value": "simple", "label": "Simple image" },
+                { "value": "hover", "label": "Changement au hover" },
+                { "value": "gallery", "label": "Gallerie d'images" }
+            ],
+            "default": "gallery"
+        },
+        {
+            "type": "select",
+            "id": "product_img_orientation",
+            "label": "Image orientation",
+            "default": "square",
+            "options": [
+                { "value": "square", "label": "Carré" },
+                { "value": "landscape", "label": "Paysage" },
+                { "value": "potrait", "label": "Portrait" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "product_img_thumbnail",
+            "label": "Bordure de l'image",
+            "default": "img-thumbnail",
+            "options": [
+                { "value": "", "label": "Aucune" },
+                { "value": "img-thumbnail", "label": "Bordure" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "product_border_color",
+            "label": "Couleur de la bordure",
+            "options": [
+                { "value": "", "label": "Default" },
+                { "value": "border-primary", "label": "Primaire" },
+                { "value": "border-secondary", "label": "Secondaire" },
+                { "value": "border-tertiary", "label": "Tertiaire" },
+                { "value": "border-dark", "label": "Sombre" },
+                { "value": "border-success", "label": "Succès" },
+                { "value": "border-warning", "label": "Avertissement" },
+                { "value": "border-danger", "label": "Danger" },
+                { "value": "border-info", "label": "Info" }
+            ],
+            "default": ""
+        },
+        {
+            "type": "select",
+            "id": "product_shadow_sp",
+            "label": "Ombre",
+            "options": [
+                { "value": "shadow-none", "label": "Aucune" },
+                { "value": "shadow-1", "label": "Ombre légère" },
+                { "value": "shadow-2", "label": "Ombre partiel" },
+                { "value": "shadow-3", "label": "Ombre profonde" },
+                { "value": "shadow-4", "label": "Ombre totale" }
+            ],
+            "default": "shadow-1"
+        },
+        {
+            "type": "checkbox",
+            "id": "product_show_sale_badge",
+            "label": "Afficher le badge de vente",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "product_sale_badge_color",
+            "label": "Couleur du badge de vente",
+            "default": "bg-success text-white",
+            "options": [
+                { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+                { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+                { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+                { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
+                { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+                { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Sombre" },
+                { "group": "Par défaut", "value": "", "label": "Corps (body)" },
+                { "group": "Alerte", "value": "bg-success text-white", "label": "Succès" },
+                { "group": "Alerte", "value": "bg-warning text-dark", "label": "Avertissement" },
+                { "group": "Alerte", "value": "bg-danger text-white", "label": "Danger" },
+                { "group": "Alerte", "value": "bg-info text-white", "label": "Info" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "product_title_size",
+            "label": "Taille du titre",
+            "default": "h6",
+            "options": [
+                { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "product_title_truncate",
+            "label": "Tronquer le titre",
+            "default": "",
+            "info": "Utile si les titres de vos produits sont longs",
+            "options": [
+                { "value": "", "label": "Non (default)" },
+                { "value": "text-truncate", "label": "Une ligne" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "product_show_vendor",
+            "label": "Afficher le distributeur",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "product_show_atc_form",
+            "label": "Afficher le bouton 'Ajouter au lot'",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "product_form_show_inventory",
+            "label": "Afficher l'inventaire dans le bouton 'Ajouter au lot'",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "product_show_wishlist_btn",
+            "label": "Afficher le bouton de la liste de souhaits",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Points d'arrêt",
+            "info": "Ajuster les éléments par diapositive en fonction de la résolution de l'écran"
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_xs",
+            "label": "Éléments par slide / xs",
+            "info": "Largeur d'écran : moins de 576px",
+            "min": 1,
+            "max": 3,
+            "step": 1,
+            "default": 2
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_sm",
+            "label": "Éléments par slide / sm",
+            "info": "Largeur d'écran : ≥576px",
+            "min": 1,
+            "max": 3,
+            "step": 1,
+            "default": 2
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_md",
+            "label": "Éléments par slide / md",
+            "info": "Largeur d'écran : ≥768px",
+            "min": 1,
+            "max": 4,
+            "step": 1,
+            "default": 2
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_lg",
+            "label": "Éléments par slide / lg",
+            "info": "Largeur d'écran : ≥992px",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "default": 3
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_xl",
+            "label": "Éléments par slide / xl",
+            "info": "Largeur d'écran : ≥1200px",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "default": 3
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_xxl",
+            "label": "Éléments par slide / xxl",
+            "info": "Largeur d'écran : ≥1400px",
+            "min": 1,
+            "max": 8,
+            "step": 1,
+            "default": 3
+        }
+    ],
+    "blocks": [
+        {
+            "type": "mobile",
+            "name": "Mobile",
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "General"
+                },
+                {
+                    "type": "range",
+                    "id": "inject",
+                    "label": "Injecter comme élément",
+                    "info": "Sélectionnez la position dans la liste des produits où la bannière s'affichera.",
+                    "min": 1,
+                    "max": 40,
+                    "default": 5,
+                    "step": 1
+                },
+                {
+                    "type": "select",
+                    "id": "bg_color",
+                    "label": "Couleur de l'arrière plan",
+                    "default": "bg-dark text-white",
+                    "options": [
+                        { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+                        { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+                        { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+                        { "group": "Intermédiaire", "value": "bg-white text-body", "label": "Blanc" },
+                        { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+                        { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Sombre" },
+                        { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" },
+                        { "group": "Alerte", "value": "bg-success text-white", "label": "Succès" },
+                        { "group": "Alerte", "value": "bg-warning text-white", "label": "Avertissement" },
+                        { "group": "Alerte", "value": "bg-danger text-white", "label": "Danger" },
+                        { "group": "Alerte", "value": "bg-info text-white", "label": "Info" }
+                    ]
+                },
+                {
+                    "type": "url",
+                    "id": "url",
+                    "label": "URL"
+                },
+                {
+                    "type": "header",
+                    "content": "Image"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "img",
+                    "label": "Image"
+                },
+                {
+                    "type": "range",
+                    "id": "img_opacity",
+                    "label": "Opacité image",
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.1,
+                    "default": 0.7
+                },
+                {
+                    "type": "header",
+                    "content": "Vidéo"
+                },
+                {
+                    "type": "video",
+                    "id": "video",
+                    "label": "Vidéo"
+                },
+                {
+                    "type": "range",
+                    "id": "vid_opacity",
+                    "label": "Opacité vidéo",
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.1,
+                    "default": 0.7
+                },
+                {
+                    "type": "checkbox",
+                    "id": "autoplay",
+                    "label": "Autoplay",
+                    "default": true
+                },
+                {
+                    "type": "checkbox",
+                    "id": "loop",
+                    "label": "Loop",
+                    "info": "(Vidéo en boucle)",
+                    "default": true
+                },
+                {
+                    "type": "checkbox",
+                    "id": "muted",
+                    "label": "Mute",
+                    "info": "(Vidéo muette)",
+                    "default": true
+                },
+                {
+                    "type": "checkbox",
+                    "id": "controls",
+                    "label": "Contrôles",
+                    "default": true
+                },
+                {
+                    "type": "header",
+                    "content": "Texte"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Titre",
+                    "default": "Nouvelle Collection"
+                },
+                {
+                    "type": "select",
+                    "id": "title_size",
+                    "label": "Taille du titre",
+                    "default": "h4",
+                    "options": [
+                        { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                        { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                        { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                        { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                        { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                        { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+                    ]
+                },
+                {
+                    "type": "richtext",
+                    "id": "description",
+                    "label": "Description (facultatif)",
+                    "default": "<p>Ajouter une description facultative à cette section</p>"
+                },
+                {
+                    "type": "text",
+                    "id": "btn_text",
+                    "label": "Texte du bouton",
+                    "default": "En savoir plus",
+                    "info": "Laisser vide pour désactiver"
+                }
+            ]
+        },
+        {
+            "type": "desktop",
+            "name": "Bureau",
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "General"
+                },
+                {
+                    "type": "range",
+                    "id": "inject",
+                    "label": "Injecter comme élément",
+                    "info": "Sélectionnez la position dans la liste des produits où la bannière s'affichera.",
+                    "min": 1,
+                    "max": 40,
+                    "default": 5,
+                    "step": 1
+                },
+                {
+                    "type": "select",
+                    "id": "bg_color",
+                    "label": "Couleur de l'arrière plan",
+                    "default": "bg-dark text-white",
+                    "options": [
+                        { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+                        { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+                        { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+                        { "group": "Intermédiaire", "value": "bg-white text-body", "label": "Blanc" },
+                        { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+                        { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Sombre" },
+                        { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" },
+                        { "group": "Alerte", "value": "bg-success text-white", "label": "Succès" },
+                        { "group": "Alerte", "value": "bg-warning text-white", "label": "Avertissement" },
+                        { "group": "Alerte", "value": "bg-danger text-white", "label": "Danger" },
+                        { "group": "Alerte", "value": "bg-info text-white", "label": "Info" }
+                    ]
+                },
+                {
+                    "type": "url",
+                    "id": "url",
+                    "label": "URL"
+                },
+                {
+                    "type": "header",
+                    "content": "Image"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "img",
+                    "label": "Image"
+                },
+                {
+                    "type": "range",
+                    "id": "img_opacity",
+                    "label": "Opacité image",
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.1,
+                    "default": 0.7
+                },
+                {
+                    "type": "header",
+                    "content": "Vidéo"
+                },
+                {
+                    "type": "video",
+                    "id": "video",
+                    "label": "Vidéo"
+                },
+                {
+                    "type": "range",
+                    "id": "vid_opacity",
+                    "label": "Opacité vidéo",
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.1,
+                    "default": 0.7
+                },
+                {
+                    "type": "checkbox",
+                    "id": "autoplay",
+                    "label": "Autoplay",
+                    "default": true
+                },
+                {
+                    "type": "checkbox",
+                    "id": "loop",
+                    "label": "Loop",
+                    "info": "(Vidéo en boucle)",
+                    "default": true
+                },
+                {
+                    "type": "checkbox",
+                    "id": "muted",
+                    "label": "Mute",
+                    "info": "(Vidéo muette)",
+                    "default": true
+                },
+                {
+                    "type": "checkbox",
+                    "id": "controls",
+                    "label": "Contrôles",
+                    "default": true
+                },
+                {
+                    "type": "header",
+                    "content": "Texte"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Titre",
+                    "default": "Nouvelle Collection"
+                },
+                {
+                    "type": "select",
+                    "id": "title_size",
+                    "label": "Taille du titre",
+                    "default": "h4",
+                    "options": [
+                        { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                        { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                        { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                        { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                        { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                        { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+                    ]
+                },
+                {
+                    "type": "richtext",
+                    "id": "description",
+                    "label": "Description (facultatif)",
+                    "default": "<p>Ajouter une description facultative à cette section</p>"
+                },
+                {
+                    "type": "text",
+                    "id": "btn_text",
+                    "label": "Texte du bouton",
+                    "default": "En savoir plus",
+                    "info": "Laisser vide pour désactiver"
+                }
+            ]
+        }
+    ],
+    "templates": ["collection"],
+    "presets": [
+        {
+            "name": "Collection Bundle",
+            "category": "Template"
+        }
+    ]
+}
+{% endschema %}

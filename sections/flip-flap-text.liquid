@@ -1,0 +1,575 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid 
+    assign pt = section.settings.pt | prepend: 'pt-'
+    assign pb = section.settings.pb | prepend: 'pb-'
+    assign mt = section.settings.mt | prepend: 'mt-'
+    assign mb = section.settings.mb | prepend: 'mb-'
+
+    assign bg_color = section.settings.bg_color
+
+    if section.settings.bg_gradient
+        assign bg_color = bg_color | append: ' bg-gradient'
+    endif
+
+    assign btn_shadow_sp = settings.btn_shadow_sp
+
+    assign card_bg_color = section.settings.card_bg_color
+    assign card_text_color = section.settings.card_text_color
+
+    assign counter_delay = section.settings.counter_delay
+
+    assign img_width = section.settings.brand_image_size
+%}
+
+{%- style -%}
+
+.counter-tick-{{ section.id }} .tick-flip-panel {
+    background-color: {{ card_bg_color }};
+    color: {{ card_text_color }};
+}
+
+.tick .tick-credits {
+    display: none !important;
+}
+
+.tick-char {
+    width:1.5em;
+} 
+
+.tick-text-inline {
+    display: inline-block;
+    text-align: center;
+    min-width: 1em;
+}
+
+.tick-flip {
+    border-radius: var(--bs-border-radius)!important; 
+}
+
+.preview-counter-{{ section.id }} {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+}
+
+.preview-counter-{{ section.id }}.hide-preview {
+    display: none;
+}
+
+.preview-counter-char-{{ section.id }} {
+    flex: 1 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1/1;
+    background-color: {{ card_bg_color }};
+    color: {{ card_text_color }};
+    border-radius: var(--bs-border-radius)!important;
+    font-size: 20px;
+}
+
+@media(min-width: 1024px) {
+  .tick-flip {
+       border-radius: var(--bs-border-radius)!important; 
+  }
+
+  .preview-counter-char-{{ section.id }} {
+      font-size: 70px;
+      border-radius: var(--bs-border-radius)!important;
+  }
+}
+{%- endstyle -%}
+
+<link href="{{ 'vendor-flip.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+<script src="{{ 'vendor-flip.min.js' | asset_url }}" defer></script>
+
+<section
+    id="flip-flap-{{ section.id }}" 
+    class="flip-flap enter-view {{ bg_color }} {{ section.settings.text_align }} {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+     <div class="{{ section.settings.container }}" style="max-width: {{ section.settings.max_width }}px;">
+        {% unless section.settings.subtitle_img == blank %}
+            <div 
+                class="animate__animated animate__faster opacity-0"
+                {% if settings.effect_apply_caption_enable %}
+                  data-animate-class="{{ settings.animation_caption_name }}"
+                  style="animation-delay: 1200ms;"
+                {% endif %}>
+                    <img
+                        class="img-fluid mb-5"
+                        src="{{ section.settings.subtitle_img.src | image_url: width: img_width }}"
+                        alt="{{ section.settings.subtitle_img.alt | escape }}"
+                        width="{{ img_width }}"
+                        height="auto"
+                        loading="lazy">
+                </div>
+        {% endunless %}
+        
+        {% unless section.settings.subtitle == blank %}
+            <div 
+                class="animate__animated animate__faster opacity-0"
+                {% if settings.effect_apply_caption_enable %}
+                  data-animate-class="{{ settings.animation_caption_name }}"
+                  style="animation-delay: 1000ms;"
+                {% endif %}>
+                    <p class="subtitle text-uppercase fw-500 mb-3 {{ section.settings.subtitle_size }}"
+                        style="color:{{ section.settings.color_caption }};">
+                        {{ section.settings.subtitle }}
+                    </p>
+            </div>
+        {% endunless %} 
+        {% unless section.settings.title == blank %}
+            <{{ section.settings.heading_tag }} class="title mb-4 {{ section.settings.title_size }} animate__animated animate__faster opacity-0"
+                {% if settings.effect_apply_title_enable %}
+                  data-animate-class="{{ settings.animation_title_name }}"
+                  style="animation-delay: 200ms;"
+                {% endif %}>
+                {{ section.settings.title }}
+                {% if settings.custom_svg_h2 != blank %}
+                  <div class="h2_svg animate__animated animate__faster opacity-0"
+                      {% if settings.effect_apply_svg_enable %} 
+                        data-animate-class="{{ settings.animation_svg_name }}"
+                        style="animation-delay: 400ms;"
+                      {% endif %}
+                  >
+                    <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {{ settings.custom_svg_h2 }}</span>
+                  </div>
+                {% else %}
+                  {% if settings.svg_h2 != 'none' %}
+                    <div class="h2_svg mb-4 animate__animated animate__faster opacity-0"
+                          {% if settings.effect_apply_svg_enable %} 
+                            data-animate-class="{{ settings.animation_svg_name }}"
+                            style="animation-delay: 400ms;"
+                          {% endif %}>
+                      <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {% render 'svg-subtitle', svg_h2: settings.svg_h2 %}</span>
+                    </div>
+                  {% endif %}
+                {% endif %}
+            </{{ section.settings.heading_tag }}>
+        {% endunless %}
+              
+        <div class="tick counter-tick-{{ section.id }} {{ section.settings.flipflap_text_font_family }} mt-6 mb-6" data-did-init="handleTickInit">
+            <div data-repeat="true" data-layout="horizontal fit" data-transform="upper -> split -> delay(random, 100, 150)">
+                <span data-view="flip" data-transform="ascii -> arrive -> round -> char(^[A-Za-z]*$)" class="tick-char"></span>
+            </div>
+        </div>
+        <div class="preview-counter-{{ section.id }}">
+          <div class="preview-counter-char-{{ section.id }}">S</div>
+          <div class="preview-counter-char-{{ section.id }}">H</div>
+          <div class="preview-counter-char-{{ section.id }}">O</div>
+          <div class="preview-counter-char-{{ section.id }}">P</div>
+          <div class="preview-counter-char-{{ section.id }}">I</div>
+          <div class="preview-counter-char-{{ section.id }}">F</div>
+          <div class="preview-counter-char-{{ section.id }}">Y</div>
+        </div>
+
+       {% unless section.settings.description == blank %}
+            <div class="description rte text-muted mt-n2 mb-5 {{ section.settings.description_size }} animate__animated animate__faster opacity-0"
+                {% if settings.effect_apply_description_enable %} 
+                  data-animate-class="{{ settings.animation_description_name }}"
+                  style="animation-delay: 600ms;"
+                {% endif %}>
+                {{ section.settings.description }}
+            </div>
+        {% endunless %}
+        {% unless section.settings.btn_text == blank %}
+            <a 
+                class="btn mb-1 {{ section.settings.btn_color }} {{ btn_shadow_sp }} {{ section.settings.btn_size }} animate__animated animate__faster opacity-0" 
+                href="{{ section.settings.btn_url }}"
+                {% if settings.effect_apply_btn_enable %} 
+                  data-animate-class="{{ settings.animation_btn_name }}"
+                  style="animation-delay: 800ms;"
+                {% endif %}>
+                {{ section.settings.btn_text }}
+            </a>
+        {% endunless %}
+    </div>
+</section>
+
+{% assign global_max = 0 %}
+{% for block in section.blocks %}
+    {% assign text_length = block.settings.text | split: '' %}
+    {% assign text_length = block.settings.text | size %}
+    {% if text_length > global_max %}
+        {% assign global_max = text_length %}
+    {% endif %}
+{% endfor %}
+
+<script>
+  function handleTickInit(tick) {
+
+        var rotation = [
+          {% for block in section.blocks %}{% assign text_length = block.settings.text | split: '' %}{% assign text_length = block.settings.text | size %}{% assign count = global_max | minus: text_length %}{% if forloop.last %}'{{ block.settings.text }}{% for i in (1..count) %}{{ ' ' }}{% endfor %}'{% else %}'{{block.settings.text}}{% for i in (1..count) %}{{ ' ' }}{% endfor %}',{% endif %}{% endfor %}
+        ];
+
+        // Index de rotation actuel (commence au premier mot)
+        var index = 0;
+
+        Tick.helper.interval(function(){
+
+            tick.value = rotation[index];
+
+            index = index < rotation.length - 1 ? index + 1 : 0;
+
+        }, {{ counter_delay | times: 1000 }});
+
+    }
+  
+  function initCounter() {
+    document.querySelector('.preview-counter-{{ section.id }}').classList.add('hide-preview');
+    handleTickInit(document.querySelector('.counter-tick-{{ section.id }}'));  
+  }
+
+  document.addEventListener('DOMContentLoaded', initCounter);
+  
+  if (Shopify.designMode) {
+     document.addEventListener('shopify:section:unload', initCounter);
+     document.addEventListener('shopify:section:load', initCounter);
+  }
+  
+</script>
+
+{% schema %}
+  {
+    "name": "Flip Flap Texte",
+    "limit": 1,
+    "settings": [
+      {
+          "type": "paragraph", 
+          "content": "Documentation FR : [Flip Flap Texte by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/sections\/flip-flap-texte)"
+      },
+      {
+          "type": "header",
+          "content": "General"
+      },
+      {
+          "type": "select",
+          "id": "bg_color",
+          "label": "Couleur de l'arrière plan",
+          "default": "bg-body text-body",
+          "options": [
+              { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+              { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+              { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+              { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
+              { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+              { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Sombre" },
+              { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" }
+          ]
+      },
+      {
+          "type": "checkbox",
+          "id": "bg_gradient",
+          "label": "Dégradé d'arrière-plan",
+          "default": false,
+          "info": "Ne s'applique pas aux couleurs claires"
+      },
+      {
+          "type": "select",
+          "id": "container",
+          "label": "Conteneur",
+          "default": "container",
+          "options": [
+              { "value": "container", "label": "Conteneur" },
+              { "value": "container-fluid", "label": "Pleine largeur" }
+          ]
+      },
+      {
+          "type": "text",
+          "id": "max_width",
+          "label": "Largeur maximale (px)",
+          "info": "Ajuster la largeur du conteneur (en pixels)",
+          "default": "991"
+      },
+      {
+          "type": "select",
+          "id": "text_align",
+          "label": "Alignement du texte",
+          "default": "text-center",
+          "options": [
+              { "value": "text-start", "label": "Gauche" },
+              { "value": "text-center", "label": "Centre" }
+          ]
+      },
+      {
+          "type": "header",
+          "content": "En-tête de la section"
+      },
+      {
+          "type": "image_picker",
+          "id": "subtitle_img",
+          "label": "Légende Image"
+      },
+      {
+          "type": "text",
+          "id": "brand_image_size",
+          "label": "Image Largeur/Hauteur (px)",
+          "default": "60"
+      },
+      {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Légende Texte"
+      },
+      {
+          "type": "select",
+          "id": "subtitle_size",
+          "label": "Taille de la légende",
+          "default": "fs-5",
+          "options": [
+              { "group": "Légende Standard", "value": "fs-1", "label": "Extra Grand" },
+              { "group": "Légende Standard", "value": "fs-2", "label": "Super Grand" },
+              { "group": "Légende Standard", "value": "fs-3", "label": "Très Grand" },
+              { "group": "Légende Standard", "value": "fs-4", "label": "Grand" },
+              { "group": "Légende Standard", "value": "fs-5", "label": "Moyen" },
+              { "group": "Légende Standard", "value": "fs-6", "label": "Petit" } 
+          ]
+      },
+      {
+          "type": "color",
+          "id": "color_caption",
+          "label": "Couleur de la légende",
+          "default": "#6c757d"
+      },
+      {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "Titre",
+          "default": "Flip Flap Texte"
+      },
+      {
+          "type": "select",
+          "id": "heading_tag",
+          "label": "Balise titre (SEO)",
+          "default": "h2",
+          "options": [
+              { "value": "h1", "label": "h1" },
+              { "value": "h2", "label": "h2" },
+              { "value": "h3", "label": "h3" },
+              { "value": "h4", "label": "h4" },
+              { "value": "h5", "label": "h5" },
+              { "value": "h6", "label": "h6" },
+              { "value": "span", "label": "Aucune" }
+          ]
+      },
+      {
+          "type": "select",
+          "id": "title_size",
+          "label": "Taille du titre",
+          "default": "h2",
+          "options": [
+              { "group": "Titre Supérieur", "value": "display-1", "label": "Extra Extra Grand" },
+              { "group": "Titre Supérieur", "value": "display-2", "label": "Extra Grand" },
+              { "group": "Titre Supérieur", "value": "display-3", "label": "Ultra Grand" },
+              { "group": "Titre Supérieur", "value": "display-4", "label": "Super Grand" },
+              { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+              { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+              { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+              { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+              { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+              { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+          ]
+      },
+      {
+        "type": "header",
+        "content": "Réglages du compteur"
+      },
+      {
+        "type": "range",
+        "id": "counter_delay",
+        "min": 1,
+        "max": 10,
+        "step": 0.1,
+        "unit": "s",
+        "label": "Délai du compteur",
+        "default": 4
+      },
+      {
+          "type": "select",
+          "id": "flipflap_text_font_family",
+          "label": "Police d'écriture",
+          "default": "",
+          "options": [
+              { "value": "", "label": "Par défaut" },
+              { "value": "headings-font-family", "label": "Titres" }
+          ]
+      },
+      {
+          "type": "color",
+          "label": "Couleur de fond de la carte",
+          "id": "card_bg_color",
+          "default": "#333232"
+      },
+      {
+          "type": "color",
+          "label": "Couleur du texte de la carte",
+          "id": "card_text_color",
+          "default": "#FFFFFF"
+      },
+      {
+          "type": "header",
+          "content": "Description"
+      },
+      {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description (facultatif)",
+          "default": "<p>Ajouter une description facultative à cette section</p>"
+      },
+      {
+          "type": "select",
+          "id": "description_size",
+          "label": "Taille de description",
+          "default": "fs-5",
+          "options": [
+              { "group": "Description Standard", "value": "fs-1", "label": "Extra Grand" },
+              { "group": "Description Standard", "value": "fs-2", "label": "Super Grand" },
+              { "group": "Description Standard", "value": "fs-3", "label": "Très Grand" },
+              { "group": "Description Standard", "value": "fs-4", "label": "Grand" },
+              { "group": "Description Standard", "value": "fs-5", "label": "Moyen" },
+              { "group": "Description Standard", "value": "fs-6", "label": "Petit" } 
+          ]
+      },
+      {
+          "type": "header",
+          "content": "Bouton"
+      },
+      {
+          "type": "text",
+          "id": "btn_text",
+          "label": "Texte du bouton",
+          "info": "Laisser vide pour désactiver"
+      },
+      {
+          "type": "url",
+          "id": "btn_url",
+          "label": "URL du bouton"
+      },
+      {
+          "type": "select",
+          "id": "btn_color",
+          "label": "Couleur du bouton",
+          "default": "btn-primary",
+          "options": [
+              { "group": "Normal", "value": "btn-link", "label": "Lien" },
+              { "group": "Normal", "value": "btn-light", "label": "Claire" },
+              { "group": "Normal", "value": "btn-dark", "label": "Sombre" },
+              { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
+              { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
+              { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
+              { "group": "Normal", "value": "btn-success", "label": "Succès" },
+              { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+              { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
+              { "group": "Normal", "value": "btn-info", "label": "Info" },
+              { "group": "Contour", "value": "btn-outline-light", "label": "Contour Claire" },
+              { "group": "Contour", "value": "btn-outline-dark", "label": "Contour Sombre" },
+              { "group": "Contour", "value": "btn-outline-primary", "label": "Contour Primaire" },
+              { "group": "Contour", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
+              { "group": "Contour", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
+              { "group": "Contour", "value": "btn-outline-success", "label": "Contour Succès" },
+              { "group": "Contour", "value": "btn-outline-danger", "label": "Contour Danger" },
+              { "group": "Contour", "value": "btn-outline-warning", "label": "Contour Avertissement" },
+              { "group": "Contour", "value": "btn-outline-info", "label": "Contour Info" }
+          ]
+      },
+      {
+          "type": "select",
+          "id": "btn_size",
+          "label": "Taille du bouton",
+          "default": "btn-md",
+          "options": [
+              { "value": "btn-sm", "label": "Petit" },
+              { "value": "btn-md", "label": "Normal" },
+              { "value": "btn-lg", "label": "Large" }
+          ]
+      },
+      {
+          "type": "header",
+          "content": "Espacement de la section"
+      },
+      {
+          "type": "range",
+          "id": "pt",
+          "label": "Padding supérieure",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 0
+      },
+      {
+          "type": "range",
+          "id": "pb",
+          "label": "Padding inférieure",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 0
+      },
+      {
+          "type": "range",
+          "id": "mt",
+          "label": "Marge supérieure",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 0
+      },
+      {
+          "type": "range",
+          "id": "mb",
+          "label": "Marge inférieure",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 0
+      }
+    ],
+    "blocks": [
+      {
+        "type": "item",
+        "name": "Item",
+        "limit": 5,
+        "settings": [
+          {
+            "type": "text",
+            "label": "Texte",
+            "id": "text"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Flip Flap Texte",
+        "blocks": [
+          {
+            "type": "item",
+            "settings": {
+              "text": "Compteur"
+            }
+          },
+          {
+            "type": "item",
+            "settings": {
+              "text": "Shopiweb"
+            }
+          },
+          {
+            "type": "item",
+            "settings": {
+              "text": "Shopify"
+            }
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

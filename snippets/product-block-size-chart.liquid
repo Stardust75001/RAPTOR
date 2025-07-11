@@ -1,0 +1,52 @@
+{% assign block = section.blocks | where: 'type', 'size_chart' | first %}
+
+{% if block %}
+    <div 
+        id="size-chart-modal"
+        class="modal fade" 
+        tabindex="-1" 
+        aria-labelledby="size-chart-modal-label" 
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="">
+                        <h2 id="modal-upsell-product-label"
+                            class="modal-title h4">
+                            {{ block.settings.title }}
+                        </h2>
+                    </div>
+                    <button 
+                        type="button" 
+                        class="btn-close" 
+                        data-bs-dismiss="modal"
+                        aria-label="{{ 'general.accessibility.close' | t }}">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="size-chart-block d-flex align-items-center mb-5">
+                        {% unless block.settings.img == blank %}
+                            <img 
+                                class="img-fluid me-4"
+                                src="{{ block.settings.img | image_url: width: 240 }}" 
+                                alt=" {{ block.settings.img.alt }}"
+                                width="120"
+                                height="{{ 120 | divided_by: block.settings.img.aspect_ratio | round }}"
+                                loading="lazy">
+                        {% endunless %}
+                        {% unless block.settings.description == blank %}
+                            <div class="rte mb-4">
+                                {{ block.settings.description }}
+                            </div>
+                        {% endunless %}
+                    </div>
+                    {% unless block.settings.page == blank %}
+                        <div class="size-chart-page">
+                            {{ block.settings.page.content }}
+                        </div>
+                    {% endunless %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}

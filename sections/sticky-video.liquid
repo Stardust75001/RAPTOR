@@ -1,0 +1,261 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% if section.settings.double_max_width %}
+  <style>
+      #sticky-video-{{ section.id }}:hover,
+      #sticky-video-{{ section.id }}:focus {
+          max-width: {{ section.settings.max_width | times: 2 }}px !important;
+      }
+      @media only screen and (max-width: 768px) {
+        #sticky-video-{{ section.id }}:hover,
+        #sticky-video-{{ section.id }}:focus {
+          max-width: {{ section.settings.max_width | times: 1.8 }}px !important;
+        }
+      }
+      #sticky-video-{{ section.id }}:hover .video-wrapper-product .product-price,
+      #sticky-video-{{ section.id }}:focus .video-wrapper-product .product-price {
+          visibility: visible;
+          opacity: 1;
+          height: auto;
+      }
+  </style>
+{% endif %}
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var stickyATC = document.getElementById('sticky-atc');
+    var currencySelector = document.getElementById('currency-selector');
+    var whatsappWrapper = document.querySelector('.eg-whatsapp-wrapper');
+    var stickyVideo = document.querySelector('.sticky-video');
+
+    function updateStickyVideoStyle() {
+      var bottomValue = '1rem'; // Valeur par défaut
+
+      if (window.innerWidth <= 768) { // Vérifier si c'est un mobile
+        bottomValue = '1rem'; // Valeur par défaut si stickyVideo est seul
+
+        if (stickyATC && stickyATC.classList.contains('show')) {
+          // Avec stickyATC
+          bottomValue = '6rem'; // Valeur par défaut si stickyVideo est seul avec stickyATC
+
+          if (currencySelector && whatsappWrapper) {
+            bottomValue = '11.6rem'; // stickyVideo avec currencySelector et whatsappWrapper
+          } else if (currencySelector) {
+            bottomValue = '8rem'; // stickyVideo avec currencySelector
+          } else if (whatsappWrapper) {
+            bottomValue = '9rem'; // stickyVideo avec whatsappWrapper
+          }
+        } else {
+          // Sans stickyATC
+          if (currencySelector && whatsappWrapper) {
+            bottomValue = '7rem'; // stickyVideo avec currencySelector et whatsappWrapper
+          } else if (currencySelector) {
+            bottomValue = '3rem'; // stickyVideo avec currencySelector
+          } else if (whatsappWrapper) {
+            bottomValue = '5rem'; // stickyVideo avec whatsappWrapper
+          }
+        }
+      } else { // Desktop
+        if (currencySelector && whatsappWrapper) {
+          bottomValue = '7rem'; // stickyVideo avec whatsappWrapper en desktop
+        } else if (currencySelector) {
+            bottomValue = '3rem'; // stickyVideo avec currencySelector
+        } else if (whatsappWrapper) {
+            bottomValue = '5rem'; // stickyVideo avec whatsappWrapper
+          }
+      }
+
+      stickyVideo.style.bottom = bottomValue;
+    }
+
+    // Appliquer le style initial et observer les changements
+    updateStickyVideoStyle();
+
+    var observer = new MutationObserver(function() {
+      updateStickyVideoStyle();
+    });
+
+    observer.observe(document.body, { attributes: true, subtree: true });
+
+    // Écouter les événements de redimensionnement de la fenêtre
+    window.addEventListener('resize', updateStickyVideoStyle);
+  });
+</script>
+
+<section 
+    id="sticky-video-{{ section.id }}" 
+    class="sticky-video"
+    data-show-after="{{ section.settings.show_after }}"
+    data-closing-delay="{{ section.settings.closing_delay }}"
+    style="
+        max-width: {{ section.settings.max_width }}px;
+        z-index: {{ section.settings.z_index }}
+    ">
+    {{ section.settings.video | video_tag: class: 'rounded', image_size: '600x', autoplay: section.settings.autoplay, loop: section.settings.loop, muted: section.settings.muted, controls: section.settings.controls }}
+    {% unless section.settings.product == blank %}
+        {% assign product = section.settings.product %}
+        <a class="video-wrapper-product rounded p-4" href="{{ product.url }}">
+            <div class="row align-items-center mx-n3">
+                <div class="col-4 px-3">
+                    <img 
+                        class="img-fluid rounded"
+                        src="{{ product.featured_image.src | image_url: width: 120, height: 120, crop: 'center' }}" 
+                        alt="{{ product.featured_image.alt | escape }}"
+                        width="120"
+                        height="120"
+                        loading="lazy">
+                </div>
+                <div class="col-8 px-3">
+                    <p class="product-title m-0 lh-sm small {{ section.settings.product_title_truncate }}">
+                        {{ product.title }}
+                    </p>
+                    <p class="product-price mt-1 mb-0 lh-sm small">
+                        {{ product.price | money }}
+                        {% if product.compare_at_price > product.price %}
+                            <span class="opacity-75 me-1">
+                                <span class="visually-hidden">
+                                    {{ 'product.price_regular' | t }} &nbsp;
+                                </span>
+                                <s>{{ product.compare_at_price | money }}</s>
+                            </span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </a>
+    {% endunless %}
+    <button class="btn-close-custom" type="button" aria-label="{{ 'general.accessibility.close' | t }}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line>
+        </svg>
+    </button>
+</section>
+
+{% schema %}
+{
+    "name": "🏆 Vidéo Sticky",
+    "limit": 1,
+    "enabled_on": {
+        "groups": ["footer"]
+    },
+    "settings": [
+        {
+          "type": "header",
+          "content": "🏆 Application Vidéo Sticky",
+          "info": "👉 Application Version Shopiweb Premium"
+        },
+        {
+            "type": "paragraph", 
+            "content": "Documentation FR : [Vidéo Sticky by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/sections\/video-sticky)"
+        },
+        {
+            "type": "video",
+            "id": "video",
+            "label": "Vidéo"
+        },
+        {
+            "type": "checkbox",
+            "id": "autoplay",
+            "label": "Autoplay",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "loop",
+            "label": "Loop",
+            "info": "(Vidéo en boucle)",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "muted",
+            "label": "Mute",
+            "info": "(Vidéo muette)",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "controls",
+            "label": "Contrôles",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "General"
+        },
+        {
+            "type": "text",
+            "id": "max_width",
+            "label": "Vidéo Largeur max. (px)",
+            "default": "180"
+        },
+        {
+            "type": "checkbox",
+            "id": "double_max_width",
+            "label": "Doublement de la largeur maximale en cas de survol ou de clic",
+            "default": true
+        },
+        {
+            "type": "text",
+            "id": "z_index",
+            "label": "Z-index",
+            "info": "Ajustez cette valeur si la vidéo se superpose à d'autres éléments.",
+            "default": "1020"
+        },
+        {
+            "type": "range",
+            "id": "show_after",
+            "label": "Délai vidéo (en secondes)",
+            "info": "Afficher la vidéo après x secondes.",
+            "min": 0,
+            "max": 10,
+            "default": 3,
+            "step": 1
+        },
+        {
+            "type": "range",
+            "id": "closing_delay",
+            "label": "Délai de fermeture (en heures)",
+            "info": "Temps en heures qui doit s'écouler avant que la vidéo ne soit à nouveau diffusée lorsque l'utilisateur clique sur le bouton de fermeture.",
+            "min": 1,
+            "max": 72,
+            "default": 24,
+            "step": 1
+        },
+        {
+            "type": "header",
+            "content": "Produit"
+        },
+        {
+            "type": "product",
+            "id": "product",
+            "label": "Produit",
+            "info": "Laisser vide pour désactiver"
+        },
+        {
+            "type": "select",
+            "id": "product_title_truncate",
+            "label": "Tronquer le titre",
+            "default": "text-truncate",
+            "info": "Utile si les titres de vos produits sont longs",
+            "options": [
+                { "value": "", "label": "Non (default)" },
+                { "value": "text-truncate", "label": "Une ligne" }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "🏆 Vidéo Sticky",
+            "category": "Media"
+        }
+    ]
+}
+{% endschema %}

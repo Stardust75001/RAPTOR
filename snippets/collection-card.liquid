@@ -1,0 +1,58 @@
+{% for block in section.blocks %}
+    <li
+        class="
+            collection-card 
+            p-3 p-lg-4 mb-4
+            {% if block.type == 'mobile' %}d-sm-none{% else %}d-none d-sm-block{% endif %}
+        "
+        data-inject="{{ block.settings.inject }}" {{ block.shopify_attributes }}>
+        {% if block.settings.url != nil %}
+            <a href="{{ block.settings.url }}">
+        {% endif %}
+            <div 
+                class="collection-card-inner {{ block.settings.bg_color }} {{ section.settings.product_img_thumbnail }} {{ section.settings.product_shadow_sp }} {{ section.settings.product_border_color }}">
+
+                {% if block.settings.video != nil %}
+                    <div style="opacity: {{ block.settings.vid_opacity }};">
+                        {{ block.settings.video | video_tag: 
+                            class: 'rounded', 
+                            image_size: '600x', 
+                            autoplay: block.settings.autoplay, 
+                            loop: block.settings.loop, 
+                            muted: block.settings.muted, 
+                            controls: block.settings.controls
+                        }}
+                    </div>
+                {% elsif block.settings.img != nil %}
+                    <img
+                        class="img-fluid rounded"
+                        src="{{ block.settings.img.src | image_url: width: 800 }}"
+                        alt="{{ block.settings.img.alt | escape }}"
+                        width="800"
+                        height="{{ 800 | divided_by: block.settings.img.aspect_ratio | round }}"
+                        loading="lazy"
+                        style="opacity: {{ block.settings.img_opacity }};">
+                {% endif %}
+                <div class="position-relative px-4">
+                    {% unless block.settings.title == blank %}
+                        <h3 class="title mb-4 {{ block.settings.title_size }} ">
+                            {{ block.settings.title }}
+                        </h3>
+                    {% endunless %}
+                    {% unless block.settings.description == blank %}
+                        <div class="description rte mt-n2 mb-4 small">
+                            {{ block.settings.description }}
+                        </div>
+                    {% endunless %}
+                    {% unless block.settings.btn_text == blank %}
+                        <p class="btn btn-link mb-0">
+                            {{ block.settings.btn_text }}
+                        </p>
+                    {% endunless %}
+                </div>
+            </div>
+        {% if block.settings.url != nil %}
+            </a>
+        {% endif %}
+    </li>
+{% endfor %}

@@ -1,0 +1,38 @@
+{% liquid 
+    assign mt = block.settings.mt | prepend: 'mt-'
+    assign mb = block.settings.mb | prepend: 'mb-'
+%}
+
+<div class="product-block-media {{ mt }} {{ mb }}" {{ block.shopify_attributes }}>
+    {% unless block.settings.image == blank %}
+        <div class="mb-4">
+            <img
+                class="img-fluid rounded w-100 img-thumbnail"
+                src="{{ block.settings.image.src | image_url: width: 800 }}"
+                alt="{{ block.settings.image.alt | escape }}"
+                width="800"
+                height="{{ 800 | divided_by: block.settings.img.aspect_ratio | round }}"
+                loading="lazy">
+          </div>
+    {% endunless %}
+    
+    {% unless block.settings.video == blank %}
+      <div class="mb-3">
+        {% assign video_class = 'img-thumbnail rounded w-100' %}
+        {{ block.settings.video | video_tag: class: video_class, image_size: '800x', autoplay: block.settings.autoplay, loop: block.settings.loop, muted: block.settings.muted, controls: block.settings.controls }}
+      </div>
+    {% endunless %}
+    
+    {% unless block.settings.external_video == blank %}
+        <div class="ratio ratio-16x9 mb-3">
+            <iframe
+                class="rounded img-thumbnail"
+                src="https://www.youtube.com/embed/{{ block.settings.external_video.id }}"
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+                frameborder="0"
+                allowfullscreen
+                loading="lazy">
+            </iframe>
+        </div>
+    {% endunless %}
+</div>

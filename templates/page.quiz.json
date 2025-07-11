@@ -1,0 +1,201 @@
+{
+  "sections": {
+    "quiz_qTRKep": {
+      "type": "quiz",
+      "blocks": {
+        "item_N7j7Tw": {
+          "type": "item",
+          "settings": {
+            "title": "Comment décririez-vous votre peau ?",
+            "heading_tag": "h3",
+            "title_size": "h3",
+            "description": "<p>Ajouter une description facultative à cette section<\/p>",
+            "description_size": "fs-5",
+            "values": "Normal, Grasse, Sèche, Sensible, Mixte",
+            "show_images": true,
+            "img_size": "300x300",
+            "breakpoint_xs": 2,
+            "breakpoint_sm": 3,
+            "breakpoint_md": 3,
+            "breakpoint_lg": 3,
+            "breakpoint_xl": 5,
+            "breakpoint_xxl": 5
+          }
+        },
+        "item_kyE8Gn": {
+          "type": "item",
+          "settings": {
+            "title": "Quel âge avez-vous ?",
+            "heading_tag": "h3",
+            "title_size": "h3",
+            "description": "<p>Ajouter une description facultative à cette section<\/p>",
+            "description_size": "fs-5",
+            "values": "18-24, 25-34, 35-44, 45-54, 55+",
+            "show_images": false,
+            "img_size": "240x240",
+            "breakpoint_xs": 2,
+            "breakpoint_sm": 3,
+            "breakpoint_md": 3,
+            "breakpoint_lg": 3,
+            "breakpoint_xl": 5,
+            "breakpoint_xxl": 5
+          }
+        },
+        "item_HGxf7R": {
+          "type": "item",
+          "settings": {
+            "title": "Fumez-vous du tabac ?",
+            "heading_tag": "h3",
+            "title_size": "h3",
+            "description": "<p>Ajouter une description facultative à cette section<\/p>",
+            "description_size": "fs-5",
+            "values": "Oui, Non",
+            "show_images": false,
+            "img_size": "240x240",
+            "breakpoint_xs": 2,
+            "breakpoint_sm": 3,
+            "breakpoint_md": 3,
+            "breakpoint_lg": 3,
+            "breakpoint_xl": 3,
+            "breakpoint_xxl": 3
+          }
+        },
+        "item_h4a8bR": {
+          "type": "item",
+          "settings": {
+            "title": "Quelle est votre couleur préféré ?",
+            "heading_tag": "h3",
+            "title_size": "h3",
+            "description": "<p>Ajouter une description facultative à cette section<\/p>",
+            "description_size": "fs-5",
+            "values": "Rouge, Bleu, Vert, Gris, Violet",
+            "show_images": true,
+            "img_size": "240x240",
+            "breakpoint_xs": 2,
+            "breakpoint_sm": 3,
+            "breakpoint_md": 3,
+            "breakpoint_lg": 3,
+            "breakpoint_xl": 5,
+            "breakpoint_xxl": 5
+          }
+        },
+        "results_XNrrk7": {
+          "type": "results",
+          "settings": {
+            "title": "Vos résultats",
+            "heading_tag": "h2",
+            "title_size": "h2",
+            "description": "<p>Sur la base de vos réponses, voici nos principales recommandations<\/p>",
+            "description_size": "fs-5",
+            "set_1_values": "Normal, 18-24, Oui, Bleu",
+            "set_1_products": [
+              "etui-airpods-pro-capuccino",
+              "etui-airpods-pro-navy",
+              "etui-airpods-pro-nuage",
+              "etui-airpods-pro-ruby"
+            ],
+            "set_2_values": "Grasse, 25-34, Non, Rouge",
+            "set_2_products": [
+              "etui-airpods-pro-ruby",
+              "etui-airpods-pro-summer"
+            ],
+            "set_3_values": "Sèche, 35-44, Oui",
+            "set_3_products": [
+              "etui-airpods-pro-smooth",
+              "etui-airpods-pro-space-evasion",
+              "etui-airpods-pro-summer"
+            ],
+            "set_4_values": "Mixte, 35-44, Oui, Gris",
+            "set_4_products": [
+              "etui-airpods-pro-nuage"
+            ],
+            "set_5_values": "Mixte, 35-44, Oui, Violet",
+            "set_5_products": [
+              "etui-airpods-pro-summer"
+            ],
+            "set_6_values": "",
+            "set_6_products": [
+
+            ],
+            "set_7_values": "",
+            "set_7_products": [
+
+            ],
+            "set_8_values": "",
+            "set_8_products": [
+
+            ],
+            "set_9_values": "",
+            "set_9_products": [
+
+            ],
+            "set_10_values": "",
+            "set_10_products": [
+
+            ],
+            "set_11_values": "",
+            "set_11_products": [
+
+            ],
+            "set_12_values": "",
+            "set_12_products": [
+
+            ],
+            "breakpoint_xs": 2,
+            "breakpoint_sm": 2,
+            "breakpoint_md": 3,
+            "breakpoint_lg": 3,
+            "breakpoint_xl": 4,
+            "breakpoint_xxl": 4
+          }
+        }
+      },
+      "block_order": [
+        "item_N7j7Tw",
+        "item_kyE8Gn",
+        "item_HGxf7R",
+        "item_h4a8bR",
+        "results_XNrrk7"
+      ],
+      "settings": {
+        "bg_color": "bg-light text-body",
+        "bg_gradient": false,
+        "container": "container",
+        "max_width": "960",
+        "text_align": "text-center",
+        "subtitle": "",
+        "subtitle_size": "fs-5",
+        "color_caption": "#6c757d",
+        "title": "Quiz",
+        "heading_tag": "h2",
+        "title_size": "h2",
+        "description": "<p>Veuillez compléter ce qui suit pour obtenir nos recommandations de produits.<\/p>",
+        "description_size": "fs-5",
+        "border_color": "border-primary",
+        "shadow_sp": "shadow-2",
+        "animation": "animate__zoomIn",
+        "animation_speed": "animate__fast",
+        "product_img_thumbnail": "img-thumbnail",
+        "product_border_color": "border-primary",
+        "product_shadow_sp": "shadow-1",
+        "product_show_sale_badge": true,
+        "product_sale_badge_color": "bg-success text-white",
+        "product_title_size": "h5",
+        "product_title_truncate": "text-truncate",
+        "product_show_vendor": true,
+        "product_show_color_swatches": true,
+        "product_show_atc_form": true,
+        "product_form_show_inventory": true,
+        "prev_btn_color": "btn-outline-primary",
+        "prev_btn_size": "btn-sm",
+        "pt": 10,
+        "pb": 10,
+        "mt": 0,
+        "mb": 0
+      }
+    }
+  },
+  "order": [
+    "quiz_qTRKep"
+  ]
+}

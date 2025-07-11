@@ -1,0 +1,594 @@
+{% liquid 
+    assign pt = section.settings.pt | prepend: 'pt-'
+    assign pb = section.settings.pb | prepend: 'pb-'
+    assign mt = section.settings.mt | prepend: 'mt-'
+    assign mb = section.settings.mb | prepend: 'mb-'
+
+    assign bg_color = section.settings.bg_color
+
+    if section.settings.bg_gradient
+        assign bg_color = bg_color | append: ' bg-gradient'
+    endif
+
+    assign btn_shadow_sp = settings.btn_shadow_sp
+
+    assign row_xs = section.settings.breakpoint_xs | prepend: 'row-cols-'
+    assign row_sm = section.settings.breakpoint_sm | prepend: 'row-cols-sm-'
+    assign row_md = section.settings.breakpoint_md | prepend: 'row-cols-md-'
+    assign row_lg = section.settings.breakpoint_lg | prepend: 'row-cols-lg-'
+    assign row_xl = section.settings.breakpoint_xl | prepend: 'row-cols-xl-'
+    assign row_xxl = section.settings.breakpoint_xxl | prepend: 'row-cols-xxl-'
+%}
+
+<section
+    id="animated-counters-{{ section.id }}" 
+    class="animated-counters enter-view {% unless section.settings.background_img %} {{ bg_color }} {% endunless %} {{ section.settings.text_align }} {{ pt }} {{ pb }} {{ mt }} {{ mb }}"
+  
+    {% if section.settings.background_img %}
+        style="background-image: url('{{ section.settings.background_img.src | image_url }}'); background-size: cover; background-repeat: no-repeat; position: relative;"
+    {% endif %}>
+
+    {% if section.settings.background_img %}
+        <div class="background-overlay" style="background: rgba(0, 0, 0, {{ section.settings.background_img_opacity }});"></div>
+        <div class="background-overlay-blur" style="backdrop-filter: blur({{ section.settings.background_img_blur }}px);"></div>
+    {% endif %}
+  
+    <div class="{{ section.settings.container }} {% if section.settings.background_img %}{{ bg_color | split: ' ' | last }}{% endif %}" 
+         style="max-width: {{ section.settings.max_width }}px; position: relative;">
+        {% render 'section-header' %}
+        <ul class="list-unstyled row mx-n3 mx-lg-n4 {{ row_xs }} {{ row_sm }} {{ row_md }} {{ row_lg }} {{ row_xl }} {{ row_xxl }}">
+            {% for block in section.blocks %}
+                <li class="p-3 p-lg-6" {{ block.shopify_attributes }}>
+                    <p 
+                        id="animated-counter-{{ block.id }}"
+                        class="animated-counter mb-3 h3 {{ block.settings.value_size }} {{ block.settings.value_color }} {% if block.settings.show_circle %}animated-counter-circle mt-6 mb-6{% endif %}" 
+                        data-value="{{ block.settings.value_number }}" 
+                        data-speed="{{ section.settings.animation_speed }}"
+                        data-circle-active-color="{{ block.settings.circle_active_color }}" 
+                        data-circle-inactive-color="{{ block.settings.circle_inactive_color }}"
+                        aria-label="{{ block.settings.value_number }}">
+                        <span class="animated-counter-inner">
+                            <em class="fst-normal">0</em>
+                            {% unless block.settings.suffix == blank %}
+                                <span class="d-inline-block ms-n2" style="font-size: .75em;">
+                                    {{ block.settings.suffix }}
+                                </span>
+                            {% endunless %}
+                        </span>
+                    </p>
+                    {% unless block.settings.title == blank %}
+                        <h2 class="title mb-2 {{ block.settings.title_size }}">
+                            {{ block.settings.title }}
+                        </h2>
+                    {% endunless %}
+                    {% unless block.settings.description == blank %}
+                        <div class="description rte mb-0 {{ block.settings.description_size }}">
+                            {{ block.settings.description }}
+                        </div>
+                    {% endunless %}
+                    {% unless block.settings.btn_text == blank %}
+                        <a class="btn mt-5 {{ block.settings.btn_color }} {{ btn_shadow_sp }} {{ block.settings.btn_size }}" href="{{ block.settings.btn_url }}">
+                            {{ block.settings.btn_text }}
+                        </a>
+                    {% endunless %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+
+
+{% schema %}
+{
+    "name": "Compteurs Animés",
+    "settings": [
+        {
+            "type": "paragraph", 
+            "content": "Documentation FR : [Compteurs Animés by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/sections\/compteurs-animes)"
+        },
+        {
+            "type": "header",
+            "content": "General"
+        },
+        {
+            "type": "image_picker",
+            "id": "background_img",
+            "label": "Image d'arrière plan",
+            "info": "Si aucune image n'est sélectionnée, les options de couleur d'arrière-plan ci-dessous seront appliquées."
+        },
+        {
+            "type": "range",
+            "id": "background_img_opacity",
+            "label": "Opacité",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "default": 0.7
+        },
+        {
+            "type": "range",
+            "id": "background_img_blur",
+            "label": "Flou",
+            "min": 0,
+            "max": 10,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "select",
+            "id": "bg_color",
+            "label": "Couleur de l'arrière plan",
+            "default": "bg-body text-body",
+            "options": [
+                { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+                { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+                { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+                { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
+                { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+                { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Sombre" },
+                { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "bg_gradient",
+            "label": "Dégradé d'arrière-plan",
+            "default": false,
+            "info": "Ne s'applique pas aux couleurs claires"
+        },
+        {
+            "type": "select",
+            "id": "container",
+            "label": "Conteneur",
+            "default": "container",
+            "options": [
+                { "value": "container", "label": "Conteneur" },
+                { "value": "container-fluid", "label": "Pleine largeur" }
+            ]
+        },
+        {
+            "type": "text",
+            "id": "max_width",
+            "label": "Largeur maximale (px)",
+            "info": "Ajuster la largeur du conteneur (en pixels)"
+        },
+        {
+            "type": "select",
+            "id": "text_align",
+            "label": "Alignement du texte",
+            "default": "text-center",
+            "options": [
+                { "value": "text-start", "label": "Gauche" },
+                { "value": "text-center", "label": "Centre" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "En-tête de la section"
+        },
+        {
+            "type": "image_picker",
+            "id": "subtitle_img",
+            "label": "Légende Image"
+        },
+        {
+            "type": "text",
+            "id": "brand_image_size",
+            "label": "Image Largeur/Hauteur (px)",
+            "default": "60"
+        },
+        {
+            "type": "text",
+            "id": "subtitle",
+            "label": "Légende Texte"
+        },
+        {
+            "type": "select",
+            "id": "subtitle_size",
+            "label": "Taille de la légende",
+            "default": "fs-5",
+            "options": [
+                { "group": "Légende Standard", "value": "fs-1", "label": "Extra Grand" },
+                { "group": "Légende Standard", "value": "fs-2", "label": "Super Grand" },
+                { "group": "Légende Standard", "value": "fs-3", "label": "Très Grand" },
+                { "group": "Légende Standard", "value": "fs-4", "label": "Grand" },
+                { "group": "Légende Standard", "value": "fs-5", "label": "Moyen" },
+                { "group": "Légende Standard", "value": "fs-6", "label": "Petit" } 
+            ]
+        },
+        {
+            "type": "color",
+            "id": "color_caption",
+            "label": "Couleur de la légende",
+            "default": "#6c757d"
+        },
+        {
+            "type": "text",
+            "id": "title_overlay",
+            "label": "Titre overlay",
+            "info": "Visible sur ordinateur, masqué sur mobile pour optimiser la lisibilité."
+        },
+        {
+            "type": "select",
+            "id": "title_overlay_size",
+            "label": "Taille du titre overlay",
+            "default": "3",
+            "options": [
+                { "group": "Titre Overlay", "value": "4", "label": "Grand" },
+                { "group": "Titre Overlay", "value": "3", "label": "Moyen" },
+                { "group": "Titre Overlay", "value": "2", "label": "Petit" }
+            ]
+        },
+        {
+            "type": "color",
+            "id": "color_title_overlay",
+            "label": "Couleur du titre overlay",
+            "default": "#000000"
+        },
+        {
+            "type": "inline_richtext",
+            "id": "title",
+            "label": "Titre",
+            "default": "Compteurs animés"
+        },
+        {
+            "type": "select",
+            "id": "heading_tag",
+            "label": "Balise titre (SEO)",
+            "default": "h2",
+            "options": [
+                { "value": "h1", "label": "h1" },
+                { "value": "h2", "label": "h2" },
+                { "value": "h3", "label": "h3" },
+                { "value": "h4", "label": "h4" },
+                { "value": "h5", "label": "h5" },
+                { "value": "h6", "label": "h6" },
+                { "value": "span", "label": "Aucune" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "title_size",
+            "label": "Taille du titre",
+            "default": "h2",
+            "options": [
+                { "group": "Titre Supérieur", "value": "display-1", "label": "Extra Extra Grand" },
+                { "group": "Titre Supérieur", "value": "display-2", "label": "Extra Grand" },
+                { "group": "Titre Supérieur", "value": "display-3", "label": "Ultra Grand" },
+                { "group": "Titre Supérieur", "value": "display-4", "label": "Super Grand" },
+                { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+            ]
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Description (facultatif)",
+            "default": "<p>Ajouter une description facultative à cette section</p>"
+        },
+        {
+            "type": "select",
+            "id": "description_size",
+            "label": "Taille de description",
+            "default": "fs-5",
+            "options": [
+                { "group": "Description Standard", "value": "fs-1", "label": "Extra Grand" },
+                { "group": "Description Standard", "value": "fs-2", "label": "Super Grand" },
+                { "group": "Description Standard", "value": "fs-3", "label": "Très Grand" },
+                { "group": "Description Standard", "value": "fs-4", "label": "Grand" },
+                { "group": "Description Standard", "value": "fs-5", "label": "Moyen" },
+                { "group": "Description Standard", "value": "fs-6", "label": "Petit" } 
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Animation"
+        },
+        {
+            "type": "range",
+            "id": "animation_speed",
+            "label": "Vitesse de défilement (sec)",
+            "min": 1,
+            "max": 10,
+            "default": 5,
+            "step": 1
+        },
+        {
+            "type": "header",
+            "content": "Points d'arrêt",
+            "info": "Ajuster les éléments par ligne en fonction de la résolution de l'écran"
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_xs",
+            "label": "Éléments par ligne / xs",
+            "info": "Largeur d'écran : moins de 576px",
+            "min": 1,
+            "max": 3,
+            "step": 1,
+            "default": 1
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_sm",
+            "label": "Éléments par ligne / sm",
+            "info": "Largeur d'écran : ≥576px",
+            "min": 1,
+            "max": 3,
+            "step": 1,
+            "default": 1
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_md",
+            "label": "Éléments par ligne / md",
+            "info": "Largeur d'écran : ≥768px",
+            "min": 1,
+            "max": 4,
+            "step": 1,
+            "default": 2
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_lg",
+            "label": "Éléments par ligne / lg",
+            "info": "Largeur d'écran : ≥992px",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "default": 2
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_xl",
+            "label": "Éléments par ligne / xl",
+            "info": "Largeur d'écran : ≥1200px",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "default": 4
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_xxl",
+            "label": "Éléments par ligne / xxl",
+            "info": "Largeur d'écran : ≥1400px",
+            "min": 1,
+            "max": 8,
+            "step": 1,
+            "default": 4
+        },
+        {
+            "type": "header",
+            "content": "Espacement de la section"
+        },
+        {
+          "type": "range",
+          "id": "pt",
+          "label": "Padding supérieure",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "pb",
+          "label": "Padding inférieure",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "mt",
+          "label": "Marge supérieure",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "mb",
+          "label": "Marge inférieure",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 0
+        }
+    ],
+    "blocks": [
+        {
+            "type": "item",
+            "name": "Item",
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "Valeur"
+                },
+                {
+                    "type": "range",
+                    "id": "value_number",
+                    "label": "Valeur de progression",
+                    "default": 87,
+                    "min": 0,
+                    "max": 100
+                },
+                {
+                    "type": "text",
+                    "id": "suffix",
+                    "label": "Suffixe",
+                    "default": "%"
+                },
+                {
+                    "type": "select",
+                    "id": "value_size",
+                    "label": "Taille de la valeur",
+                    "default": "display-3",
+                    "options": [
+                        { "value": "display-1", "label": "Extra Grand" },
+                        { "value": "display-2", "label": "Super Grand" },
+                        { "value": "display-3", "label": "Très Grand" },
+                        { "value": "display-4", "label": "Grand" },
+                        { "value": "display-5", "label": "Moyen" },
+                        { "value": "display-6", "label": "Petit" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "value_color",
+                    "label": "Couleur de la valeur",
+                    "options": [
+                        { "value": "", "label": "Default" },
+                        { "value": "text-primary", "label": "Primaire" },
+                        { "value": "text-secondary", "label": "Secondaire" },
+                        { "value": "text-tertiary", "label": "Tertiaire" },
+                        { "value": "text-white", "label": "Blanc" },
+                        { "value": "text-light", "label": "Claire" },
+                        { "value": "text-dark", "label": "Sombre" },
+                        { "value": "text-success", "label": "Succès" },
+                        { "value": "text-warning", "label": "Avertissement" },
+                        { "value": "text-danger", "label": "Danger" },
+                        { "value": "text-info", "label": "Info" }
+                    ],
+                    "default": ""
+                },
+                {
+                    "type": "header",
+                    "content": "Paramètres du cercle"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "show_circle",
+                    "label": "Afficher le cercle",
+                    "default": false
+                },
+                {
+                    "type": "color",
+                    "id": "circle_inactive_color",
+                    "label": "Couleur inactive",
+                    "default": "#e9ecef"
+                },
+                {
+                    "type": "color",
+                    "id": "circle_active_color",
+                    "label": "Couleur active",
+                    "default": "#C99700"
+                },
+                {
+                    "type": "header",
+                    "content": "General"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Titre",
+                    "default": "Compteur Animé"
+                },
+                {
+                    "type": "select",
+                    "id": "title_size",
+                    "label": "Taille du titre",
+                    "default": "h4",
+                    "options": [
+                        { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                        { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                        { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                        { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                        { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                        { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+                    ]
+                },
+                {
+                    "type": "richtext",
+                    "id": "description",
+                    "label": "Description",
+                    "default": "<p>Rédigez un court paragraphe pour ce bloc ou laissez-le vide pour le désactiver.</p>"
+                },
+                {
+                    "type": "select",
+                    "id": "description_size",
+                    "label": "Taille de description",
+                    "default": "fs-5",
+                    "options": [
+                        { "group": "Description Standard", "value": "fs-1", "label": "Extra Grand" },
+                        { "group": "Description Standard", "value": "fs-2", "label": "Super Grand" },
+                        { "group": "Description Standard", "value": "fs-3", "label": "Très Grand" },
+                        { "group": "Description Standard", "value": "fs-4", "label": "Grand" },
+                        { "group": "Description Standard", "value": "fs-5", "label": "Moyen" },
+                        { "group": "Description Standard", "value": "fs-6", "label": "Petit" }
+                    ]
+                },
+                {
+                    "type": "header",
+                    "content": "Bouton"
+                },
+                {
+                    "type": "text",
+                    "id": "btn_text",
+                    "label": "Texte du bouton",
+                    "default": "En savoir plus",
+                    "info": "Laisser vide pour désactiver"
+                },
+                {
+                    "type": "url",
+                    "id": "btn_url",
+                    "label": "URL du bouton"
+                },
+                {
+                    "type": "select",
+                    "id": "btn_color",
+                    "label": "Couleur du bouton",
+                    "default": "btn-primary",
+                    "options": [
+                        { "group": "Normal", "value": "btn-link", "label": "Lien" },
+                        { "group": "Normal", "value": "btn-light", "label": "Claire" },
+                        { "group": "Normal", "value": "btn-dark", "label": "Sombre" },
+                        { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
+                        { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
+                        { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
+                        { "group": "Normal", "value": "btn-success", "label": "Succès" },
+                        { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+                        { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
+                        { "group": "Normal", "value": "btn-info", "label": "Info" },
+                        { "group": "Contour", "value": "btn-outline-light", "label": "Contour Claire" },
+                        { "group": "Contour", "value": "btn-outline-dark", "label": "Contour Sombre" },
+                        { "group": "Contour", "value": "btn-outline-primary", "label": "Contour Primaire" },
+                        { "group": "Contour", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
+                        { "group": "Contour", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
+                        { "group": "Contour", "value": "btn-outline-success", "label": "Contour Succès" },
+                        { "group": "Contour", "value": "btn-outline-danger", "label": "Contour Danger" },
+                        { "group": "Contour", "value": "btn-outline-warning", "label": "Contour Avertissement" },
+                        { "group": "Contour", "value": "btn-outline-info", "label": "Contour Info" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "btn_size",
+                    "label": "Taille du bouton",
+                    "default": "btn-sm",
+                    "options": [
+                        { "value": "btn-sm", "label": "Petit" },
+                        { "value": "btn-md", "label": "Normal" },
+                        { "value": "btn-lg", "label": "Large" }
+                    ]
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Compteurs Animés",
+            "category": "General"
+        }
+    ]
+}
+{% endschema %}
+
+

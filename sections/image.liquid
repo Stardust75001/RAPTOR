@@ -1,0 +1,336 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid 
+    assign pt = section.settings.pt | prepend: 'pt-'
+    assign pb = section.settings.pb | prepend: 'pb-'
+    assign mt = section.settings.mt | prepend: 'mt-'
+    assign mb = section.settings.mb | prepend: 'mb-'
+
+    assign bg_color = section.settings.bg_color
+
+    if section.settings.bg_gradient
+        assign bg_color = bg_color | append: ' bg-gradient'
+    endif
+%}
+
+<section 
+    id="simple-image-{{ section.id }}" 
+    class="simple-image enter-view {{ bg_color }} {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+    <div class="{{ section.settings.container }}">
+        <div class="mx-auto" style="max-width: {{ section.settings.max_width }}px;">
+            <div 
+                class="animate__animated animate__faster opacity-0"
+                data-animate-class="animate__fadeIn"
+                style="animation-delay: 0ms">
+                {% if section.settings.image_mobile == blank and section.settings.image_desktop == blank %}
+                    {{ 'detailed-apparel-1' | placeholder_svg_tag: 'placeholder-svg rounded bg-light' }}
+                {% else %}
+                    {% unless section.settings.url == blank %}
+                        <a href="{{ section.settings.url }}">
+                    {% endunless %}
+                        <div class="d-lg-none">
+                            <img
+                                class="img-fluid rounded {{ section.settings.img_mobile_thumbnail }} {{ section.settings.shadow_sp_mobile }} {{ section.settings.border_color_mobile }}"
+                                style="border-width: {{ section.settings.border_width_mobile }}px;"
+                                src="{{ section.settings.image_mobile.src | image_url: width: section.settings.img_mobile_width, height: section.settings.img_mobile_height, crop: section.settings.img_mobile_crop }}"
+                                alt="{{ section.settings.image_mobile.alt | escape }}"
+                                width="{{ section.settings.img_mobile_width }}"
+                                height="{{ section.settings.img_mobile_height }}"
+                                loading="lazy">
+                        </div>
+                        <div class="d-none d-lg-block">
+                            <img
+                                class="img-fluid rounded {{ section.settings.img_desktop_thumbnail }} {{ section.settings.shadow_sp_desktop }} {{ section.settings.border_color_desktop }}"
+                                style="border-width: {{ section.settings.border_width_desktop }}px;"
+                                src="{{ section.settings.image_desktop.src | image_url: width: section.settings.img_desktop_width, height: section.settings.img_desktop_height, crop: section.settings.img_desktop_crop }}"
+                                alt="{{ section.settings.image_desktop.alt | escape }}"
+                                width="{{ section.settings.img_desktop_width }}"
+                                height="{{ section.settings.img_desktop_height }}"
+                                loading="lazy">
+                        </div>
+                    {% unless section.settings.url == blank %}
+                        </a>
+                    {% endunless %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% schema %} 
+{
+    "name": "Image",
+    "settings": [
+        {
+            "type": "paragraph", 
+            "content": "Documentation FR : [Image by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/sections\/image)"
+        },
+        {
+            "type": "header",
+            "content": "General"
+        },
+        {
+            "type": "select",
+            "id": "bg_color",
+            "label": "Couleur de l'arrière plan",
+            "default": "bg-body text-body",
+            "options": [
+                { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+                { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+                { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+                { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
+                { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+                { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Sombre" },
+                { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "bg_gradient",
+            "label": "Dégradé d'arrière-plan",
+            "default": false,
+            "info": "Ne s'applique pas aux couleurs claires"
+        },
+        {
+            "type": "select",
+            "id": "container",
+            "label": "Conteneur",
+            "default": "container",
+            "options": [
+                { "value": "container", "label": "Conteneur" },
+                { "value": "container-fluid", "label": "Pleine largeur" }
+            ]
+        },
+        {
+            "type": "text",
+            "id": "max_width",
+            "label": "Largeur max. (px)",
+            "default": "991"
+        },
+        {
+            "type": "url",
+            "id": "url",
+            "label": "URL (lien)"
+        },
+        {
+            "type": "header",
+            "content": "Image (mobile)"
+        },
+        {
+            "type": "image_picker",
+            "id": "image_mobile",
+            "label": "Image"
+        },
+        {
+            "type": "text",
+            "id": "img_mobile_width",
+            "label": "Largeur image (px)",
+            "default": "900"
+        },
+        {
+            "type": "text",
+            "id": "img_mobile_height",
+            "label": "Hauteur image (px)",
+            "default": "600"
+        },
+        {
+            "type": "select",
+            "id": "img_mobile_crop",
+            "label": "Image crop",
+            "default": "center",
+            "options": [
+                { "value": "top", "label": "Top" },
+                { "value": "center", "label": "Center" },
+                { "value": "bottom", "label": "Bottom" },
+                { "value": "left", "label": "Left" },
+                { "value": "right", "label": "Right" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "img_mobile_thumbnail",
+            "label": "Bordure de l'image",
+            "default": "img-thumbnail",
+            "options": [
+                { "value": "", "label": "Aucune" },
+                { "value": "img-thumbnail", "label": "Bordure" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "border_color_mobile",
+            "label": "Couleur de la bordure",
+            "options": [
+                { "value": "", "label": "Default" },
+                { "value": "border-primary", "label": "Primaire" },
+                { "value": "border-secondary", "label": "Secondaire" },
+                { "value": "border-tertiary", "label": "Tertiaire" },
+                { "value": "border-dark", "label": "Sombre" },
+                { "value": "border-success", "label": "Succès" },
+                { "value": "border-warning", "label": "Avertissement" },
+                { "value": "border-danger", "label": "Danger" },
+                { "value": "border-info", "label": "Info" }
+            ],
+            "default": ""
+        },
+        {
+            "type": "range",
+            "id": "border_width_mobile",
+            "label": "Largeur de la bordure",
+            "min": 0,
+            "max": 10,
+            "step": 1,
+            "default": 1
+        },
+        {
+            "type": "select",
+            "id": "shadow_sp_mobile",
+            "label": "Ombre",
+            "options": [
+                { "value": "shadow-none", "label": "Aucune" },
+                { "value": "shadow-1", "label": "Ombre légère" },
+                { "value": "shadow-2", "label": "Ombre partiel" },
+                { "value": "shadow-3", "label": "Ombre profonde" },
+                { "value": "shadow-4", "label": "Ombre totale" }
+            ],
+            "default": "shadow-1"
+        },
+        {
+            "type": "header",
+            "content": "Image (bureau)"
+        },
+        {
+            "type": "image_picker",
+            "id": "image_desktop",
+            "label": "Image"
+        },
+        {
+            "type": "text",
+            "id": "img_desktop_width",
+            "label": "Largeur image (px)",
+            "default": "1600"
+        },
+        {
+            "type": "text",
+            "id": "img_desktop_height",
+            "label": "Hauteur image (px)",
+            "default": "900"
+        },
+        {
+            "type": "select",
+            "id": "img_desktop_crop",
+            "label": "Recadrage de l'image",
+            "default": "center",
+            "options": [
+                { "value": "top", "label": "Haut" },
+                { "value": "center", "label": "Centre" },
+                { "value": "bottom", "label": "Bas" },
+                { "value": "left", "label": "Gauche" },
+                { "value": "right", "label": "Droite" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "img_desktop_thumbnail",
+            "label": "Bordure de l'image",
+            "default": "img-thumbnail",
+            "options": [
+                { "value": "", "label": "Aucune" },
+                { "value": "img-thumbnail", "label": "Bordure" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "border_color_desktop",
+            "label": "Couleur de la bordure",
+            "options": [
+                { "value": "", "label": "Default" },
+                { "value": "border-primary", "label": "Primaire" },
+                { "value": "border-secondary", "label": "Secondaire" },
+                { "value": "border-tertiary", "label": "Tertiaire" },
+                { "value": "border-dark", "label": "Sombre" },
+                { "value": "border-success", "label": "Succès" },
+                { "value": "border-warning", "label": "Avertissement" },
+                { "value": "border-danger", "label": "Danger" },
+                { "value": "border-info", "label": "Info" }
+            ],
+            "default": ""
+        },
+        {
+            "type": "range",
+            "id": "border_width_desktop",
+            "label": "Largeur de la bordure",
+            "min": 0,
+            "max": 10,
+            "step": 1,
+            "default": 1
+        },
+        {
+            "type": "select",
+            "id": "shadow_sp_desktop",
+            "label": "Ombre",
+            "options": [
+                { "value": "shadow-none", "label": "Aucune" },
+                { "value": "shadow-1", "label": "Ombre légère" },
+                { "value": "shadow-2", "label": "Ombre partiel" },
+                { "value": "shadow-3", "label": "Ombre profonde" },
+                { "value": "shadow-4", "label": "Ombre totale" }
+            ],
+            "default": "shadow-1"
+        },
+        {
+            "type": "header",
+            "content": "Espacement de la section"
+        },
+        {
+            "type": "range",
+            "id": "pt",
+            "label": "Padding supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "pb",
+            "label": "Padding inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mt",
+            "label": "Marge supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mb",
+            "label": "Marge inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        }
+    ],
+    "presets": [
+        {
+            "name": "Image",
+            "category": "Image"
+        }
+    ]
+}
+{% endschema %}

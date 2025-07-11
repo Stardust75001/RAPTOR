@@ -1,0 +1,905 @@
+{% liquid
+    case settings.offcanvas_img_orientation
+        when 'square'
+            assign img_width  = 600
+            assign img_height = 600
+        when 'landscape'
+            assign img_width  = 600
+            assign img_height = 480
+        when 'potrait'
+            assign img_width  = 480
+            assign img_height = 600
+    endcase
+%}
+
+<div 
+    id="offcanvas-search" 
+    class="offcanvas offcanvas-end offcanvas-mobile-full {{ settings.offcanvas_opening_direction }}" 
+    tabindex="-1" 
+    aria-labelledby="offcanvas-search-label">
+    <div class="offcanvas-header {{ settings.offcanvas_header_bg }}">
+        <h2 
+            id="offcanvas-search-label" 
+            class="offcanvas-title {{ settings.offcanvas_header_title_size }}">
+            {{ 'general.offcanvas_search.title' | t }}
+        </h2>
+        <button 
+            class="btn-close {% if settings.offcanvas_header_bg contains 'text-white' %}btn-close-white{% endif %}" 
+            type="button" 
+            data-bs-dismiss="offcanvas" 
+            aria-label="{{ 'general.accessibility.close' | t }}">
+        </button>
+    </div>
+    <div class="offcanvas-body">
+        <search-predictive>
+            <form 
+                action="{{ routes.search_url }}" method="get" role="search">
+                <div class="form-control-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon-search" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input
+                        class="form-control"
+                        type="search"
+                        name="q"
+                        value="{{ search.terms | escape }}"
+                        aria-describedby="search-predictive-alert"
+                        aria-label="{{ 'general.offcanvas_search.input_label' | t }}"
+                        placeholder="{{ 'general.offcanvas_search.input_label' | t }}"
+                        data-search-collections="{{ settings.search_collections }}"
+                        data-search-pages="{{ settings.search_pages }}"
+                        data-search-articles="{{ settings.search_articles }}">
+                    {% if settings.search_speech %}
+                        <button 
+                            class="btn btn-search-by-voice" 
+                            type="button" 
+                            aria-label="{{ 'general.offcanvas_search.search_by_voice' | t }}"
+                            title="{{ 'general.offcanvas_search.search_by_voice' | t }}"
+                            data-lang="en-US"
+                            data-bs-toggle="tooltip"
+                            data-bs-trigger="hover"
+                            data-bs-placement="bottom">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2c-1.7 0-3 1.2-3 2.6v6.8c0 1.4 1.3 2.6 3 2.6s3-1.2 3-2.6V4.6C15 3.2 13.7 2 12 2z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18.4v3.3M8 22h8"/>
+                            </svg>
+                        </button>
+                    {% endif %}
+                </div>
+                <input type="hidden" name="type" value="product">
+            </form>
+            <p 
+                id="search-predictive-alert" 
+                class="visually-hidden" 
+                role="status"
+                data-text-result-found="{{ 'general.offcanvas_search.result_found' | t }}"
+                data-text-results-found="{{ 'general.offcanvas_search.results_found' | t }}"
+                data-text-no-results="{{ 'general.offcanvas_search.no_results' | t }}">
+            </p>
+            <div id="search-predictive" tabindex="-1"></div>
+        </search-predictive>
+        {% if settings.search_show_popular_products %}
+            <div id="search-popular-products-wrapper" class="mt-6">
+                <h3 class="h6 border-bottom pb-3 mb-4">
+                    {{ 'general.offcanvas_search.title_popular_products' | t }}
+                </h3>
+                {% render 'offcanvas-product-listing', products: settings.search_popular_products %}
+            </div>
+        {% endif %}
+    </div>
+    <div class="offcanvas-footer border-top p-5" hidden>
+        <form action="{{ routes.search_url }}" method="get" role="search">
+            <input type="hidden" name="q" value="">
+            <input type="hidden" name="type" value="product">
+            <button 
+                class="btn btn-outline-primary w-100" 
+                data-text-search-for="{{ 'general.offcanvas_search.search_for' | t }}"
+                tabindex="-1">
+            </button>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="popup-premium-modal" class="modal fade" tabindex="-1" aria-labelledby="popup-premium-modal-label" aria-hidden="true" data-bs-backdrop="static" data-delay="1"><div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h2 id="popup-premium-modal-label" class="modal-title h6"><strong>ATTENTION : DERNIÈRE ÉTAPE POUR UTILISER SHOPIWEB PREMIUM</strong></h2></div><div class="modal-body pt-4 pb-4 mt-2 mb-2"><div class="row align-items-center"><div class="col-lg-6 mb-6 mt-lg-n2 mb-lg-0"><img class="img-fluid mx-auto d-block" src="{{ 'shopiweb-premium.svg' | asset_url }}" alt="Shopiweb Premium" width="250" height="250" crop="center" loading="lazy"></div><div class="col-lg-6 mb-4"><div class="text-center"><h3 class="title mb-4 h3"><strong>Activez votre licence !</strong></h3><div class="description rte mb-6 fs-6"><p>Pour utiliser toutes les fonctionnalités et déverrouiller les 41 applications, merci de cliquer sur le bouton ACTIVER MA LICENCE 👇</p></div><div class="d-inline-flex"><style>#popup-premium-modal .btn{animation:shopibtns 1.5s infinite}#popup-premium-modal .btn:hover{animation:unset!important}</style><a class="btn btn-success btn-lg" style="animation:shopibtns 1.5s infinite" href="https://theme.shopiweb.fr/course/theme-shopiweb-premium/lecture/3326692" target="_blank">ACTIVER MA LICENCE</a></div></div></div></div><div class="notice rte mt-lg-6 lh-sm extra-small text-center"><p>Besoin d'aide ? Regardez la vidéo tutoriel disponible dans votre espace membre SHOPIWEB PREMIUM.</p></div></div></div></div></div>
+
+

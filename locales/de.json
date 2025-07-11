@@ -1,0 +1,483 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin language editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "no_reviews": "Keine Bewertungen",
+  "announcement": {
+    "shipping_notice": "Versand in ganz Europa (EWR)",
+    "title": "Ankündigung",
+    "text": "Dies ist eine Ankündigungsnachricht."
+  },
+  "gift_card": {
+    "title": "Hier ist Ihre Geschenkkarte!",
+    "instructions": "Verwenden Sie diesen Code an der Kasse, um Ihre Geschenkkarte einzulösen.",
+    "print": "Drucken",
+    "start_shopping": "Jetzt einkaufen",
+    "disabled": "Deaktiviert",
+    "expired_on": "Abgelaufen am {{ date }}",
+    "expires_on": "Läuft ab am {{ date }}",
+    "balance": "Guthaben"
+  },
+  "custom_sections": {
+    "image_banner": {
+      "title": "Entdecken Sie eine Oase der Eleganz und Innovation für Ihre Haustiere.",
+      "text": "Kuratiertes Sortiment, Gourmet-Leckerlis und Premium-Pflege erwarten Sie.",
+      "primary_button": "JETZT ENTDECKEN!",
+      "secondary_button": "ÜBER UNS"
+    },
+    "image_but": {
+      "title": "Entdecken Sie eine Oase der Eleganz und Innovation für Ihre Haustiere.",
+      "description": "Kuratiertes Sortiment, Gourmet-Leckerlis und Premium-Pflege erwarten Sie.",
+      "primary_button_label": "JETZT ENTDECKEN!",
+      "secondary_button_label": "ÜBER UNS"
+    },
+    "banner": {
+      "heading": "Banner Titel",
+      "text": "Beschreibungstext hier"
+    },
+    "multicolumn": {
+      "title_1": "Titel 1",
+      "text_1": "Text 1",
+      "title_2": "Titel 2",
+      "text_2": "Text 2",
+      "title_3": "Titel 3",
+      "text_3": "Text 3"
+    },
+    "section_1": "Benutzerdefinierter Abschnitt 1",
+    "section_2": "Benutzerdefinierter Abschnitt 2"
+  },
+"sections": {
+  "list_collections": {
+    "name": "Kollektionen",
+    "settings": {
+      "show_breadcrumbs": {
+        "label": "Brotkrumen anzeigen"
+      },
+      "text_align": {
+        "label": "Textausrichtung"
+      },
+      "bg_color": {
+        "label": "Hintergrundfarbe"
+      }
+    }
+  },
+  "colors": {
+    "white": {
+      "label": "Weiß"
+    },
+    "light": {
+      "label": "Hell"
+    },
+    "body": {
+      "label": "Text"
+    }
+  },
+  "alignment": {
+    "left": "Links",
+    "center": "Zentriert"
+  },
+  "featured_collections": {
+    "settings": {
+      "btn_text": {
+        "label": "Schaltflächentext",
+        "default": "Alle Kollektionen anzeigen",
+        "info": "Leer lassen, um zu deaktivieren"
+      }
+    }
+  },
+  "header": "Kopfzeile",
+  "footer": ""
+},
+  "collection": {
+    "btn_filter_products": "Produkte filtern",
+    "sort_by": "Sortieren nach",
+    "paginate_count": "{{ count }} von {{ total }} Produkten angezeigt",
+    "empty_html": "Diese Kollektion ist leer.",
+    "custom_bundle": {
+      "add_to_bundle": "Zum Bundle hinzufügen",
+      "added_to_bundle": "Zum Bundle hinzugefügt",
+      "bundle_contents_empty_html": "Das Bundle ist derzeit leer.",
+      "bundle_contents_title": "Bundle-Inhalt",
+      "bundle_price": "Bundle-Preis",
+      "button_atc_text": "In den Warenkorb",
+      "button_view_contents_text": "Bundle-Inhalt anzeigen",
+      "progress_completed_text": "Angebot abgeschlossen",
+      "progress_label": "Angebotsfortschritt",
+      "progress_uncompleted_text": "Nicht abgeschlossen",
+      "you_save": "Sie sparen"
+    },
+    "filters": {
+      "from": "Kollektion Filter von",
+      "title": "Kollektion Filter Titel",
+      "to": "Kollektion Filter bis",
+      "view_more": "Mehr Filter anzeigen"
+    },
+    "load_more": "Mehr laden",
+    "load_previous": "Vorherige laden"
+  },
+  "product": {
+    "price_unit": "Preis pro Einheit",
+    "sold_out": "Ausverkauft",
+    "price_sale": "Angebotspreis",
+    "price_regular": "Regulärer Preis",
+    "price_from": "Ab ",
+    "color_options": "Farboptionen",
+    "color_swatches": "Farbmuster",
+    "in_stock": "Auf Lager",
+    "out_of_stock": "Nicht vorrätig",
+    "product": "Produkt",
+    "product_added_to_cart": "Produkt zum Warenkorb hinzugefügt",
+    "remove": "Entfernen",
+    "wishlist": {
+      "add_to_wishlist": "Zur Wunschliste hinzufügen",
+      "remove_from_wishlist": "Von der Wunschliste entfernen",
+      "btn_label": "Zur Wunschliste hinzufügen"
+    },
+    "bundle": {
+      "custom_bundle": {
+        "add_to_bundle": "Zum Paket hinzufügen",
+        "added_to_bundle": "Zum Paket hinzugefügt",
+        "progress_label": "Angebotsfortschritt",
+        "progress_uncompleted_text": "Nicht abgeschlossen",
+        "progress_completed_text": "Abgeschlossen",
+        "bundle_price": "Paketpreis",
+        "you_save": "Du sparst",
+        "button_atc_text": "In den Warenkorb",
+        "button_view_contents_text": "Paketinhalt anzeigen",
+        "bundle_contents_title": "Paketinhalt",
+        "bundle_contents_empty_html": "Das Paket ist derzeit leer"
+      }
+    },
+    "add": "Hinzufügen",
+    "add_to_cart": "In den Warenkorb",
+    "bought_together": {
+      "add_selected_to_cart": "Ausgewählte zum Warenkorb hinzufügen",
+      "select_this": "Dieses auswählen",
+      "this_item": "Dieser Artikel",
+      "total_price": "Gesamtpreis"
+    },
+    "buy_it_now": "Jetzt kaufen",
+    "include_taxes": "Inkl. MwSt.",
+    "inventory_bar": {
+      "label": "Lagerbestand",
+      "sold_out": "Ausverkauft",
+      "untracked": "Begrenzte Verfügbarkeit",
+      "verylow_html": "Nur noch {{ count }} übrig!",
+      "low_html": "{{ count }} Stück übrig",
+      "normal_html": "{{ count }} verfügbar"
+    },
+    "product_options": "Produktoptionen",
+    "purchase_options": {
+      "option_deliver_every": "Lieferung alle",
+      "option_one_time": "Einmalkauf",
+      "option_subscription": "Abonnement"
+    },
+    "quantity": "Menge",
+    "save": "Speichern",
+    "select_variant": "Variante auswählen"
+  },
+  "general": {
+    "menu": "Menü",
+    "all_rights_reserved": "Alle Rechte vorbehalten",
+    "secure_payments": "Sichere Zahlungen",
+  "newsletter": {
+    "name_placeholder": "Geben Sie Ihren Namen ein",
+    "input_label": "Geben Sie Ihre E-Mail ein",
+    "submit_button": "Abonnieren",
+    "confirmation_text": "Danke für Ihr Abonnement!"
+},
+    "breadcrumbs": {
+      "home": "Startseite",
+      "label": "Sie sind hier:"
+    },
+    "cookies": {
+      "consent": "Wir verwenden Cookies, um Ihre Erfahrung zu verbessern."
+    },
+    "404_page": {
+      "title": "404 - Seite nicht gefunden",
+      "subtext": "Die gesuchte Seite existiert nicht.",
+      "button": "Zurück zur Startseite"
+    },
+    "search_page": {
+      "title": "Shop durchsuchen",
+      "title_search_performed": "Suchergebnisse",
+      "form": {
+        "input_label": "Produkte suchen...",
+        "select_label": "Suchtyp",
+        "btn_text": "Suchen"
+      },
+      "types": {
+        "products": "Produkte",
+        "articles": "Artikel",
+        "pages": "Seiten"
+      },
+      "no_results": "Keine Ergebnisse für '{{ terms }}' gefunden.",
+      "results_with_count_and_term": "{{ count }} Ergebnisse für '{{ terms }}'"
+    },
+    "offcanvas_search": {
+      "title": "Suche",
+      "input_label": "Im Shop suchen",
+      "search_by_voice": "Sprachsuche",
+      "result_found": "1 Ergebnis gefunden",
+      "results_found": "{{ count }} Ergebnisse gefunden",
+      "no_results": "Keine Ergebnisse gefunden",
+      "search_for": "Suchen nach",
+      "title_articles": "Artikel",
+      "title_collections": "Kollektionen",
+      "title_pages": "Seiten",
+      "title_popular_products": "Beliebte Produkte",
+      "title_products": "Produkte"
+    },
+    "accessibility": {
+      "close": "Schließen",
+      "load_more_products": "Mehr Produkte laden",
+      "sorted_by": "Sortiert nach",
+      "previous_page": "Vorherige Seite",
+      "next_page": "Nächste Seite",
+      "increase_qty": "Menge erhöhen",
+      "decrease_qty": "Menge verringern",
+      "account": "Konto",
+      "cart": "Warenkorb",
+      "cart_product_list": "Warenkorb Produkte",
+      "menu": "Menü",
+      "model_3d_decrease": "3D-Modell verkleinern",
+      "model_3d_fullscreen": "3D-Modell Vollbild",
+      "model_3d_increase": "3D-Modell vergrößern",
+      "model_3d_list_label": "3D-Modelle",
+      "next": "Weiter",
+      "payment_methods": "Zahlungsmethoden",
+      "previous": "Zurück",
+      "product_media_gallery": "Produktgalerie",
+      "product_options": "Produktoptionen",
+      "search": "Suche",
+      "skip_content": "Zum Inhalt springen",
+      "skip_product_content": "Zum Produktinhalt springen",
+      "slide_of": "Folie {{ current }} von {{ total }}",
+      "toggle_sound": "Ton umschalten",
+      "utility_icons": "Dienstsymbole",
+      "wishlist": "Wunschliste"
+    },
+    "wishlist": {
+      "offcanvas_title": "Ihre Wunschliste",
+      "empty_html": "Ihre Wunschliste ist leer.",
+      "remove_from_wishlist": "Von der Wunschliste entfernen",
+      "add_to_wishlist": "Zur Wunschliste hinzufügen",
+      "btn_label": "Zur Wunschliste hinzufügen"
+    },
+    "offcanvas_menu": {
+      "subtitle_guest_html": "Willkommen Gast",
+      "subtitle_customer_html": "Willkommen zurück",
+      "title_guest": "Ihr Konto"
+    },
+    "contact": {
+      "email": "E-Mail",
+      "message": "Nachricht",
+      "name": "Name",
+      "phone": "Telefon",
+      "send": "Senden",
+      "success": "Nachricht erfolgreich gesendet"
+    },
+    "countdown_timer": {
+      "d": "T",
+      "days": "Tage",
+      "expires": "Läuft ab in",
+      "h": "Std",
+      "hours": "Stunden",
+      "m": "Min",
+      "minutes": "Minuten",
+      "s": "Sek",
+      "seconds": "Sekunden"
+    },
+    "general": {
+      "copied": "Kopiert",
+      "copy": "Kopieren",
+      "follow_us": "Folgen Sie uns",
+      "menu": "Menü",
+      "optional": "Optional",
+      "share": "Teilen"
+    },
+    "password_page": {
+      "password_form": {
+        "btn_label": "Einloggen",
+        "password_label": "Passwort"
+      }
+    },
+    "quiz": {
+      "btn_previous": "Zurück",
+      "btn_reload_quiz": "Quiz neu starten"
+    },
+    "tracking": {
+      "btn_text": "Sendung verfolgen",
+      "placeholder": "Sendungsnummer eingeben"
+    },
+    "btn_add_to_cart": "In den Warenkorb",
+    "text_note_saved": "Notiz gespeichert",
+    "text_btn_save": "Speichern"
+  },
+  "cart": {
+    "title": "Ihr Warenkorb",
+    "quantity": "Menge",
+    "subtotal": "Zwischensumme",
+    "checkout": "Zur Kasse",
+    "view_file": "Datei anzeigen",
+    "taxes_shipping_at_checkout_html": "Steuern und Versand werden an der Kasse berechnet.",
+    "alert_item_added": "Artikel zum Warenkorb hinzugefügt.",
+    "alert_items_added": "Artikel zum Warenkorb hinzugefügt.",
+    "alert_cart_updated": "Warenkorb erfolgreich aktualisiert.",
+    "empty_html": "Ihr Warenkorb ist leer.",
+    "continue_shopping": "Weiter einkaufen",
+    "shipping_rates": {
+      "modal_title": "Versandkosten",
+      "no_results_found": "Keine Versandkosten für Ihre Adresse gefunden.",
+      "modal_button_label": "Versandkosten berechnen",
+      "button_label": "Versandkosten berechnen"
+    },
+    "note_label": "Bestellnotiz",
+    "note_placeholder": "Notiz zu Ihrer Bestellung eingeben",
+    "note_button": "Notiz speichern",
+    "note_saved": "Notiz erfolgreich gespeichert",
+    "empty_products_title": "Ihr Warenkorb ist leer",
+    "remove": "Entfernen",
+    "subtotal_discounted": "Reduzierte Zwischensumme",
+    "subtotal_regular": "Zwischensumme",
+    "summary": "Zusammenfassung",
+    "view_cart": "Warenkorb anzeigen"
+  },
+  "blogs": {
+    "filter_by": "Nach Thema filtern",
+    "all_topics": "Alle Themen",
+    "posted_in": "Veröffentlicht in"
+  },
+  "shopify": {
+    "checkout": {
+      "payment": {
+        "payment_method_incompatible_with_payment_terms": "Zahlungsmethode ist mit den Zahlungsbedingungen nicht kompatibel."
+      },
+      "review": {
+        "blocks": {
+          "company_location": "Unternehmensstandort"
+        }
+      }
+    }
+  },
+  "customer": {
+    "activate_account": {
+      "password": "Passwort",
+      "password_confirm": "Passwort bestätigen",
+      "submit": "Absenden",
+      "cancel": "Abbrechen",
+      "subtext": "Gib dein Passwort ein"
+    },
+    "addresses": {
+      "title": "Adressen",
+      "tab_addresses": "Adressen",
+      "tab_add_new": "Neue Adresse hinzufügen",
+      "default": "Standardadresse",
+      "add_new": "Neue Adresse hinzufügen",
+      "country": "Land",
+      "province": "Region",
+      "zip": "Postleitzahl",
+      "address2": "Adresszeile 2",
+      "city": "Stadt",
+      "phone": "Telefon",
+      "set_default": "Als Standardadresse festlegen",
+      "add": "Adresse hinzufügen",
+      "edit_address": "Adresse bearbeiten",
+      "first_name": "Vorname",
+      "last_name": "Nachname",
+      "company": "Firma",
+      "address1": "Adresszeile 1",
+      "update": "Aktualisieren",
+      "cancel": "Abbrechen",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "delete_confirm": "Sind Sie sicher, dass Sie diese Adresse löschen möchten?",
+      "select_country": "Land auswählen",
+      "no_addresses": "Keine Adressen gefunden"
+    },
+    "login": {
+      "title": "Kundenlogin",
+      "email": "E-Mail",
+      "password": "Passwort",
+      "forgot_password": "Passwort vergessen?",
+      "submit": "Anmelden",
+      "new": "Neuer Kunde?",
+      "create_account": "Konto erstellen"
+    },
+    "recover_password": {
+      "title": "Passwort wiederherstellen",
+      "success": "Passwort-Wiederherstellungs-E-Mail gesendet",
+      "subtext": "Geben Sie Ihre E-Mail ein, um Ihr Passwort zurückzusetzen",
+      "submit": "Senden"
+    },
+    "order": {
+      "fulfilled_at_html": "Erfüllt am {{ date }}",
+      "title": "Bestelldetails",
+      "date_html": "Bestelldatum: {{ date }}",
+      "cancelled_html": "Bestellung storniert am {{ date }}",
+      "cancelled_reason": "Stornierungsgrund",
+      "product": "Produkt",
+      "sku": "SKU",
+      "price": "Preis",
+      "quantity": "Menge",
+      "total": "Gesamt",
+      "subtotal": "Zwischensumme",
+      "discount": "Rabatt",
+      "shipping": "Versand",
+      "tax": "MwSt.",
+      "billing_address": "Rechnungsadresse",
+      "payment_status": "Zahlungsstatus",
+      "shipping_address": "Lieferadresse",
+      "fulfillment_status": "Erfüllungsstatus",
+      "track_shipment": "Sendung verfolgen",
+      "return": "Bestellung zurückgeben"
+    },
+    "register": {
+      "title": "Registrieren",
+      "first_name": "Vorname",
+      "last_name": "Nachname",
+      "email": "E-Mail",
+      "password": "Passwort",
+      "submit": "Konto erstellen",
+      "have_account": "Bereits ein Konto?",
+      "login": "Anmelden"
+    },
+    "reset_password": {
+      "title": "Passwort zurücksetzen",
+      "subtext": "Geben Sie Ihr neues Passwort unten ein",
+      "password": "Neues Passwort",
+      "password_confirm": "Neues Passwort bestätigen",
+      "submit": "Passwort zurücksetzen"
+    },
+    "account": {
+      "return": "Zurück zum Konto"
+    }
+  },
+  "section": "Abschnitt",
+  "textWishlistAdd": "Zur Wunschliste hinzufügen",
+  "textWishlistRemove": "Von der Wunschliste entfernen",
+  "textWishlistBtnLabel": "Wunschliste",
+  "shared": "Geteilt",
+  "bundle": {
+    "label": "Bundle"
+  },
+  "custom": {
+    "title": "Benutzerdefiniert",
+    "description": "Passen Sie Ihre Auswahl an"
+  },
+ "footer": {
+  "newsletter": {
+    "title": "Abonnieren Sie unseren Newsletter",
+    "first_name_placeholder": "Geben Sie Ihren Vornamen ein",
+    "email_placeholder": "Geben Sie Ihre E-Mail-Adresse ein",
+    "submit_button": "Abonnieren",
+    "notice_html": "Mit dem Abonnieren unseres Newsletters stimmen Sie unseren Allgemeinen Geschäftsbedingungen und unserer <a href=\"/pages/confidentialite\">Datenschutzrichtlinie</a> zu."
+  }
+}
+}

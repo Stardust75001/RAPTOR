@@ -1,0 +1,82 @@
+
+<script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        new Shopify.CountryProvinceSelector('shipping-rates-modal-country', 'shipping-rates-modal-province', {
+            hideElement: 'shipping-rates-modal-province-wrapper'
+        });
+    })
+</script>
+
+<div 
+    id="shipping-rates-modal"
+    class="modal fade" 
+    tabindex="-1" 
+    aria-labelledby="shipping-rates-modal-label" 
+    aria-hidden="true"
+    data-text-no-results="{{ 'cart.shipping_rates.no_results_found' | t }}">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="">
+                    <h2 id="shipping-rates-modal-label" class="modal-title h4">
+                        {{ 'cart.shipping_rates.modal_title' | t }}
+                    </h2>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'general.accessibility.close' | t }}">
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="shipping-rates-modal-alert-danger" class="alert alert-danger" role="alert" hidden>
+                </div>
+                <div id="shipping-rates-modal-alert-warning" class="alert alert-warning" role="alert" hidden>
+                </div>
+                <div id="shipping-rates-modal-alert-success" class="alert alert-success" role="alert" hidden>
+                </div>
+                <div class="form-floating mb-4">
+                    <select 
+                        id="shipping-rates-modal-country"
+                        class="form-select"
+                        autocomplete="country">
+                        {{ all_country_option_tags }}
+                    </select>
+                    <label for="shipping-rates-modal-country">
+                        {{ 'customer.addresses.country' | t }}
+                    </label>
+                </div>
+                <div
+                    id="shipping-rates-modal-province-wrapper" 
+                    class="form-floating mb-4"
+                    style="display: none;">
+                    <select 
+                        id="shipping-rates-modal-province"
+                        class="form-select"
+                        autocomplete="address-level1">
+                    </select>
+                    <label for="shipping-rates-modal-province">
+                        {{ 'customer.addresses.province' | t }}
+                    </label>
+                </div>
+                <div class="form-floating mb-4">
+                    <input 
+                        id="shipping-rates-modal-zip" 
+                        class="form-control" 
+                        type="text"
+                        placeholder="{{ 'customer.addresses.zip' | t }}"
+                        autocomplete="postal-code">
+                    <label for="shipping-rates-modal-zip">
+                        {{ 'customer.addresses.zip' | t }}
+                    </label>
+                </div>
+                <button 
+                    id="shipping-rates-modal-btn" 
+                    class="btn btn-primary w-100"
+                    data-text="{{ 'cart.shipping_rates.modal_button_label' | t }}"
+                    onclick="fetchShippingRates(this)">
+                    {{ 'cart.shipping_rates.modal_button_label' | t }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

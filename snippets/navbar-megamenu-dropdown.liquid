@@ -1,0 +1,410 @@
+{% assign current_level = level | default: 1 %}
+{% liquid 
+    assign bg_color = section.settings.bg_color %}
+
+<div class="dropdown-megamenu dropdown-menu {{ bg_color }}">
+    <div class="{{ section.settings.container }}">
+        <ul class="list-unstyled row">
+            {% for child_link in link.links %}
+                {% if child_link.title contains '.jpg' or child_link.title contains '.png' or child_link.title contains 'product' %}
+                    <li 
+                        class="col megamenu-col animate__animated animate__faster animate__fadeInRight"
+                        style="animation-delay: {{ forloop.index0 | times: 100 }}ms">
+                        <a href="{{ child_link.url }}">
+                            {% if child_link.title contains 'product' %}
+                                {% assign product = child_link.object %}
+                                <img
+                                    src="{{ product.featured_image | image_url: width: 480, height: 360, crop: 'center' }}"
+                                    class="img-fluid mb-3 rounded img-thumbnail {{ section.settings.shadow_sp_img_megamenu }} {{ section.settings.border_color_img_megamenu }}"
+                                    alt="{{ product.featured_image.alt }}"
+                                    width="480"
+                                    height="360"
+                                    loading="lazy">
+                                <h6 class="product-item-title mb-1">
+                                    {{ child_link.title | split: ':' | first }}
+                                </h6>
+                                <p class="product-item-price mb-0">
+                                    {% if product.compare_at_price > product.price %}
+                                        <span class="product-item-price-final me-1">
+                                            <span class="visually-hidden">
+                                                {{ 'product.price_sale' | t }} &nbsp;
+                                            </span>
+                                            {% if product.price_varies %}
+                                                {{ 'product.price_from' | t }}
+                                            {% endif %}
+                                            {{ product.price | money }}
+                                        </span>
+                                        <span class="product-item-price-compare text-muted">
+                                            <span class="visually-hidden">
+                                                {{ 'product.price_regular' | t }} &nbsp;
+                                            </span>
+                                            <s>{{ product.compare_at_price | money }}</s>
+                                        </span>
+                                    {% else %}
+                                        <span class="product-item-price-final">
+                                            {% if product.price_varies %}
+                                                {{ 'product.price_from' | t }}
+                                            {% endif %}
+                                            {{ product.price | money }}
+                                        </span>
+                                    {% endif %}
+                                </p>
+                            {% else %}
+                                {% assign image = child_link.title | split: ':' | last | strip %}
+                                <img
+                                    src="{{ image | image_url: '480x360', crop: 'center' }}"
+                                    class="img-fluid mb-3 rounded img-thumbnail {{ section.settings.shadow_sp_img_megamenu }} {{ section.settings.border_color_img_megamenu }}"
+                                    alt=""
+                                    width="480"
+                                    height="360"
+                                    loading="lazy">
+                                <span class="d-inline-flex headings-font-family align-items-center">
+                                    {{ child_link.title | split: ':' | first }}
+                                </span>
+                            {% endif %}
+                        </a>
+                    </li>
+                {% elsif child_link.links != blank and current_level > 1 %}
+                    <li 
+                        class="col animate__animated animate__faster animate__fadeInRight"
+                        style="animation-delay: {{ forloop.index0 | times: 100 }}ms">
+                        {% if child_link.url == '#' %}
+                            <h6 id="navbar-childitem-{{ forloop.index }}" class="px-5">
+                                {{ child_link.title }}
+                            </h6>
+                        {% else %}
+                            <a 
+                                class="dropdown-item rounded dropdown-item-level-2 {% if child_link.active %}active{% endif %}" 
+                                href="{{ child_link.url }}"
+                                aria-current="{% if child_link.active %}page{% endif %}">
+                                {{ child_link.title }}
+                            </a>
+                        {% endif %}
+                        {%- comment -%}
+                        Prevent excessive recursion by limiting to 1 submenu level.
+                        {%- endcomment -%}
+                    </li>
+                {% else %}
+                    <li 
+                        class="col animate__animated animate__faster animate__fadeInRight"
+                        style="animation-delay: {{ forloop.index0 | times: 100 }}ms">
+                        <a 
+                            class="dropdown-item rounded dropdown-item-level-2 {% if child_link.active %}active{% endif %}" 
+                            href="{{ child_link.url }}"
+                            aria-current="{% if child_link.active %}page{% endif %}">
+                            {{ child_link.title }}
+                        </a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{% liquid 
+    assign bg_color = section.settings.bg_color %}
+
+<ul class="nav nav-links justify-content-center">
+    {% for link in linklists[section.settings.menu_desktop].links %}
+        {% assign skip_links = false %}
+        {% if link.title == ':' %}
+            {% assign skip_links = true %}
+        {% endif %}
+        {% unless skip_links %}
+            {% if link.links == blank %}
+                <li class="nav-item">
+                    <a
+                        class="nav-link rounded {{ section.settings.menu_desktop_font_family }} {% if link.active %}active{% endif %}" 
+                        href="{{ link.url }}"
+                        aria-current="{% if link.active %}page{% endif %}">
+                        {{ link.title }}
+                    </a>
+                </li>
+            {% else %}
+                <li class="nav-item dropdown {% if link.levels > 1 %}position-static{% endif %}">
+                    <a 
+                        class="nav-link rounded dropdown-toggle {{ section.settings.menu_desktop_font_family }} {% if link.child_active %}active{% endif %}" 
+                        href="#"
+                        data-bs-toggle="dropdown" 
+                        aria-expanded="false"
+                        data-index="{{ forloop.index }}"
+                        role="button">
+                        {{ link.title }}
+                    </a>
+                    {% if link.levels > 1 %}
+                        {% render 'navbar-megamenu-dropdown', link: link, level: 1 %}
+                    {% else %}
+                        <ul class="dropdown-menu {{ bg_color }}">
+                            {% for child_link in link.links %}
+                                <li>
+                                    <a 
+                                        id="navbar-childitem-{{ forloop.index }}" 
+                                        class="dropdown-item {% if child_link.active %}active{% endif %}" 
+                                        href="{{ child_link.url }}"
+                                        aria-current="{% if child_link.active %}page{% endif %}">
+                                        {{ child_link.title }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </li>
+            {% endif %}
+        {% endunless %}
+    {% endfor %}
+</ul>
+
+<div 
+    id="offcanvas-menu" 
+    class="offcanvas offcanvas-start {{ settings.offcanvas_opening_direction }}" 
+    tabindex="-1"
+    aria-labelledby="offcanvas-menu-label">
+    <div class="offcanvas-header {{ settings.offcanvas_header_bg }}">
+        <div class="">
+            <div id="offcanvas-menu-label" class="offcanvas-title">
+                {% if section.settings.show_account %}
+                    {% if customer %}
+                        <h3 class="h6 mb-0">
+                            {{ 'general.offcanvas_menu.title_customer' | t: name: customer.name }}
+                        </h3>
+                        <div class="opacity-75 small">
+                            {{ 'general.offcanvas_menu.subtitle_customer_html' | t }}
+                        </div>
+                    {% else %}
+                        <h3 class="h6 mb-0">
+                            {{ 'general.offcanvas_menu.title_guest' | t }}
+                        </h3>
+                          <div class="opacity-75 small">
+                              {{ 'general.offcanvas_menu.subtitle_guest_html' | t }}
+                          </div>
+                    {% endif %}
+                {% else %}
+                    {{ 'general.general.menu' | t }}
+                {% endif %}
+            </div>
+        </div>
+        <button 
+            type="button" 
+            class="btn-close {% if settings.offcanvas_header_bg contains 'text-white' %}btn-close-white{% endif %}"
+            data-bs-dismiss="offcanvas" 
+            aria-label="{{ 'general.accessibility.close' | t }}">
+        </button>
+    </div>
+    <div class="offcanvas-body px-0 py-4">
+        <ul 
+            id="offcanvas-menu-nav" 
+            class="nav nav-level-0 flex-column mb-4">
+            {% for link in linklists[section.settings.menu_mobile].links %}
+                {% if link.title == ':' %}
+                {% elsif link.links == blank %}
+                    <li class="nav-item">
+                        <a 
+                            class="nav-link {{ section.settings.menu_desktop_font_family }} {% if link.active %}active{% endif %}" 
+                            href="{{ link.url }}" 
+                            aria-current="{% if link.active %}page{% endif %}">
+                            {{ link.title }}
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a 
+                            class="nav-link {{ section.settings.menu_desktop_font_family }} {% if link.child_active %}active{% endif %}" 
+                            href="#offcanvas-menu-collapse-level-1-{{ forloop.index }}" 
+                            aria-controls="offcanvas-menu-collapse-level-1-{{ forloop.index }}"
+                            aria-expanded="{% if link.child_active %}true{% else %}false{% endif %}" 
+                            data-bs-toggle="collapse"
+                            role="button">
+                            {{ link.title }}
+                        </a>
+                        <div 
+                            id="offcanvas-menu-collapse-level-1-{{ forloop.index }}" 
+                            class="collapse {% if link.child_active %}show{% endif %}">
+                            <ul class="nav flex-column">
+                                {% for child_link in link.links %}
+                                    {% if child_link.title contains '.jpg' or child_link.title contains '.png'  or child_link.title contains 'product' %}
+                                        <li class="megamenu-block">
+                                            <a href="{{ child_link.url }}" class="">
+                                                {% if child_link.title contains 'product' %}
+                                                    {% assign product = child_link.object %}
+                                                    <img
+                                                        src="{{ product.featured_image | image_url: width: 480, height: 360, crop: 'center' }}"
+                                                        class="img-fluid mb-3 rounded img-thumbnail {{ section.settings.shadow_sp_img_megamenu }} {{ section.settings.border_color_img_megamenu }}"
+                                                        style="max-width: 90%"
+                                                        alt="{{ product.featured_image.alt }}"
+                                                        width="480"
+                                                        height="360"
+                                                        loading="lazy">
+                                                    <h6 class="product-item-title mb-1">
+                                                        {{ child_link.title | split: ':' | first }}
+                                                    </h6>
+                                                    <p class="product-item-price mb-0">
+                                                        {% if product.compare_at_price > product.price %}
+                                                            <span class="product-item-price-final me-1">
+                                                                <span class="visually-hidden">
+                                                                    {{ 'product.price_sale' | t }} &nbsp;
+                                                                </span>
+                                                                {% if product.price_varies %}
+                                                                    {{ 'product.price_from' | t }}
+                                                                {% endif %}
+                                                                {{ product.price | money }}
+                                                            </span>
+                                                            <span class="product-item-price-compare text-muted">
+                                                                <span class="visually-hidden">
+                                                                    {{ 'product.price_regular' | t }} &nbsp;
+                                                                </span>
+                                                                <s>{{ product.compare_at_price | money }}</s>
+                                                            </span>
+                                                        {% else %}
+                                                            <span class="product-item-price-final">
+                                                                {% if product.price_varies %}
+                                                                    {{ 'product.price_from' | t }}
+                                                                {% endif %}
+                                                                {{ product.price | money }}
+                                                            </span>
+                                                        {% endif %}
+                                                    </p>
+                                                {% else %}
+                                                    {% assign image = child_link.title | split: ':' | last | strip %}
+                                                    <img
+                                                        src="{{ image | image_url: '480x320', crop: 'center' }}"
+                                                        class="img-fluid mb-3 rounded img-thumbnail {{ section.settings.shadow_sp_img_megamenu }} {{ section.settings.border_color_img_megamenu }}"
+                                                        style="max-width: 90%"
+                                                        alt=""
+                                                        width="480"
+                                                        height="320"
+                                                        loading="lazy">
+                                                    <span class="">
+                                                        {{ child_link.title | split: ':' | first }}
+                                                    </span>
+                                                {% endif %}
+                                            </a>
+                                        </li>
+                                   {% elsif child_link.links == blank %}
+                                        <li>
+                                            <a 
+                                                class="dropdown-item {% if child_link.active %}active{% endif %}" 
+                                                href="{{ child_link.url }}"
+                                                aria-current="{% if child_link.active %}page{% endif %}">
+                                                {{ child_link.title }}
+                                            </a>
+                                        </li>
+                                    {% else %}
+                                        <li>
+                                            <a 
+                                                class="nav-link py-4 px-5 accordion-button collapsed {{ section.settings.menu_desktop_font_family }} {% if child_link.child_active %}active{% endif %}" 
+                                                href="#collapse-level-1-{{ forloop.index }}" 
+                                                aria-controls="collapse-level-1-{{ forloop.index }}"
+                                                aria-expanded="{% if child_link.child_active %}true{% else %}false{% endif %}" 
+                                                data-bs-toggle="collapse" 
+                                                role="button">
+                                                {{ child_link.title }}
+                                            </a>
+                                            <div id="collapse-level-1-{{ forloop.index }}" class="collapse {% if child_link.child_active %}show{% endif %}">
+                                                <ul class="nav flex-column">
+                                                    {% for grandchild_link in child_link.links %}
+                                                        <li>
+                                                            <a 
+                                                                class="dropdown-item small {% if grandchild_link.active %}active{% endif %}" 
+                                                                href="{{ grandchild_link.url }}"
+                                                                aria-current="{% if grandchild_link.active %}page{% endif %}">
+                                                                • {{ grandchild_link.title }}
+                                                            </a>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+        {% unless section.settings.utilities_menu == blank %}
+            <ul 
+                id="offcanvas-menu-utilities-nav" 
+                class="nav nav-level-0 flex-column mb-5">
+                {% for link in linklists[section.settings.utilities_menu].links %}
+                    <li>
+                        {% if link.url contains 'search' %}
+                            <a 
+                                class="nav-link" 
+                                href="#offcanvas-search"
+                                data-bs-toggle="offcanvas"
+                                aria-controls="offcanvas-search" 
+                                role="button">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="me-3" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                                {{ link.title }}
+                            </a>
+                        {% elsif link.url contains 'wishlist' %}
+                            <a 
+                                class="nav-link" 
+                                href="#offcanvas-wishlist"
+                                data-bs-toggle="offcanvas"
+                                aria-controls="offcanvas-wishlist" 
+                                role="button">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="me-3" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                                {{ link.title }}
+                                <span class="wishlist-count-badge badge" hidden>
+                                </span>
+                            </a>
+                        {% elsif link.url contains 'account' %}
+                            <a 
+                                class="nav-link {% if template.name == 'login' or template.name == 'account' %}active{% endif %}" 
+                                aria-current="{% if template.name == 'login' or template.name == 'account' %}page{% endif %}" 
+                                href="{{ routes.account_url }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="me-3" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                {{ link.title }}
+                            </a>
+                        {% else %}
+                            <a 
+                                class="nav-link {% if link.active %}active{% endif %}" 
+                                href="{{ link.url }}"
+                                aria-current="{% if link.active %}page{% endif %}">
+                                {{ link.title }}
+                            </a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endunless %}
+        {% if section.settings.offcanvas_menu_show_cart_upsells %}
+            <div class="cart-upsell-wrapper pt-2 px-5 pb-5">
+                {% render 'cart-upsell', layout: 'horizontal' %}
+            </div>
+        {% endif %}
+    </div>
+
+    {% if section.settings.language_selector_show or section.settings.currency_selector_show %}
+        {% if localization.available_languages.size > 1 or shop.enabled_currencies.size > 1 %}
+            <div class="offcanvas-footer-lang-currency">
+                <div class="d-flex justify-content-center py-3 mx-4 my-2">
+                    {% if section.settings.language_selector_show %}
+                        {% render 'dropdown-localization', btn_color: section.settings.lang_currency_btn_color %}
+                    {% endif %}
+                    {% if section.settings.currency_selector_show %}
+                        {% render 'dropdown-currency', btn_color: section.settings.lang_currency_btn_color %}
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+    
+    {% if section.settings.offcanvas_menu_show_social_icons %}
+        <div class="offcanvas-footer">
+            <div class="text-center">
+                {% render 'social-icons', icon_size: 18 %}
+            </div>
+        </div>
+    {% endif %}
+</div>

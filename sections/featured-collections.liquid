@@ -1,0 +1,617 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid 
+  assign pt = section.settings.pt | prepend: 'pt-'
+  assign pb = section.settings.pb | prepend: 'pb-'
+  assign mt = section.settings.mt | prepend: 'mt-'
+  assign mb = section.settings.mb | prepend: 'mb-'
+
+  if section.settings.breakpoint_xs_scroll
+    assign row_xs = 'xs-scroll'
+  else
+    assign row_xs = section.settings.breakpoint_xs | prepend: 'row-cols-'
+  endif
+
+  assign row_sm = section.settings.breakpoint_sm | prepend: 'row-cols-sm-'
+  assign row_md = section.settings.breakpoint_md | prepend: 'row-cols-md-'
+  assign row_lg = section.settings.breakpoint_lg | prepend: 'row-cols-lg-'
+  assign row_xl = section.settings.breakpoint_xl | prepend: 'row-cols-xl-'
+  assign row_xxl = section.settings.breakpoint_xxl | prepend: 'row-cols-xxl-'
+
+  assign btn_shadow_sp = settings.btn_shadow_sp
+%}
+
+<section 
+  id="featured-collections-{{ section.id }}" 
+  class="featured-collections enter-view overflow-hidden {{ section.settings.bg_color }} {{ section.settings.text_align }} {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+  <div class="{{ section.settings.container }}">
+    {% render 'section-header' %}
+
+    <ul class="collection-list list-unstyled row mx-n3 mx-lg-n4 mb-0 {{ row_xs }} {{ row_sm }} {{ row_md }} {{ row_lg }} {{ row_xl }} {{ row_xxl }}">
+      {% for block in section.blocks %}
+        {% render 'collection-item', collection: collections[block.settings.collection], block: block, index: forloop.index %}
+      {% endfor %}
+    </ul>
+
+    {% unless section.settings.btn_text == blank %}
+      <a 
+        class="btn mt-8 mb-0 {{ section.settings.btn_color }} {{ btn_shadow_sp }} animate__animated animate__faster opacity-0" 
+        href="{{ routes.collections_url }}"
+        {% if settings.effect_apply_btn_enable %} 
+          data-animate-class="{{ settings.animation_btn_name }}"
+          style="animation-delay: 1000ms;"
+        {% endif %}>
+        {{ section.settings.btn_text | t }}
+      </a>
+    {% endunless %}
+  </div>
+</section>
+    id="featured-collections-{{ section.id }}" 
+    class="featured-collections enter-view overflow-hidden {{ section.settings.bg_color }} {{ section.settings.text_align }} {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+    <div class="{{ section.settings.container }}">
+        {% render 'section-header' %}
+        <ul class="collection-list list-unstyled row mx-n3 mx-lg-n4 mb-0 {{ row_xs }} {{ row_sm }} {{ row_md }} {{ row_lg }} {{ row_xl }} {{ row_xxl }}">
+            {% for block in section.blocks %}
+                {% render 'collection-item', collection: collections[block.settings.collection], block: block, index: forloop.index %}
+            {% endfor %}
+        </ul>
+        {% unless section.settings.btn_text == blank %}
+            <a 
+                class="btn mt-8 mb-0 {{ section.settings.btn_color }} {{ btn_shadow_sp }} animate__animated animate__faster opacity-0" 
+                href="{{ routes.collections_url }}"
+                {% if settings.effect_apply_btn_enable %} 
+                  data-animate-class="{{ settings.animation_btn_name }}"
+                  style="animation-delay: 1000ms;"
+                {% endif %}>
+                {{ section.settings.btn_text }} 
+            </a>
+        {% endunless %}
+    </div>
+</section>
+
+    id="featured-collections-{{ section.id }}" 
+    class="featured-collections enter-view overflow-hidden {{ section.settings.bg_color }} {{ section.settings.text_align }} {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+    <div class="{{ section.settings.container }}">
+        {% render 'section-header' %}
+        <ul class="collection-list list-unstyled row mx-n3 mx-lg-n4 mb-0 {{ row_xs }} {{ row_sm }} {{ row_md }} {{ row_lg }} {{ row_xl }} {{ row_xxl }}">
+            {% for block in section.blocks %}
+                {% render 'collection-item', collection: collections[block.settings.collection], block: block, index: forloop.index %}
+            {% endfor %}
+        </ul>
+        {% unless section.settings.btn_text == blank %}
+            <a 
+                class="btn mt-8 mb-0 {{ section.settings.btn_color }} {{ btn_shadow_sp }} animate__animated animate__faster opacity-0" 
+                href="{{ routes.collections_url }}"
+                {% if settings.effect_apply_btn_enable %} 
+                  data-animate-class="{{ settings.animation_btn_name }}"
+                  style="animation-delay: 1000ms;"
+                {% endif %}>
+                {{ section.settings.btn_text }} 
+            </a>
+        {% endunless %}
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Collections en Vedette",
+    "disabled_on": {
+      "groups": ["header", "footer"]
+    },
+    "settings": [
+        {
+            "type": "paragraph", 
+            "content": "Documentation FR : [Collections en vedette by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/sections\/liste-de-collections)"
+        },
+        {
+            "type": "header",
+            "content": "General"
+        },
+        {
+            "type": "select",
+            "id": "bg_color",
+            "label": "Couleur de l'arrière plan",
+            "default": "bg-body text-body",
+            "options": [
+                { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
+                { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+                { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "container",
+            "label": "Conteneur",
+            "default": "container",
+            "options": [
+                { "value": "container", "label": "Conteneur" },
+                { "value": "container-fluid", "label": "Pleine largeur" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "text_align",
+            "label": "Alignement du texte",
+            "default": "text-center",
+            "options": [
+                { "value": "text-start", "label": "Gauche" },
+                { "value": "text-center", "label": "Centre" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "En-tête de la section"
+        },
+        {
+            "type": "image_picker",
+            "id": "subtitle_img",
+            "label": "Légende Image"
+        },
+        {
+            "type": "text",
+            "id": "brand_image_size",
+            "label": "Image Largeur/Hauteur (px)",
+            "default": "60"
+        },
+        {
+            "type": "text",
+            "id": "subtitle",
+            "label": "Légende Texte"
+        },
+        {
+            "type": "select",
+            "id": "subtitle_size",
+            "label": "Taille de la légende",
+            "default": "fs-5",
+            "options": [
+                { "group": "Légende Standard", "value": "fs-1", "label": "Extra Grand" },
+                { "group": "Légende Standard", "value": "fs-2", "label": "Super Grand" },
+                { "group": "Légende Standard", "value": "fs-3", "label": "Très Grand" },
+                { "group": "Légende Standard", "value": "fs-4", "label": "Grand" },
+                { "group": "Légende Standard", "value": "fs-5", "label": "Moyen" },
+                { "group": "Légende Standard", "value": "fs-6", "label": "Petit" } 
+            ]
+        },
+        {
+            "type": "color",
+            "id": "color_caption",
+            "label": "Couleur de la légende",
+            "default": "#6c757d"
+        },
+        {
+            "type": "text",
+            "id": "title_overlay",
+            "label": "Titre overlay",
+            "info": "Visible sur ordinateur, masqué sur mobile pour optimiser la lisibilité."
+        },
+        {
+            "type": "select",
+            "id": "title_overlay_size",
+            "label": "Taille du titre overlay",
+            "default": "3",
+            "options": [
+                { "group": "Titre Overlay", "value": "4", "label": "Grand" },
+                { "group": "Titre Overlay", "value": "3", "label": "Moyen" },
+                { "group": "Titre Overlay", "value": "2", "label": "Petit" }
+            ]
+        },
+        {
+            "type": "color",
+            "id": "color_title_overlay",
+            "label": "Couleur du titre overlay",
+            "default": "#000000"
+        },
+        {
+            "type": "inline_richtext",
+            "id": "title",
+            "label": "Titre",
+            "default": "Collections en vedette"
+        },
+        {
+            "type": "select",
+            "id": "heading_tag",
+            "label": "Balise titre (SEO)",
+            "default": "h2",
+            "options": [
+                { "value": "h1", "label": "h1" },
+                { "value": "h2", "label": "h2" },
+                { "value": "h3", "label": "h3" },
+                { "value": "h4", "label": "h4" },
+                { "value": "h5", "label": "h5" },
+                { "value": "h6", "label": "h6" },
+                { "value": "span", "label": "Aucune" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "title_size",
+            "label": "Taille du titre",
+            "default": "h2",
+            "options": [
+                { "group": "Titre Supérieur", "value": "display-1", "label": "Extra Extra Grand" },
+                { "group": "Titre Supérieur", "value": "display-2", "label": "Extra Grand" },
+                { "group": "Titre Supérieur", "value": "display-3", "label": "Ultra Grand" },
+                { "group": "Titre Supérieur", "value": "display-4", "label": "Super Grand" },
+                { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+            ]
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Description (facultatif)",
+            "default": "<p>Ajouter une description facultative à cette section</p>"
+        },
+        {
+            "type": "select",
+            "id": "description_size",
+            "label": "Taille de description",
+            "default": "fs-5",
+            "options": [
+                { "group": "Description Standard", "value": "fs-1", "label": "Extra Grand" },
+                { "group": "Description Standard", "value": "fs-2", "label": "Super Grand" },
+                { "group": "Description Standard", "value": "fs-3", "label": "Très Grand" },
+                { "group": "Description Standard", "value": "fs-4", "label": "Grand" },
+                { "group": "Description Standard", "value": "fs-5", "label": "Moyen" },
+                { "group": "Description Standard", "value": "fs-6", "label": "Petit" } 
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Collection"
+        },
+        {
+            "type": "select",
+            "id": "collection_img_orientation",
+            "label": "Image orientation",
+            "default": "square",
+            "options": [
+                { "value": "square", "label": "Carré" },
+                { "value": "landscape", "label": "Paysage" },
+                { "value": "potrait", "label": "Portrait" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "collection_img_thumbnail",
+            "label": "Bordure de l'image",
+            "default": "img-thumbnail",
+            "options": [
+                { "value": "", "label": "Aucun" },
+                { "value": "img-thumbnail", "label": "Bordure" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "collection_border_color",
+            "label": "Couleur de la bordure",
+            "options": [
+                { "value": "", "label": "Default" },
+                { "value": "border-primary", "label": "Primaire" },
+                { "value": "border-secondary", "label": "Secondaire" },
+                { "value": "border-dark", "label": "Foncé" },
+                { "value": "border-success", "label": "Succès" },
+                { "value": "border-warning", "label": "Avertissement" },
+                { "value": "border-danger", "label": "Danger" },
+                { "value": "border-info", "label": "Info" }
+            ],
+            "default": ""
+        },
+        {
+            "type": "range",
+            "id": "collection_border_width",
+            "label": "Largeur de la bordure",
+            "min": 0,
+            "max": 10,
+            "step": 1,
+            "default": 1
+        },
+        {
+            "type": "select",
+            "id": "collection_shadow_sp",
+            "label": "Ombre",
+            "options": [
+                { "value": "shadow-none", "label": "Aucune" },
+                { "value": "shadow-1", "label": "Ombre légère" },
+                { "value": "shadow-2", "label": "Ombre partiel" },
+                { "value": "shadow-3", "label": "Ombre profonde" },
+                { "value": "shadow-4", "label": "Ombre totale" }
+            ],
+            "default": "shadow-1"
+        },
+        {
+            "type": "checkbox",
+            "id": "collection_show_title",
+            "label": "Afficher les titres des collections",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Bouton"
+        },
+        {
+            "type": "text",
+            "id": "btn_text",
+            "label": "Texte du bouton",
+            "default": "Voir toutes les collections",
+            "info": "Laisser vide pour désactiver"
+        },
+        {
+            "type": "select",
+            "id": "btn_color",
+            "label": "Couleur du bouton",
+            "default": "btn-primary",
+            "options": [
+                { "group": "Normal", "value": "btn-link", "label": "Lien" },
+                { "group": "Normal", "value": "btn-light", "label": "Claire" },
+                { "group": "Normal", "value": "btn-dark", "label": "Sombre" },
+                { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
+                { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
+                { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
+                { "group": "Normal", "value": "btn-success", "label": "Succès" },
+                { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+                { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
+                { "group": "Normal", "value": "btn-info", "label": "Info" },
+                { "group": "Contour", "value": "btn-outline-light", "label": "Contour Claire" },
+                { "group": "Contour", "value": "btn-outline-dark", "label": "Contour Sombre" },
+                { "group": "Contour", "value": "btn-outline-primary", "label": "Contour Primaire" },
+                { "group": "Contour", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
+                { "group": "Contour", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
+                { "group": "Contour", "value": "btn-outline-success", "label": "Contour Succès" },
+                { "group": "Contour", "value": "btn-outline-danger", "label": "Contour Danger" },
+                { "group": "Contour", "value": "btn-outline-warning", "label": "Contour Avertissement" },
+                { "group": "Contour", "value": "btn-outline-info", "label": "Contour Info" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Animation"
+        },
+        {
+            "type": "select",
+            "id": "animation",
+            "label": "Effet d'animation",
+            "default": "animate__zoomIn",
+            "options": [
+                { "group": "Désactivé", "value": "", "label": "Pas d'animation" },
+                { "group": "Retour", "value": "animate__backInDown", "label": "Back In Down" },
+                { "group": "Retour", "value": "animate__backInLeft", "label": "Back In Left" },
+                { "group": "Retour", "value": "animate__backInRight", "label": "Back In Right" },
+                { "group": "Retour", "value": "animate__backInUp", "label": "Back In Up" },
+                { "group": "Rebond", "value": "animate__bounceIn", "label": "Bounce In" },
+                { "group": "Rebond", "value": "animate__bounceInDown", "label": "Bounce-in-down" },
+                { "group": "Rebond", "value": "animate__bounceInLeft", "label": "Bounce-in-left" },
+                { "group": "Rebond", "value": "animate__bounceInRight", "label": "Bounce-in-right" },
+                { "group": "Rebond", "value": "animate__bounceInUp", "label": "Bounce-in-up" },
+                { "group": "Fondu", "value": "animate__fadeIn", "label": "Fade In" },
+                { "group": "Fondu", "value": "animate__fadeInDown", "label": "Fade-in-down" },
+                { "group": "Fondu", "value": "animate__fadeInDownBig", "label": "Fade-in-down Big" },
+                { "group": "Fondu", "value": "animate__fadeInLeft", "label": "Fade-in-left" },
+                { "group": "Fondu", "value": "animate__fadeInLeftBig", "label": "Fade-in-left Big" },
+                { "group": "Fondu", "value": "animate__fadeInRight", "label": "Fade-in-right" },
+                { "group": "Fondu", "value": "animate__fadeInRightBig", "label": "Fade-in-right Big" },
+                { "group": "Fondu", "value": "animate__fadeInUp", "label": "Fade-in-up" },
+                { "group": "Fondu", "value": "animate__fadeInUpBig", "label": "Fade-in-up Big" },
+                { "group": "Fondu", "value": "animate__fadeInTopLeft", "label": "Fade-in Top Left" },
+                { "group": "Fondu", "value": "animate__fadeInTopRight", "label": "Fade-in Top Right" },
+                { "group": "Fondu", "value": "animate__fadeInBottomLeft", "label": "Fade-in Bottom Left" },
+                { "group": "Fondu", "value": "animate__fadeInBottomRight", "label": "Fade-in Bottom Right" },
+                { "group": "Flip", "value": "animate__flip", "label": "Flip" },
+                { "group": "Flip", "value": "animate__flipInX", "label": "Flip In X" },
+                { "group": "Flip", "value": "animate__flipInY", "label": "Flip In Y" },
+                { "group": "Flip", "value": "animate__flipOutX", "label": "Flip Out X" },
+                { "group": "Flip", "value": "animate__flipOutY", "label": "Flip Out Y" },
+                { "group": "Vitesse Lumière", "value": "animate__lightSpeedInRight", "label": "Light Speed In Right" },
+                { "group": "Vitesse Lumière", "value": "animate__lightSpeedInLeft", "label": "Light Speed In Left" },
+                { "group": "Rotation", "value": "animate__rotateIn", "label": "Rotate In" },
+                { "group": "Rotation", "value": "animate__rotateInDownLeft", "label": "Rotate In Down Left" },
+                { "group": "Rotation", "value": "animate__rotateInDownRight", "label": "Rotate In Down Right" },
+                { "group": "Rotation", "value": "animate__rotateInUpLeft", "label": "Rotate In Up Left" },
+                { "group": "Rotation", "value": "animate__rotateInUpRight", "label": "Rotate In Up Right" },
+                { "group": "Zoom", "value": "animate__zoomIn", "label": "Zoom In" },
+                { "group": "Zoom", "value": "animate__zoomInDown", "label": "Zoom In Down" },
+                { "group": "Zoom", "value": "animate__zoomInLeft", "label": "Zoom In Left" },
+                { "group": "Zoom", "value": "animate__zoomInRight", "label": "Zoom In Right" },
+                { "group": "Zoom", "value": "animate__zoomInUp", "label": "Zoom In Up" },
+                { "group": "Glissement", "value": "animate__slideInDown", "label": "Slide In Down" },
+                { "group": "Glissement", "value": "animate__slideInLeft", "label": "Slide In Left" },
+                { "group": "Glissement", "value": "animate__slideInRight", "label": "Slide In Right" },
+                { "group": "Glissement", "value": "animate__slideInUp", "label": "Slide In Up" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "animation_speed",
+            "label": "Vitesse d'animation",
+            "default": "animate__fast",
+            "options": [
+                { "value": "animate__slower", "label": "Plus lent" },
+                { "value": "animate__slow", "label": "Lent" },
+                { "value": "", "label": "Normal" },
+                { "value": "animate__fast", "label": "Rapide" },
+                { "value": "animate__faster", "label": "Plus rapide" }
+    
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Points d'arrêt",
+            "info": "Ajuster les éléments par ligne en fonction de la résolution de l'écran"
+        },
+        {
+            "type": "checkbox",
+            "id": "breakpoint_xs_scroll",
+            "label": "Activer le carrousel sur mobile",
+            "default": true,
+            "info": "Remarque : si cette option est activée, le paramètre ci-dessous \"Éléments par ligne / xs\" ne s'appliquera pas."
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_xs",
+            "label": "Éléments par ligne / xs",
+            "info": "Largeur d'écran : less than 576px",
+            "min": 1,
+            "max": 3,
+            "step": 1,
+            "default": 1
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_sm",
+            "label": "Éléments par ligne / sm",
+            "info": "Largeur d'écran : ≥576px",
+            "min": 1,
+            "max": 3,
+            "step": 1,
+            "default": 2
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_md",
+            "label": "Éléments par ligne / md",
+            "info": "Largeur d'écran : ≥768px",
+            "min": 1,
+            "max": 4,
+            "step": 1,
+            "default": 2
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_lg",
+            "label": "Éléments par ligne / lg",
+            "info": "Largeur d'écran : ≥992px",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "default": 3
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_xl",
+            "label": "Éléments par ligne / xl",
+            "info": "Largeur d'écran : ≥1200px",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "default": 3
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_xxl",
+            "label": "Éléments par ligne / xxl",
+            "info": "Largeur d'écran : ≥1400px",
+            "min": 1,
+            "max": 8,
+            "step": 1,
+            "default": 3
+        },
+        {
+            "type": "header",
+            "content": "Espacement de la section"
+        },
+        {
+          "type": "range",
+          "id": "pt",
+          "label": "Padding supérieure",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "pb",
+          "label": "Padding inférieure",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "mt",
+          "label": "Marge supérieure",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "mb",
+          "label": "Marge inférieure",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 0
+        }
+    ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "t:sections.featured_collections.blocks.collection.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.featured_collections.blocks.collection.settings.title.label",
+          "info": "t:sections.featured_collections.blocks.collection.settings.title.info"
+        },
+        {
+          "type": "text",
+          "id": "btn_text",
+          "label": "t:sections.featured_collections.settings.btn_text.label",
+          "default": "t:sections.featured_collections.settings.btn_text.default",
+          "info": "t:sections.featured_collections.settings.btn_text.info"
+        },
+        {
+          "type": "select",
+          "id": "heading_tag",
+          "label": "Balise titre (SEO)",
+          "default": "h3",
+          "options": [
+            { "value": "h1", "label": "h1" },
+            { "value": "h2", "label": "h2" },
+            { "value": "h3", "label": "h3" },
+            { "value": "h4", "label": "h4" },
+            { "value": "h5", "label": "h5" },
+            { "value": "h6", "label": "h6" },
+            { "value": "span", "label": "Aucune" }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "title_size",
+          "label": "Taille du titre",
+          "default": "h5",
+          "options": [
+            { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+            { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+            { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+            { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+            { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+            { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+          ]
+        }
+      ]
+    }
+  ],
+   "presets": [
+    {
+      "name": "t:sections.featured_collections.presets.name",
+      "category": "Collections"
+    }
+  ]
+}
+{% endschema %}

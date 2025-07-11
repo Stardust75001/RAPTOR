@@ -1,0 +1,282 @@
+/* ========================================================================
+   CHECKOUT STYLES
+   ======================================================================== */
+
+.checkout-main {
+  padding: 2rem;
+}
+
+.checkout-sidebar {
+  padding: 2rem;
+  min-height: 100vh;
+}
+
+.checkout-step {
+  margin-bottom: 2rem;
+}
+
+.checkout-step-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.checkout-step-number {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--bs-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  font-weight: bold;
+}
+
+.checkout-step-number.completed {
+  background: var(--bs-success);
+}
+
+.checkout-step-number.active {
+  background: var(--bs-primary);
+}
+
+.checkout-step-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* ========================================================================
+   ORDER STATUS STYLES
+   ======================================================================== */
+
+.order-success-icon {
+  font-size: 4rem;
+}
+
+.order-status-card {
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.order-status-header {
+  background: var(--bs-success);
+  color: white;
+  padding: 1rem;
+  border-radius: 0.5rem 0.5rem 0 0;
+  margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+}
+
+.order-tracking-steps {
+  display: flex;
+  justify-content: space-between;
+  margin: 2rem 0;
+}
+
+.tracking-step {
+  flex: 1;
+  text-align: center;
+  position: relative;
+}
+
+.tracking-step::after {
+  content: '';
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: var(--bs-gray-300);
+  z-index: 1;
+}
+
+.tracking-step:last-child::after {
+  display: none;
+}
+
+.tracking-step-icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--bs-gray-300);
+  color: var(--bs-gray-600);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  margin-bottom: 0.5rem;
+}
+
+.tracking-step.completed .tracking-step-icon {
+  background: var(--bs-success);
+  color: white;
+}
+
+.tracking-step.active .tracking-step-icon {
+  background: var(--bs-primary);
+  color: white;
+}
+
+/* ========================================================================
+   POLICY PAGE STYLES
+   ======================================================================== */
+
+.policy-page {
+  line-height: 1.6;
+}
+
+.policy-page h1,
+.policy-page h2,
+.policy-page h3,
+.policy-page h4,
+.policy-page h5,
+.policy-page h6 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.policy-page h1:first-child {
+  margin-top: 0;
+}
+
+.policy-page ul,
+.policy-page ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.policy-page li {
+  margin-bottom: 0.5rem;
+}
+
+.policy-page p {
+  margin-bottom: 1rem;
+}
+
+.policy-page .policy-section {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--bs-border-color);
+}
+
+.policy-page .policy-section:last-child {
+  border-bottom: none;
+}
+
+/* ========================================================================
+   CONTACT FORM STYLES
+   ======================================================================== */
+
+.contact-form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.contact-form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.contact-form .form-label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.contact-form .form-control {
+  border: 2px solid var(--bs-border-color);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  transition: border-color 0.15s ease-in-out;
+}
+
+.contact-form .form-control:focus {
+  border-color: var(--bs-primary);
+  box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+.contact-form textarea.form-control {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.contact-form .btn-submit {
+  min-width: 150px;
+}
+
+/* ========================================================================
+   LOADING STATES
+   ======================================================================== */
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.loading-spinner {
+  display: inline-block;
+}
+
+.btn-loading {
+  position: relative;
+  pointer-events: none;
+}
+
+.btn-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1rem;
+  height: 1rem;
+  margin-top: -0.5rem;
+  margin-left: -0.5rem;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ========================================================================
+   RESPONSIVE DESIGN
+   ======================================================================== */
+
+@media (max-width: 991.98px) {
+  .checkout-main,
+  .checkout-sidebar {
+    padding: 1rem;
+  }
+  
+  .checkout-sidebar {
+    min-height: auto;
+  }
+  
+  .order-tracking-steps {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .tracking-step::after {
+    display: none;
+  }
+  
+  .contact-form {
+    padding: 0 1rem;
+  }
+}

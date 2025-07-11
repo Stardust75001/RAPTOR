@@ -1,0 +1,99 @@
+{% liquid 
+    assign current_variant = product.selected_or_first_available_variant
+
+    assign mt = block.settings.mt | prepend: 'mt-'
+    assign mb = block.settings.mb | prepend: 'mb-'
+%}
+
+<style>
+.btn-atc .btn-icon {
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+</style>
+
+<div class="product-buy-buttons {{ mt }} {{ mb }}" {{ block.shopify_attributes }}>
+    <div class="d-flex">
+        {% if block.settings.show_qty_field %}
+            <div class="quantity-wrapper me-3">
+                <button 
+                    class="btn"
+                    type="button"
+                    data-mode="minus"
+                    onclick="onClickQtyPlusMinus(this)" 
+                    aria-label="{{ 'general.accessibility.decrease_qty' | t }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                </button>
+                <input
+                    class="form-control" 
+                    name="quantity"
+                    type="text"
+                    value="1"
+                    data-min-qty="1"
+                    aria-label="{{ 'product.quantity' | t }}">
+                <button 
+                    class="btn btn-plus"
+                    type="button"
+                    data-mode="plus"
+                    onclick="onClickQtyPlusMinus(this)"
+                    aria-label="{{ 'general.accessibility.increase_qty' | t }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                </button>
+            </div>
+        {% endif %}
+        <button
+            class="btn-atc btn {{ block.settings.btn_color }} w-100"
+            type="submit"
+            name="add"
+            data-text-add-to-cart="{{ 'product.add_to_cart' | t }}"
+            {% unless current_variant.available %}
+                disabled
+            {% endunless %}>
+            {% if current_variant.available %}
+                {{ 'product.add_to_cart' | t }}
+            {% else %}
+                {{ 'product.sold_out' | t }}
+            {% endif %}
+        </button>
+    </div>
+
+    {% if block.settings.show_dynamic_buttons %}
+        <div class="product-form-dynamic-buttons mt-5 pb-2">
+            {{ form | payment_button }}
+        </div>
+    {% endif %}
+
+    {% if block.settings.show_buy_btn or settings.wishlist_enable %}
+        <div class="d-flex mt-4">
+            {% if block.settings.show_buy_btn %}
+                <button 
+                    class="btn-buy btn btn-sm btn-outline-secondary w-100 {% if settings.wishlist_enable %}me-2{% endif %}" 
+                    type="button"
+                    onclick="handleBuyButtonClick(this, event)">
+                    {{ 'product.buy_it_now' | t }}
+                </button>
+            {% endif %}
+            {% if settings.wishlist_enable %}
+                <button 
+                    class="btn-wishlist-add-remove btn btn-sm btn-outline-secondary w-100 d-flex align-items-center justify-content-center {% if block.settings.show_buy_btn %}ms-2{% endif %}"
+                    type="button"
+                    data-product-handle="{{ product.handle }}"
+                    data-text-add="{{ 'general.wishlist.add_to_wishlist' | t }}"
+                    data-text-remove="{{ 'general.wishlist.remove_from_wishlist' | t }}"
+                    aria-label="{{ 'general.wishlist.add_to_wishlist' | t }}"
+                    onclick="removeOrAddFromWishlist(this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="me-2" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                <span>{{ 'general.wishlist.btn_label' | t }}</span>
+                </button>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+    

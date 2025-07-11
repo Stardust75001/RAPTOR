@@ -1,0 +1,106 @@
+/* ========================================================================
+   INFORMATIONS GÉNÉRALES SUR LE SITE
+   Propriété de © 2019/2024 Shopiweb.fr
+   Pour plus d'informations, visitez : https://www.shopiweb.fr
+   ======================================================================== */
+
+/* =====================
+   Carte du Bundle
+   ===================== */
+#card-bundle {
+  text-align: left;
+  transition: all 0.2s linear;
+}
+
+/* =====================
+   Progression du Bundle
+   ===================== */
+.bd-pss {
+  height: 0.5rem;
+}
+
+ul.bd-pss-tiers {
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+  margin: -0.25rem 0 0;
+  font-size: 0.825rem;
+  padding: 0;
+  font-weight: 500;
+}
+
+ul.bd-pss-tiers li {
+  position: absolute;
+  transform: translateX(-50%);
+  text-align: center;
+  line-height: 1.1;
+  padding-bottom: 0.15rem;
+}
+
+ul.bd-pss-tiers li::after {
+  content: "";
+  position: absolute;
+  bottom: -0.5rem;
+  left: 50%;
+  width: 1px;
+  height: 0.5rem;
+  background-color: var(--bs-dark);
+}
+
+ul.bd-pss-tiers li:last-child {
+  position: relative;
+  transform: translateX(25%);
+  left: auto !important;
+}
+
+/* =====================
+   Modal des Contenus du Bundle
+   ===================== */
+#modal-bundle-contents .quantity-wrapper {
+  max-width: 100px;
+}
+
+#modal-bundle-contents .quantity-wrapper .form-control {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+#modal-bundle-contents .btn-remove {
+  display: flex;
+  color: var(--bs-body-color);
+  opacity: 0.75;
+  transition: all 0.2s ease-out;
+  border: none;
+}
+
+#modal-bundle-contents .btn-remove:hover,
+#modal-bundle-contents .btn-remove:focus {
+  opacity: 1;
+}
+
+#modal-bundle-contents .btn-remove:focus-visible {
+  box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+/* =====================
+   Modal Produit du Bundle (Vue Rapide)
+   ===================== */
+.bundle-product-modal .btn-close {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+/* =====================
+   Carte Bundle Sticky pour Mobile
+   ===================== */
+#sticky-mobile-bundle-card {
+  transform: translateY(100%);
+  transition: all 0.2s ease-out;
+  box-shadow: 0 -0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+#sticky-mobile-bundle-card.show {
+  z-index: 1019;
+  transform: translateY(0);
+}

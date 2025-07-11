@@ -1,0 +1,107 @@
+{% liquid
+    case settings.offcanvas_img_orientation
+        when 'square'
+            assign img_width  = 600
+            assign img_height = 600
+        when 'landscape'
+            assign img_width  = 600
+            assign img_height = 480
+        when 'potrait'
+            assign img_width  = 480
+            assign img_height = 600
+    endcase
+%}
+<ul class="product-listing list-unstyled mb-0">
+    {% for product in products %}
+        <li class="product-item py-3">
+            <div class="row align-items-center mx-n3">
+                <div class="col-4 px-3">
+                    <a href="{{ product.url }}" class="">
+                        <img 
+                            class="product-item-img img-fluid me-3 rounded {{ settings.offcanvas_img_thumbnail }} {{ settings.offcanvas_shadow_sp }} {{ settings.offcanvas_border_color }}"
+                            src="{{ product.featured_image | image_url: width: img_width, height: img_height, crop: 'center' }}"
+                            alt="{{ product.featured_image.alt }}"
+                            width="{{ img_width }}"
+                            height="{{ img_height }}"
+                            loading="lazy">
+                    </a>
+                </div>
+                <div class="col-8 px-3">
+                    <h4 class="product-item-title h6 mb-1 {{ settings.search_title_truncate }}">
+                        <a href="{{ product.url }}" class="link-dark">
+                            {{ product.title }}
+                        </a>
+                    </h4>
+                    {% render 'product-rating-badge', product: product %}
+                    <p class="product-item-price small mb-3">
+                        {% if product.first_available_variant.compare_at_price > product.price %}
+                            <span class="product-item-price-final me-1">
+                                <span class="visually-hidden">
+                                    {{ 'product.price_sale' | t }} &nbsp;
+                                </span>
+                                {{ product.first_available_variant.price | money }}
+                            </span>
+                            <span class="product-item-price-compare text-muted">
+                                <span class="visually-hidden">
+                                    {{ 'product.price_regular' | t }} &nbsp;
+                                </span>
+                                <s>
+                                    {{ product.first_available_variant.compare_at_price | money }}
+                                </s>
+                            </span>
+                        {% else %}
+                            <span class="product-item-price-final">
+                                {{ product.first_available_variant.price | money }}
+                            </span>
+                        {% endif %}
+                    </p>
+                    {% if settings.search_show_atc_form %}
+                        <div class="form-wrapper">
+                            {% form 'product', product, onsubmit: 'handleAddToCartFormSubmit(this, event)' %}
+                                <div class="d-flex">
+                                    {% if product.has_only_default_variant %}
+                                        <input type="hidden" name="id" value="{{ product.first_available_variant.id }}">
+                                    {% else %}
+                                        <select 
+                                            class="form-select form-select-sm w-100 me-3" 
+                                            name="id" 
+                                            aria-label="{{ 'product.select_variant' | t }}"
+                                            onchange="handleProductItemVariantChange(this, event)">
+                                            {% for variant in product.variants %}
+                                                <option 
+                                                    value="{{ variant.id }}"
+                                                    data-compare-at-price="{{ variant.compare_at_price }}"
+                                                    data-price="{{ variant.price }}"
+                                                    {% if variant.image %}
+                                                        data-variant-image="{{ variant.image | image_url: width: img_width, height: img_height, crop: 'center' }}"
+                                                    {% endif %}
+                                                    >
+                                                    {{ variant.title }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    {% endif %}
+                                    
+                                    <button
+                                    class="btn-atc btn btn-sm btn-primary px-4 flex-shrink-0" 
+                                        type="submit"
+                                        name="add"
+                                        data-text-add-to-cart="{{ 'product.add' | t }}"
+                                        {% unless product.available %}
+                                            disabled
+                                        {% endunless %}>
+                                        {% if product.available %}
+                                            {{ 'product.add' | t }}
+                                        {% else %}
+                                            {{ 'product.sold_out' | t }}
+                                        {% endif %}
+                                    </button>
+                                </div>
+                            {% endform %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </li>
+    {% endfor %}
+</ul>

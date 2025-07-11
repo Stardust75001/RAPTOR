@@ -1,0 +1,12 @@
+{% liquid 
+    assign mt = block.settings.mt | prepend: 'mt-'
+    assign mb = block.settings.mb | prepend: 'mb-'
+%}
+
+{% if product.metafields.descriptors.subtitle %}
+    <div class="product-block-subtitle {{ mt }} {{ mb }}" {{ block.shopify_attributes }}>
+        <p class="subtitle text-muted">
+            {{ product.metafields.descriptors.subtitle }}
+        </p>
+    </div>
+{% endif %}

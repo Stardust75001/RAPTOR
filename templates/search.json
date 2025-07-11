@@ -1,0 +1,44 @@
+{
+  "sections": {
+    "template-search": {
+      "type": "template-search",
+      "settings": {
+        "container": "container",
+        "text_align": "text-center",
+        "limit": 48,
+        "title_size": "h2",
+        "form_max_width": "540",
+        "show_search_types_select": true,
+        "product_img_mode": "gallery",
+        "product_img_orientation": "square",
+        "product_img_thumbnail": "img-thumbnail",
+        "product_border_color": "border-primary",
+        "product_shadow_sp": "shadow-2",
+        "product_show_sale_badge": true,
+        "product_sale_badge_color": "bg-success text-white",
+        "product_title_size": "h6",
+        "product_show_atc_form": true,
+        "product_show_wishlist_btn": true,
+        "article_img_orientation": "landscape-2",
+        "article_title_size": "h5",
+        "article_meta": true,
+        "article_excerpt": true,
+        "page_title_size": "h5",
+        "page_excerpt": true,
+        "breakpoint_xs": 2,
+        "breakpoint_sm": 2,
+        "breakpoint_md": 3,
+        "breakpoint_lg": 3,
+        "breakpoint_xl": 4,
+        "breakpoint_xxl": 4,
+        "pt": 0,
+        "pb": 10,
+        "mt": 0,
+        "mb": 0
+      }
+    }
+  },
+  "order": [
+    "template-search"
+  ]
+}

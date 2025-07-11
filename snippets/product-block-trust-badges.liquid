@@ -1,0 +1,51 @@
+{% liquid 
+    assign mt = block.settings.mt | prepend: 'mt-'
+    assign mb = block.settings.mb | prepend: 'mb-'
+%}
+
+{% style %}
+  #pdp-trust-badges svg {
+    color: {{ block.settings.color_trust }};
+  } 
+{% endstyle %}
+
+{% if block %}
+    {% liquid 
+        if block.settings.icon_1
+            assign icons = block.settings.icon_1 | append: ','
+            assign text = block.settings.text_1 | append: ','
+        endif
+        if block.settings.icon_2
+            assign icons = block.settings.icon_2 | append: ',' | prepend: icons
+            assign text = block.settings.text_2 | append: ',' | prepend: text
+        endif
+        if block.settings.icon_3
+            assign icons = block.settings.icon_3 | append: ',' | prepend: icons
+            assign text = block.settings.text_3 | append: ',' | prepend: text
+        endif
+        if block.settings.icon_4
+            assign icons = block.settings.icon_4 | append: ',' | prepend: icons
+            assign text = block.settings.text_4 | append: ',' | prepend: text
+        endif
+
+        assign icons = icons | split: ','
+        assign text = text | split: ','
+    %}
+    <div 
+        class="product-block-trust-badges mx-auto {{ mt }} {{ mb }}" 
+        style="max-width: {{ block.settings.max_width }}px;" {{ block.shopify_attributes }}>
+        <ul 
+            id="pdp-trust-badges"
+            class="list-unstyled row justify-content-center text-center small lh-sm mx-n4 mb-0"
+            aria-label="{{ block.settings.label }}">
+            {% for icon in icons %}
+                <li class="p-4 {{ block.settings.col_size }}">
+                    <div class="mb-3">
+                        {{ icon }}
+                    </div>
+                    {{ text[forloop.index0] }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}

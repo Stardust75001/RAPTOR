@@ -1,0 +1,3988 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid
+    assign pt = section.settings.pt | prepend: 'pt-5 pt-sm-'
+    assign pb = section.settings.pb | prepend: 'pb-'
+%}
+
+{% style %}
+  .product-content-bg-gradient {
+      background: {{ section.settings.product_content_bg_gradient }};
+  }
+{% endstyle %}
+
+<script>
+    window.productVariants = {{ product.variants | json }}
+</script>
+
+<a class="visually-hidden-focusable" href="#product-content">
+    {{ 'general.accessibility.skip_product_content' | t }}
+</a>
+
+<section 
+    id="product-template" 
+    class="{{ pt }} {{ pb }}"
+    data-product-handle="{{ product.handle }}">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center my-4">
+            {% if section.settings.show_breadcrumbs and section.settings.breadcrumb_position == 'top' %}
+                <div class="breadcrumbs-wrapper">
+                    {% render 'breadcrumbs' %}
+                </div>
+            {% endif %}
+            {% if section.settings.show_share_btn and section.settings.share_btn_position == 'top' %}
+                <div class="ms-auto">
+                    {% render 'share-button', title: product.title, url: product.url %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="product-gallery-wrapper">
+                    {% render 'product-gallery' %}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div id="product-content" class="product-content">
+                    <div class="{% if section.settings.product_content_show_bg_gradient %}product-content-bg-gradient rounded mx-n3 mx-lg-0 p-lg-5 p-3{% endif %}">
+                  
+                    {% form 'product', product, onsubmit: 'handleAddToCartFormSubmit(this, event)' %}
+                        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                          
+                          {%- for block in section.blocks -%}
+                              {%- case block.type -%}
+                                  {%- when '@app' -%}
+                                      {% render block %}
+                                  {%- when 'vendor' -%}
+                                      {% render 'product-block-vendor', block: block %}
+                                  {%- when 'title' -%}
+                                      {% render 'product-block-title', block: block %}
+                                  {%- when 'sku' -%}
+                                      {% render 'product-block-sku', block: block %}
+                                  {%- when 'subtitle' -%}
+                                      {% render 'product-block-subtitle', block: block %}
+                                  {%- when 'rating_shopitrust' -%}
+                                      {% render 'product-block-rating-shopitrust', block: block %}
+                                  {%- when 'rating_natif' -%}
+                                      {% render 'product-block-rating-natif', block: block %}
+                                  {%- when 'price' -%}
+                                      {% render 'product-block-price', block: block, form: form %}
+                                  {%- when 'variant_selector' -%}
+                                      {% render 'product-block-variant-selector', block: block %}
+                                  {%- when 'purchase_options' -%}
+                                      {% render 'product-block-purchase-options', block: block %}
+                                  {%- when 'inventory_bar' -%}
+                                      {% render 'product-block-inventory-bar', block: block %}
+                                  {%- when 'gift_card' -%}
+                                      {% render 'product-block-gift-card', form: form %}
+                                  {%- when 'buy_buttons' -%}
+                                      {% render 'product-block-buy-buttons', block: block, form: form %}
+                                  {%- when 'payment_icons' -%}
+                                      {% render 'product-block-payment-icons', block: block %}
+                                  {%- when 'animated_stories' -%}
+                                      {% render 'product-block-animated-stories', block: block %}
+                                  {%- when 'qty_breaks' -%}
+                                      {% render 'product-block-qty-breaks', block: block %}
+                                  {%- when 'text' -%}
+                                      {% render 'product-block-text', block: block %}
+                                  {%- when 'scrolling_text' -%}
+                                      {% render 'product-block-scrolling-text', block: block %}
+                                  {%- when 'limited_offer' -%}
+                                      {% render 'product-block-limited-offer', block: block %}
+                                  {%- when 'live_visitors' -%}
+                                      {% render 'product-block-live-visitors', block: block %}
+                                  {%- when 'estimated_delivery' -%}
+                                      {% render 'product-block-estimated-delivery', block: block %}
+                                  {%- when 'liquid_code' -%}
+                                      {% render 'product-block-liquid-code', block: block %}
+                                  {%- when 'separator' -%}
+                                      {% render 'product-block-separator', block: block %}
+                                  {%- when 'media' -%}
+                                      {% render 'product-block-media', block: block %}
+                                  {%- when 'delivery_info' -%}
+                                      {% render 'product-block-delivery-info', block: block %}
+                                  {%- when 'accordion' -%}
+                                      {% render 'product-block-accordion', block: block %}
+                                  {%- when 'personalization' -%}
+                                      {% render 'product-block-personalization', block: block %}
+                                  {%- when 'trust_badges' -%}
+                                      {% render 'product-block-trust-badges', block: block %}
+                                  {%- when 'testimonials' -%}
+                                      {% render 'product-block-testimonials', block: block %}
+                                  {%- when 'tabs' -%}
+                                      {% render 'product-block-tabs', block: block %}
+                                      
+                              {%- endcase -%}
+                          {%- endfor -%}
+                      
+                        
+                  {% endform %}
+</div>
+
+{% liquid
+    render 'bought-product-together' 
+%}
+
+<div class="d-flex justify-content-between align-items-center my-4">
+    {% if section.settings.show_breadcrumbs and section.settings.breadcrumb_position == 'bottom' %}
+        <div class="breadcrumbs-wrapper me-6">
+            {% render 'breadcrumbs' %}
+        </div>
+    {% endif %}
+    {% if section.settings.show_share_btn and section.settings.share_btn_position == 'bottom' %}
+        <div class="ms-auto">
+            {% render 'share-button', title: product.title, url: product.url %}
+        </div>
+    {% endif %}
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+{% liquid
+    render 'product-prev-next'
+    render 'product-block-upsell-modal'
+    render 'product-block-size-chart'
+%}
+
+{%- liquid
+    if product.selected_or_first_available_variant.featured_media
+        assign seo_media = product.selected_or_first_available_variant.featured_media
+    else
+        assign seo_media = product.featured_media
+    endif
+-%}
+
+<!-- Structured data for SEO -->
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org/",
+    "@type": "Product",
+    "name": {{ product.title | json }},
+    "url": {{ request.origin | append: product.url | json }},
+    {% if seo_media -%}
+        "image": [
+            {{ seo_media | image_url: width: seo_media.preview_image.width | prepend: "https:" | json }}
+        ],
+    {%- endif %}
+    "description": {{ product.description | strip_html | json }},
+    {% if product.selected_or_first_available_variant.sku != blank -%}
+        "sku": {{ product.selected_or_first_available_variant.sku | json }},
+    {%- endif %}
+    "brand": {
+        "@type": "Brand",
+        "name": {{ product.vendor | json }}
+    },
+    "offers": [
+        {%- for variant in product.variants -%}
+            {
+            "@type" : "Offer",
+            {%- if variant.sku != blank -%}
+                "sku": {{ variant.sku | json }},
+            {%- endif -%}
+            {%- if variant.barcode.size == 12 -%}
+                "gtin12": {{ variant.barcode }},
+            {%- endif -%}
+            {%- if variant.barcode.size == 13 -%}
+                "gtin13": {{ variant.barcode }},
+            {%- endif -%}
+            {%- if variant.barcode.size == 14 -%}
+                "gtin14": {{ variant.barcode }},
+            {%- endif -%}
+            "availability" : "http://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
+            "price" : {{ variant.price | divided_by: 100.00 | json }},
+            "priceCurrency" : {{ cart.currency.iso_code | json }},
+            "url" : {{ request.origin | append: variant.url | json }}
+            }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+    ]
+}
+</script>
+
+{% schema %}
+{
+    "name": "Product (template)",
+    "settings": [
+        {
+            "type": "paragraph", 
+            "content": "Documentation EN : [Product (template) by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/page-produit\/produit-modele)"
+        },
+        {
+            "type": "header",
+            "content": "General"
+        },
+        {
+            "type": "checkbox",
+            "id": "product_content_show_bg_gradient",
+            "label": "Enable form gradient background",
+            "default": true
+        },
+        {
+            "type": "color_background",
+            "id": "product_content_bg_gradient",
+            "label": "Form gradient"
+        },
+        {
+            "type": "checkbox",
+            "id": "show_breadcrumbs",
+            "label": "Show breadcrumbs",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "breadcrumb_position",
+            "label": "Breadcrumb position",
+            "default": "bottom",
+            "options": [
+                { "value": "top", "label": "Top" },
+                { "value": "bottom", "label": "Bottom" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "show_share_btn",
+            "label": "Show share button",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "share_btn_position",
+            "label": "Share button position",
+            "default": "bottom",
+            "options": [
+                { "value": "top", "label": "Top" },
+                { "value": "bottom", "label": "Bottom" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Gallery"
+        },
+        {
+            "type": "checkbox",
+            "id": "first_to_variant",
+            "label": "Show first variant image",
+            "info": "The first variant image will be selected instead of the main image.",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "gallery_img_orientation",
+            "label": "Image orientation",
+            "default": "square",
+            "options": [
+                { "value": "square", "label": "Square" },
+                { "value": "landscape", "label": "Landscape" },
+                { "value": "potrait", "label": "Portrait" },
+                { "value": "adapt", "label": "Adapt to image" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "gallery_img_thumbnail",
+            "label": "Image border",
+            "default": "img-thumbnail",
+            "options": [
+                { "value": "", "label": "None" },
+                { "value": "img-thumbnail", "label": "Border" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "gallery_mobile_full_width",
+            "label": "Full width on mobile",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "gallery_show_thumbnails_mobile",
+            "label": "Show thumbnails on mobile",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "gallery_enable_lightbox",
+            "label": "Enable lightbox mode (full screen)",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Section spacing"
+        },
+        {
+            "type": "range",
+            "id": "pt",
+            "label": "Top padding",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 10
+        },
+        {
+            "type": "range",
+            "id": "pb",
+            "label": "Bottom padding",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 10
+        },
+        {
+            "type": "range",
+            "id": "mt",
+            "label": "Top margin",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mb",
+            "label": "Bottom margin",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        }
+    ],
+    "blocks": [
+        {
+            "type": "@app"
+        },
+        {
+            "type": "vendor",
+            "name": "Vendor",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "paragraph", 
+                    "content": "Documentation EN : [Vendor by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/page-produit\/produit-modele\/distributeur)"
+                },
+                {
+                    "type": "select",
+                    "id": "image_text_align",
+                    "label": "Alignment",
+                    "default": "justify-content-left",
+                    "options": [
+                        { "value": "justify-content-left", "label": "Left" },
+                        { "value": "justify-content-center", "label": "Center" }
+                    ]
+                },
+                {
+                    "type": "header",
+                    "content": "Brand image"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "show_brand_image",
+                    "label": "Show brand image",
+                    "default": true
+                },
+                {
+                    "type": "text",
+                    "id": "metafield",
+                    "label": "Metafield key name",
+                    "default": "shopiweb.brand_image",
+                    "info": "Please first [create the above metafield](https:\/\/shopify.com\/admin\/metafields\/product\/create) then add the brand image to the product."
+                },
+                {
+                    "type": "text",
+                    "id": "brand_image_size",
+                    "label": "Image Width/Height (px)",
+                    "default": "120"
+                },
+                {
+                    "type": "header",
+                    "content": "Brand name"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "show_vendor",
+                    "label": "Show vendor",
+                    "default": true
+                },
+                {
+                    "type": "checkbox",
+                    "id": "is_badge",
+                    "label": "Enable badge style",
+                    "default": false
+                },
+                {
+                    "type": "select",
+                    "id": "badge_color",
+                    "label": "Badge color",
+                    "options": [
+                        { "value": "text-bg-primary", "label": "Primary" },
+                        { "value": "text-bg-secondary", "label": "Secondary" },
+                        { "value": "text-bg-tertiary", "label": "Tertiary" },
+                        { "value": "text-bg-light", "label": "Light" },
+                        { "value": "text-bg-dark", "label": "Dark" },
+                        { "value": "text-bg-success", "label": "Success" },
+                        { "value": "text-bg-warning", "label": "Warning" },
+                        { "value": "text-bg-danger", "label": "Danger" },
+                        { "value": "text-bg-info", "label": "Info" }
+                    ],
+                    "default": "text-bg-primary"
+                },
+                {
+                    "type": "select",
+                    "id": "font_size",
+                    "label": "Text size",
+                    "default": "fs-5",
+                    "options": [
+                        { "value": "fs-4", "label": "Large" },
+                        { "value": "fs-5", "label": "Medium" },
+                        { "value": "fs-6", "label": "Small" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "text_transform",
+                    "label": "Text transform",
+                    "default": "text-uppercase",
+                    "options": [
+                        { "value": "", "label": "Normal" },
+                        { "value": "text-capitalize", "label": "Capitalize" },
+                        { "value": "text-lowercase", "label": "Lowercase" },
+                        { "value": "text-uppercase", "label": "Uppercase" }
+            
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "text_font_weight",
+                    "label": "Font weight",
+                    "default": "normal",
+                    "options": [
+                        { "value": "normal", "label": "Normal" },
+                        { "value": "bold", "label": "Bold" }
+                    ]
+                },
+                {
+                    "type": "header",
+                    "content": "Block spacing"
+                },
+                {
+                    "type": "range",
+                    "id": "mt",
+                    "label": "Top margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                },
+                {
+                    "type": "range",
+                    "id": "mb",
+                    "label": "Bottom margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+            "type": "title",
+            "name": "Title",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "paragraph", 
+                    "content": "Documentation EN : [Title by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/page-produit\/produit-modele\/titre)"
+                },
+                {
+                    "type": "text",
+                    "id": "title_next",
+                    "label": "Title complement"
+                },
+                {
+                    "type": "select",
+                    "id": "heading_tag",
+                    "label": "Title tag (SEO)",
+                    "default": "h2",
+                    "options": [
+                        { "value": "h1", "label": "h1" },
+                        { "value": "h2", "label": "h2" },
+                        { "value": "h3", "label": "h3" },
+                        { "value": "h4", "label": "h4" },
+                        { "value": "h5", "label": "h5" },
+                        { "value": "h6", "label": "h6" },
+                        { "value": "span", "label": "None" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "title_size",
+                    "label": "Title size",
+                    "default": "h2",
+                    "options": [
+                        { "group": "Standard Title", "value": "h1", "label": "Very Large" },
+                        { "group": "Standard Title", "value": "h2", "label": "Large" },
+                        { "group": "Standard Title", "value": "h3", "label": "Medium" },
+                        { "group": "Standard Title", "value": "h4", "label": "Small" },
+                        { "group": "Standard Title", "value": "h5", "label": "Very Small" },
+                        { "group": "Standard Title", "value": "h6", "label": "Extra Small" }
+                    ]
+                },
+                {
+                    "type": "checkbox",
+                    "id": "show_custom_svg_h2",
+                    "label": "Show subtitle SVG",
+                    "default": true
+                },
+                {
+                    "type": "select",
+                    "id": "text_align",
+                    "label": "Text alignment",
+                    "default": "text-start",
+                    "options": [
+                        { "value": "text-start", "label": "Left" },
+                        { "value": "text-center", "label": "Center" }
+                    ]
+                },
+                {
+                    "type": "header",
+                    "content": "Block spacing"
+                },
+                {
+                    "type": "range",
+                    "id": "mt",
+                    "label": "Top margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                },
+                {
+                    "type": "range",
+                    "id": "mb",
+                    "label": "Bottom margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+            "type": "sku",
+            "name": "SKU",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "paragraph", 
+                    "content": "Documentation EN : [SKU by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/page-produit\/produit-modele\/sku)"
+                },
+                {
+                    "type": "header",
+                    "content": "Block spacing"
+                },
+                {
+                    "type": "range",
+                    "id": "mt",
+                    "label": "Top margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                },
+                {
+                    "type": "range",
+                    "id": "mb",
+                    "label": "Bottom margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+            "type": "subtitle",
+            "name": "Subtitle",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "paragraph", 
+                    "content": "Documentation EN : [Subtitle by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/page-produit\/produit-modele\/sous-titre)"
+                },
+                {
+                    "type": "header",
+                    "content": "Block spacing"
+                },
+                {
+                    "type": "range",
+                    "id": "mt",
+                    "label": "Top margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                },
+                {
+                    "type": "range",
+                    "id": "mb",
+                    "label": "Bottom margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+            "type": "rating_shopitrust",
+            "name": "🏆 ShopiTrust Ratings",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "🏆 ShopiTrust Ratings Application",
+                    "info": "👉 Shopiweb Premium Version Application"
+                },
+                {
+                    "type": "paragraph", 
+                    "content": "Documentation EN : [ShopiTrust Ratings by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/page-produit\/produit-modele\/evaluations-shopitrust)"
+                },
+                {
+                    "type": "select",
+                    "id": "star_align",
+                    "label": "Star positioning",
+                    "default": "justify-content-start",
+                    "options": [
+                        { "value": "justify-content-start", "label": "Left" },
+                        { "value": "justify-content-center", "label": "Center" },
+                        { "value": "justify-content-end", "label": "Right" }
+                    ]
+                },
+                {
+                    "type": "url",
+                    "id": "shopitrust_url",
+                    "label": "Link to reviews"
+                },
+                {
+                    "type": "header",
+                    "content": "Block spacing"
+                },
+                {
+                    "type": "range",
+                    "id": "mt",
+                    "label": "Top margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                },
+                {
+                    "type": "range",
+                    "id": "mb",
+                    "label": "Bottom margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+            "type": "rating_natif",
+            "name": "Ratings (Native)",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "paragraph", 
+                    "content": "Documentation EN : [Ratings (Native) by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/page-produit\/produit-modele\/evaluations-native)"
+                },
+                {
+                    "type": "range",
+                    "id": "stars_num",
+                    "min": 0,
+                    "max": 5,
+                    "step": 0.5,
+                    "unit": "★",
+                    "label": "Number of default stars",
+                    "info": "Set the number of stars (including half-stars) for the default style.",
+                    "default": 5
+                },
+                {
+                    "type": "text",
+                    "id": "avis_text",
+                    "label": "Review description",
+                    "default": "(24 reviews)",
+                    "info": "Leave empty to disable"
+                },
+                {
+                    "type": "url",
+                    "id": "avis_url",
+                    "label": "Link to reviews"
+                },
+                {
+                    "type": "select",
+                    "id": "star_align",
+                    "label": "Star positioning",
+                    "default": "justify-content-start",
+                    "options": [
+                        { "value": "justify-content-start", "label": "Left" },
+                        { "value": "justify-content-center", "label": "Center" },
+                        { "value": "justify-content-end", "label": "Right" }
+                    ]
+                },
+                {
+                    "type": "header",
+                    "content": "Colors"
+                },
+                {
+                    "type": "color",
+                    "id": "starscolor",
+                    "label": "Active stars color",
+                    "default": "#ffc107"
+                },
+                {
+                    "type": "color",
+                    "id": "starsoff",
+                    "label": "Inactive stars color",
+                    "default": "#dedede"
+                },
+                {
+                    "type": "header",
+                    "content": "Block spacing"
+                },
+                {
+                    "type": "range",
+                    "id": "mt",
+                    "label": "Top margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                },
+                {
+                    "type": "range",
+                    "id": "mb",
+                    "label": "Bottom margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+            "type": "price",
+            "name": "Price",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "paragraph", 
+                    "content": "Documentation EN : [Price by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/page-produit\/produit-modele\/prix)"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "taxes_included",
+                    "label": "Show \"Tax included.\" mention",
+                    "default": true
+                },
+                {
+                    "type": "header",
+                    "content": "Block spacing"
+                },
+                {
+                    "type": "range",
+                    "id": "mt",
+                    "label": "Top margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                },
+                {
+                    "type": "range",
+                    "id": "mb",
+                    "label": "Bottom margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+            "type": "variant_selector",
+            "name": "Variant selector",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "paragraph", 
+                    "content": "Documentation EN : [Variant selector by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/page-produit\/produit-modele\/selecteur-de-variante)"
+                },
+                {
+                    "type": "header",
+                    "content": "Block spacing"
+                },
+                {
+                    "type": "range",
+                    "id": "mt",
+                    "label": "Top margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                },
+                {
+                    "type": "range",
+                    "id": "mb",
+                    "label": "Bottom margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+            "type": "purchase_options",
+            "name": "Purchase options",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "paragraph", 
+                    "content": "Documentation EN : [Purchase options by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/page-produit\/produit-modele\/options-dachat)"
+                },
+                {
+                    "type": "paragraph",
+                    "content": "Specially designed to work optimally with the Recharge Subscriptions or Shopify Subscriptions app from the Shopify App Store."
+                },
+                {
+                    "type": "checkbox",
+                    "id": "sub_selected_first",
+                    "label": "Subscription selected first",
+                    "default": false,
+                    "info": "The subscription plan will be selected first when the page loads."
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Title",
+                    "default": "Purchase options",
+                    "info": "Leave empty to disable"
+                },
+                {
+                    "type": "richtext",
+                    "id": "sub_benefits",
+                    "label": "Subscription benefits",
+                    "default": "<ul><li>Automatically save 10%</li><li>Pause, swap, or cancel anytime!</li><li>Special discounts/partnerships</li><li>Free shipping after 2nd order</li></ul>",
+                    "info": "Leave empty to disable"
+                },
+                {
+                    "type": "header",
+                    "content": "Block spacing"
+                },
+                {
+                    "type": "range",
+                    "id": "mt",
+                    "label": "Top margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                },
+                {
+                    "type": "range",
+                    "id": "mb",
+                    "label": "Bottom margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+            "type": "inventory_bar",
+            "name": "🏆 Inventory bar",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "🏆 Inventory Bar Application",
+                    "info": "👉 Shopiweb Premium Version Application"
+                },
+                {
+                    "type": "paragraph", 
+                    "content": "Documentation EN : [Inventory bar by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/page-produit\/produit-modele\/barre-dinventaire)"
+                },
+                {
+                    "type": "range",
+                    "id": "inventory_bar_verylow_threshold",
+                    "label": "Minimum inventory threshold",
+                    "info": "Below this level, the inventory bar displays a red warning color.",
+                    "default": 5,
+                    "min": 2,
+                    "max": 100,
+                    "step": 1
+                },
+                {
+                    "type": "select",
+                    "id": "inventory_bar_color_verylow",
+                    "label": "Very low inventory color",
+                    "options": [
+                        { "value": "dark", "label": "Dark" },
+                        { "value": "primary", "label": "Primary" },
+                        { "value": "secondary", "label": "Secondary" },
+                        { "value": "tertiary", "label": "Tertiary" },
+                        { "value": "success", "label": "Success" },
+                        { "value": "danger", "label": "Danger" },
+                        { "value": "warning", "label": "Warning" },
+                        { "value": "info", "label": "Info" }
+                    ],
+                    "default": "danger"
+                },
+                {
+                    "type": "range",
+                    "id": "inventory_bar_low_threshold",
+                    "label": "Intermediate inventory threshold",
+                    "info": "Below this level, the inventory bar displays an orange warning color.",
+                    "default": 10,
+                    "min": 2,
+                    "max": 100,
+                    "step": 1
+                },
+                {
+                    "type": "select",
+                    "id": "inventory_bar_color_low",
+                    "label": "Low inventory color",
+                    "options": [
+                        { "value": "dark", "label": "Dark" },
+                        { "value": "primary", "label": "Primary" },
+                        { "value": "secondary", "label": "Secondary" },
+                        { "value": "tertiary", "label": "Tertiary" },
+                        { "value": "success", "label": "Success" },
+                        { "value": "danger", "label": "Danger" },
+                        { "value": "warning", "label": "Warning" },
+                        { "value": "info", "label": "Info" }
+                    ],
+                    "default": "warning"
+                },
+                {
+                    "type": "range",
+                    "id": "inventory_bar_max_threshold",
+                    "label": "Maximum inventory threshold",
+                    "info": "The current value of the product inventory will be compared to this value to determine the width of the progress bar.",
+                    "default": 100,
+                    "min": 50,
+                    "max": 500,
+                    "step": 10
+                },
+                {
+                    "type": "select",
+                    "id": "inventory_bar_color_normal",
+                    "label": "Normal inventory color",
+                    "options": [
+                        { "value": "dark", "label": "Dark" },
+                        { "value": "primary", "label": "Primary" },
+                        { "value": "secondary", "label": "Secondary" },
+                        { "value": "tertiary", "label": "Tertiary" },
+                        { "value": "success", "label": "Success" },
+                        { "value": "danger", "label": "Danger" },
+                        { "value": "warning", "label": "Warning" },
+                        { "value": "info", "label": "Info" }
+                    ],
+                    "default": "success"
+                },
+                {
+                    "type": "header",
+                    "content": "Block spacing"
+                },
+                {
+                    "type": "range",
+                    "id": "mt",
+                    "label": "Top margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                },
+                {
+                    "type": "range",
+                    "id": "mb",
+                    "label": "Bottom margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+          "type": "gift_card",
+          "name": "🏆 Gift card",
+          "limit": 1,
+          "settings": [
+            {
+                "type": "header",
+                "content": "🏆 Gift Card Application",
+                "info": "👉 Shopiweb Premium Version Application"
+            },
+            {
+                "type": "paragraph", 
+                "content": "Documentation EN : [Gift card by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/page-produit\/produit-modele\/carte-cadeau)"
+            },
+            {
+                "type": "paragraph", 
+                "content": "This option is only visible when the gift card is configured in Shopify."
+            },
+            {
+                "type": "select",
+                "id": "btn_color",
+                "label": "Button color",
+                "default": "btn-outline-primary",
+                "options": [
+                    { "group": "Normal", "value": "btn-light", "label": "Light" },
+                    { "group": "Normal", "value": "btn-dark", "label": "Dark" },
+                    { "group": "Normal", "value": "btn-primary", "label": "Primary" },
+                    { "group": "Normal", "value": "btn-secondary", "label": "Secondary" },
+                    { "group": "Normal", "value": "btn-tertiary", "label": "Tertiary" },
+                    { "group": "Normal", "value": "btn-success", "label": "Success" },
+                    { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+                    { "group": "Normal", "value": "btn-warning", "label": "Warning" },
+                    { "group": "Normal", "value": "btn-info", "label": "Info" },
+                    { "group": "Outline", "value": "btn-outline-light", "label": "Outline Light" },
+                    { "group": "Outline", "value": "btn-outline-dark", "label": "Outline Dark" },
+                    { "group": "Outline", "value": "btn-outline-primary", "label": "Outline Primary" },
+                    { "group": "Outline", "value": "btn-outline-secondary", "label": "Outline Secondary" },
+                    { "group": "Outline", "value": "btn-outline-tertiary", "label": "Outline Tertiary" },
+                    { "group": "Outline", "value": "btn-outline-success", "label": "Outline Success" },
+                    { "group": "Outline", "value": "btn-outline-danger", "label": "Outline Danger" },
+                    { "group": "Outline", "value": "btn-outline-warning", "label": "Outline Warning" },
+                    { "group": "Outline", "value": "btn-outline-info", "label": "Outline Info" }
+                ]
+            },
+            {
+                "type": "header",
+                "content": "Block spacing"
+            },
+            {
+                "type": "range",
+                "id": "mt",
+                "label": "Top margin",
+                "min": 0,
+                "max": 20,
+                "step": 1,
+                "default": 3
+            },
+            {
+                "type": "range",
+                "id": "mb",
+                "label": "Bottom margin",
+                "min": 0,
+                "max": 20,
+                "step": 1,
+                "default": 3
+            }
+          ]
+        },
+        {
+            "type": "buy_buttons",
+            "name": "Buy buttons",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "paragraph", 
+                    "content": "Documentation EN : [Buy buttons by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/page-produit\/produit-modele\/boutons-dachat)"
+                },
+                {
+                    "type": "select",
+                    "id": "btn_color",
+                    "label": "'Add to cart' button color",
+                    "default": "btn-primary",
+                    "options": [
+                        { "group": "Normal", "value": "btn-light", "label": "Light" },
+                        { "group": "Normal", "value": "btn-dark", "label": "Dark" },
+                        { "group": "Normal", "value": "btn-primary", "label": "Primary" },
+                        { "group": "Normal", "value": "btn-secondary", "label": "Secondary" },
+                        { "group": "Normal", "value": "btn-tertiary", "label": "Tertiary" },
+                        { "group": "Normal", "value": "btn-success", "label": "Success" },
+                        { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+                        { "group": "Normal", "value": "btn-warning", "label": "Warning" },
+                        { "group": "Normal", "value": "btn-info", "label": "Info" }
+                    ]
+                },
+                {
+                    "type": "checkbox",
+                    "id": "show_qty_field",
+                    "label": "Show quantity field",
+                    "default": true
+                },
+                {
+                    "type": "checkbox",
+                    "id": "show_buy_btn",
+                    "label": "Show buy button",
+                    "default": true
+                },
+                {
+                    "type": "checkbox",
+                    "id": "show_dynamic_buttons",
+                    "label": "Show dynamic buttons",
+                    "default": false
+                },
+                {
+                    "type": "header",
+                    "content": "Block spacing"
+                },
+                {
+                    "type": "range",
+                    "id": "mt",
+                    "label": "Top margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                },
+                {
+                    "type": "range",
+                    "id": "mb",
+                    "label": "Bottom margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+          "type": "payment_icons",
+          "name": "🏆 Payment icons",
+          "limit": 1,
+          "settings": [
+            {
+                "type": "header",
+                "content": "🏆 Payment Icons Application",
+                "info": "👉 Shopiweb Premium Version Application"
+            },
+            {
+                "type": "paragraph", 
+                "content": "Documentation EN : [Payment icons by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/page-produit\/produit-modele\/icones-paiement)"
+            },
+            {
+                "type": "header",
+                "content": "Customization"
+            },
+            {
+                "type": "text",
+                "id": "payment_title",
+                "label": "Title",
+                "default": "SECURE PAYMENT"
+            },
+            {
+                "type": "color",
+                "id": "color",
+                "label": "Title color",
+                "default": "#212529"
+            },
+            {
+                "type": "checkbox",
+                "id": "show_lines",
+                "default": true,
+                "label": "Show decoration lines"
+            },
+            {
+                "type": "text",
+                "id": "payment_text",
+                "label": "Text (Label)",
+                "default": "100% secure and protected payments"
+            },
+            {
+                "type": "range",
+                "id": "icon_size",
+                "label": "Icon size",
+                "min": 0,
+                "max": 150,
+                "step": 2,
+                "default": 50
+            },
+             {
+                "type": "range",
+                "id": "icon_size_mobile",
+                "label": "Mobile icon size",
+                "min": 0,
+                "max": 150,
+                "step": 2,
+                "default": 50
+            },
+            {
+                "type": "checkbox",
+                "id": "show_filter",
+                "default": false,
+                "label": "Enable black and white card filter"
+            },
+            {
+                "type": "header",
+                "content": "Cards"
+            },
+            {
+                "type": "checkbox",
+                "id": "stripe",
+                "default": false,
+                "label": "Stripe"
+            },
+            {
+                "type": "checkbox",
+                "id": "amex",
+                "default": false,
+                "label": "Amex"
+            },
+            {
+                "type": "checkbox",
+                "id": "apple_pay",
+                "default": false,
+                "label": "ApplePay"
+            },
+            {
+                "type": "checkbox",
+                "id": "mastercard",
+                "default": false,
+                "label": "Mastercard"
+            },
+            {
+                "type": "checkbox",
+                "id": "visa",
+                "default": false,
+                "label": "Visa"
+            },
+            {
+                "type": "checkbox",
+                "id": "paypal",
+                "default": false,
+                "label": "PayPal"
+            },
+            {
+                "type": "checkbox",
+                "id": "google_pay",
+                "default": false,
+                "label": "GooglePay"
+            },
+            {
+                "type": "checkbox",
+                "id": "discover",
+                "default": false,
+                "label": "Discover"
+            },
+            {
+                "type": "checkbox",
+                "id": "amazon_pay",
+                "default": false,
+                "label": "AmazonPay"
+            },
+            {
+                "type": "checkbox",
+                "id": "bitcoin",
+                "default": false,
+                "label": "Bitcoin"
+            },
+            {
+                "type": "checkbox",
+                "id": "shop_pay",
+                "default": false,
+                "label": "ShopPay"
+            },
+            {
+                "type": "checkbox",
+                "id": "klarna",
+                "default": false,
+                "label": "Klarna"
+            },
+            {
+                "type": "checkbox",
+                "id": "bancontact",
+                "default": false,
+                "label": "Bancontact"
+            },
+            {
+                "type": "html",
+                "id": "icon",
+                "label": "Icon code (SVG)",
+                "default": "<svg width='226' height='167' viewBox='0 0 226 167' fill='none' xmlns='http://www.w3.org/2000/svg'><g filter='url(#filter0_d_353_4479)'><rect x='21.3229' y='21.3229' width='182.562' height='124.354' rx='14.5521' fill='white' stroke='#D9D9D9' stroke-width='2.64583'/><path fill-rule='evenodd' clip-rule='evenodd' d='M113.927 110.789C107.622 116.23 99.4425 119.515 90.5049 119.515C70.5624 119.515 54.3958 103.161 54.3958 82.9865C54.3958 62.8125 70.5624 46.4583 90.5049 46.4583C99.4425 46.4583 107.622 49.7431 113.927 55.1844C120.232 49.7431 128.412 46.4583 137.349 46.4583C157.292 46.4583 173.458 62.8126 173.458 82.9866C173.458 103.161 157.292 119.515 137.349 119.515C128.412 119.515 120.232 116.23 113.927 110.789Z' fill='#ED0006'/><path fill-rule='evenodd' clip-rule='evenodd' d='M113.927 110.789C121.691 104.089 126.614 94.1193 126.614 82.9865C126.614 71.8538 121.691 61.8843 113.927 55.1843C120.232 49.743 128.412 46.4583 137.349 46.4583C157.292 46.4583 173.458 62.8125 173.458 82.9865C173.458 103.161 157.292 119.515 137.349 119.515C128.412 119.515 120.232 116.23 113.927 110.789Z' fill='#F9A000'/><path fill-rule='evenodd' clip-rule='evenodd' d='M113.927 110.789C121.691 104.089 126.614 94.1193 126.614 82.9866C126.614 71.854 121.691 61.8845 113.927 55.1846C106.163 61.8845 101.24 71.854 101.24 82.9866C101.24 94.1193 106.163 104.089 113.927 110.789Z' fill='#FF5E00'/></g><defs><filter id='filter0_d_353_4479' x='0' y='0' width='225.208' height='167' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'><feFlood flood-opacity='0' result='BackgroundImageFix'/><feColorMatrix in='SourceAlpha' type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0' result='hardAlpha'/><feOffset/><feGaussianBlur stdDeviation='10'/><feComposite in2='hardAlpha' operator='out'/><feColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.07 0'/><feBlend mode='normal' in2='BackgroundImageFix' result='effect1_dropShadow_353_4479'/><feBlend mode='normal' in='SourceGraphic' in2='effect1_dropShadow_353_4479' result='shape'/></filter></defs></svg>",
+                "info": "Copy your own svg code to add an icon otherwise leave empty."
+            },
+            {
+                "type": "header",
+                "content": "Block spacing"
+            },
+            {
+                "type": "range",
+                "id": "mt",
+                "label": "Top margin",
+                "min": 0,
+                "max": 20,
+                "step": 1,
+                "default": 3
+            },
+            {
+                "type": "range",
+                "id": "mb",
+                "label": "Bottom margin",
+                "min": 0,
+                "max": 20,
+                "step": 1,
+                "default": 3
+            }
+          ]
+        },
+        {
+            "type": "animated_stories",
+            "name": "🏆 Animated stories",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "paragraph", 
+                    "content": "EN Documentation: [Animated Stories by Shopiweb](https://www.docs.shopiweb.fr/theme-premium/documentation/page-produit/produit-modele/stories-animées)"
+                },
+                {
+                    "type": "header",
+                    "content": "🏆 Animated Product Stories Application",
+                    "info": "👉 Application Version Shopiweb Premium"
+                },
+                {
+                    "type": "header",
+                    "content": "Item"
+                },
+                {
+                    "type": "text",
+                    "id": "list_label",
+                    "label": "List label",
+                    "default": "Featured videos",
+                    "info": "Used for accessibility purposes"
+                },
+                {
+                    "type": "text",
+                    "id": "item_img_size",
+                    "label": "Largeur/hauteur de l'image (px)",
+                    "default": "70"
+                },
+                {
+                    "type": "range",
+                    "id": "item_stroke_width",
+                    "label": "Largeur du trait",
+                    "default": 2,
+                    "min": 1,
+                    "max": 4,
+                    "step": 1
+                },
+                {
+                    "type": "color",
+                    "id": "item_stroke_color_start",
+                    "label": "Stroke color start",
+                    "default": "#F56900"
+                },
+                {
+                    "type": "color",
+                    "id": "item_stroke_color_end",
+                    "label": "Fin de la couleur du trait",
+                    "default": "#C99700"
+                },
+                {
+                    "type": "select",
+                    "id": "item_title_size",
+                    "label": "Taille des titres",
+                    "default": "fs-6",
+                    "options": [
+                        { "group": "Texte Standard", "value": "fs-1", "label": "Extra Grand" },
+                        { "group": "Texte Standard", "value": "fs-2", "label": "Super Grand" },
+                        { "group": "Texte Standard", "value": "fs-3", "label": "Very Large" },
+                        { "group": "Texte Standard", "value": "fs-4", "label": "Large" },
+                        { "group": "Texte Standard", "value": "fs-5", "label": "Medium" },
+                        { "group": "Texte Standard", "value": "fs-6", "label": "Small" },
+                        { "group": "Texte Standard", "value": "extra-small", "label": "Very Small" }
+                    ]
+                },
+                {
+                    "type": "header",
+                    "content": "Stories 1"
+                },
+                {
+                    "type": "video",
+                    "id": "video",
+                    "label": "Video",
+                    "info": "Displays only in full screen mode"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "autoplay",
+                    "label": "Autoplay",
+                    "default": true,
+                    "info": "If enabled, the video will start automatically and the play icon will not display."
+                },
+                {
+                    "type": "text",
+                    "id": "title_0",
+                    "label": "Titre"
+                },
+                {
+                    "type": "header",
+                    "content": "Stories 2"
+                },
+                {
+                    "type": "video",
+                    "id": "video_1",
+                    "label": "Video",
+                    "info": "Displays only in full screen mode"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "autoplay_1",
+                    "label": "Autoplay",
+                    "default": true,
+                    "info": "If enabled, the video will start automatically and the play icon will not display."
+                },
+                {
+                    "type": "text",
+                    "id": "title_1",
+                    "label": "Titre"
+                },
+                {
+                    "type": "header",
+                    "content": "Stories 3"
+                },
+                {
+                    "type": "video",
+                    "id": "video_2",
+                    "label": "Video",
+                    "info": "Displays only in full screen mode"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "autoplay_2",
+                    "label": "Autoplay",
+                    "default": true,
+                    "info": "If enabled, the video will start automatically and the play icon will not display."
+                },
+                {
+                    "type": "text",
+                    "id": "title_2",
+                    "label": "Titre"
+                },
+                {
+                    "type": "header",
+                    "content": "Stories 4"
+                },
+                {
+                    "type": "video",
+                    "id": "video_3",
+                    "label": "Video",
+                    "info": "Displays only in full screen mode"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "autoplay_3",
+                    "label": "Autoplay",
+                    "default": true,
+                    "info": "If enabled, the video will start automatically and the play icon will not display."
+                },
+                {
+                    "type": "text",
+                    "id": "title_3",
+                    "label": "Titre"
+                },
+                {
+                    "type": "header",
+                    "content": "Stories 5"
+                },
+                {
+                    "type": "video",
+                    "id": "video_4",
+                    "label": "Video",
+                    "info": "Displays only in full screen mode"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "autoplay_4",
+                    "label": "Autoplay",
+                    "default": true,
+                    "info": "If enabled, the video will start automatically and the play icon will not display."
+                },
+                {
+                    "type": "text",
+                    "id": "title_4",
+                    "label": "Titre"
+                },
+                {
+                    "type": "header",
+                    "content": "Espacement du bloc"
+                },
+                {
+                    "type": "range",
+                    "id": "mt",
+                    "label": "Top margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                },
+                {
+                    "type": "range",
+                    "id": "mb",
+                    "label": "Bottom margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+            "type": "qty_breaks",
+            "name": "🏆 Pack Produits",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "🏆 Application Pack Produits",
+                    "info": "👉 Application Version Shopiweb Premium"
+                },
+                {
+                    "type": "paragraph",
+                    "content": "Documentation FR : [Pack Produits by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/metafields\/pack-produit-quantite)"
+                },
+                {
+                    "type": "paragraph",
+                    "content": "Allows users to select predefined quantities using radio buttons, preferably with a discount."
+                },
+                {
+                    "type": "select",
+                    "id": "style_packs",
+                    "label": "Style des packs",
+                    "default": "inline",
+                    "options": [
+                        { "value": "inline", "label": "En ligne" },
+                        { "value": "", "label": "En bundle"}
+                    ]
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Titre",
+                    "default": "Buy more, Save more!"
+                },
+                {
+                    "type": "select",
+                    "id": "title_size",
+                    "label": "Taille du titre",
+                    "default": "h5",
+                    "options": [
+                        { "group": "Titre Standard", "value": "h1", "label": "Very Large" },
+                        { "group": "Titre Standard", "value": "h2", "label": "Large" },
+                        { "group": "Titre Standard", "value": "h3", "label": "Medium" },
+                        { "group": "Titre Standard", "value": "h4", "label": "Small" },
+                        { "group": "Titre Standard", "value": "h5", "label": "Very Small" },
+                        { "group": "Titre Standard", "value": "h6", "label": "Extra Small" }
+                    ]
+                },
+                {
+                    "type": "text",
+                    "id": "metafield",
+                    "label": "Metafield key name",
+                    "default": "shopiweb.qty_breaks",
+                    "info": "Please first [create the metafield above](https://shopify.com/admin/metafields/product/create) then add the quantity break values in your product like 5:10 which corresponds to 5 items 10% discount"
+                },
+                {
+                    "type": "header",
+                    "content": "Produit"
+                },
+                {
+                    "type": "paragraph",
+                    "content": "The settings below only work if you choose the Bundle pack style"
+                },
+                {
+                    "type": "select",
+                    "id": "bg_color",
+                    "label": "Header color",
+                    "default": "bg-primary text-white",
+                    "options": [
+                        { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+                        { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+                        { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+                        { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "White" },
+                        { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Light" },
+                        { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Dark" },
+                        { "group": "Par défaut", "value": "", "label": "Body" },
+                        { "group": "Alerte", "value": "bg-success text-white", "label": "Success" },
+                        { "group": "Alerte", "value": "bg-warning text-dark", "label": "Avertissement" },
+                        { "group": "Alerte", "value": "bg-danger text-white", "label": "Danger" },
+                        { "group": "Alerte", "value": "bg-info text-white", "label": "Info" }
+                    ]
+                },
+                {
+                  "type": "text",
+                  "id": "text_offer_all_blocks",
+                  "label": "Titres des offres",
+                  "default": "OFFRE bloc 1, OFFRE bloc 2, OFFRE bloc 3",
+                  "info":"Titles for all offers (separated by commas)"
+                },
+                {
+                    "type": "color",
+                    "id": "offer_color_all_blocks",
+                    "label": "Couleur des titres",
+                    "default": "#F56900"
+                },
+                {
+                    "type": "color",
+                    "id": "offer_color_last",
+                    "label": "Couleur du dernier titre",
+                    "default": "#F56900",
+                    "info":"Title color for the block in last position"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "enable_animation_last_block",
+                    "label": "Activer l'animation flash",
+                    "default": false,
+                    "info":"Cochez cette option pour ajouter une animation Flash dynamique uniquement sur le titre du dernier bloc, le rendant ainsi plus accrocheur."
+                },
+                {
+                    "type": "select",
+                    "id": "img_orientation",
+                    "label": "Image orientation",
+                    "default": "square",
+                    "options": [
+                        { "value": "square", "label": "Square" },
+                        { "value": "landscape", "label": "Paysage" },
+                        { "value": "potrait", "label": "Portrait" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "img_thumbnail",
+                    "label": "Bordure de l'image",
+                    "default": "img-thumbnail",
+                    "options": [
+                        { "value": "", "label": "Aucune" },
+                        { "value": "img-thumbnail", "label": "Bordure" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "shadow_sp",
+                    "label": "Ombre",
+                    "options": [
+                        { "value": "shadow-none", "label": "Aucune" },
+                        { "value": "shadow-1", "label": "Light shadow" },
+                        { "value": "shadow-2", "label": "Ombre partiel" },
+                        { "value": "shadow-3", "label": "Ombre profonde" },
+                        { "value": "shadow-4", "label": "Ombre totale" }
+                    ],
+                    "default": "shadow-1"
+                },
+                {
+                    "type": "header",
+                    "content": "Espacement du bloc"
+                },
+                {
+                    "type": "range",
+                    "id": "mt",
+                    "label": "Top margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                },
+                {
+                    "type": "range",
+                    "id": "mb",
+                    "label": "Bottom margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+            "type": "text",
+            "name": "Texte enrichi",
+            "settings": [
+                {
+                    "type": "paragraph", 
+                    "content": "Documentation FR : [Texte enrichi by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/page-produit\/produit-modele\/texte-enrichi)"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Titre",
+                    "default": "Texte enrichi"
+                },
+                {
+                    "type": "select",
+                    "id": "title_size",
+                    "label": "Taille du titre",
+                    "default": "h5",
+                    "options": [
+                        { "group": "Titre Standard", "value": "h1", "label": "Very Large" },
+                        { "group": "Titre Standard", "value": "h2", "label": "Large" },
+                        { "group": "Titre Standard", "value": "h3", "label": "Medium" },
+                        { "group": "Titre Standard", "value": "h4", "label": "Small" },
+                        { "group": "Titre Standard", "value": "h5", "label": "Very Small" },
+                        { "group": "Titre Standard", "value": "h6", "label": "Extra Small" }
+                    ]
+                },
+                {
+                    "type": "richtext",
+                    "id": "description",
+                    "label": "Description",
+                    "default": "<p>Annoncez tout ce que vous voulez</p>"
+                },
+                {
+                    "type": "select",
+                    "id": "text_align",
+                    "label": "Alignement du texte",
+                    "default": "text-start",
+                    "options": [
+                        { "value": "text-start", "label": "Gauche" },
+                        { "value": "text-center", "label": "Centre" }
+                    ]
+                },
+                {
+                    "type": "header",
+                    "content": "Espacement du bloc"
+                },
+                {
+                    "type": "range",
+                    "id": "mt",
+                    "label": "Top margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                },
+                {
+                    "type": "range",
+                    "id": "mb",
+                    "label": "Bottom margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+          "type": "scrolling_text",
+          "name": "Scrolling text",
+          "limit": 1,
+          "settings": [
+              {
+                  "type": "paragraph", 
+                  "content": "EN Documentation: [Scrolling text by Shopiweb](https://www.docs.shopiweb.fr/theme-premium/documentation/page-produit/produit-modele/texte-defilant)"
+              },
+              {
+                  "type": "select",
+                  "id": "bg_color",
+                  "label": "Background color",
+                  "default": "bg-primary text-white",
+                  "options": [
+                      { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+                      { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+                      { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+                      { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "White" },
+                      { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Light" },
+                      { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Dark" },
+                      { "group": "Par défaut", "value": "", "label": "Body" },
+                      { "group": "Alerte", "value": "bg-success text-white", "label": "Success" },
+                      { "group": "Alerte", "value": "bg-warning text-dark", "label": "Avertissement" },
+                      { "group": "Alerte", "value": "bg-danger text-white", "label": "Danger" },
+                      { "group": "Alerte", "value": "bg-info text-white", "label": "Info" }
+                  ]
+              },
+              {
+                  "type": "checkbox",
+                  "id": "bg_gradient",
+                  "label": "Background gradient",
+                  "default": false,
+                  "info": "Ne s'applique pas aux couleurs claires"
+              },
+              {
+                  "type": "text",
+                  "id": "list_label",
+                  "label": "List label",
+                  "default": "Promotional features",
+                  "info": "Used for accessibility purposes"
+              },
+              {
+                  "type": "text",
+                  "id": "title",
+                  "label": "Titre",
+                  "default": "LOREM IPSUM DOLOR SIT AMET. Lorem ipsum dolor sit amet.",
+                  "info": "Comma-separated list"
+              },
+              {
+                  "type": "select",
+                  "id": "title_size",
+                  "label": "Taille du titre",
+                  "default": "h5",
+                  "options": [
+                      { "group": "Titre Standard", "value": "h1", "label": "Very Large" },
+                      { "group": "Titre Standard", "value": "h2", "label": "Large" },
+                      { "group": "Titre Standard", "value": "h3", "label": "Medium" },
+                      { "group": "Titre Standard", "value": "h4", "label": "Small" },
+                      { "group": "Titre Standard", "value": "h5", "label": "Very Small" },
+                      { "group": "Titre Standard", "value": "h6", "label": "Extra Small" }
+                  ]
+              },
+              {
+                  "type": "header",
+                  "content": "Animation"
+              },
+              {
+                  "type": "range",
+                  "id": "animation_duration",
+                  "label": "Vitesse",
+                  "min": 0,
+                  "max": 60,
+                  "step": 1,
+                  "default": 20,
+                  "unit": "sec",
+                  "info": "Auto-scroll speed"
+              },
+              {
+                  "type": "select",
+                  "id": "scrolling_direction",
+                  "label": "Scroll direction",
+                  "default": "left",
+                  "info": "Auto-scroll direction",
+                  "options": [
+                      { "value": "left", "label": "Gauche" },
+                      { "value": "right", "label": "Droite" }
+      
+                  ]
+              },
+              {
+                  "type": "select",
+                  "id": "separator",
+                  "label": "Separator",
+                  "default": "separator-dot",
+                  "options": [
+                      { "value": "", "label": "Aucun" },
+                      { "value": "separator-dot", "label": "Point" }
+      
+                  ]
+              },
+              {
+                  "type": "header",
+                  "content": "Gap",
+                  "info": "Spacing between elements."
+              },
+              {
+                  "type": "range",
+                  "id": "gap",
+                  "label": "Espacement",
+                  "min": 0,
+                  "max": 12,
+                  "step": 1,
+                  "default": 6
+              },
+              {
+                  "type": "header",
+                  "content": "Espacement du bloc"
+              },
+              {
+                  "type": "range",
+                  "id": "mt",
+                  "label": "Top margin",
+                  "min": 0,
+                  "max": 20,
+                  "step": 1,
+                  "default": 3
+              },
+              {
+                  "type": "range",
+                  "id": "mb",
+                  "label": "Bottom margin",
+                  "min": 0,
+                  "max": 20,
+                  "step": 1,
+                  "default": 3
+              }
+            ]
+        },
+        {
+            "type": "limited_offer",
+            "name": "🏆 Limited offer",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "🏆 Limited Offer Application",
+                    "info": "👉 Application Version Shopiweb Premium"
+                },
+                {
+                    "type": "paragraph", 
+                    "content": "EN Documentation: [Limited offer by Shopiweb](https://www.docs.shopiweb.fr/theme-premium/documentation/page-produit/produit-modele/offre-limitee)"
+                },
+                {
+                    "type": "paragraph",
+                    "content": "Display an animated countdown for \"on sale\" products below the price. This creates a sense of urgency. Note: The countdown will not display if the product variant only has the regular price."
+                },
+                {
+                    "type": "html",
+                    "id": "icon",
+                    "label": "Icon code (SVG)",
+                    "default":"<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" fill=\"currentColor\" class=\"bi bi-stopwatch\" viewbox=\"0 0 16 16\"><path d=\"M8.5 5.6a.5.5 0 1 0-1 0v2.9h-3a.5.5 0 0 0 0 1H8a.5.5 0 0 0 .5-.5V5.6z\"></path><path d=\"M6.5 1A.5.5 0 0 1 7 .5h2a.5.5 0 0 1 0 1v.57c1.36.196 2.594.78 3.584 1.64a.715.715 0 0 1 .012-.013l.354-.354-.354-.353a.5.5 0 0 1 .707-.708l1.414 1.415a.5.5 0 1 1-.707.707l-.353-.354-.354.354a.512.512 0 0 1-.013.012A7 7 0 1 1 7 2.071V1.5a.5.5 0 0 1-.5-.5zM8 3a6 6 0 1 0 .001 12A6 6 0 0 0 8 3z\"></path></svg>",
+                    "info": "You can get svg icons from libraries like [Bootstrap Icons](https://icons.getbootstrap.com)"
+                },
+                {
+                    "type": "text",
+                    "id": "text",
+                    "label": "Texte",
+                    "default": "Hurry up! This offer expires in:"
+                },
+                {
+                    "type": "text",
+                    "id": "countdown_timer",
+                    "label": "Countdown",
+                    "info": "Display an animated countdown using the following format: 2024-03-17 11:10am. Leave blank to disable"
+                },
+                {
+                    "type": "color",
+                    "id": "color",
+                    "label": "Couleur",
+                    "default": "#C99700"
+                },
+                {
+                    "type": "header",
+                    "content": "Espacement du bloc"
+                },
+                {
+                    "type": "range",
+                    "id": "mt",
+                    "label": "Top margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                },
+                {
+                    "type": "range",
+                    "id": "mb",
+                    "label": "Bottom margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+          "type": "live_visitors",
+          "name": "🏆 Live visiteurs",
+          "limit": 1,
+          "settings": [
+            {
+                "type": "header",
+                "content": "🏆 Application Live Visiteurs",
+                "info": "👉 Application Version Shopiweb Premium"
+            },
+            {
+                "type": "paragraph", 
+                "content": "Documentation FR : [Live visiteurs by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/page-produit\/produit-modele\/live-visiteurs)"
+            },
+            {
+                "type": "html",
+                "id": "icon",
+                "label": "Icon code (SVG)",
+                "info": "You can get svg icons from libraries like [Bootstrap Icons](https://icons.getbootstrap.com)"
+            },
+            {
+                "type": "text",
+                "id": "debutlive",
+                "default": "LIVE:",
+                "label": "Text start"
+            },
+            {
+                "type": "textarea",
+                "id": "finlive",
+                "default": "personnes regardent aussi ce produit.",
+                "label": "Fin du texte"
+            },
+            {
+                "type": "header",
+                "content": "Nombres de personnes"
+            },
+            {
+                "type": "number",
+                "id": "min",
+                "default": 10,
+                "label": "Nombre de personnes minimum"
+            },
+            {
+                "type": "number",
+                "id": "max",
+                "default": 25,
+                "label": "Nombre de personnes maximum"
+            },
+            {
+                "id": "color_live",
+                "type": "color",
+                "label": "Couleur du compteur",
+                "default": "#C99700"
+            },
+            {
+                "type": "header",
+                "content": "Espacement du bloc"
+            },
+            {
+                "type": "range",
+                "id": "mt",
+                "label": "Top margin",
+                "min": 0,
+                "max": 20,
+                "step": 1,
+                "default": 3
+            },
+            {
+                "type": "range",
+                "id": "mb",
+                "label": "Bottom margin",
+                "min": 0,
+                "max": 20,
+                "step": 1,
+                "default": 3
+            }
+          ]
+        },
+        {
+          "type": "estimated_delivery",
+          "name": "🏆 Estimation livraison",
+          "limit": 1,
+          "settings": [
+            {
+                "type": "header",
+                "content": "🏆 Application Estimation Livraison",
+                "info": "👉 Application Version Shopiweb Premium"
+            },
+            {
+                "type": "paragraph", 
+                "content": "Documentation FR : [Estimation livraison by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/page-produit\/produit-modele\/estimation-livraison)"
+            },
+            {
+                "type": "html",
+                "id": "icon",
+                "label": "Icon code (SVG)",
+                "info": "You can get svg icons from libraries like [Bootstrap Icons](https://icons.getbootstrap.com)"
+            },
+            {
+                "type": "text",
+                "id": "delivery_message",
+                "label": "Text start",
+                "default": "Commandez maintenant pour recevoir votre colis entre le"
+            },
+            {
+                "type": "header",
+                "content": "Delivery time"
+            },
+            {
+                "type": "select",
+                "id": "language",
+                "label": "Langue",
+                "options": [
+                  { "value": "en", "label": "Anglais" },
+                  { "value": "fr", "label": "French" }
+                ],
+                "default": "fr"
+            },
+            {
+                "type": "number",
+                "id": "delivery_start_days",
+                "label": "Minimum days until delivery",
+                "default": 3
+            },
+            {
+                "type": "number",
+                "id": "delivery_end_days",
+                "label": "Maximum days until delivery",
+                "default": 5
+            },
+            {
+                "id": "color_estimation",
+                "type": "color",
+                "label": "Couleur des jours",
+                "default": "#C99700"
+            },
+            {
+                "type": "header",
+                "content": "Espacement du bloc"
+            },
+            {
+                "type": "range",
+                "id": "mt",
+                "label": "Top margin",
+                "min": 0,
+                "max": 20,
+                "step": 1,
+                "default": 3
+            },
+            {
+                "type": "range",
+                "id": "mb",
+                "label": "Bottom margin",
+                "min": 0,
+                "max": 20,
+                "step": 1,
+                "default": 3
+            }
+          ]
+        },
+        {
+            "type": "liquid_code",
+            "name": "🏆 HTML/Liquid code",
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "🏆 Application HTML/Liquid code",
+                    "info": "👉 Application Version Shopiweb Premium"
+                },
+                {
+                    "type": "paragraph", 
+                    "content": "Documentation FR : [HTML/Liquid code by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/page-produit\/produit-modele\/html-liquid)"
+                },
+                {
+                    "type": "liquid",
+                    "id": "liquid",
+                    "label": "HTML/Liquid code",
+                    "default": "<p class=\"bg-light rounded border p-4\">Date du jour : <b>{{ 'now' | date: \"%d %b, %Y\" }}</b></p>",
+                    "info": "Remarque: Vous pouvez utiliser les codes HTML et Liquid."
+                },
+                {
+                    "type": "header",
+                    "content": "Espacement du bloc"
+                },
+                {
+                    "type": "range",
+                    "id": "mt",
+                    "label": "Top margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                },
+                {
+                    "type": "range",
+                    "id": "mb",
+                    "label": "Bottom margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+            "type": "separator",
+            "name": "Separator",
+            "settings": [
+                {
+                    "type": "paragraph", 
+                    "content": "EN Documentation: [Separator by Shopiweb](https://www.docs.shopiweb.fr/theme-premium/documentation/page-produit/produit-modele/separateur)"
+                },
+                {
+                    "type": "select",
+                    "id": "bbstyle",
+                    "label": "Separator style",
+                    "default": "solid",
+                    "options": [
+                        { "value": "solid", "label": "Solid" },
+                        { "value": "dashed", "label": "Dashed" },
+                        { "value": "double", "label": "Double" },
+                        { "value": "dotted", "label": "Dotted" }
+                    ]
+                },
+                {
+                    "type": "range",
+                    "id": "bbwidth",
+                    "min": 0,
+                    "max": 10,
+                    "step": 1,
+                    "unit": "px",
+                    "label": "Border thickness",
+                    "default": 1
+                },
+                {
+                    "type": "range",
+                    "id": "bblength",
+                    "min": 0,
+                    "max": 100,
+                    "step": 1,
+                    "unit": "%",
+                    "label": "Taille de la bordure",
+                    "default": 10
+                },
+                {
+                    "id": "color_border",
+                    "type": "color",
+                    "label": "Couleur de la bordure",
+                    "default": "#d9d9d9"
+                },
+                {
+                    "type": "range",
+                    "id": "opacity",
+                    "label": "Border opacity",
+                    "min": 0,
+                    "max": 1,
+                    "step": 0.1,
+                    "default": 0.5
+                },
+                {
+                    "type": "header",
+                    "content": "Espacement du bloc"
+                },
+                {
+                    "type": "range",
+                    "id": "mt",
+                    "label": "Top margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                },
+                {
+                    "type": "range",
+                    "id": "mb",
+                    "label": "Bottom margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+            "type": "media",
+            "name": "Media",
+            "settings": [
+                {
+                    "type": "paragraph", 
+                    "content": "EN Documentation: [Media by Shopiweb](https://www.docs.shopiweb.fr/theme-premium/documentation/page-produit/produit-modele/media)"
+                },
+                {
+                    "type": "header",
+                    "content": "Image"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                },
+                {
+                    "type": "header",
+                    "content": "Video"
+                },
+                {
+                    "type": "video",
+                    "id": "video",
+                    "label": "Vidéo"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "autoplay",
+                    "label": "Autoplay",
+                    "default": true
+                },
+                {
+                    "type": "checkbox",
+                    "id": "loop",
+                    "label": "Loop",
+                    "info": "(Looping video)",
+                    "default": true
+                },
+                {
+                    "type": "checkbox",
+                    "id": "muted",
+                    "label": "Mute",
+                    "info": "(Muted video)",
+                    "default": true
+                },
+                {
+                    "type": "checkbox",
+                    "id": "controls",
+                    "label": "Controls",
+                    "default": true
+                },
+                {
+                    "type": "header",
+                    "content": "External Video"
+                },
+                {
+                    "type": "video_url",
+                    "id": "external_video",
+                    "label": "Video",
+                    "accept": [
+                        "youtube"
+                    ]
+                },
+                {
+                    "type": "header",
+                    "content": "Espacement du bloc"
+                },
+                {
+                    "type": "range",
+                    "id": "mt",
+                    "label": "Top margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                },
+                {
+                    "type": "range",
+                    "id": "mb",
+                    "label": "Bottom margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+            "type": "delivery_info",
+            "name": "Info livraison",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "paragraph", 
+                    "content": "Documentation FR : [Info livraison by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/page-produit\/produit-modele\/info-livraison)"
+                },
+                {
+                    "type": "paragraph",
+                    "content": "Quickly inform your customers about shipping deadlines."
+                },
+                {
+                    "type": "html",
+                    "id": "icon",
+                    "label": "Icon (svg)",
+                    "default": " <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" fill=\"currentColor\" class=\"bi bi-truck\" viewbox=\"0 0 16 16\"><path d=\"M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5v-7zm1.294 7.456A1.999 1.999 0 0 1 4.732 11h5.536a2.01 2.01 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456zM12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12v4zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z\"></path></svg>",
+                    "info": "You can get svg icons from libraries like [Bootstrap Icons](https://icons.getbootstrap.com)"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Titre",
+                    "default": "Informations sur la livraison"
+                },
+                {
+                    "type": "select",
+                    "id": "title_size",
+                    "label": "Taille du titre",
+                    "default": "h5",
+                    "options": [
+                        { "group": "Titre Standard", "value": "h1", "label": "Very Large" },
+                        { "group": "Titre Standard", "value": "h2", "label": "Large" },
+                        { "group": "Titre Standard", "value": "h3", "label": "Medium" },
+                        { "group": "Titre Standard", "value": "h4", "label": "Small" },
+                        { "group": "Titre Standard", "value": "h5", "label": "Very Small" },
+                        { "group": "Titre Standard", "value": "h6", "label": "Extra Small" }
+                    ]
+                },
+                {
+                    "type": "richtext",
+                    "id": "description",
+                    "label": "Description",
+                    "default": "<p><strong>France</strong>: 2-3 jours; <strong>International</strong>: 7-10 jours</p>"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "enable_info_bubble",
+                    "label": "Activer l'info-bulle pour la description",
+                    "default": false
+                },
+                {
+                    "type": "text",
+                    "id": "info_bubble_text",
+                    "label": "Texte de l'info-bulle",
+                    "default": "Votre texte d'info-bulle ici"
+                },
+                {
+                    "type": "header",
+                    "content": "Espacement du bloc"
+                },
+                {
+                    "type": "range",
+                    "id": "mt",
+                    "label": "Top margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                },
+                {
+                    "type": "range",
+                    "id": "mb",
+                    "label": "Bottom margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+            "type": "accordion",
+            "name": "Collapsible row",
+            "settings": [
+                {
+                    "type": "paragraph", 
+                    "content": "EN Documentation: [Collapsible row by Shopiweb](https://www.docs.shopiweb.fr/theme-premium/documentation/page-produit/produit-modele/rangee-reductible)"
+                },
+                {
+                    "type": "select",
+                    "id": "accordion_style",
+                    "label": "Collapsible row style",
+                    "default": "accordion-default",
+                    "options": [
+                        { "value": "accordion-default", "label": "Default" },
+                        { "value": "accordion-flush", "label": "Sans bordure" },
+                        { "value": "accordion-custom", "label": "Custom" }
+                    ]
+                },
+                {
+                    "type": "checkbox",
+                    "id": "open_first_item",
+                    "label": "Open first element by default",
+                    "default": true
+                },
+                {
+                    "type": "header",
+                    "content": "Options de Personnalisation"
+                },
+                {
+                    "type": "paragraph",
+                    "content": "Color customization options are exclusively available for the custom collapsible row style."
+                },
+                {
+                    "type": "color",
+                    "id": "accordion_custom_bg",
+                    "label": "Background Color (Closed)",
+                    "default": "#ffffff",
+                    "info": "The background color when the collapsible row is closed."
+                },
+                {
+                    "type": "color",
+                    "id": "accordion_custom_title_color",
+                    "label": "Title Color (Closed)",
+                    "default": "#212529",
+                    "info": "The color of the question title when the collapsible row is closed."
+                },
+                {
+                    "type": "color",
+                    "id": "accordion_custom_bg_plus",
+                    "label": "Plus Badge Color (Closed)",
+                    "default": "#f56900",
+                    "info": "The color of the + badge when the collapsible row is closed."
+                },
+                {
+                    "type": "color",
+                    "id": "accordion_custom_plus_color",
+                    "label": "Plus Sign Color (Closed)",
+                    "default": "#ffffff",
+                    "info": "The color of the + sign when the collapsible row is closed."
+                },
+                {
+                    "type": "color",
+                    "id": "accordion_custom_bg_actif",
+                    "label": "Couleur de Fond (Ouvert)",
+                    "default": "#f56900",
+                    "info": "The background color when the collapsible row is open."
+                },
+                {
+                    "type": "color",
+                    "id": "accordion_custom_title_color_actif",
+                    "label": "Couleur du Titre (Ouvert)",
+                    "default": "#ffffff",
+                    "info": "The color of the question title when the collapsible row is open."
+                },
+                {
+                    "type": "color",
+                    "id": "accordion_custom_bg_plus_actif",
+                    "label": "Couleur de la Pastille - (Ouvert)",
+                    "default": "#ffffff",
+                    "info": "The color of the - badge when the collapsible row is open."
+                },
+                {
+                    "type": "color",
+                    "id": "accordion_custom_plus_color_actif",
+                    "label": "Couleur du Signe - (Ouvert)",
+                    "default": "#f56900",
+                    "info": "The color of the - sign when the collapsible row is open."
+                },
+                {
+                    "type": "header",
+                    "content": "item 1"
+                },
+                {
+                    "type": "text",
+                    "id": "title_1",
+                    "label": "Titre",
+                    "default": "Collapsible row 1"
+                },
+                {
+                    "type": "richtext",
+                    "id": "description_1",
+                    "label": "Description"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "description_1_is_desc",
+                    "label": "Afficher la description du produit",
+                    "default": true
+                },
+                {
+                    "type": "html",
+                    "id": "icon_1",
+                    "label": "Icon",
+                    "info": "You can get svg icons from libraries like [Bootstrap Icons](https://icons.getbootstrap.com)"
+                },
+                {
+                    "type": "header",
+                    "content": "item 2"
+                },
+                {
+                    "type": "text",
+                    "id": "title_2",
+                    "label": "Titre",
+                    "default": "Collapsible row 2"
+                },
+                {
+                    "type": "richtext",
+                    "id": "description_2",
+                    "label": "Description",
+                    "default": "<p>Add a description or inject a metafield</p>"
+                },
+                {
+                    "type": "html",
+                    "id": "icon_2",
+                    "label": "Icon",
+                    "info": "You can get svg icons from libraries like [Bootstrap Icons](https://icons.getbootstrap.com)"
+                },
+                {
+                    "type": "header",
+                    "content": "item 3"
+                },
+                {
+                    "type": "text",
+                    "id": "title_3",
+                    "label": "Titre"
+                },
+                {
+                    "type": "richtext",
+                    "id": "description_3",
+                    "label": "Description"
+                },
+                {
+                    "type": "html",
+                    "id": "icon_3",
+                    "label": "Icon",
+                    "info": "You can get svg icons from libraries like [Bootstrap Icons](https://icons.getbootstrap.com)"
+                },
+                {
+                    "type": "header",
+                    "content": "item 4"
+                },
+                {
+                    "type": "text",
+                    "id": "title_4",
+                    "label": "Titre"
+                },
+                {
+                    "type": "richtext",
+                    "id": "description_4",
+                    "label": "Description"
+                },
+                {
+                    "type": "html",
+                    "id": "icon_4",
+                    "label": "Icon",
+                    "info": "You can get svg icons from libraries like [Bootstrap Icons](https://icons.getbootstrap.com)"
+                },
+                {
+                    "type": "header",
+                    "content": "item 5"
+                },
+                {
+                    "type": "text",
+                    "id": "title_5",
+                    "label": "Titre"
+                },
+                {
+                    "type": "richtext",
+                    "id": "description_5",
+                    "label": "Description"
+                },
+                {
+                    "type": "html",
+                    "id": "icon_5",
+                    "label": "Icon",
+                    "info": "You can get svg icons from libraries like [Bootstrap Icons](https://icons.getbootstrap.com)"
+                },
+                {
+                    "type": "header",
+                    "content": "item 6"
+                },
+                {
+                    "type": "text",
+                    "id": "title_6",
+                    "label": "Titre"
+                },
+                {
+                    "type": "richtext",
+                    "id": "description_6",
+                    "label": "Description"
+                },
+                {
+                    "type": "html",
+                    "id": "icon_6",
+                    "label": "Icon",
+                    "info": "You can get svg icons from libraries like [Bootstrap Icons](https://icons.getbootstrap.com)"
+                },
+                {
+                    "type": "header",
+                    "content": "Espacement du bloc"
+                },
+                {
+                    "type": "range",
+                    "id": "mt",
+                    "label": "Top margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                },
+                {
+                    "type": "range",
+                    "id": "mb",
+                    "label": "Bottom margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+            "type": "personalization",
+            "name": "🏆 Champ personnaliser",
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "🏆 Application Champ Personnaliser",
+                    "info": "👉 Application Version Shopiweb Premium"
+                },
+                {
+                    "type": "paragraph", 
+                    "content": "Documentation FR : [Champ personnaliser by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/page-produit\/produit-modele\/champ-personnaliser)"
+                },
+                {
+                    "type": "paragraph",
+                    "content": "Display custom properties such as entering a name or uploading a file..."
+                },
+                {
+                    "type": "select",
+                    "id": "type",
+                    "label": "Type",
+                    "default": "text",
+                    "options": [
+                        { "value": "text", "label": "Texte" },
+                        { "value": "phone", "label": "Phone" },
+                        { "value": "date", "label": "Date" },
+                        { "value": "textarea", "label": "Zone de texte" },
+                        { "value": "file", "label": "File upload" },
+                        { "value": "select", "label": "Selection" },
+                        { "value": "checkbox", "label": "Checkbox" },
+                        { "value": "radio", "label": "Radio" }
+                    ]
+                },
+                {
+                    "type": "text",
+                    "id": "label",
+                    "label": "Label",
+                    "default": "Votre nom"
+                },
+                {
+                    "type": "text",
+                    "id": "placeholder",
+                    "label": "Placeholder",
+                    "default": "John Doe",
+                    "info": "Leave empty to hide. This setting is only used on types that allow it."
+                },
+                {
+                    "type": "textarea",
+                    "id": "values",
+                    "label": "Valeurs",
+                    "default": "Bleu, Blanc, Rouge",
+                    "info": "Only applies if the type parameter selected above is 'selection', 'radio' or 'checkbox'"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "required",
+                    "label": "Champ obligatoire",
+                    "default": true,
+                    "info": "If this option is enabled, the customer cannot leave this field empty."
+                },
+                {
+                    "type": "richtext",
+                    "id": "helper_text",
+                    "label": "Texte d'aide",
+                    "info": "Additional text to display under the form field."
+                },
+                {
+                    "type": "header",
+                    "content": "Espacement du bloc"
+                },
+                {
+                    "type": "range",
+                    "id": "mt",
+                    "label": "Top margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                },
+                {
+                    "type": "range",
+                    "id": "mb",
+                    "label": "Bottom margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+            "type": "trust_badges",
+            "name": "🏆 Trust badges",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "🏆 Application Trust badges",
+                    "info": "👉 Application Version Shopiweb Premium"
+                },
+                {
+                    "type": "paragraph", 
+                    "content": "Documentation FR : [Trust badges by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/page-produit\/produit-modele\/trust-badges)"
+                },
+                {
+                    "type": "text",
+                    "id": "label",
+                    "label": "Label",
+                    "default": "Liste des badges de confiance",
+                    "info": "Used for accessibility purposes"
+                },
+                {
+                    "type": "text",
+                    "id": "max_width",
+                    "label": "Largeur maximale (px)",
+                    "info": "Ajuster la largeur du conteneur (en pixels)",
+                    "default": "400"
+                },
+                {
+                    "type": "select",
+                    "id": "col_size",
+                    "label": "Largeur de colonne",
+                    "options": [
+                        { "value": "col-3", "label": "25%" },
+                        { "value": "col-4", "label": "33%" },
+                        { "value": "col-6", "label": "50%" },
+                        { "value": "col-12", "label": "100%" }
+                    ],
+                    "default": "col-4"
+                },
+                {
+                    "id": "color_trust",
+                    "type": "color",
+                    "label": "Couleur des svg",
+                    "default": "#F56900"
+                },
+                {
+                    "type": "header",
+                    "content": "item 1"
+                },
+                {
+                    "type": "html",
+                    "id": "icon_1",
+                    "label": "Icon 1 (svg)",
+                    "info": "You can get svg icons from libraries like [Bootstrap Icons](https://icons.getbootstrap.com)"
+                },
+                {
+                    "type": "html",
+                    "id": "text_1",
+                    "label": "Texte 1"
+                },
+                {
+                    "type": "header",
+                    "content": "item 2"
+                },
+                {
+                    "type": "html",
+                    "id": "icon_2",
+                    "label": "Icon 2 (svg)",
+                    "info": "You can get svg icons from libraries like [Bootstrap Icons](https://icons.getbootstrap.com)"
+                },
+                {
+                    "type": "html",
+                    "id": "text_2",
+                    "label": "Texte 2"
+                },
+                {
+                    "type": "header",
+                    "content": "item 3"
+                },
+                {
+                    "type": "html",
+                    "id": "icon_3",
+                    "label": "Icon 3 (svg)",
+                    "info": "You can get svg icons from libraries like [Bootstrap Icons](https://icons.getbootstrap.com)"
+                },
+                {
+                    "type": "html",
+                    "id": "text_3",
+                    "label": "Texte 3"
+                },
+                {
+                    "type": "header",
+                    "content": "item 4"
+                },
+                {
+                    "type": "html",
+                    "id": "icon_4",
+                    "label": "Icon 4 (svg)",
+                    "info": "You can get svg icons from libraries like [Bootstrap Icons](https://icons.getbootstrap.com)"
+                },
+                {
+                    "type": "html",
+                    "id": "text_4",
+                    "label": "Texte 4"
+                },
+                {
+                    "type": "header",
+                    "content": "Espacement du bloc"
+                },
+                {
+                    "type": "range",
+                    "id": "mt",
+                    "label": "Top margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                },
+                {
+                    "type": "range",
+                    "id": "mb",
+                    "label": "Bottom margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+            "type": "testimonials",
+            "name": "🏆 Product testimonials",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "🏆 Product Testimonials Application",
+                    "info": "👉 Application Version Shopiweb Premium"
+                },
+                {
+                    "type": "paragraph", 
+                    "content": "EN Documentation: [Product testimonials by Shopiweb](https://www.docs.shopiweb.fr/theme-premium/documentation/page-produit/produit-modele/temoignages-produit)"
+                },
+                {
+                    "type": "select",
+                    "id": "bg_color",
+                    "label": "Background color",
+                    "default": "bg-dark text-white",
+                    "options": [
+                        { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+                        { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+                        { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+                        { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "White" },
+                        { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Light" },
+                        { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Dark" },
+                        { "group": "Par défaut", "value": "bg-body text-body", "label": "Body" },
+                        { "group": "Alerte", "value": "bg-success text-white", "label": "Success" },
+                        { "group": "Alerte", "value": "bg-warning text-dark", "label": "Avertissement" },
+                        { "group": "Alerte", "value": "bg-danger text-white", "label": "Danger" },
+                        { "group": "Alerte", "value": "bg-info text-white", "label": "Info" }
+                    ]
+                },
+                {
+                    "type": "checkbox",
+                    "id": "bg_gradient",
+                    "label": "Background gradient",
+                    "default": true,
+                    "info": "Ne s'applique pas aux couleurs claires"
+                },
+                {
+                    "type": "select",
+                    "id": "img_thumbnail",
+                    "label": "Bordure de l'image",
+                    "default": "img-thumbnail",
+                    "options": [
+                        { "value": "", "label": "Aucune" },
+                        { "value": "img-thumbnail", "label": "Bordure" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "shadow_sp",
+                    "label": "Ombre",
+                    "options": [
+                        { "value": "shadow-none", "label": "Aucune" },
+                        { "value": "shadow-1", "label": "Light shadow" }
+                    ],
+                    "default": "shadow-1"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "show_stars",
+                    "label": "Show stars",
+                    "default": true
+                },
+                {
+                    "type": "select",
+                    "id": "star_style",
+                    "label": "Star style",
+                    "options": [
+                      {
+                        "value": "default",
+                        "label": "Default"
+                      },
+                      {
+                        "value": "shopitrust",
+                        "label": "ShopiTrust"
+                      }
+                    ],
+                    "default": "default"
+                },
+                {
+                    "type": "color",
+                    "id": "testi_star_color",
+                    "label": "Active star color",
+                    "default": "#ffb81c"
+                },
+                {
+                    "type": "color",
+                    "id": "testi_star_off",
+                    "label": "Inactive star color",
+                    "default": "#e5e4e2"
+                },
+                {
+                    "type": "color",
+                    "id": "pagination_color",
+                    "label": "Couleur de la pagination",
+                    "default": "#ffffff"
+                },
+                {
+                    "type": "header",
+                    "content": "Image Auteur 1"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "img_author",
+                    "label": "Image",
+                    "info": "Leave empty to disable"
+                },
+                {
+                    "type": "header",
+                    "content": "Texte Auteur 1"
+                },
+                {
+                    "type": "text",
+                    "id": "text_author",
+                    "label": "Auteur",
+                    "default": "John Doe",
+                    "info": "Laisser vide pour ne pas afficher ce slide"
+                },
+                {
+                    "type": "select",
+                    "id": "show_verified",
+                    "label": "Verified badge",
+                    "default": "show_avis_verified",
+                    "options": [
+                        { "value": "", "label": "Aucun" },
+                        { "value": "show_avis_verified", "label": "Verified review" },
+                        { "value": "show_achat_verified", "label": "Verified purchase" }
+                    ]
+                },
+                {
+                    "type": "range",
+                    "id": "stars_rating",
+                    "min": 0,
+                    "max": 5,
+                    "step": 0.5,
+                    "unit": "★",
+                    "label": "Number of stars",
+                    "info": "Set the number of stars. Half-stars are allowed.",
+                    "default": 5
+                },
+                {
+                    "type": "richtext",
+                    "id": "description",
+                    "label": "Description",
+                    "default": "<p>Share here the reviews that reflect the positive experience of your customers to inspire trust among visitors to your store.</p>"
+                },
+                {
+                    "type": "header",
+                    "content": "Image Auteur 2"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "img_author_1",
+                    "label": "Image",
+                    "info": "Leave empty to disable"
+                },
+                {
+                    "type": "header",
+                    "content": "Texte Auteur 2"
+                },
+                {
+                    "type": "text",
+                    "id": "text_author_1",
+                    "label": "Auteur",
+                    "default": "John Doe",
+                    "info": "Laisser vide pour ne pas afficher ce slide"
+                },
+                {
+                    "type": "select",
+                    "id": "show_verified_1",
+                    "label": "Verified badge",
+                    "default": "show_avis_verified",
+                    "options": [
+                        { "value": "", "label": "Aucun" },
+                        { "value": "show_avis_verified", "label": "Verified review" },
+                        { "value": "show_achat_verified", "label": "Verified purchase" }
+                    ]
+                },
+                {
+                    "type": "range",
+                    "id": "stars_rating_1",
+                    "min": 0,
+                    "max": 5,
+                    "step": 0.5,
+                    "unit": "★",
+                    "label": "Number of stars",
+                    "info": "Set the number of stars. Half-stars are allowed.",
+                    "default": 5
+                },
+                {
+                    "type": "richtext",
+                    "id": "description_1",
+                    "label": "Description",
+                    "default": "<p>Share here the reviews that reflect the positive experience of your customers to inspire trust among visitors to your store.</p>"
+                },
+                {
+                    "type": "header",
+                    "content": "Image Auteur 3"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "img_author_2",
+                    "label": "Image",
+                    "info": "Leave empty to disable"
+                },
+                {
+                    "type": "header",
+                    "content": "Texte Auteur 3"
+                },
+                {
+                    "type": "text",
+                    "id": "text_author_2",
+                    "label": "Auteur",
+                    "default": "John Doe",
+                    "info": "Laisser vide pour ne pas afficher ce slide"
+                },
+                {
+                    "type": "select",
+                    "id": "show_verified_2",
+                    "label": "Verified badge",
+                    "default": "show_avis_verified",
+                    "options": [
+                        { "value": "", "label": "Aucun" },
+                        { "value": "show_avis_verified", "label": "Verified review" },
+                        { "value": "show_achat_verified", "label": "Verified purchase" }
+                    ]
+                },
+                {
+                    "type": "range",
+                    "id": "stars_rating_2",
+                    "min": 0,
+                    "max": 5,
+                    "step": 0.5,
+                    "unit": "★",
+                    "label": "Number of stars",
+                    "info": "Set the number of stars. Half-stars are allowed.",
+                    "default": 5
+                },
+                {
+                    "type": "richtext",
+                    "id": "description_2",
+                    "label": "Description",
+                    "default": "<p>Share here the reviews that reflect the positive experience of your customers to inspire trust among visitors to your store.</p>"
+                },
+                {
+                    "type": "header",
+                    "content": "Espacement du bloc"
+                },
+                {
+                    "type": "range",
+                    "id": "mt",
+                    "label": "Top margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                },
+                {
+                    "type": "range",
+                    "id": "mb",
+                    "label": "Bottom margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+            "type": "tabs",
+            "name": "Onglets",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "paragraph", 
+                    "content": "Documentation FR : [Onglets by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/page-produit\/produit-modele\/onglets)"
+                },
+                {
+                    "type": "select",
+                    "id": "tabs_style",
+                    "label": "Style d'onglets",
+                    "default": "nav-tabs",
+                    "options": [
+                        { "value": "nav-tabs", "label": "Onglets (par défaut)" },
+                        { "value": "nav-pills", "label": "Boutons" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "tabs_position",
+                    "label": "Position des onglets",
+                    "default": "",
+                    "options": [
+                        { "value": "", "label": "Gauche" },
+                        { "value": "justify-content-evenly", "label": "Centre" }
+                    ]
+                },
+                {
+                    "type": "checkbox",
+                    "id": "open_first_tab",
+                    "label": "Ouvrir le premier onglet par défaut",
+                    "default": true
+                },
+                {
+                    "type": "header",
+                    "content": "Onglet 1"
+                },
+                {
+                    "type": "text",
+                    "id": "tab_title_1",
+                    "label": "Titre de l'onglet",
+                    "default": "Onglet 1",
+                    "info": "Leave empty to disable"
+                },
+                {
+                    "type": "html",
+                    "id": "icon_1",
+                    "label": "Icon",
+                    "info": "You can get svg icons from libraries like [Bootstrap Icons](https://icons.getbootstrap.com)"
+                },
+                {
+                    "type": "header",
+                    "content": "Image"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "img_1",
+                    "label": "Image"
+                },
+                {
+                    "type": "select",
+                    "id": "img_orientation_1",
+                    "label": "Image orientation",
+                    "default": "square",
+                    "options": [
+                        { "value": "square", "label": "Square" },
+                        { "value": "landscape", "label": "Paysage" },
+                        { "value": "potrait", "label": "Portrait" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "img_crop_1",
+                    "label": "Recadrage de l'image",
+                    "default": "center",
+                    "options": [
+                        { "value": "top", "label": "Haut" },
+                        { "value": "center", "label": "Centre" },
+                        { "value": "bottom", "label": "Bas" },
+                        { "value": "left", "label": "Gauche" },
+                        { "value": "right", "label": "Droite" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "img_thumbnail_1",
+                    "label": "Bordure de l'image",
+                    "default": "img-thumbnail",
+                    "options": [
+                        { "value": "", "label": "Aucune" },
+                        { "value": "img-thumbnail", "label": "Bordure" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "shadow_sp_1",
+                    "label": "Ombre",
+                    "options": [
+                        { "value": "shadow-none", "label": "Aucune" },
+                        { "value": "shadow-1", "label": "Light shadow" }
+                    ],
+                    "default": "shadow-1"
+                },
+                {
+                    "type": "select",
+                    "id": "img_align_desktop_1",
+                    "label": "Alignement de l'image (bureau)",
+                    "default": "flex-lg-row",
+                    "options": [
+                        { "value": "flex-lg-row", "label": "Gauche" },
+                        { "value": "flex-lg-row-reverse", "label": "Droite" }
+                    ]
+                },
+                {
+                    "type": "text",
+                    "id": "title_pane_1",
+                    "label": "Titre"
+                },
+                {
+                    "type": "select",
+                    "id": "title_size_1",
+                    "label": "Taille du titre",
+                    "default": "h5",
+                    "options": [
+                        { "group": "Titre Standard", "value": "h1", "label": "Very Large" },
+                        { "group": "Titre Standard", "value": "h2", "label": "Large" },
+                        { "group": "Titre Standard", "value": "h3", "label": "Medium" },
+                        { "group": "Titre Standard", "value": "h4", "label": "Small" },
+                        { "group": "Titre Standard", "value": "h5", "label": "Very Small" },
+                        { "group": "Titre Standard", "value": "h6", "label": "Extra Small" }
+                    ]
+                },
+                {
+                    "type": "richtext",
+                    "id": "description_1",
+                    "label": "Description",
+                    "default": "<p>Annoncez tout ce que vous voulez</p>"
+                },
+                {
+                    "type": "header",
+                    "content": "Onglet 2"
+                },
+                {
+                    "type": "text",
+                    "id": "tab_title_2",
+                    "label": "Titre de l'onglet",
+                    "default": "Onglet 2",
+                    "info": "Leave empty to disable"
+                },
+                {
+                    "type": "html",
+                    "id": "icon_2",
+                    "label": "Icon",
+                    "info": "You can get svg icons from libraries like [Bootstrap Icons](https://icons.getbootstrap.com)"
+                },
+                {
+                    "type": "header",
+                    "content": "Image"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "img_2",
+                    "label": "Image"
+                },
+                {
+                    "type": "select",
+                    "id": "img_orientation_2",
+                    "label": "Image orientation",
+                    "default": "square",
+                    "options": [
+                        { "value": "square", "label": "Square" },
+                        { "value": "landscape", "label": "Paysage" },
+                        { "value": "potrait", "label": "Portrait" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "img_crop_2",
+                    "label": "Recadrage de l'image",
+                    "default": "center",
+                    "options": [
+                        { "value": "top", "label": "Haut" },
+                        { "value": "center", "label": "Centre" },
+                        { "value": "bottom", "label": "Bas" },
+                        { "value": "left", "label": "Gauche" },
+                        { "value": "right", "label": "Droite" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "img_thumbnail_2",
+                    "label": "Bordure de l'image",
+                    "default": "img-thumbnail",
+                    "options": [
+                        { "value": "", "label": "Aucune" },
+                        { "value": "img-thumbnail", "label": "Bordure" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "shadow_sp_2",
+                    "label": "Ombre",
+                    "options": [
+                        { "value": "shadow-none", "label": "Aucune" },
+                        { "value": "shadow-1", "label": "Light shadow" }
+                    ],
+                    "default": "shadow-1"
+                },
+                {
+                    "type": "select",
+                    "id": "img_align_desktop_2",
+                    "label": "Alignement de l'image (bureau)",
+                    "default": "flex-lg-row",
+                    "options": [
+                        { "value": "flex-lg-row", "label": "Gauche" },
+                        { "value": "flex-lg-row-reverse", "label": "Droite" }
+                    ]
+                },
+                {
+                    "type": "text",
+                    "id": "title_pane_2",
+                    "label": "Titre"
+                },
+                {
+                    "type": "select",
+                    "id": "title_size_2",
+                    "label": "Taille du titre",
+                    "default": "h5",
+                    "options": [
+                        { "group": "Titre Standard", "value": "h1", "label": "Very Large" },
+                        { "group": "Titre Standard", "value": "h2", "label": "Large" },
+                        { "group": "Titre Standard", "value": "h3", "label": "Medium" },
+                        { "group": "Titre Standard", "value": "h4", "label": "Small" },
+                        { "group": "Titre Standard", "value": "h5", "label": "Very Small" },
+                        { "group": "Titre Standard", "value": "h6", "label": "Extra Small" }
+                    ]
+                },
+                {
+                    "type": "richtext",
+                    "id": "description_2",
+                    "label": "Description",
+                    "default": "<p>Annoncez tout ce que vous voulez</p>"
+                },
+                {
+                    "type": "header",
+                    "content": "Onglet 3"
+                },
+                {
+                    "type": "text",
+                    "id": "tab_title_3",
+                    "label": "Titre de l'onglet",
+                    "default": "Onglet 3",
+                    "info": "Leave empty to disable"
+                },
+                {
+                    "type": "html",
+                    "id": "icon_3",
+                    "label": "Icon",
+                    "info": "You can get svg icons from libraries like [Bootstrap Icons](https://icons.getbootstrap.com)"
+                },
+                {
+                    "type": "header",
+                    "content": "Image"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "img_3",
+                    "label": "Image"
+                },
+                {
+                    "type": "select",
+                    "id": "img_orientation_3",
+                    "label": "Image orientation",
+                    "default": "square",
+                    "options": [
+                        { "value": "square", "label": "Square" },
+                        { "value": "landscape", "label": "Paysage" },
+                        { "value": "potrait", "label": "Portrait" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "img_crop_3",
+                    "label": "Recadrage de l'image",
+                    "default": "center",
+                    "options": [
+                        { "value": "top", "label": "Haut" },
+                        { "value": "center", "label": "Centre" },
+                        { "value": "bottom", "label": "Bas" },
+                        { "value": "left", "label": "Gauche" },
+                        { "value": "right", "label": "Droite" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "img_thumbnail_3",
+                    "label": "Bordure de l'image",
+                    "default": "img-thumbnail",
+                    "options": [
+                        { "value": "", "label": "Aucune" },
+                        { "value": "img-thumbnail", "label": "Bordure" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "shadow_sp_3",
+                    "label": "Ombre",
+                    "options": [
+                        { "value": "shadow-none", "label": "Aucune" },
+                        { "value": "shadow-1", "label": "Light shadow" }
+                    ],
+                    "default": "shadow-1"
+                },
+                {
+                    "type": "select",
+                    "id": "img_align_desktop_3",
+                    "label": "Alignement de l'image (bureau)",
+                    "default": "flex-lg-row",
+                    "options": [
+                        { "value": "flex-lg-row", "label": "Gauche" },
+                        { "value": "flex-lg-row-reverse", "label": "Droite" }
+                    ]
+                },
+                {
+                    "type": "text",
+                    "id": "title_pane_3",
+                    "label": "Titre"
+                },
+                {
+                    "type": "select",
+                    "id": "title_size_3",
+                    "label": "Taille du titre",
+                    "default": "h5",
+                    "options": [
+                        { "group": "Titre Standard", "value": "h1", "label": "Very Large" },
+                        { "group": "Titre Standard", "value": "h2", "label": "Large" },
+                        { "group": "Titre Standard", "value": "h3", "label": "Medium" },
+                        { "group": "Titre Standard", "value": "h4", "label": "Small" },
+                        { "group": "Titre Standard", "value": "h5", "label": "Very Small" },
+                        { "group": "Titre Standard", "value": "h6", "label": "Extra Small" }
+                    ]
+                },
+                {
+                    "type": "richtext",
+                    "id": "description_3",
+                    "label": "Description",
+                    "default": "<p>Annoncez tout ce que vous voulez</p>"
+                },
+                {
+                    "type": "header",
+                    "content": "Onglet 4"
+                },
+                {
+                    "type": "text",
+                    "id": "tab_title_4",
+                    "label": "Titre de l'onglet",
+                    "default": "Onglet 4",
+                    "info": "Leave empty to disable"
+                },
+                {
+                    "type": "html",
+                    "id": "icon_4",
+                    "label": "Icon",
+                    "info": "You can get svg icons from libraries like [Bootstrap Icons](https://icons.getbootstrap.com)"
+                },
+                {
+                    "type": "header",
+                    "content": "Image"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "img_4",
+                    "label": "Image"
+                },
+                {
+                    "type": "select",
+                    "id": "img_orientation_4",
+                    "label": "Image orientation",
+                    "default": "square",
+                    "options": [
+                        { "value": "square", "label": "Square" },
+                        { "value": "landscape", "label": "Paysage" },
+                        { "value": "potrait", "label": "Portrait" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "img_crop_4",
+                    "label": "Recadrage de l'image",
+                    "default": "center",
+                    "options": [
+                        { "value": "top", "label": "Haut" },
+                        { "value": "center", "label": "Centre" },
+                        { "value": "bottom", "label": "Bas" },
+                        { "value": "left", "label": "Gauche" },
+                        { "value": "right", "label": "Droite" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "img_thumbnail_4",
+                    "label": "Bordure de l'image",
+                    "default": "img-thumbnail",
+                    "options": [
+                        { "value": "", "label": "Aucune" },
+                        { "value": "img-thumbnail", "label": "Bordure" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "shadow_sp_4",
+                    "label": "Ombre",
+                    "options": [
+                        { "value": "shadow-none", "label": "Aucune" },
+                        { "value": "shadow-1", "label": "Light shadow" }
+                    ],
+                    "default": "shadow-1"
+                },
+                {
+                    "type": "select",
+                    "id": "img_align_desktop_4",
+                    "label": "Alignement de l'image (bureau)",
+                    "default": "flex-lg-row",
+                    "options": [
+                        { "value": "flex-lg-row", "label": "Gauche" },
+                        { "value": "flex-lg-row-reverse", "label": "Droite" }
+                    ]
+                },
+                {
+                    "type": "text",
+                    "id": "title_pane_4",
+                    "label": "Titre"
+                },
+                {
+                    "type": "select",
+                    "id": "title_size_4",
+                    "label": "Taille du titre",
+                    "default": "h5",
+                    "options": [
+                        { "group": "Titre Standard", "value": "h1", "label": "Very Large" },
+                        { "group": "Titre Standard", "value": "h2", "label": "Large" },
+                        { "group": "Titre Standard", "value": "h3", "label": "Medium" },
+                        { "group": "Titre Standard", "value": "h4", "label": "Small" },
+                        { "group": "Titre Standard", "value": "h5", "label": "Very Small" },
+                        { "group": "Titre Standard", "value": "h6", "label": "Extra Small" }
+                    ]
+                },
+                {
+                    "type": "richtext",
+                    "id": "description_4",
+                    "label": "Description",
+                    "default": "<p>Annoncez tout ce que vous voulez</p>"
+                },
+                {
+                    "type": "header",
+                    "content": "Espacement du bloc"
+                },
+                {
+                    "type": "range",
+                    "id": "mt",
+                    "label": "Top margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                },
+                {
+                    "type": "range",
+                    "id": "mb",
+                    "label": "Bottom margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+            "type": "bought_together",
+            "name": "🏆 Bundle offer",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "🏆 Bundle Offer Application",
+                    "info": "👉 Application Version Shopiweb Premium"
+                },
+                {
+                    "type": "paragraph",
+                    "content": "EN Documentation: [Bundle Offer by Shopiweb](https://www.docs.shopiweb.fr/theme-premium/documentation/metafields/offre-groupee)"
+                },
+                {
+                    "type": "paragraph",
+                    "content": "Offer your users the possibility to buy multiple related products at the same time, with the current product listed first."
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Titre",
+                    "default": "Frequently bought together"
+                },
+                {
+                    "type": "select",
+                    "id": "title_size",
+                    "label": "Taille du titre",
+                    "default": "h5",
+                    "options": [
+                        { "group": "Titre Standard", "value": "h1", "label": "Very Large" },
+                        { "group": "Titre Standard", "value": "h2", "label": "Large" },
+                        { "group": "Titre Standard", "value": "h3", "label": "Medium" },
+                        { "group": "Titre Standard", "value": "h4", "label": "Small" },
+                        { "group": "Titre Standard", "value": "h5", "label": "Very Small" },
+                        { "group": "Titre Standard", "value": "h6", "label": "Extra Small" }
+                    ]
+                },
+                {
+                  "type": "text",
+                  "id": "metafield",
+                  "label": "Metafield key name",
+                  "default": "shopiweb.upsell",
+                  "info": "Veuillez d'abord [créer le champ-méta ci-dessus](https:\/\/shopify.com\/admin\/metafields\/product\/create) puis ajoutez-y les produits en vente incitative."
+                },
+                {
+                    "type": "range",
+                    "id": "limit",
+                    "label": "Limite des produits",
+                    "default": 3,
+                    "min": 1,
+                    "max": 10,
+                    "step": 1
+                },
+                {
+                    "type": "header",
+                    "content": "Produit"
+                },
+                {
+                    "type": "select",
+                    "id": "img_orientation",
+                    "label": "Image orientation",
+                    "default": "square",
+                    "options": [
+                        { "value": "square", "label": "Square" },
+                        { "value": "landscape", "label": "Paysage" },
+                        { "value": "potrait", "label": "Portrait" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "img_thumbnail",
+                    "label": "Bordure de l'image",
+                    "default": "img-thumbnail",
+                    "options": [
+                        { "value": "", "label": "Aucune" },
+                        { "value": "img-thumbnail", "label": "Bordure" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "border_color",
+                    "label": "Couleur de la bordure",
+                    "options": [
+                        { "value": "", "label": "Default" },
+                        { "value": "border-primary", "label": "Primaire" },
+                        { "value": "border-secondary", "label": "Secondaire" },
+                        { "value": "border-tertiary", "label": "Tertiaire" },
+                        { "value": "border-dark", "label": "Dark" },
+                        { "value": "border-success", "label": "Success" },
+                        { "value": "border-warning", "label": "Avertissement" },
+                        { "value": "border-danger", "label": "Danger" },
+                        { "value": "border-info", "label": "Info" }
+                    ],
+                    "default": ""
+                },
+                {
+                    "type": "select",
+                    "id": "shadow_sp",
+                    "label": "Ombre",
+                    "options": [
+                        { "value": "shadow-none", "label": "Aucune" },
+                        { "value": "shadow-1", "label": "Light shadow" },
+                        { "value": "shadow-2", "label": "Ombre partiel" },
+                        { "value": "shadow-3", "label": "Ombre profonde" },
+                        { "value": "shadow-4", "label": "Ombre totale" }
+                    ],
+                    "default": "shadow-1"
+                },
+                {
+                    "type": "header",
+                    "content": "Espacement du bloc"
+                },
+                {
+                    "type": "range",
+                    "id": "mt",
+                    "label": "Top margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                },
+                {
+                    "type": "range",
+                    "id": "mb",
+                    "label": "Bottom margin",
+                    "min": 0,
+                    "max": 20,
+                    "step": 1,
+                    "default": 3
+                }
+            ]
+        },
+        {
+            "type": "prev_next",
+            "name": "🏆 Previous/Next",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "🏆 Previous/Next Application",
+                    "info": "👉 Application Version Shopiweb Premium"
+                },
+                {
+                    "type": "paragraph", 
+                    "content": "EN Documentation: [Previous/Next by Shopiweb](https://www.docs.shopiweb.fr/theme-premium/documentation/page-produit/produit-modele/precedent-suivant)"
+                },
+                {
+                    "type": "paragraph",
+                    "content": "Displays the previous and next products if the current product comes from a collection."
+                },
+                        {
+                    "type": "select",
+                    "id": "img_orientation",
+                    "label": "Image orientation",
+                    "default": "square",
+                    "options": [
+                        { "value": "square", "label": "Square" },
+                        { "value": "landscape", "label": "Paysage" },
+                        { "value": "potrait", "label": "Portrait" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "img_thumbnail",
+                    "label": "Bordure de l'image",
+                    "default": "img-thumbnail",
+                    "options": [
+                        { "value": "", "label": "Aucune" },
+                        { "value": "img-thumbnail", "label": "Bordure" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "border_color",
+                    "label": "Couleur de la bordure",
+                    "options": [
+                        { "value": "", "label": "Default" },
+                        { "value": "border-primary", "label": "Primaire" },
+                        { "value": "border-secondary", "label": "Secondaire" },
+                        { "value": "border-tertiary", "label": "Tertiaire" },
+                        { "value": "border-dark", "label": "Dark" },
+                        { "value": "border-success", "label": "Success" },
+                        { "value": "border-warning", "label": "Avertissement" },
+                        { "value": "border-danger", "label": "Danger" },
+                        { "value": "border-info", "label": "Info" }
+                    ],
+                    "default": ""
+                },
+                {
+                    "type": "select",
+                    "id": "shadow_sp",
+                    "label": "Ombre",
+                    "options": [
+                        { "value": "shadow-none", "label": "Aucune" },
+                        { "value": "shadow-1", "label": "Light shadow" },
+                        { "value": "shadow-2", "label": "Ombre partiel" },
+                        { "value": "shadow-3", "label": "Ombre profonde" },
+                        { "value": "shadow-4", "label": "Ombre totale" }
+                    ],
+                    "default": "shadow-1"
+                }
+            ]
+        },
+        {
+            "type": "upsell_modal",
+            "name": "🏆 Upsell Pop-up",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "🏆 Application Upsell Pop-up",
+                    "info": "👉 Application Version Shopiweb Premium"
+                },
+                {
+                    "type": "paragraph",
+                    "content": "Documentation FR : [Upsell Pop-up by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/metafields\/upsell-pop-up)"
+                },
+                {
+                    "type": "paragraph",
+                    "content": "Displays immediately in a pop-up window after the user has clicked the ATC (Add to Cart) button."
+                },
+                {
+                    "type": "text",
+                    "id": "modal_title",
+                    "label": "Titre de la Pop-up",
+                    "default": "Hurry up before it's too late..."
+                },
+                {
+                    "type": "text",
+                    "id": "metafield",
+                    "label": "Metafield key name",
+                    "default": "shopiweb.upsell",
+                    "info": "Veuillez d'abord [créer le champ-méta ci-dessus](https:\/\/shopify.com\/admin\/metafields\/product\/create) puis ajoutez-y les produits en vente incitative."
+                },
+                {
+                    "type": "range",
+                    "id": "limit",
+                    "label": "Limite des produits",
+                    "default": 2,
+                    "min": 1,
+                    "max": 10,
+                    "step": 1
+                },
+                {
+                    "type": "text",
+                    "id": "modal_footer_btn",
+                    "label": "Bouton Continuer",
+                    "default": "Poursuivre l'achat"
+                },
+                {
+                    "type": "text",
+                    "id": "countdown_timer_pretext",
+                    "label": "Texte du compte à rebours",
+                    "default": "L'offre expire dans : "
+                },
+                {
+                    "type": "text",
+                    "id": "countdown_timer",
+                    "label": "Countdown",
+                    "info": "Display an animated countdown using the following format: 2024-03-17 11:10am. Leave blank to disable"
+                }
+                
+            ]
+        },
+        {
+            "type": "size_chart",
+            "name": "Bouton des tailles",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "paragraph", 
+                    "content": "Documentation FR : [Bouton des tailles by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/page-produit\/produit-modele\/guide-des-tailles)"
+                },
+                {
+                    "type": "select",
+                    "id": "btn_color",
+                    "label": "Couleur du bouton",
+                    "default": "btn-outline-primary",
+                    "options": [
+                        { "group": "Normal", "value": "btn-link", "label": "Lien" },
+                        { "group": "Normal", "value": "btn-light", "label": "Light" },
+                        { "group": "Normal", "value": "btn-dark", "label": "Dark" },
+                        { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
+                        { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
+                        { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
+                        { "group": "Normal", "value": "btn-success", "label": "Success" },
+                        { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+                        { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
+                        { "group": "Normal", "value": "btn-info", "label": "Info" },
+                        { "group": "Contour", "value": "btn-outline-light", "label": "Contour Claire" },
+                        { "group": "Contour", "value": "btn-outline-dark", "label": "Contour Sombre" },
+                        { "group": "Contour", "value": "btn-outline-primary", "label": "Contour Primaire" },
+                        { "group": "Contour", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
+                        { "group": "Contour", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
+                        { "group": "Contour", "value": "btn-outline-success", "label": "Contour Succès" },
+                        { "group": "Contour", "value": "btn-outline-danger", "label": "Contour Danger" },
+                        { "group": "Contour", "value": "btn-outline-warning", "label": "Contour Avertissement" },
+                        { "group": "Contour", "value": "btn-outline-info", "label": "Contour Info" }
+                    ]
+                },
+                {
+                    "type": "html",
+                    "id": "icon",
+                    "label": "Icon code (SVG)",
+                    "info": "You can get svg icons from libraries such as [Bootstrap Icons](https://icons.getbootstrap.com)"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Title",
+                    "default": "Size guide"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "img",
+                    "label": "Image"
+                },
+                {
+                    "type": "richtext",
+                    "id": "description",
+                    "label": "Description"
+                },
+                {
+                    "type": "page",
+                    "id": "page",
+                    "label": "Page"
+                }
+            ]
+        }
+    ],
+    "templates": ["product"],
+    "presets": [
+        {
+            "name": "Product (template)",
+            "category": "Product page"
+        }
+    ]
+}
+{% endschema %}

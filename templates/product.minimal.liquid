@@ -1,0 +1,57 @@
+{% comment %}
+Template produit minimal - pour tester les redirections
+{% endcomment %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>DEBUG - {{ product.title | default: 'Produit non trouvé' }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .alert { padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .alert-info { background: #d1ecf1; color: #0c5460; }
+        .alert-success { background: #d4edda; color: #155724; }
+        .alert-danger { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>🔍 DEBUG - Page Produit</h1>
+    
+    <div class="alert alert-info">
+        <h3>Informations de la page</h3>
+        <ul>
+            <li><strong>URL actuelle:</strong> {{ canonical_url }}</li>
+            <li><strong>Template utilisé:</strong> product.minimal.liquid</li>
+            <li><strong>Request URL:</strong> {{ request.path }}</li>
+        </ul>
+    </div>
+    
+    {% if product.id %}
+        <div class="alert alert-success">
+            <h3>✅ Produit trouvé</h3>
+            <ul>
+                <li><strong>ID:</strong> {{ product.id }}</li>
+                <li><strong>Handle:</strong> {{ product.handle }}</li>
+                <li><strong>Titre:</strong> {{ product.title }}</li>
+                <li><strong>URL:</strong> {{ product.url }}</li>
+                <li><strong>Prix:</strong> {{ product.price | money }}</li>
+                <li><strong>Disponible:</strong> {{ product.available }}</li>
+            </ul>
+        </div>
+        
+        <h2>{{ product.title }}</h2>
+        <p>Prix: {{ product.price | money }}</p>
+        <p>{{ product.description | truncate: 200 }}</p>
+        
+    {% else %}
+        <div class="alert alert-danger">
+            <h3>❌ Produit non trouvé</h3>
+            <p>Aucun produit n'a été trouvé pour cette URL.</p>
+        </div>
+    {% endif %}
+    
+    <hr>
+    <a href="/" style="color: blue;">← Retour à l'accueil</a>
+</body>
+</html>

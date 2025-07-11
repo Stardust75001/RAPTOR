@@ -1,0 +1,67 @@
+{% liquid 
+    assign mt = block.settings.mt | prepend: 'mt-'
+    assign mb = block.settings.mb | prepend: 'mb-'
+%}
+
+<div class="stp-star d-flex align-items-center {{ block.settings.star_align }} {{ mt }} {{ mb }}"
+     data-id="{{ product.id }}"
+     data-rating-stp="{{ product.metafields.shopiweb.rating_shopitrust }}" 
+     data-num-reviews-stp="{{ product.metafields.shopiweb.number_shopitrust }}" {{ block.shopify_attributes }}>
+    
+    {% assign stars_rating = product.metafields.shopiweb.rating_shopitrust %}
+    {% assign number_reviews = product.metafields.shopiweb.number_shopitrust %}
+    
+    {% comment %}Define color codes for ratings{% endcomment %}
+    {% assign colors = "#e8e8eb,#ff3722,#ff8622,#ffce00,#73cf11,#00b67a" | split: "," %}
+    {% assign full_stars = stars_rating | floor %}
+    {% assign half_star_present = stars_rating | modulo: 1 %}
+    {% assign next_star = full_stars | plus: 1 %}
+
+    {% unless block.settings.shopitrust_url == blank %}
+        <a href="{{ block.settings.shopitrust_url }}" class="text-decoration-none">
+    {% endunless %}
+        
+        {% for i in (1..5) %}
+            {% if i <= full_stars %}
+                <!-- Étoiles pleines -->
+                {% assign color = colors[full_stars] %}
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="{{ color }}" class="{% unless block.settings.shopitrust_url == blank %}me-0{% else %}me-2{% endunless %}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M16 0H0V16H16V0Z" fill="{{ color }}"></path>
+                    <path d="M5.8,9.3L8,10.8l3.5,2.5l-1.3-4.1l3.5-2.5H9.3L8,2.7L6.7,6.7H2.4L5.8,9.3z M13.6,6.7H9.3L8,2.7L6.7,6.7H2.4l3.5,2.5l-1.3,4.1L8,10.8l2.1-1.5L13.6,6.7z" fill="white"></path>
+                </svg>
+            {% elsif i == next_star and half_star_present > 0 %}
+                <!-- Demi-étoile, ajustez pour gérer spécifiquement 0.5 -->
+                {% if full_stars == 0 and stars_rating == 0.5 %}
+                    {% assign gradient_color = colors[1] %}
+                {% else %}
+                    {% assign gradient_color = colors[full_stars] %}
+                {% endif %}
+                <svg width="16" height="16" viewBox="0 0 16 16" class="{% unless block.settings.shopitrust_url == blank %}me-0{% else %}me-2{% endunless %}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <defs>
+                        <linearGradient id="half_grad{{ i }}">
+                            <stop offset="50%" stop-color="{{ gradient_color }}"/>
+                            <stop offset="50%" stop-color="{{ colors.first }}"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M16 0H0V16H16V0Z" fill="url(#half_grad{{ i }})"></path>
+                    <path d="M5.8,9.3L8,10.8l3.5,2.5l-1.3-4.1l3.5-2.5H9.3L8,2.7L6.7,6.7H2.4L5.8,9.3z M13.6,6.7H9.3L8,2.7L6.7,6.7H2.4l3.5,2.5l-1.3,4.1L8,10.8l2.1-1.5L13.6,6.7z" fill="white"></path>
+                </svg>
+            {% else %}
+                <!-- Étoiles vides -->
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="{{ colors.first }}" class="{% unless block.settings.shopitrust_url == blank %}me-0{% else %}me-2{% endunless %}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M16 0H0V16H16V0Z" fill="{{ colors.first }}"></path>
+                    <path d="M5.8,9.3L8,10.8l3.5,2.5l-1.3-4.1l3.5-2.5H9.3L8,2.7L6.7,6.7H2.4L5.8,9.3z M13.6,6.7H9.3L8,2.7L6.7,6.7H2.4l3.5,2.5l-1.3,4.1L8,10.8l2.1-1.5L13.6,6.7z" fill="white"></path>
+                </svg>
+            {% endif %}
+        {% endfor %}
+    
+        {% if number_reviews == 0 or number_reviews == blank %}
+          <span class="spt-badge-caption ms-2">{{ 'no_reviews' | t }}</span>
+        {% else %}
+          <span class="spt-badge-caption ms-2">{{ number_reviews }}</span>
+        {% endif %}
+
+    {% unless block.settings.shopitrust_url == blank %}
+        </a>
+    {% endunless %}
+</div>

@@ -1,0 +1,230 @@
+{% schema %}
+{
+  "name": "Carousel Block Buttons",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Sous-titre"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titre"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "image_picker",
+          "id": "subtitle_img",
+          "label": "Image du sous-titre"
+        },
+        {
+          "type": "range",
+          "id": "brand_image_size",
+          "label": "Taille image sous-titre",
+          "min": 20,
+          "max": 300,
+          "step": 10,
+          "default": 120
+        },
+        {
+          "type": "text",
+          "id": "btn_text",
+          "label": "Texte du bouton principal"
+        },
+        {
+          "type": "url",
+          "id": "btn_url",
+          "label": "Lien du bouton principal"
+        },
+        {
+          "type": "select",
+          "id": "btn_color",
+          "label": "Style du bouton principal",
+          "options": [
+            { "value": "btn-primary", "label": "Principal" },
+            { "value": "btn-secondary", "label": "Secondaire" }
+          ],
+          "default": "btn-primary"
+        },
+        {
+          "type": "select",
+          "id": "btn_size",
+          "label": "Taille du bouton principal",
+          "options": [
+            { "value": "btn-sm", "label": "Petit" },
+            { "value": "btn-md", "label": "Moyen" },
+            { "value": "btn-lg", "label": "Grand" }
+          ],
+          "default": "btn-md"
+        },
+        {
+          "type": "text",
+          "id": "btn_secondary_text",
+          "label": "Texte du bouton secondaire"
+        },
+        {
+          "type": "url",
+          "id": "btn_secondary_url",
+          "label": "Lien du bouton secondaire"
+        },
+        {
+          "type": "select",
+          "id": "btn_secondary_color",
+          "label": "Style du bouton secondaire",
+          "options": [
+            { "value": "btn-outline-primary", "label": "Contour principal" },
+            { "value": "btn-outline-secondary", "label": "Contour secondaire" }
+          ],
+          "default": "btn-outline-primary"
+        },
+        {
+          "type": "select",
+          "id": "btn_secondary_size",
+          "label": "Taille du bouton secondaire",
+          "options": [
+            { "value": "btn-sm", "label": "Petit" },
+            { "value": "btn-md", "label": "Moyen" },
+            { "value": "btn-lg", "label": "Grand" }
+          ],
+          "default": "btn-md"
+        },
+        {
+          "type": "select",
+          "id": "caption_position_mobile",
+          "label": "Position du texte (mobile)",
+          "options": [
+            { "value": "text-start", "label": "Gauche" },
+            { "value": "text-center", "label": "Centré" },
+            { "value": "text-end", "label": "Droite" }
+          ],
+          "default": "text-center"
+        },
+        {
+          "type": "select",
+          "id": "caption_position_desktop",
+          "label": "Position du texte (desktop)",
+          "options": [
+            { "value": "text-start", "label": "Gauche" },
+            { "value": "text-center", "label": "Centré" },
+            { "value": "text-end", "label": "Droite" }
+          ],
+          "default": "text-center"
+        },
+        {
+          "type": "text",
+          "id": "caption_color",
+          "label": "Couleur du texte",
+          "default": "#ffffff"
+        },
+        {
+          "type": "range",
+          "id": "caption_max_width",
+          "label": "Largeur max. du bloc (px)",
+          "min": 200,
+          "max": 1200,
+          "step": 10,
+          "default": 800
+        }
+      ]
+    }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    {
+      "name": "Diapositive avec boutons",
+      "category": "Image",
+      "blocks": [
+        {
+          "type": "slide"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+---------------------------------------------------------
+{% endcomment %}
+
+{%- style -%}
+@media screen and (max-width: 767px) {
+  .carousel-caption .btn-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+  }
+
+  .carousel-caption .btn-wrapper .btn {
+    font-size: 14px;
+    padding: 8px 18px;
+    margin: 0;
+    text-align: center;
+  }
+}
+{%- endstyle -%}
+
+<!-- Boutons dans le carousel -->
+<div class="carousel-caption {{ block.settings.caption_position_mobile }} {{ block.settings.caption_position_desktop }}"
+     style="color: {{ block.settings.caption_color }};">
+  <div style="max-width: {{ block.settings.caption_max_width }}px">
+
+    {% unless block.settings.subtitle_img == blank %}
+      <img
+        class="img-fluid mb-5"
+        src="{{ block.settings.subtitle_img.src | image_url: width: block.settings.brand_image_size }}"
+        alt="{{ block.settings.subtitle_img.alt | escape }}"
+        width="{{ block.settings.brand_image_size }}"
+        height="auto"
+        loading="lazy">
+    {% endunless %}
+
+    {% unless block.settings.subtitle == blank %}
+      <div class="subtitle mb-3 {{ block.settings.subtitle_size }}">
+        {{ block.settings.subtitle }}
+      </div>
+    {% endunless %}
+
+    <{{ block.settings.heading_tag }} class="title mb-3 {{ block.settings.title_size }}">
+      {{ block.settings.title }}
+    </{{ block.settings.heading_tag }}>
+
+    {% unless block.settings.description == blank %}
+      <div class="description rte mb-6 {{ block.settings.description_size }}">
+        {{ block.settings.description }}
+      </div>
+    {% endunless %}
+
+<div class="btn-wrapper">
+  {% unless block.settings.btn_text == blank %}
+    <a class="btn {{ block.settings.btn_color }} {{ block.settings.btn_size }}" href="{{ block.settings.btn_url }}">
+      {{ block.settings.btn_text }}
+    </a>
+  {% endunless %}
+
+  {% unless block.settings.btn_secondary_text == blank %}
+    <a class="btn {{ block.settings.btn_secondary_color }} {{ block.settings.btn_secondary_size }}" href="{{ block.settings.btn_secondary_url }}">
+      {{ block.settings.btn_secondary_text }}
+    </a>
+  {% endunless %}
+</div>

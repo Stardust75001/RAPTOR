@@ -1,0 +1,72 @@
+{% comment %}
+Template produit de débogage - Version ultra simple
+{% endcomment %}
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-info">
+                <h4>🔍 DEBUG - Informations produit</h4>
+                <ul>
+                    <li><strong>URL actuelle:</strong> {{ canonical_url }}</li>
+                    <li><strong>Handle produit:</strong> {{ product.handle }}</li>
+                    <li><strong>ID produit:</strong> {{ product.id }}</li>
+                    <li><strong>Titre:</strong> {{ product.title }}</li>
+                    <li><strong>URL produit:</strong> {{ product.url }}</li>
+                    <li><strong>Template utilisé:</strong> product.debug.liquid</li>
+                </ul>
+            </div>
+            
+            {% if product.id %}
+                <div class="alert alert-success">
+                    <h3>✅ Produit trouvé !</h3>
+                    <p>Le produit existe et est accessible.</p>
+                </div>
+            {% else %}
+                <div class="alert alert-danger">
+                    <h3>❌ Produit non trouvé</h3>
+                    <p>Le produit n'existe pas ou n'est pas accessible.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    {% if product.id %}
+        <div class="row">
+            <div class="col-lg-6">
+                {% if product.images.size > 0 %}
+                    <img src="{{ product.featured_image | img_url: 'master' }}" 
+                         alt="{{ product.title }}" 
+                         class="img-fluid rounded">
+                {% else %}
+                    <div class="bg-light p-5 text-center">
+                        <p>Aucune image disponible</p>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="col-lg-6">
+                <h1>{{ product.title }}</h1>
+                <p class="h4 text-primary">{{ product.price | money }}</p>
+                <div class="mb-4">{{ product.description }}</div>
+                
+                {% form 'product', product %}
+                    <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                    <button type="submit" class="btn btn-primary">
+                        Ajouter au panier
+                    </button>
+                {% endform %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <a href="{{ collections.all.url }}" class="btn btn-secondary">
+                ← Retour aux collections
+            </a>
+        </div>
+    </div>
+</div>

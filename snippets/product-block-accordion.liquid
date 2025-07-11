@@ -1,0 +1,108 @@
+{% liquid 
+    unless block.settings.title_1 == blank
+        assign title_array = block.settings.title_1 | append: ','
+        assign icon_array = block.settings.icon_1 | append: ','
+    endunless
+    unless block.settings.title_2 == blank
+        assign title_array = block.settings.title_2 | append: ',' | prepend: title_array
+        assign icon_array = block.settings.icon_2 | append: ',' | prepend: icon_array
+        endunless
+    unless block.settings.title_3 == blank
+        assign title_array = block.settings.title_3 | append: ',' | prepend: title_array
+        assign icon_array = block.settings.icon_3 | append: ',' | prepend: icon_array
+    endunless
+    unless block.settings.title_4 == blank
+        assign title_array = block.settings.title_4 | append: ',' | prepend: title_array
+        assign icon_array = block.settings.icon_4 | append: ',' | prepend: icon_array
+    endunless
+    unless block.settings.title_5 == blank
+        assign title_array = block.settings.title_5 | append: ',' | prepend: title_array
+        assign icon_array = block.settings.icon_5 | append: ',' | prepend: icon_array
+    endunless
+    unless block.settings.title_6 == blank
+        assign title_array = block.settings.title_6 | append: ',' | prepend: title_array
+        assign icon_array = block.settings.icon_6 | append: ',' | prepend: icon_array
+    endunless
+
+    assign title_array = title_array | split: ',' 
+    assign icon_array = icon_array | split: ','
+
+    assign mt = block.settings.mt | prepend: 'mt-'
+    assign mb = block.settings.mb | prepend: 'mb-'
+%}
+
+{% if block.settings.accordion_style == 'accordion-custom' %}
+    {% style %}
+    .accordion-custom .accordion-button {
+        background-color: {{ block.settings.accordion_custom_bg }} !important;
+        color: {{ block.settings.accordion_custom_title_color }};
+    }
+    .accordion-custom .accordion-button:not(.collapsed) {
+        background-color: {{ block.settings.accordion_custom_bg_actif }} !important;
+        color: {{ block.settings.accordion_custom_title_color_actif }};
+    }
+    
+    .accordion-custom .accordion-button::after {
+        background-color: {{ block.settings.accordion_custom_bg_plus }};
+        color: {{ block.settings.accordion_custom_plus_color }};
+    }  
+    .accordion-custom .accordion-button:not(.collapsed)::after {
+        background-color: {{ block.settings.accordion_custom_bg_plus_actif }};
+        color: {{ block.settings.accordion_custom_plus_color_actif }};
+    } 
+    {% endstyle %}
+{% endif %}
+
+<div class="product-block-accordion accordion {{ block.settings.accordion_style }} {{ mt }} {{ mb }}" {{ block.shopify_attributes }}>
+    {% for title in title_array %}
+        <div class="accordion-item">
+            <h3 id="heading-{{ block.id }}-{{ forloop.index }}" class="accordion-header mb-0">
+                <button 
+                    class="accordion-button {% unless block.settings.open_first_item == true and forloop.first %}collapsed{% endunless %}" 
+                    type="button"
+                    data-bs-toggle="collapse" 
+                    data-bs-target="#collapse-{{ block.id }}-{{ forloop.index }}" 
+                    aria-expanded="{% if block.settings.open_first_item == true and forloop.first %}true{% else %}false{% endif %}" 
+                    aria-controls="collapse-{{ block.id }}-{{ forloop.index }}">
+                    <div class="d-flex align-items-center">
+                        {% unless icon_array[forloop.index0] == blank %}
+                            <div class="me-3">
+                                {{ icon_array[forloop.index0] }}
+                            </div>
+                        {% endunless %}
+                        {{ title }}
+                    </div>
+                </button>
+            </h3>
+            <div 
+                id="collapse-{{ block.id }}-{{ forloop.index }}" 
+                class="accordion-collapse collapse {% if block.settings.open_first_item == true and forloop.first %}show{% endif %}"
+                aria-labelledby="heading-{{ block.id }}-{{ forloop.index }}">
+                <div class="accordion-body">
+                    <div class="description rte">
+                        {% case forloop.index %}
+                            {% when 1 %}
+                                {{ block.settings.description_1 }}
+                                {% if block.settings.description_1_is_desc %}
+                                    <div class="product-description">
+                                        {{ product.description }}
+                                    </div>
+                                {% endif %}
+                            {% when 2 %}
+                                {{ block.settings.description_2 }}
+                            {% when 3 %}
+                                {{ block.settings.description_3 }}
+                            {% when 4 %}
+                                {{ block.settings.description_4 }}
+                            {% when 5 %}
+                                {{ block.settings.description_5 }}
+                            {% when 6 %}
+                                {{ block.settings.description_6 }}
+                        {% endcase %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+

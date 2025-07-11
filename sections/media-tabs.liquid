@@ -1,0 +1,567 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid 
+    assign pt = section.settings.pt | prepend: 'pt-'
+    assign pb = section.settings.pb | prepend: 'pb-'
+    assign mt = section.settings.mt | prepend: 'mt-'
+    assign mb = section.settings.mb | prepend: 'mb-'
+
+    assign bg_color = section.settings.bg_color
+
+    if section.settings.bg_gradient
+        assign bg_color = bg_color | append: ' bg-gradient'
+    endif
+%}
+
+<style>  
+{% for block in section.blocks %}
+    #media-nav-block-{{ block.id }} .nav-link {
+        color: var(--bs-body-color);
+        opacity: .7;
+    }
+    .media-navigation.text-white .nav-link {
+        color: #fff !important;
+    }
+    .media-navigation.text-white .nav-link:hover,
+    .media-navigation.text-white .nav-link:focus {
+        color: var(--bs-nav-link-hover-color)!important;
+    }
+
+    .media-navigation.bg-primary.text-white .nav-link:hover {
+        color: #fff !important;
+        opacity: 1;
+    }
+    .media-navigation.text-white .nav-link:focus {
+        color: #fff !important;
+    }
+    
+    #media-nav-block-{{ block.id }} .nav-link:hover,
+    #media-nav-block-{{ block.id }} .nav-link:focus {
+        color: var(--bs-nav-link-hover-color);
+        opacity: 1!important;
+    }
+    #media-nav-block-{{ block.id }} .nav-link.active {
+        /*color: var(--bs-nav-pills-link-active-color)!important;*/
+        color: {{ section.settings.text_pill_color }}!important;
+        background-color: {{ section.settings.btn_pill_color }};
+        opacity: 1;
+    }
+    
+{% endfor %}
+</style>
+
+<section 
+    id="media-navigation-{{ section.id }}" 
+    class="media-navigation enter-view {{ bg_color }} {{ section.settings.text_align }} {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+    <div class="{{ section.settings.container }}">
+        <div class="mx-auto" style="max-width: {{ section.settings.max_width }}px;">
+            {% render 'section-header' %}
+            <div class="tab-content mx-auto text-center" id="TabContentMedia">
+                {% for block in section.blocks %}
+                    <div class="tab-pane {% if forloop.first %}show active{% endif %} mb-6 pb-6" 
+                         id="{{ block.id }}-pane" 
+                         role="tabpanel" 
+                         aria-labelledby="{{ block.id }}-tab" 
+                         tabindex="0">
+                        <div 
+                            class="animate__animated animate__faster opacity-0"
+                            data-animate-class="animate__fadeIn"
+                            style="animation-delay: 0ms">
+                            {% if block.settings.video != blank %}
+                                {% assign video_class = section.settings.img_thumbnail | append: ' w-100 rounded' | append: ' ' | append: section.settings.shadow_sp | append: ' ' | append: section.settings.border_color %}
+                                {% assign video_style = 'border-width: ' | append: section.settings.border_width | append: 'px ' %}
+                                {{ block.settings.video | video_tag: class: video_class, style: video_style, image_size: '800x', autoplay: block.settings.autoplay, loop: block.settings.loop, muted: block.settings.muted, controls: block.settings.controls }}
+                            {% elsif block.settings.img != blank %}
+                                <img
+                                    class="img-fluid rounded {{ section.settings.img_thumbnail }} {{ section.settings.shadow_sp }} {{ section.settings.border_color }}"
+                                    style="border-width: {{ section.settings.border_width }}px;"
+                                    src="{{ block.settings.img.src | image_url: width: 900 }}"
+                                    alt="{{ block.settings.img.alt | escape }}"
+                                    width="900"
+                                    height="{{ 900 | divided_by: block.settings.img.aspect_ratio | round }}"
+                                    loading="lazy">
+                            {% else %}
+                                {{ 'hero-apparel-2' | placeholder_svg_tag: 'placeholder-svg rounded' }}
+                            {% endif %}
+                        </div>
+                        <div class="description rte mt-6 text-center text-muted mx-auto {{ block.settings.tab_description_size }}"
+                             style="max-width: 500px; opacity: .8;">
+                            {{ block.settings.tab_description }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+              
+            <div class="d-lg-flex justify-content-lg-center align-items-lg-center">
+              <div class="py-lg-0 px-lg-0 py-1 px-2 rounded {{ section.settings.border_nav }} border-{{ section.settings.border_width_nav }} {{ section.settings.border_color_nav }} {{ section.settings.shadow_sp_tab }}">
+                <ul class="nav nav-pills d-flex flex-nowrap overflow-auto" 
+                    id="myTab" 
+                    role="tablist">
+                    {% for block in section.blocks %}
+                        <li id="media-nav-block-{{ block.id }}" class="nav-item flex-shrink-0 small my-lg-0 my-2" role="presentation" {{ block.shopify_attributes }}>
+                            <a class="nav-link rounded headings-font-family {% if forloop.first %}active{% endif %}" id="{{ block.id }}-tab" data-bs-toggle="tab" data-bs-target="#{{ block.id }}-pane" type="button" role="tab" aria-controls="{{ block.id }}-pane" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
+                                <div class="d-flex align-items-center">
+                                    {% unless block.settings.icon == blank %}
+                                        <div class="me-3">
+                                            {{ block.settings.icon }}
+                                        </div>
+                                    {% endunless %}
+                                {{ block.settings.tab_title }}
+                                </div>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+              </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+{% schema %} 
+{
+    "name": "Média Navigation",
+    "settings": [
+        {
+            "type": "paragraph", 
+            "content": "Documentation FR : [Média navigation by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/sections\/media-navigation)"
+        },
+        {
+            "type": "header",
+            "content": "General"
+        },
+        {
+            "type": "select",
+            "id": "bg_color",
+            "label": "Couleur de l'arrière plan",
+            "default": "bg-body text-body",
+            "options": [
+                { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+                { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+                { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+                { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
+                { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+                { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Sombre" },
+                { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "bg_gradient",
+            "label": "Dégradé d'arrière-plan",
+            "default": false,
+            "info": "Ne s'applique pas aux couleurs claires"
+        },
+        {
+            "type": "select",
+            "id": "container",
+            "label": "Conteneur",
+            "default": "container",
+            "options": [
+                { "value": "container", "label": "Conteneur" },
+                { "value": "container-fluid", "label": "Pleine largeur" }
+            ]
+        },
+        {
+            "type": "text",
+            "id": "max_width",
+            "label": "Largeur max. (px)",
+            "default": "900"
+        },
+        {
+            "type": "select",
+            "id": "text_align",
+            "label": "Alignement du texte",
+            "default": "text-center",
+            "options": [
+                { "value": "text-start", "label": "Gauche" },
+                { "value": "text-center", "label": "Centre" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "En-tête de la section"
+        },
+        {
+            "type": "image_picker",
+            "id": "subtitle_img",
+            "label": "Légende Image"
+        },
+        {
+            "type": "text",
+            "id": "brand_image_size",
+            "label": "Image Largeur/Hauteur (px)",
+            "default": "60"
+        },
+        {
+            "type": "text",
+            "id": "subtitle",
+            "label": "Légende Texte"
+        },
+        {
+            "type": "select",
+            "id": "subtitle_size",
+            "label": "Taille de la légende",
+            "default": "fs-5",
+            "options": [
+                { "group": "Légende Standard", "value": "fs-1", "label": "Extra Grand" },
+                { "group": "Légende Standard", "value": "fs-2", "label": "Super Grand" },
+                { "group": "Légende Standard", "value": "fs-3", "label": "Très Grand" },
+                { "group": "Légende Standard", "value": "fs-4", "label": "Grand" },
+                { "group": "Légende Standard", "value": "fs-5", "label": "Moyen" },
+                { "group": "Légende Standard", "value": "fs-6", "label": "Petit" } 
+            ]
+        },
+        {
+            "type": "color",
+            "id": "color_caption",
+            "label": "Couleur de la légende",
+            "default": "#6c757d"
+        },
+        {
+            "type": "text",
+            "id": "title_overlay",
+            "label": "Titre overlay",
+            "info": "Visible sur ordinateur, masqué sur mobile pour optimiser la lisibilité."
+        },
+        {
+            "type": "select",
+            "id": "title_overlay_size",
+            "label": "Taille du titre overlay",
+            "default": "3",
+            "options": [
+                { "group": "Titre Overlay", "value": "4", "label": "Grand" },
+                { "group": "Titre Overlay", "value": "3", "label": "Moyen" },
+                { "group": "Titre Overlay", "value": "2", "label": "Petit" }
+            ]
+        },
+        {
+            "type": "color",
+            "id": "color_title_overlay",
+            "label": "Couleur du titre overlay",
+            "default": "#000000"
+        },
+        {
+            "type": "inline_richtext",
+            "id": "title",
+            "label": "Titre",
+            "default": "Média Navigation"
+        },
+        {
+            "type": "select",
+            "id": "heading_tag",
+            "label": "Balise titre (SEO)",
+            "default": "h2",
+            "options": [
+                { "value": "h1", "label": "h1" },
+                { "value": "h2", "label": "h2" },
+                { "value": "h3", "label": "h3" },
+                { "value": "h4", "label": "h4" },
+                { "value": "h5", "label": "h5" },
+                { "value": "h6", "label": "h6" },
+                { "value": "span", "label": "Aucune" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "title_size",
+            "label": "Taille du titre",
+            "default": "h2",
+            "options": [
+                { "group": "Titre Supérieur", "value": "display-1", "label": "Extra Extra Grand" },
+                { "group": "Titre Supérieur", "value": "display-2", "label": "Extra Grand" },
+                { "group": "Titre Supérieur", "value": "display-3", "label": "Ultra Grand" },
+                { "group": "Titre Supérieur", "value": "display-4", "label": "Super Grand" },
+                { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+            ]
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Description (facultatif)",
+            "default": "<p>Ajouter une description facultative à cette section</p>"
+        },
+        {
+            "type": "select",
+            "id": "description_size",
+            "label": "Taille de description",
+            "default": "fs-5",
+            "options": [
+                { "group": "Description Standard", "value": "fs-1", "label": "Extra Grand" },
+                { "group": "Description Standard", "value": "fs-2", "label": "Super Grand" },
+                { "group": "Description Standard", "value": "fs-3", "label": "Très Grand" },
+                { "group": "Description Standard", "value": "fs-4", "label": "Grand" },
+                { "group": "Description Standard", "value": "fs-5", "label": "Moyen" },
+                { "group": "Description Standard", "value": "fs-6", "label": "Petit" } 
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Image & Vidéo"
+        },
+        {
+            "type": "select",
+            "id": "img_thumbnail",
+            "label": "Bordure de l'image & vidéo",
+            "default": "img-thumbnail",
+            "options": [
+                { "value": "", "label": "Aucune" },
+                { "value": "img-thumbnail", "label": "Bordure" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "border_color",
+            "label": "Couleur de la bordure",
+            "options": [
+                { "value": "", "label": "Par défaut" },
+                { "value": "border-primary", "label": "Primaire" },
+                { "value": "border-secondary", "label": "Secondaire" },
+                { "value": "border-tertiary", "label": "Tertiaire" },
+                { "value": "border-dark", "label": "Sombre" },
+                { "value": "border-success", "label": "Succès" },
+                { "value": "border-warning", "label": "Avertissement" },
+                { "value": "border-danger", "label": "Danger" },
+                { "value": "border-info", "label": "Info" }
+            ],
+            "default": ""
+        },
+        {
+            "type": "range",
+            "id": "border_width",
+            "label": "Largeur de la bordure",
+            "min": 1,
+            "max": 10,
+            "step": 1,
+            "default": 1
+        },
+        {
+            "type": "select",
+            "id": "shadow_sp",
+            "label": "Ombre",
+            "options": [
+                { "value": "shadow-none", "label": "Aucune" },
+                { "value": "shadow-1", "label": "Ombre légère" },
+                { "value": "shadow-2", "label": "Ombre partiel" },
+                { "value": "shadow-3", "label": "Ombre profonde" },
+                { "value": "shadow-4", "label": "Ombre totale" }
+            ],
+            "default": "shadow-1"
+        },
+        {
+            "type": "header",
+            "content": "Navigation"
+        },
+        {
+            "type": "select",
+            "id": "border_nav",
+            "label": "Bordure",
+            "default": "border",
+            "options": [
+                { "value": "border-0", "label": "Aucune" },
+                { "value": "border", "label": "Bordure" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "border_color_nav",
+            "label": "Couleur de la bordure",
+            "options": [
+                { "value": "", "label": "Par défaut" },
+                { "value": "border-primary", "label": "Primaire" },
+                { "value": "border-secondary", "label": "Secondaire" },
+                { "value": "border-tertiary", "label": "Tertiaire" },
+                { "value": "border-dark", "label": "Sombre" },
+                { "value": "border-success", "label": "Succès" },
+                { "value": "border-warning", "label": "Avertissement" },
+                { "value": "border-danger", "label": "Danger" },
+                { "value": "border-info", "label": "Info" }
+            ],
+            "default": ""
+        },
+        {
+            "type": "range",
+            "id": "border_width_nav",
+            "label": "Largeur de la bordure",
+            "min": 1,
+            "max": 10,
+            "step": 1,
+            "default": 1
+        },
+        {
+            "type": "select",
+            "id": "shadow_sp_tab",
+            "label": "Ombre",
+            "options": [
+                { "value": "shadow-none", "label": "Aucune" },
+                { "value": "shadow-1", "label": "Ombre légère" },
+                { "value": "shadow-2", "label": "Ombre partiel" },
+                { "value": "shadow-3", "label": "Ombre profonde" },
+                { "value": "shadow-4", "label": "Ombre totale" }
+            ],
+            "default": "shadow-1"
+        },
+        {
+            "type": "color",
+            "id": "btn_pill_color",
+            "label": "Couleur du bouton",
+            "default": "#FF4D45"
+        },
+        {
+            "type": "color",
+            "id": "text_pill_color",
+            "label": "Couleur du texte bouton",
+            "default": "#FFFFFF"
+        },
+        {
+            "type": "header",
+            "content": "Espacement de la section"
+        },
+        {
+            "type": "range",
+            "id": "pt",
+            "label": "Padding supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "pb",
+            "label": "Padding inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mt",
+            "label": "Marge supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mb",
+            "label": "Marge inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        }
+    ],
+    "blocks": [
+        {
+            "type": "image",
+            "name": "Onglet",
+            "limit": 4,
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "Image"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "img",
+                    "label": "Image"
+                },
+                {
+                    "type": "header",
+                    "content": "Vidéo"
+                },
+                {
+                    "type": "video",
+                    "id": "video",
+                    "label": "Vidéo"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "autoplay",
+                    "label": "Autoplay",
+                    "default": true
+                },
+                {
+                    "type": "checkbox",
+                    "id": "loop",
+                    "label": "Loop",
+                    "info": "(Vidéo en boucle)",
+                    "default": true
+                },
+                {
+                    "type": "checkbox",
+                    "id": "muted",
+                    "label": "Mute",
+                    "info": "(Vidéo muette)",
+                    "default": true
+                },
+                {
+                    "type": "checkbox",
+                    "id": "controls",
+                    "label": "Contrôles",
+                    "default": true
+                },
+                {
+                    "type": "header",
+                    "content": "Onglets"
+                },
+                {
+                    "type": "html",
+                    "id": "icon",
+                    "label": "Code icône (SVG)",
+                    "info": "Vous pouvez obtenir des icônes svg à partir de bibliothèques telles que [Bootstrap Icons](https://icons.getbootstrap.com)"
+                },
+                {
+                  "type": "text",
+                  "id": "tab_title",
+                  "label": "Titre de l'onglet",
+                  "default": "Shopiweb"
+                },
+                {
+                    "type": "richtext",
+                    "id": "tab_description",
+                    "label": "Description (facultatif)",
+                    "default": "<p>Ajouter une description facultative à cette section</p>"
+                },
+                {
+                    "type": "select",
+                    "id": "tab_description_size",
+                    "label": "Taille de description",
+                    "default": "fs-5",
+                    "options": [
+                        { "group": "Description Standard", "value": "fs-1", "label": "Extra Grand" },
+                        { "group": "Description Standard", "value": "fs-2", "label": "Super Grand" },
+                        { "group": "Description Standard", "value": "fs-3", "label": "Très Grand" },
+                        { "group": "Description Standard", "value": "fs-4", "label": "Grand" },
+                        { "group": "Description Standard", "value": "fs-5", "label": "Moyen" },
+                        { "group": "Description Standard", "value": "fs-6", "label": "Petit" } 
+                    ]
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Média Navigation",
+            "category": "Image"
+        }
+    ]
+}
+{% endschema %}

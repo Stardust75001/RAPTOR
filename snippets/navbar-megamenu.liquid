@@ -1,0 +1,53 @@
+{% liquid 
+    assign bg_color = section.settings.bg_color %}
+
+<ul class="nav nav-links justify-content-center">
+    {% for link in linklists[section.settings.menu_desktop].links %}
+        {% liquid 
+            if link.title == ':'
+                 assign skip_links = true
+            endif %}
+        {% unless skip_links %}
+            {% if link.links == blank %}
+                <li class="nav-item">
+                    <a
+                        class="nav-link rounded {{ section.settings.menu_desktop_font_family }} {% if link.active %}active{% endif %}" 
+                        href="{{ link.url }}"
+                        aria-current="{% if link.active %}page{% endif %}">
+                        {{ link.title }}
+                    </a>
+                </li>
+            {% else %}
+                <li class="nav-item dropdown {% if link.levels > 1 %}position-static{% endif %}">
+                    <a 
+                        class="nav-link rounded dropdown-toggle {{ section.settings.menu_desktop_font_family }} {% if link.child_active %}active{% endif %}" 
+                        href="#"
+                        data-bs-toggle="dropdown" 
+                        aria-expanded="false"
+                        data-index="{{ forloop.index }}"
+                        role="button">
+                        {{ link.title }}
+                    </a>
+                    {% if link.levels > 1 %}
+                        {% render 'navbar-megamenu-dropdown', link: link, level: 1 %}
+                    {% else %}
+                        <ul class="dropdown-menu {{ bg_color }}">
+                            {% for child_link in link.links %}
+                                <li>
+                                    <a 
+                                        id="navbar-childitem-{{ forloop.index }}" 
+                                        class="dropdown-item {% if child_link.active %}active{% endif %}" 
+                                        href="{{ child_link.url }}"
+                                        aria-current="{% if child_link.active %}page{% endif %}">
+                                        {{ child_link.title }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </li>
+            {% endif %}
+        {% endunless %}
+    {% endfor %}
+</ul>
+

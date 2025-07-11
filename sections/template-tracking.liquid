@@ -1,0 +1,341 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid 
+  assign pt = section.settings.pt | prepend: 'pt-'
+  assign pb = section.settings.pb | prepend: 'pb-'
+  assign mt = section.settings.mt | prepend: 'mt-'
+  assign mb = section.settings.mb | prepend: 'mb-'
+
+  assign bg_color = section.settings.bg_color
+
+  if section.settings.bg_gradient
+      assign bg_color = bg_color | append: ' bg-gradient'
+  endif
+
+  assign btn_shadow_sp = settings.btn_shadow_sp
+%}
+
+<section id="tracking-form-{{ section.id }}" class="tracking-form enter-view {{ section.settings.text_align }} {{ bg_color }} {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+  <div class="{{ section.settings.container }}" style="max-width: {{ section.settings.max_width }}px;">
+    {% render 'section-header' %}
+    <div class="row mb-3">
+      <div class="form-group mb-5">
+        <input 
+          class="form-control" 
+          type="text" 
+          name="tracking-number" 
+          id="tracking-input-{{ section.id }}" 
+          value="" 
+          placeholder="{{ 'general.tracking.placeholder' | t }}" 
+          aria-label="{{ 'general.tracking.placeholder' | t }}">
+      </div>
+      <div class="px-5 w-100">
+      <button class="btn w-100 {{ section.settings.btn_color }} {{ btn_shadow_sp }} {{ section.settings.btn_size }}" onclick="trackPackage()">
+        {{ 'general.tracking.btn_text' | t }}
+      </button>
+      </div>
+    </div>
+  </div>
+  <div class="container mt-6">
+    <div class="row">
+      <div id="tracking-container-{{ section.id }}" class="tracking-container"></div>
+    </div>
+  </div>
+</section>
+<script src="https://www.17track.net/externalcall.js" defer></script>
+<script>
+  function trackPackage() {
+      const trackingNumber = document.getElementById("tracking-input-{{ section.id }}").value;
+      if(trackingNumber===""){
+          alert("Enter your number.");
+          return;
+      }
+      YQV5.trackSingle({
+          YQ_ContainerId:"tracking-container-{{ section.id }}",
+          YQ_Height:560,
+          YQ_Fc:"0",
+          YQ_Lang:"fr",
+          YQ_Num:trackingNumber
+      });
+  }
+</script>
+{% schema %}
+{
+  "name": "Tracking",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+      {
+          "type": "header",
+          "content": "General"
+      },
+      {
+          "type": "select",
+          "id": "bg_color",
+          "label": "Couleur de l'arrière plan",
+          "default": "bg-body text-body",
+          "options": [
+              { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+              { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+              { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+              { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
+              { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+              { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Sombre" },
+              { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" },
+              { "group": "Alerte", "value": "bg-success text-white", "label": "Succès" },
+              { "group": "Alerte", "value": "bg-warning text-dark", "label": "Avertissement" },
+              { "group": "Alerte", "value": "bg-danger text-white", "label": "Danger" },
+              { "group": "Alerte", "value": "bg-info text-white", "label": "Info" }
+          ]
+      },
+      {
+          "type": "checkbox",
+          "id": "bg_gradient",
+          "label": "Dégradé d'arrière-plan",
+          "default": false,
+          "info": "Ne s'applique pas aux couleurs claires"
+      },
+      {
+          "type": "select",
+          "id": "container",
+          "label": "Conteneur",
+          "default": "container",
+          "options": [
+              { "value": "container", "label": "Conteneur" },
+              { "value": "container-fluid", "label": "Pleine largeur" }
+          ]
+      },
+      {
+          "type": "text",
+          "id": "max_width",
+          "label": "Largeur maximale (px)",
+          "info": "Ajuster la largeur du conteneur (en pixels)"
+      },
+      {
+          "type": "select",
+          "id": "text_align",
+          "label": "Alignement du texte",
+          "default": "text-center",
+          "options": [
+              { "value": "text-start", "label": "Gauche" },
+              { "value": "text-center", "label": "Centre" }
+          ]
+      },
+      {
+          "type": "header",
+          "content": "En-tête de la section"
+      },
+      {
+          "type": "image_picker",
+          "id": "subtitle_img",
+          "label": "Légende Image"
+      },
+      {
+          "type": "text",
+          "id": "brand_image_size",
+          "label": "Image Largeur/Hauteur (px)",
+          "default": "60"
+      },
+      {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Légende Texte",
+          "default": "Proposition de valeur unique"
+      },
+      {
+          "type": "select",
+          "id": "subtitle_size",
+          "label": "Taille de la légende",
+          "default": "fs-5",
+          "options": [
+              { "group": "Légende Standard", "value": "fs-1", "label": "Extra Grand" },
+              { "group": "Légende Standard", "value": "fs-2", "label": "Super Grand" },
+              { "group": "Légende Standard", "value": "fs-3", "label": "Très Grand" },
+              { "group": "Légende Standard", "value": "fs-4", "label": "Grand" },
+              { "group": "Légende Standard", "value": "fs-5", "label": "Moyen" },
+              { "group": "Légende Standard", "value": "fs-6", "label": "Petit" } 
+          ]
+      },
+      {
+          "type": "color",
+          "id": "color_caption",
+          "label": "Couleur de la légende",
+          "default": "#6c757d"
+      },
+      {
+          "type": "text",
+          "id": "title_overlay",
+          "label": "Titre overlay",
+          "info": "Visible sur ordinateur, masqué sur mobile pour optimiser la lisibilité."
+      },
+      {
+          "type": "select",
+          "id": "title_overlay_size",
+          "label": "Taille du titre overlay",
+          "default": "3",
+          "options": [
+              { "group": "Titre Overlay", "value": "4", "label": "Grand" },
+              { "group": "Titre Overlay", "value": "3", "label": "Moyen" },
+              { "group": "Titre Overlay", "value": "2", "label": "Petit" }
+          ]
+      },
+      {
+          "type": "color",
+          "id": "color_title_overlay",
+          "label": "Couleur du titre overlay",
+          "default": "#000000"
+      },
+      {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "Titre",
+          "default": "Suivre ma commande"
+      },
+      {
+          "type": "select",
+          "id": "heading_tag",
+          "label": "Balise titre (SEO)",
+          "default": "h2",
+          "options": [
+              { "value": "h1", "label": "h1" },
+              { "value": "h2", "label": "h2" },
+              { "value": "h3", "label": "h3" },
+              { "value": "h4", "label": "h4" },
+              { "value": "h5", "label": "h5" },
+              { "value": "h6", "label": "h6" },
+              { "value": "span", "label": "Aucune" }
+          ]
+      },
+      {
+          "type": "select",
+          "id": "title_size",
+          "label": "Taille du titre",
+          "default": "h2",
+          "options": [
+              { "group": "Titre Supérieur", "value": "display-1", "label": "Extra Extra Grand" },
+              { "group": "Titre Supérieur", "value": "display-2", "label": "Extra Grand" },
+              { "group": "Titre Supérieur", "value": "display-3", "label": "Ultra Grand" },
+              { "group": "Titre Supérieur", "value": "display-4", "label": "Super Grand" },
+              { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+              { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+              { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+              { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+              { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+              { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+          ]
+      },
+      {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description (facultatif)",
+          "default": "<p>Ajouter une description facultative à cette section</p>"
+      },
+      {
+          "type": "select",
+          "id": "description_size",
+          "label": "Taille de description",
+          "default": "fs-5",
+          "options": [
+              { "group": "Description Standard", "value": "fs-1", "label": "Extra Grand" },
+              { "group": "Description Standard", "value": "fs-2", "label": "Super Grand" },
+              { "group": "Description Standard", "value": "fs-3", "label": "Très Grand" },
+              { "group": "Description Standard", "value": "fs-4", "label": "Grand" },
+              { "group": "Description Standard", "value": "fs-5", "label": "Moyen" },
+              { "group": "Description Standard", "value": "fs-6", "label": "Petit" } 
+          ]
+      },
+      {
+          "type": "select",
+          "id": "btn_color",
+          "label": "Couleur du bouton",
+          "default": "btn-primary",
+          "options": [
+              { "group": "Normal", "value": "btn-link", "label": "Lien" },
+              { "group": "Normal", "value": "btn-light", "label": "Claire" },
+              { "group": "Normal", "value": "btn-dark", "label": "Sombre" },
+              { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
+              { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
+              { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
+              { "group": "Normal", "value": "btn-success", "label": "Succès" },
+              { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+              { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
+              { "group": "Normal", "value": "btn-info", "label": "Info" },
+              { "group": "Contour", "value": "btn-outline-light", "label": "Contour Claire" },
+              { "group": "Contour", "value": "btn-outline-dark", "label": "Contour Sombre" },
+              { "group": "Contour", "value": "btn-outline-primary", "label": "Contour Primaire" },
+              { "group": "Contour", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
+              { "group": "Contour", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
+              { "group": "Contour", "value": "btn-outline-success", "label": "Contour Succès" },
+              { "group": "Contour", "value": "btn-outline-danger", "label": "Contour Danger" },
+              { "group": "Contour", "value": "btn-outline-warning", "label": "Contour Avertissement" },
+              { "group": "Contour", "value": "btn-outline-info", "label": "Contour Info" }
+          ]
+      },
+      {
+          "type": "select",
+          "id": "btn_size",
+          "label": "Taille du bouton",
+          "default": "btn-sm",
+          "options": [
+              { "value": "btn-sm", "label": "Petit" },
+              { "value": "btn-md", "label": "Normal" },
+              { "value": "btn-lg", "label": "Large" }
+          ]
+      },
+      {
+          "type": "header",
+          "content": "Espacement de la section"
+      },
+      {
+          "type": "range",
+          "id": "pt",
+          "label": "Padding supérieure",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 0
+      },
+      {
+          "type": "range",
+          "id": "pb",
+          "label": "Padding inférieure",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 0
+      },
+      {
+          "type": "range",
+          "id": "mt",
+          "label": "Marge supérieure",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 0
+      },
+      {
+          "type": "range",
+          "id": "mb",
+          "label": "Marge inférieure",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 0
+      }
+  ],
+  "presets": [
+      {
+          "name": "Tracking",
+          "category": "General"
+      }
+  ]
+}
+{% endschema %}

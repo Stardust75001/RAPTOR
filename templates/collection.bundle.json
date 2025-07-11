@@ -1,0 +1,78 @@
+{
+  "sections": {
+    "34ba8053-12fd-455b-b4ee-9479456a0099": {
+      "type": "template-collection-bundle",
+      "blocks": {
+        "desktop_MXD7nE": {
+          "type": "desktop",
+          "settings": {
+            "inject": 5,
+            "bg_color": "bg-dark text-white",
+            "url": "#",
+            "img": "shopify://shop_images/253993428_1236304270222603_5169468223220188757_n.jpg",
+            "img_opacity": 0.7,
+            "vid_opacity": 0.7,
+            "autoplay": true,
+            "loop": true,
+            "muted": true,
+            "controls": true,
+            "title": "Nouvelle Collection",
+            "title_size": "h4",
+            "description": "<p>Ajouter une description facultative à cette section</p>",
+            "btn_text": "En savoir plus"
+          }
+        }
+      },
+      "block_order": [
+        "desktop_MXD7nE"
+      ],
+      "settings": {
+        "bundle_tiers": "100:10,200:20,300:40",
+        "bundle_redirect_checkout": false,
+        "container": "container",
+        "text_align": "text-center",
+        "limit": 48,
+        "show_filters": true,
+        "filters_btn_color": "btn-outline-secondary",
+        "show_sort_by": true,
+        "show_collection_img": true,
+        "img_opacity": 0.3,
+        "img_blur": 0,
+        "title_size": "h1",
+        "show_collection_description": true,
+        "description_size": "fs-5",
+        "bundle_card_header_bg": "bg-dark text-white",
+        "bundle_card_header_title": "Mon Offre Groupée",
+        "bundle_card_header_title_size": "h5",
+        "bundle_card_border_color": "border-primary",
+        "bundle_card_shadow_sp": "shadow-4",
+        "bundle_card_btn_atc": "btn-primary",
+        "bundle_card_btn_view_contents": "btn-outline-secondary",
+        "bundle_progress_color_uncompleted": "bg-primary",
+        "bundle_progress_color_completed": "bg-success",
+        "product_img_mode": "gallery",
+        "product_img_orientation": "square",
+        "product_img_thumbnail": "img-thumbnail",
+        "product_border_color": "border-primary",
+        "product_shadow_sp": "shadow-4",
+        "product_show_sale_badge": true,
+        "product_sale_badge_color": "bg-success text-white",
+        "product_title_size": "h5",
+        "product_title_truncate": "text-truncate",
+        "product_show_vendor": true,
+        "product_show_atc_form": true,
+        "product_form_show_inventory": true,
+        "product_show_wishlist_btn": true,
+        "breakpoint_xs": 2,
+        "breakpoint_sm": 2,
+        "breakpoint_md": 2,
+        "breakpoint_lg": 3,
+        "breakpoint_xl": 4,
+        "breakpoint_xxl": 4
+      }
+    }
+  },
+  "order": [
+    "34ba8053-12fd-455b-b4ee-9479456a0099"
+  ]
+}

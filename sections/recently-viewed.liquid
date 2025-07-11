@@ -1,0 +1,547 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid 
+    assign pt = section.settings.pt | prepend: 'pt-'
+    assign pb = section.settings.pb | prepend: 'pb-'
+    assign mt = section.settings.mt | prepend: 'mt-'
+    assign mb = section.settings.mb | prepend: 'mb-'
+
+    case section.settings.product_img_orientation
+        when 'square'
+            assign img_width  = 600
+            assign img_height = 600
+        when 'landscape'
+            assign img_width  = 600
+            assign img_height = 480
+        when 'potrait'
+            assign img_width  = 480
+            assign img_height = 600
+    endcase
+
+    assign brand_img_width = section.settings.brand_image_size
+%}
+
+<section 
+    id="recently-viewed-{{ section.id }}" 
+    class="recently-viewed featured-products {{ section.settings.bg_color }} {{ section.settings.text_align }} {{ pt }} {{ pb }} {{ mt }} {{ mb }}"
+    data-limit="{{ section.settings.limit }}"
+    data-img-width="{{ img_width }}"
+    data-img-height="{{ img_height }}"
+    data-img-thumbnail="{{ section.settings.product_img_thumbnail }} {{ section.settings.product_shadow_sp }} {{ section.settings.product_border_color }}"
+    data-product-title-size="{{ section.settings.product_title_size }}"
+    data-product-title-truncate="{{ section.settings.product_title_truncate }}"
+    data-product-vendor="{% if section.settings.product_show_vendor and product.vendor %}true{% else %}false{% endif %}"
+    data-show-atc-form="{{ section.settings.product_show_atc_form }}"
+    data-show-wishlist="{% if settings.wishlist_enable and section.settings.product_show_wishlist_btn %}true{% else %}false{% endif %}"
+    data-text-wishlist-remove="{{ 'general.wishlist.remove_from_wishlist' | t }}"
+    data-text-price-regular="{{ 'product.price_regular' | t }}"
+    data-text-price-from="{{ 'product.price_from' | t }}"
+    data-text-price-sale="{{ 'product.price_sale' | t }}"
+    data-text-add-to-cart="{{ 'product.add_to_cart' | t }}"
+    data-text-select-variant="{{ 'product.select_variant' }}"
+    data-text-wishlist-add="{{ 'general.wishlist.add_to_wishlist' | t }}"
+    data-text-wishlist-remove="{{ 'general.wishlist.remove_from_wishlist' | t }}"
+    data-text-wishlist-btn-label="{{ 'general.wishlist.btn_label' | t }}"
+    hidden>
+    <div class="{{ section.settings.container }}">
+        {% unless section.settings.subtitle_img == blank %}
+            <img
+                class="img-fluid mb-5"
+                src="{{ section.settings.subtitle_img.src | image_url: width: brand_img_width }}"
+                alt="{{ section.settings.subtitle_img.alt | escape }}"
+                width="{{ brand_img_width }}"
+                height="auto"
+                loading="lazy">
+        {% endunless %}
+        
+        {% unless section.settings.subtitle == blank %}
+            <div>
+                <p class="subtitle text-uppercase fw-500 mb-3 {{ section.settings.subtitle_size }}"
+                    style="color:{{ section.settings.color_caption }};">
+                    {{ section.settings.subtitle }}
+                </p>
+            </div>
+        {% endunless %} 
+        {% unless section.settings.title == blank %}
+            <{{ section.settings.heading_tag }} class="title mb-4 {{ section.settings.title_size }}">
+                {{ section.settings.title }}
+                {% if settings.custom_svg_h2 != blank %}
+                  <div class="h2_svg">
+                    <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {{ settings.custom_svg_h2 }}</span>
+                  </div>
+                {% else %}
+                  {% if settings.svg_h2 != 'none' %}
+                    <div class="h2_svg mb-4">
+                      <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {% render 'svg-subtitle', svg_h2: settings.svg_h2 %}</span>
+                    </div>
+                  {% endif %}
+                {% endif %}
+            </{{ section.settings.heading_tag }}>
+        {% endunless %}
+        {% unless section.settings.description == blank %}
+            <div class="description rte mt-n2 mb-5 text-muted {{ section.settings.description_size }}">
+                {{ section.settings.description }}
+            </div>
+        {% endunless %}
+        <div 
+            class="splide mx-n3 mx-lg-n4"
+            data-arrows="{{ section.settings.carousel_arrows }}"
+            data-pagination="{{ section.settings.carousel_pagination }}"
+            data-easing="{{ section.settings.carousel_easing }}"
+            data-speed="{{ section.settings.carousel_speed }}"
+            data-autoplay="{{ section.settings.carousel_autoplay }}"
+            data-interval="{{ section.settings.carousel_interval | times: 1000 }}"
+            data-per-move="{{ section.settings.carousel_per_move }}"
+            data-rewind="{{ section.settings.carousel_rewind }}"
+            data-breakpoint-xs="{{ section.settings.breakpoint_xs }}"
+            data-breakpoint-sm="{{ section.settings.breakpoint_sm }}"
+            data-breakpoint-md="{{ section.settings.breakpoint_md }}"
+            data-breakpoint-lg="{{ section.settings.breakpoint_lg }}"
+            data-breakpoint-xl="{{ section.settings.breakpoint_xl }}"
+            data-breakpoint-xxl="{{ section.settings.breakpoint_xxl }}"
+            data-text-slide-of="{{ 'general.accessibility.slide_of' | t }}"
+            role="group">
+            <div class="splide__track">
+                <ul class="product-listing splide__list">
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Récemment Consultés",
+    "settings": [
+        {
+            "type": "paragraph", 
+            "content": "Documentation FR : [Récemment Consultés by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/sections\/recemment-consultes)"
+        },
+        {
+            "type": "header",
+            "content": "General"
+        },
+        {
+            "type": "select",
+            "id": "bg_color",
+            "label": "Couleur de l'arrière plan",
+            "default": "bg-body text-body",
+            "options": [
+                { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
+                { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+                { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "container",
+            "label": "Conteneur",
+            "default": "container",
+            "options": [
+                { "value": "container", "label": "Conteneur" },
+                { "value": "container-fluid", "label": "Pleine largeur" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "text_align",
+            "label": "Alignement du texte",
+            "default": "text-center",
+            "options": [
+                { "value": "text-start", "label": "Gauche" },
+                { "value": "text-center", "label": "Centre" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "En-tête de la section"
+        },
+        {
+            "type": "image_picker",
+            "id": "subtitle_img",
+            "label": "Légende Image"
+        },
+        {
+            "type": "text",
+            "id": "brand_image_size",
+            "label": "Image Largeur/Hauteur (px)",
+            "default": "60"
+        },
+        {
+            "type": "text",
+            "id": "subtitle",
+            "label": "Légende Texte"
+        },
+        {
+            "type": "select",
+            "id": "subtitle_size",
+            "label": "Taille de la légende",
+            "default": "fs-5",
+            "options": [
+                { "group": "Légende Standard", "value": "fs-1", "label": "Extra Grand" },
+                { "group": "Légende Standard", "value": "fs-2", "label": "Super Grand" },
+                { "group": "Légende Standard", "value": "fs-3", "label": "Très Grand" },
+                { "group": "Légende Standard", "value": "fs-4", "label": "Grand" },
+                { "group": "Légende Standard", "value": "fs-5", "label": "Moyen" },
+                { "group": "Légende Standard", "value": "fs-6", "label": "Petit" } 
+            ]
+        },
+        {
+            "type": "color",
+            "id": "color_caption",
+            "label": "Couleur de la légende",
+            "default": "#6c757d"
+        },
+        {
+            "type": "inline_richtext",
+            "id": "title",
+            "label": "Titre",
+            "default": "Récemment Consultés"
+        },
+        {
+            "type": "select",
+            "id": "heading_tag",
+            "label": "Balise titre (SEO)",
+            "default": "h2",
+            "options": [
+                { "value": "h1", "label": "h1" },
+                { "value": "h2", "label": "h2" },
+                { "value": "h3", "label": "h3" },
+                { "value": "h4", "label": "h4" },
+                { "value": "h5", "label": "h5" },
+                { "value": "h6", "label": "h6" },
+                { "value": "span", "label": "Aucune" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "title_size",
+            "label": "Taille du titre",
+            "default": "h2",
+            "options": [
+                { "group": "Titre Supérieur", "value": "display-1", "label": "Extra Extra Grand" },
+                { "group": "Titre Supérieur", "value": "display-2", "label": "Extra Grand" },
+                { "group": "Titre Supérieur", "value": "display-3", "label": "Ultra Grand" },
+                { "group": "Titre Supérieur", "value": "display-4", "label": "Super Grand" },
+                { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+            ]
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Description (facultatif)",
+            "default": "<p>Ajouter une description facultative à cette section</p>"
+        },
+        {
+            "type": "select",
+            "id": "description_size",
+            "label": "Taille de description",
+            "default": "fs-5",
+            "options": [
+                { "group": "Description Standard", "value": "fs-1", "label": "Extra Grand" },
+                { "group": "Description Standard", "value": "fs-2", "label": "Super Grand" },
+                { "group": "Description Standard", "value": "fs-3", "label": "Très Grand" },
+                { "group": "Description Standard", "value": "fs-4", "label": "Grand" },
+                { "group": "Description Standard", "value": "fs-5", "label": "Moyen" },
+                { "group": "Description Standard", "value": "fs-6", "label": "Petit" } 
+            ]
+        },
+        {
+            "type": "range",
+            "id": "limit",
+            "label": "Quantité maximale de produits à afficher",
+            "min": 2,
+            "max": 24,
+            "default": 12,
+            "step": 1
+        },
+        {
+            "type": "header",
+            "content": "Produit"
+        },
+        {
+            "type": "select",
+            "id": "product_img_orientation",
+            "label": "Image orientation",
+            "default": "square",
+            "options": [
+                { "value": "square", "label": "Carré" },
+                { "value": "landscape", "label": "Paysage" },
+                { "value": "potrait", "label": "Portrait" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "product_img_thumbnail",
+            "label": "Bordure de l'image",
+            "default": "img-thumbnail",
+            "options": [
+                { "value": "", "label": "Aucune" },
+                { "value": "img-thumbnail", "label": "Bordure" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "product_border_color",
+            "label": "Couleur de la bordure",
+            "options": [
+                { "value": "", "label": "Default" },
+                { "value": "border-primary", "label": "Primaire" },
+                { "value": "border-secondary", "label": "Secondaire" },
+                { "value": "border-tertiary", "label": "Tertiaire" },
+                { "value": "border-dark", "label": "Sombre" },
+                { "value": "border-success", "label": "Succès" },
+                { "value": "border-warning", "label": "Avertissement" },
+                { "value": "border-danger", "label": "Danger" },
+                { "value": "border-info", "label": "Info" }
+            ],
+            "default": ""
+        },
+        {
+            "type": "select",
+            "id": "product_shadow_sp",
+            "label": "Ombre",
+            "options": [
+                { "value": "shadow-none", "label": "Aucune" },
+                { "value": "shadow-1", "label": "Ombre légère" },
+                { "value": "shadow-2", "label": "Ombre partiel" },
+                { "value": "shadow-3", "label": "Ombre profonde" },
+                { "value": "shadow-4", "label": "Ombre totale" }
+            ],
+            "default": "shadow-1"
+        },
+        {
+            "type": "select",
+            "id": "product_title_size",
+            "label": "Taille du titre",
+            "default": "h6",
+            "options": [
+                { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "product_title_truncate",
+            "label": "Tronquer le titre",
+            "default": "",
+            "info": "Utile si les titres de vos produits sont longs",
+            "options": [
+                { "value": "", "label": "Non (default)" },
+                { "value": "text-truncate", "label": "Une ligne" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "product_show_vendor",
+            "label": "Afficher le distributeur",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "product_show_atc_form",
+            "label": "Afficher le bouton 'Ajouter au panier'",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "product_show_wishlist_btn",
+            "label": "Afficher le bouton de la liste de souhaits",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Carroussel"
+        },
+        {
+            "type": "checkbox",
+            "id": "carousel_arrows",
+            "label": "Afficher les flèches",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "carousel_pagination",
+            "label": "Afficher la pagination",
+            "default": true
+        },
+        {
+            "type": "text",
+            "id": "carousel_easing",
+            "label": "Easing",
+            "default": "cubic-bezier(.42,.65,.27,.99)",
+            "info": "[En savoir plus](https://cubic-bezier.com)"
+        },
+        {
+            "type": "range",
+            "id": "carousel_speed",
+            "label": "Vitesse (ms)",
+            "min": 50,
+            "max": 1000,
+            "default": 400,
+            "step": 50,
+            "info": "Vitesse de transition en millisecondes."
+        },
+        {
+            "type": "checkbox",
+            "id": "carousel_autoplay",
+            "label": "Autoplay",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "carousel_interval",
+            "label": "Intervalle de lecture automatique (sec)",
+            "min": 1,
+            "max": 10,
+            "default": 5,
+            "step": 1
+        },
+        {
+            "type": "select",
+            "id": "carousel_per_move",
+            "label": "Par déplacement",
+            "info": "Nombre de slides à déplacer.",
+            "default": "0",
+            "options": [
+                { "value": "0", "label": "Tout en vue" },
+                { "value": "1", "label": "Un par un" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "carousel_rewind",
+            "label": "Rembobiner",
+            "default": true,
+            "info": "Revenir au premier slide"
+        },
+        {
+            "type": "header",
+            "content": "Points d'arrêt",
+            "info": "Ajuster les éléments par diapositive en fonction de la résolution de l'écran"
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_xs",
+            "label": "Éléments par slide / xs",
+            "info": "Largeur d'écran : moins de 576px",
+            "min": 1,
+            "max": 3,
+            "step": 1,
+            "default": 1
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_sm",
+            "label": "Éléments par slide / sm",
+            "info": "Largeur d'écran : ≥576px",
+            "min": 1,
+            "max": 3,
+            "step": 1,
+            "default": 2
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_md",
+            "label": "Éléments par slide / md",
+            "info": "Largeur d'écran : ≥768px",
+            "min": 1,
+            "max": 4,
+            "step": 1,
+            "default": 2
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_lg",
+            "label": "Éléments par slide / lg",
+            "info": "Largeur d'écran : ≥992px",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "default": 3
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_xl",
+            "label": "Éléments par slide / xl",
+            "info": "Largeur d'écran : ≥1200px",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "default": 4
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_xxl",
+            "label": "Éléments par slide / xxl",
+            "info": "Largeur d'écran : ≥1400px",
+            "min": 1,
+            "max": 8,
+            "step": 1,
+            "default": 4
+        },
+        {
+            "type": "header",
+            "content": "Espacement de la section"
+        },
+        {
+            "type": "range",
+            "id": "pt",
+            "label": "Padding supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "pb",
+            "label": "Padding inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mt",
+            "label": "Marge supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mb",
+            "label": "Marge inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        }
+    ],
+    "presets": [
+        {
+            "name": "Récemment Consultés",
+            "category": "Products"
+        }
+    ]
+}
+{% endschema %}

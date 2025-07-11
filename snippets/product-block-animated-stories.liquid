@@ -1,0 +1,314 @@
+{% liquid 
+    assign mt = block.settings.mt | prepend: 'mt-'
+    assign mb = block.settings.mb | prepend: 'mb-'
+
+%}
+
+<style>
+
+.animated-stories-x .img-wrapper {
+    width: {{ block.settings.item_img_size | plus: 21 }}px; 
+    height: {{ block.settings.item_img_size | plus: 21 }}px;
+}
+.animated-stories-x .cercle  {
+    stroke: {{ block.settings.item_stroke_color_start }};
+    stroke-width: {{ block.settings.item_stroke_width }};
+}
+  
+@keyframes product_stories_anime_trait_bordure {
+    from {
+        stroke: {{ block.settings.item_stroke_color_start }} /* #f56900 */;
+        stroke-dasharray: 1;
+    }
+    to {
+        stroke: {{ block.settings.item_stroke_color_end }}; /* #c99700 */
+        transform:rotate(180deg);
+        stroke-dasharray: 8;
+    }
+}
+  
+{% if block.settings.video or block.settings.video_1 or block.settings.video_2 or block.settings.video_3 or block.settings.video_4 != nil %}
+    .glightbox-mobile .glightbox-container .gslide-desc {
+        color: white !important;
+    }
+    
+    .gslide-description .gslide-desc {
+        font-size: 1rem !important;
+        text-align: center;
+    }
+{% endif %}
+  
+</style>
+
+{% if block.settings.video or block.settings.video_1 or block.settings.video_2 or block.settings.video_3 or block.settings.video_4 != nil %}
+    <link href="{{ 'vendor-glightbox.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+    <script src="{{ 'vendor-glightbox.min.js' | asset_url }}" defer></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            GLightbox({
+                selector: '[data-gallery="animated-stories-x"]',
+                loop: true,
+                autoplayVideos: true
+            })
+        })
+    </script>
+{% endif %}
+
+<div id="product-block-animated-stories-{{ block.id }}" 
+     class="animated-stories-x text-center position-relative overflow-hidden {{ mt }} {{ mb }}" {{ block.shopify_attributes }}>
+    {% assign total_video_count = 0 %}
+    {% if block.settings.video != blank %}
+        {% assign total_video_count = total_video_count | plus: 1 %}
+    {% endif %}
+    {% if block.settings.video_1 != blank %}
+        {% assign total_video_count = total_video_count | plus: 1 %}
+    {% endif %}
+    {% if block.settings.video_2 != blank %}
+        {% assign total_video_count = total_video_count | plus: 1 %}
+    {% endif %}
+    {% if block.settings.video_3 != blank %}
+        {% assign total_video_count = total_video_count | plus: 1 %}
+    {% endif %}
+    {% if block.settings.video_4 != blank %}
+        {% assign total_video_count = total_video_count | plus: 1 %}
+    {% endif %}
+
+    {% assign item_img_size_numeric = block.settings.item_img_size | replace: 'px', '' | plus: 0 %}
+  
+    <ul 
+        class="stories-list list-unstyled d-flex {% if total_video_count > 4 and item_img_size_numeric > 100 %}justify-content-md-start{% else %}justify-content-md-center{% endif %} overflow-auto px-2 pb-4 mb-0"
+        aria-label="{{ block.settings.list_label }}">
+
+            {% if block.settings.video != blank %}
+                <li class="mx-2">
+                    <a 
+                        class="text-decoration-none link-dark"
+                        {% if block.settings.video != nil %}
+                            href="{{ block.settings.video.sources[1].url }}"
+                            class="glightbox" 
+                            data-gallery="animated-stories-x"
+                            data-desc-position="top"
+                            data-description="{{ block.settings.title_0 }}"
+                        {% endif %}
+                        >
+                        <div class="img-wrapper position-relative d-flex">
+                            {% assign video_class = 'p-2' %}
+                            {{ block.settings.video | video_tag: class: video_class, image_size: '800x', autoplay: block.settings.autoplay, loop: 'loop', muted: 'muted', width: block.settings.item_img_size, height: block.settings.item_img_size, crop: 'center' }}
+                            {% unless block.settings.autoplay %}
+                                <div class="play-button">
+                                    <svg class="play-button" x="25" y="25" width="50" height="50" viewBox="0 0 100 100">
+                                        <filter id="dropshadow" height="150%" width="150%">
+                                        <feGaussianBlur in="SourceAlpha" stdDeviation="5"></feGaussianBlur>
+                                        <feOffset dx="4" dy="4" result="offsetblur"></feOffset>
+                                        <feComponentTransfer>
+                                        <feFuncA type="linear" slope="0.4"></feFuncA>
+                                        </feComponentTransfer>
+                                        <feMerge>
+                                        <feMergeNode></feMergeNode>
+                                        <feMergeNode in="SourceGraphic"></feMergeNode>
+                                        </feMerge>
+                                        </filter> 
+                                        <g><g>
+                                        <path style="filter: url(#dropshadow);" fill="#ffffff" class="stplay-button0" d="M 27.28 25 c 0.26 0 0.54 0 0.8 0 c 1.1 0.12 1.96 0.8 2.86 1.32 c 3.14 1.74 6.28 3.52 9.4 5.28 c 3.88 2.2 7.78 4.38 11.66 6.56 c 4.1 2.3 8.22 4.62 12.32 6.92 c 1.82 1.02 3.66 2.04 5.48 3.1 c 0.98 0.58 1.54 1.4 1.48 2.58 c -0.06 0.92 -0.52 1.6 -1.26 2.1 c -1.02 0.66 -2.1 1.22 -3.16 1.82 c -2.52 1.42 -5.02 2.82 -7.54 4.24 c -3.1 1.74 -6.22 3.5 -9.32 5.24 c -3.4 1.92 -6.78 3.82 -10.18 5.74 c -3.52 1.98 -7.02 3.94 -10.54 5.92 c -0.38 0.22 -0.8 0.28 -1.22 0.38 c -0.26 0 -0.54 0 -0.8 0 c -1.58 -0.3 -2.26 -1.14 -2.26 -2.76 c 0 -15.22 0 -30.42 0 -45.64 c 0 -0.46 0.02 -0.9 0.22 -1.32 c 0.44 -0.9 1.08 -1.42 2.06 -1.48 Z"></path>
+                                        </g></g>
+                                    </svg>
+                                </div>
+                            {% endunless %}
+                            <svg class="cercle" viewBox="0 0 100 100">  
+                                <circle cx="50" cy="50" r="40" />
+                            </svg>
+                        </div>
+                        <h6 class="title mt-n2 mb-0 {{ block.settings.item_title_size }}">
+                            {{ block.settings.title_0 }}
+                        </h6>
+                    </a>
+                </li>
+            {% endif %}
+
+            {% if block.settings.video_1 != blank %}
+                <li class="mx-2">
+                    <a 
+                        class="text-decoration-none link-dark"
+                        {% if block.settings.video_1 != nil %}
+                            href="{{ block.settings.video_1.sources[1].url }}"
+                            class="glightbox" 
+                            data-gallery="animated-stories-x"
+                            data-desc-position="top"
+                            data-description="{{ block.settings.title_1 }}"
+                        {% endif %}
+                        >
+                        <div class="img-wrapper position-relative d-flex">
+                            {% assign video_class = 'p-2' %}
+                            {{ block.settings.video_1 | video_tag: class: video_class, image_size: '800x', autoplay: block.settings.autoplay_1, loop: 'loop', muted: 'muted', width: block.settings.item_img_size, height: block.settings.item_img_size, crop: 'center' }}
+                            {% unless block.settings.autoplay_1 %}
+                                <div class="play-button">
+                                    <svg class="play-button" x="25" y="25" width="50" height="50" viewBox="0 0 100 100">
+                                        <filter id="dropshadow" height="150%" width="150%">
+                                        <feGaussianBlur in="SourceAlpha" stdDeviation="5"></feGaussianBlur>
+                                        <feOffset dx="4" dy="4" result="offsetblur"></feOffset>
+                                        <feComponentTransfer>
+                                        <feFuncA type="linear" slope="0.4"></feFuncA>
+                                        </feComponentTransfer>
+                                        <feMerge>
+                                        <feMergeNode></feMergeNode>
+                                        <feMergeNode in="SourceGraphic"></feMergeNode>
+                                        </feMerge>
+                                        </filter> 
+                                        <g><g>
+                                        <path style="filter: url(#dropshadow);" fill="#ffffff" class="stplay-button0" d="M 27.28 25 c 0.26 0 0.54 0 0.8 0 c 1.1 0.12 1.96 0.8 2.86 1.32 c 3.14 1.74 6.28 3.52 9.4 5.28 c 3.88 2.2 7.78 4.38 11.66 6.56 c 4.1 2.3 8.22 4.62 12.32 6.92 c 1.82 1.02 3.66 2.04 5.48 3.1 c 0.98 0.58 1.54 1.4 1.48 2.58 c -0.06 0.92 -0.52 1.6 -1.26 2.1 c -1.02 0.66 -2.1 1.22 -3.16 1.82 c -2.52 1.42 -5.02 2.82 -7.54 4.24 c -3.1 1.74 -6.22 3.5 -9.32 5.24 c -3.4 1.92 -6.78 3.82 -10.18 5.74 c -3.52 1.98 -7.02 3.94 -10.54 5.92 c -0.38 0.22 -0.8 0.28 -1.22 0.38 c -0.26 0 -0.54 0 -0.8 0 c -1.58 -0.3 -2.26 -1.14 -2.26 -2.76 c 0 -15.22 0 -30.42 0 -45.64 c 0 -0.46 0.02 -0.9 0.22 -1.32 c 0.44 -0.9 1.08 -1.42 2.06 -1.48 Z"></path>
+                                        </g></g>
+                                    </svg>
+                                </div>
+                            {% endunless %}
+                            <svg class="cercle" viewBox="0 0 100 100">  
+                                <circle cx="50" cy="50" r="40" />
+                            </svg>
+                        </div>
+                        <h6 class="title mt-n2 mb-0 {{ block.settings.item_title_size }}">
+                            {{ block.settings.title_1 }}
+                        </h6>
+                    </a>
+                </li>
+            {% endif %}
+
+            {% if block.settings.video_2 != blank %}
+                <li class="mx-2">
+                    <a 
+                        class="text-decoration-none link-dark"
+                        {% if block.settings.video_2 != nil %}
+                            href="{{ block.settings.video_2.sources[1].url }}"
+                            class="glightbox" 
+                            data-gallery="animated-stories-x"
+                            data-desc-position="top"
+                            data-description="{{ block.settings.title_2 }}"
+                        {% endif %}
+                        >
+                        <div class="img-wrapper position-relative d-flex">
+                            {% assign video_class = 'p-2' %}
+                            {{ block.settings.video_2 | video_tag: class: video_class, image_size: '800x', autoplay: block.settings.autoplay_2, loop: 'loop', muted: 'muted', width: block.settings.item_img_size, height: block.settings.item_img_size, crop: 'center' }}
+                            {% unless block.settings.autoplay_2 %}
+                                <div class="play-button">
+                                    <svg class="play-button" x="25" y="25" width="50" height="50" viewBox="0 0 100 100">
+                                        <filter id="dropshadow" height="150%" width="150%">
+                                        <feGaussianBlur in="SourceAlpha" stdDeviation="5"></feGaussianBlur>
+                                        <feOffset dx="4" dy="4" result="offsetblur"></feOffset>
+                                        <feComponentTransfer>
+                                        <feFuncA type="linear" slope="0.4"></feFuncA>
+                                        </feComponentTransfer>
+                                        <feMerge>
+                                        <feMergeNode></feMergeNode>
+                                        <feMergeNode in="SourceGraphic"></feMergeNode>
+                                        </feMerge>
+                                        </filter> 
+                                        <g><g>
+                                        <path style="filter: url(#dropshadow);" fill="#ffffff" class="stplay-button0" d="M 27.28 25 c 0.26 0 0.54 0 0.8 0 c 1.1 0.12 1.96 0.8 2.86 1.32 c 3.14 1.74 6.28 3.52 9.4 5.28 c 3.88 2.2 7.78 4.38 11.66 6.56 c 4.1 2.3 8.22 4.62 12.32 6.92 c 1.82 1.02 3.66 2.04 5.48 3.1 c 0.98 0.58 1.54 1.4 1.48 2.58 c -0.06 0.92 -0.52 1.6 -1.26 2.1 c -1.02 0.66 -2.1 1.22 -3.16 1.82 c -2.52 1.42 -5.02 2.82 -7.54 4.24 c -3.1 1.74 -6.22 3.5 -9.32 5.24 c -3.4 1.92 -6.78 3.82 -10.18 5.74 c -3.52 1.98 -7.02 3.94 -10.54 5.92 c -0.38 0.22 -0.8 0.28 -1.22 0.38 c -0.26 0 -0.54 0 -0.8 0 c -1.58 -0.3 -2.26 -1.14 -2.26 -2.76 c 0 -15.22 0 -30.42 0 -45.64 c 0 -0.46 0.02 -0.9 0.22 -1.32 c 0.44 -0.9 1.08 -1.42 2.06 -1.48 Z"></path>
+                                        </g></g>
+                                    </svg>
+                                </div>
+                            {% endunless %}
+                            <svg class="cercle" viewBox="0 0 100 100">  
+                                <circle cx="50" cy="50" r="40" />
+                            </svg>
+                        </div>
+                        <h6 class="title mt-n2 mb-0 {{ block.settings.item_title_size }}">
+                            {{ block.settings.title_2 }}
+                        </h6>
+                    </a>
+                </li>
+            {% endif %}
+
+            {% if block.settings.video_3 != blank %}
+                <li class="mx-2">
+                    <a 
+                        class="text-decoration-none link-dark"
+                        {% if block.settings.video_3 != nil %}
+                            href="{{ block.settings.video_3.sources[1].url }}"
+                            class="glightbox" 
+                            data-gallery="animated-stories-x"
+                            data-desc-position="top"
+                            data-description="{{ block.settings.title_3 }}"
+                        {% endif %}
+                        >
+                        <div class="img-wrapper position-relative d-flex">
+                            {% assign video_class = 'p-2' %}
+                            {{ block.settings.video_3 | video_tag: class: video_class, image_size: '800x', autoplay: block.settings.autoplay_3, loop: 'loop', muted: 'muted', width: block.settings.item_img_size, height: block.settings.item_img_size, crop: 'center' }}
+                            {% unless block.settings.autoplay_3 %}
+                                <div class="play-button">
+                                    <svg class="play-button" x="25" y="25" width="50" height="50" viewBox="0 0 100 100">
+                                        <filter id="dropshadow" height="150%" width="150%">
+                                        <feGaussianBlur in="SourceAlpha" stdDeviation="5"></feGaussianBlur>
+                                        <feOffset dx="4" dy="4" result="offsetblur"></feOffset>
+                                        <feComponentTransfer>
+                                        <feFuncA type="linear" slope="0.4"></feFuncA>
+                                        </feComponentTransfer>
+                                        <feMerge>
+                                        <feMergeNode></feMergeNode>
+                                        <feMergeNode in="SourceGraphic"></feMergeNode>
+                                        </feMerge>
+                                        </filter> 
+                                        <g><g>
+                                        <path style="filter: url(#dropshadow);" fill="#ffffff" class="stplay-button0" d="M 27.28 25 c 0.26 0 0.54 0 0.8 0 c 1.1 0.12 1.96 0.8 2.86 1.32 c 3.14 1.74 6.28 3.52 9.4 5.28 c 3.88 2.2 7.78 4.38 11.66 6.56 c 4.1 2.3 8.22 4.62 12.32 6.92 c 1.82 1.02 3.66 2.04 5.48 3.1 c 0.98 0.58 1.54 1.4 1.48 2.58 c -0.06 0.92 -0.52 1.6 -1.26 2.1 c -1.02 0.66 -2.1 1.22 -3.16 1.82 c -2.52 1.42 -5.02 2.82 -7.54 4.24 c -3.1 1.74 -6.22 3.5 -9.32 5.24 c -3.4 1.92 -6.78 3.82 -10.18 5.74 c -3.52 1.98 -7.02 3.94 -10.54 5.92 c -0.38 0.22 -0.8 0.28 -1.22 0.38 c -0.26 0 -0.54 0 -0.8 0 c -1.58 -0.3 -2.26 -1.14 -2.26 -2.76 c 0 -15.22 0 -30.42 0 -45.64 c 0 -0.46 0.02 -0.9 0.22 -1.32 c 0.44 -0.9 1.08 -1.42 2.06 -1.48 Z"></path>
+                                        </g></g>
+                                    </svg>
+                                </div>
+                            {% endunless %}
+                            <svg class="cercle" viewBox="0 0 100 100">  
+                                <circle cx="50" cy="50" r="40" />
+                            </svg>
+                        </div>
+                        <h6 class="title mt-n2 mb-0 {{ block.settings.item_title_size }}">
+                            {{ block.settings.title_3 }}
+                        </h6>
+                    </a>
+                </li>
+            {% endif %}
+
+            {% if block.settings.video_4 != blank %}
+                <li class="mx-2">
+                    <a 
+                        class="text-decoration-none link-dark"
+                        {% if block.settings.video_4 != nil %}
+                            href="{{ block.settings.video_4.sources[1].url }}"
+                            class="glightbox" 
+                            data-gallery="animated-stories-x"
+                            data-desc-position="top"
+                            data-description="{{ block.settings.title_4 }}"
+                        {% endif %}
+                        >
+                        <div class="img-wrapper position-relative d-flex">
+                            {% assign video_class = 'p-2' %}
+                            {{ block.settings.video_4 | video_tag: class: video_class, image_size: '800x', autoplay: block.settings.autoplay_4, loop: 'loop', muted: 'muted', width: block.settings.item_img_size, height: block.settings.item_img_size, crop: 'center' }}
+                            {% unless block.settings.autoplay_4 %}
+                                <div class="play-button">
+                                    <svg class="play-button" x="25" y="25" width="50" height="50" viewBox="0 0 100 100">
+                                        <filter id="dropshadow" height="150%" width="150%">
+                                        <feGaussianBlur in="SourceAlpha" stdDeviation="5"></feGaussianBlur>
+                                        <feOffset dx="4" dy="4" result="offsetblur"></feOffset>
+                                        <feComponentTransfer>
+                                        <feFuncA type="linear" slope="0.4"></feFuncA>
+                                        </feComponentTransfer>
+                                        <feMerge>
+                                        <feMergeNode></feMergeNode>
+                                        <feMergeNode in="SourceGraphic"></feMergeNode>
+                                        </feMerge>
+                                        </filter> 
+                                        <g><g>
+                                        <path style="filter: url(#dropshadow);" fill="#ffffff" class="stplay-button0" d="M 27.28 25 c 0.26 0 0.54 0 0.8 0 c 1.1 0.12 1.96 0.8 2.86 1.32 c 3.14 1.74 6.28 3.52 9.4 5.28 c 3.88 2.2 7.78 4.38 11.66 6.56 c 4.1 2.3 8.22 4.62 12.32 6.92 c 1.82 1.02 3.66 2.04 5.48 3.1 c 0.98 0.58 1.54 1.4 1.48 2.58 c -0.06 0.92 -0.52 1.6 -1.26 2.1 c -1.02 0.66 -2.1 1.22 -3.16 1.82 c -2.52 1.42 -5.02 2.82 -7.54 4.24 c -3.1 1.74 -6.22 3.5 -9.32 5.24 c -3.4 1.92 -6.78 3.82 -10.18 5.74 c -3.52 1.98 -7.02 3.94 -10.54 5.92 c -0.38 0.22 -0.8 0.28 -1.22 0.38 c -0.26 0 -0.54 0 -0.8 0 c -1.58 -0.3 -2.26 -1.14 -2.26 -2.76 c 0 -15.22 0 -30.42 0 -45.64 c 0 -0.46 0.02 -0.9 0.22 -1.32 c 0.44 -0.9 1.08 -1.42 2.06 -1.48 Z"></path>
+                                        </g></g>
+                                    </svg>
+                                </div>
+                            {% endunless %} 
+                            <svg class="cercle" viewBox="0 0 100 100">  
+                                <circle cx="50" cy="50" r="40" />
+                            </svg>
+                        </div>
+                        <h6 class="title mt-n2 mb-0 {{ block.settings.item_title_size }}">
+                            {{ block.settings.title_4 }}
+                        </h6>
+                    </a>
+                </li>
+            {% endif %}
+        
+    </ul>
+</div>
+

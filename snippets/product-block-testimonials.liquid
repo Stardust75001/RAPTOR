@@ -1,0 +1,379 @@
+{% liquid
+    assign mt = block.settings.mt | prepend: 'mt-'
+    assign mb = block.settings.mb | prepend: 'mb-'
+    
+    assign bg_color = block.settings.bg_color
+
+    if block.settings.bg_gradient
+        assign bg_color = bg_color | append: ' bg-gradient'
+    endif
+%}
+
+
+{% style %}
+#product-testimonials .carousel-indicators [data-bs-target] {
+    background-color: {{ block.settings.pagination_color }};
+}
+{% endstyle %}
+
+
+<div id="product-testimonials" class="product-block-testimonials rounded border p-2 {{ mt }} {{ mb }} {{ bg_color }} carousel carousel-dark slide" data-bs-ride="carousel" {{ block.shopify_attributes }}>
+    <div class="carousel-indicators mb-0">
+        {% unless block.settings.text_author_1 == blank %}
+            <button type="button" data-bs-target="#product-testimonials" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#product-testimonials" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        {% endunless %}
+        {% unless block.settings.text_author_2 == blank %}
+            <button type="button" data-bs-target="#product-testimonials" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        {% endunless %}
+    </div>
+    <div class="carousel-inner mb-4 mb-lg-2">
+        {% if block.settings.text_author != blank %}
+            <div class="carousel-item active">
+                <div class="d-flex align-items-center">
+                    {% unless block.settings.img_author == blank %}
+                        <img
+                            class="img-fluid rounded me-4 {{ block.settings.img_thumbnail }} {{ block.settings.shadow_sp }} {% if block.settings.shadow_sp %}m-3{% endif %}"
+                            src="{{ block.settings.img_author.src | image_url: width: 80, height: 80, crop: 'center' }}"
+                            alt="{{ block.settings.img_author.alt | escape }}"
+                            width="80"
+                            height="80"
+                            loading="lazy">
+                    {% endunless %}
+                    
+                    <div class="title-wrapper {% if block.settings.img_author == blank %}mx-3 mt-3 mb-1{% endif %}">
+                        
+                        {% unless block.settings.text_author == blank %}
+                            <div class="fw-semibold d-flex flex-wrap align-items-center mt-0 mb-0">
+                                <p class="text-start">
+                                  <span class="small me-2">
+                                      {{ block.settings.text_author }}
+                                  </span>
+                                    {% if block.settings.show_verified == 'show_avis_verified' %}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#00b67a" class="bi bi-check-circle-fill" viewbox="0 0 16 16">
+                                          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"></path>
+                                        </svg> 
+                                        <span class="extra-small me-2"><em>{{ 'testimonials.verified_review' | t }}</em></span>
+                                    {% elsif block.settings.show_verified == 'show_achat_verified'%}
+                                        <span class="extra-small me-2"><em>{{ 'testimonials.purchase' | t }} <span class="small verified-block">{{ 'testimonials.verified' | t }}</span></em></span>
+                                    {% endif %}
+                                </p>
+                                {% if block.settings.show_stars %}
+                                    {% if block.settings.star_style == 'shopitrust' %}
+                                        <div class="d-flex mt-1 mb-0">
+                                            {% assign stars_rating = block.settings.stars_rating %}
+                                            {% assign colors = "#e8e8eb,#ff3722,#ff8622,#ffce00,#73cf11,#00b67a" | split: "," %}
+                                            {% assign full_stars = stars_rating | floor %}
+                                            {% assign half_star_present = stars_rating | modulo: 1 %}
+                                            {% assign next_star = full_stars | plus: 1 %}
+                                            {% for i in (1..5) %}
+                                                {% if i <= full_stars %}
+                                                    <!-- Étoiles pleines -->
+                                                    {% assign color = colors[full_stars] %}
+                                                    <svg width="14" height="14" viewBox="0 0 16 16" fill="{{ color }}" class="m-1" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                        <path d="M16 0H0V16H16V0Z" fill="{{ color }}"></path>
+                                                        <path d="M5.8,9.3L8,10.8l3.5,2.5l-1.3-4.1l3.5-2.5H9.3L8,2.7L6.7,6.7H2.4L5.8,9.3z M13.6,6.7H9.3L8,2.7L6.7,6.7H2.4l3.5,2.5l-1.3,4.1L8,10.8l2.1-1.5L13.6,6.7z" fill="white"></path>
+                                                    </svg>
+                                                {% elsif i == next_star and half_star_present > 0 %}
+                                                    <!-- Demi-étoile, ajustez pour gérer spécifiquement 0.5 -->
+                                                    {% if full_stars == 0 and stars_rating == 0.5 %}
+                                                        {% assign gradient_color = colors[1] %}
+                                                    {% else %}
+                                                        {% assign gradient_color = colors[full_stars] %}
+                                                    {% endif %}
+                                                    <svg width="14" height="14" viewBox="0 0 16 16" class="m-1" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                        <defs>
+                                                            <linearGradient id="half_grad{{ i }}">
+                                                                <stop offset="50%" stop-color="{{ gradient_color }}"/>
+                                                                <stop offset="50%" stop-color="{{ colors.first }}"/>
+                                                            </linearGradient>
+                                                        </defs>
+                                                        <path d="M16 0H0V16H16V0Z" fill="url(#half_grad{{ i }})"></path>
+                                                        <path d="M5.8,9.3L8,10.8l3.5,2.5l-1.3-4.1l3.5-2.5H9.3L8,2.7L6.7,6.7H2.4L5.8,9.3z M13.6,6.7H9.3L8,2.7L6.7,6.7H2.4l3.5,2.5l-1.3,4.1L8,10.8l2.1-1.5L13.6,6.7z" fill="white"></path>
+                                                    </svg>
+                                                {% else %}
+                                                    <!-- Étoiles vides -->
+                                                    <svg width="14" height="14" viewBox="0 0 16 16" fill="{{ colors.first }}" class="m-1" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                        <path d="M16 0H0V16H16V0Z" fill="{{ colors.first }}"></path>
+                                                        <path d="M5.8,9.3L8,10.8l3.5,2.5l-1.3-4.1l3.5-2.5H9.3L8,2.7L6.7,6.7H2.4L5.8,9.3z M13.6,6.7H9.3L8,2.7L6.7,6.7H2.4l3.5,2.5l-1.3,4.1L8,10.8l2.1-1.5L13.6,6.7z" fill="white"></path>
+                                                    </svg>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <div class="d-flex mt-0 mb-0" style="color: {{ block.settings.testi_star_color }};">
+                                            {% for i in (1..5) %}
+                                              {% if i <= block.settings.stars_rating %}
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-star-fill m-1" viewBox="0 0 16 16" aria-hidden="true">
+                                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                                                </svg>
+                                              {% else %}
+                                                {% assign t = i | minus: 1 %}
+                                                {% if block.settings.stars_rating > t and block.settings.stars_rating < i %}
+                                                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-star-fill m-1" viewBox="0 0 16 16" aria-hidden="true">
+                                                    <defs>
+                                                      <linearGradient id="grad">
+                                                        <stop offset="50%" stop-color="{{ block.settings.testi_star_color }}"/>
+                                                        <stop offset="50%" stop-color="{{ block.settings.testi_star_off }}"/>
+                                                      </linearGradient>
+                                                    </defs>
+                                                    <path fill="url(#grad)" d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>                                                  
+                                                  </svg>
+                                                {% else %}
+                                                  <svg class="bi bi-star-fill m-1 icon color-stars-gray" style="fill: {{ block.settings.testi_star_off }}" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                                                  </svg>
+                                                {% endif %}
+                                              {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        {% endunless %}
+          
+                        {% unless block.settings.description == blank %}
+                            <div class="description fs-6 mt-2 mb-4">
+                                {{ block.settings.description }}
+                            </div>
+                        {% endunless %}                      
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        
+        {% if block.settings.text_author_1 != blank %}
+            <div class="carousel-item">
+                <div class="d-flex align-items-center">
+                    {% unless block.settings.img_author_1 == blank %}
+                        <img
+                            class="img-fluid rounded me-4 {{ block.settings.img_thumbnail }} {{ block.settings.shadow_sp }} {% if block.settings.shadow_sp %}m-3{% endif %}"
+                            src="{{ block.settings.img_author_1.src | image_url: width: 80, height: 80, crop: 'center' }}"
+                            alt="{{ block.settings.img_author_1.alt | escape }}"
+                            width="80"
+                            height="80"
+                            loading="lazy">
+                    {% endunless %}
+                    
+                    <div class="title-wrapper {% if block.settings.img_author_1 == blank %}mx-3 mt-3 mb-1{% endif %}">
+                        
+                        {% unless block.settings.text_author_1 == blank %}
+                            <div class="fw-semibold d-flex flex-wrap align-items-center mt-0 mb-0">
+                                <p class="text-start">
+                                  <span class="small me-2">
+                                      {{ block.settings.text_author_1 }}
+                                  </span>
+                                    {% if block.settings.show_verified_1 == 'show_avis_verified' %}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#00b67a" class="bi bi-check-circle-fill" viewbox="0 0 16 16">
+                                          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"></path>
+                                        </svg> 
+                                        <span class="extra-small me-2"><em>{{ 'testimonials.verified_review' | t }}</em></span>
+                                    {% elsif block.settings.show_verified_1 == 'show_achat_verified'%}
+                                        <span class="extra-small me-2"><em>{{ 'testimonials.purchase' | t }} <span class="small verified-block">{{ 'testimonials.verified' | t }}</span></em></span>
+                                    {% endif %}
+                                </p>
+                                {% if block.settings.show_stars %}
+                                    {% if block.settings.star_style == 'shopitrust' %}
+                                        <div class="d-flex mt-1 mb-0">
+                                            {% assign stars_rating_1 = block.settings.stars_rating_1 %}
+                                            {% assign colors = "#e8e8eb,#ff3722,#ff8622,#ffce00,#73cf11,#00b67a" | split: "," %}
+                                            {% assign full_stars_1 = stars_rating_1 | floor %}
+                                            {% assign half_star_present_1 = stars_rating_1 | modulo: 1 %}
+                                            {% assign next_star_1 = full_stars_1 | plus: 1 %}
+                                            {% for i in (1..5) %}
+                                                {% if i <= full_stars_1 %}
+                                                    <!-- Étoiles pleines -->
+                                                    {% assign color = colors[full_stars_1] %}
+                                                    <svg width="14" height="14" viewBox="0 0 16 16" fill="{{ color }}" class="m-1" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                        <path d="M16 0H0V16H16V0Z" fill="{{ color }}"></path>
+                                                        <path d="M5.8,9.3L8,10.8l3.5,2.5l-1.3-4.1l3.5-2.5H9.3L8,2.7L6.7,6.7H2.4L5.8,9.3z M13.6,6.7H9.3L8,2.7L6.7,6.7H2.4l3.5,2.5l-1.3,4.1L8,10.8l2.1-1.5L13.6,6.7z" fill="white"></path>
+                                                    </svg>
+                                                {% elsif i == next_star_1 and half_star_present_1 > 0 %}
+                                                    <!-- Demi-étoile, ajustez pour gérer spécifiquement 0.5 -->
+                                                    {% if full_stars_1 == 0 and stars_rating_1 == 0.5 %}
+                                                        {% assign gradient_color_1 = colors[1] %}
+                                                    {% else %}
+                                                        {% assign gradient_color_1 = colors[full_stars_1] %}
+                                                    {% endif %}
+                                                    <svg width="14" height="14" viewBox="0 0 16 16" class="m-1" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                        <defs>
+                                                            <linearGradient id="half_grad{{ i }}">
+                                                                <stop offset="50%" stop-color="{{ gradient_color_1 }}"/>
+                                                                <stop offset="50%" stop-color="{{ colors.first }}"/>
+                                                            </linearGradient>
+                                                        </defs>
+                                                        <path d="M16 0H0V16H16V0Z" fill="url(#half_grad{{ i }})"></path>
+                                                        <path d="M5.8,9.3L8,10.8l3.5,2.5l-1.3-4.1l3.5-2.5H9.3L8,2.7L6.7,6.7H2.4L5.8,9.3z M13.6,6.7H9.3L8,2.7L6.7,6.7H2.4l3.5,2.5l-1.3,4.1L8,10.8l2.1-1.5L13.6,6.7z" fill="white"></path>
+                                                    </svg>
+                                                {% else %}
+                                                    <!-- Étoiles vides -->
+                                                    <svg width="14" height="14" viewBox="0 0 16 16" fill="{{ colors.first }}" class="m-1" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                        <path d="M16 0H0V16H16V0Z" fill="{{ colors.first }}"></path>
+                                                        <path d="M5.8,9.3L8,10.8l3.5,2.5l-1.3-4.1l3.5-2.5H9.3L8,2.7L6.7,6.7H2.4L5.8,9.3z M13.6,6.7H9.3L8,2.7L6.7,6.7H2.4l3.5,2.5l-1.3,4.1L8,10.8l2.1-1.5L13.6,6.7z" fill="white"></path>
+                                                    </svg>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <div class="d-flex mt-0 mb-0" style="color: {{ block.settings.testi_star_color }};">
+                                            {% for i in (1..5) %}
+                                              {% if i <= block.settings.stars_rating_1 %}
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-star-fill m-1" viewBox="0 0 16 16" aria-hidden="true">
+                                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                                                </svg>
+                                              {% else %}
+                                                {% assign t = i | minus: 1 %}
+                                                {% if block.settings.stars_rating_1 > t and block.settings.stars_rating_1 < i %}
+                                                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-star-fill m-1" viewBox="0 0 16 16" aria-hidden="true">
+                                                    <defs>
+                                                      <linearGradient id="grad1">
+                                                        <stop offset="50%" stop-color="{{ block.settings.testi_star_color }}"/>
+                                                        <stop offset="50%" stop-color="{{ block.settings.testi_star_off }}"/>
+                                                      </linearGradient>
+                                                    </defs>
+                                                    <path fill="url(#grad1)" d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>                                                  
+                                                  </svg>
+                                                {% else %}
+                                                  <svg class="bi bi-star-fill m-1 icon color-stars-gray" style="fill: {{ block.settings.testi_star_off }}" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                                                  </svg>
+                                                {% endif %}
+                                              {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        {% endunless %}
+  
+                        
+                        {% unless block.settings.description_1 == blank %}
+                            <div class="description fs-6 mt-2 mb-4">
+                                {{ block.settings.description_1 }}
+                            </div>
+                        {% endunless %}                      
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        
+        {% if block.settings.text_author_2 != blank %}
+            <div class="carousel-item">
+                <div class="d-flex align-items-center">
+                    {% unless block.settings.img_author_2 == blank %}
+                        <img
+                            class="img-fluid rounded me-4 {{ block.settings.img_thumbnail }} {{ block.settings.shadow_sp }} {% if block.settings.shadow_sp %}m-3{% endif %}"
+                            src="{{ block.settings.img_author_2.src | image_url: width: 80, height: 80, crop: 'center' }}"
+                            alt="{{ block.settings.img_author_2.alt | escape }}"
+                            width="80"
+                            height="80"
+                            loading="lazy">
+                    {% endunless %}
+                    
+                    <div class="title-wrapper {% if block.settings.img_author_2 == blank %}mx-3 mt-3 mb-1{% endif %}">
+                        
+                        {% unless block.settings.text_author_2 == blank %}
+                            <div class="fw-semibold d-flex flex-wrap align-items-center mt-0 mb-0">
+                                <p class="text-start">
+                                  <span class="small me-2">
+                                      {{ block.settings.text_author_2 }}
+                                  </span>
+                                    {% if block.settings.show_verified_2 == 'show_avis_verified' %}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#00b67a" class="bi bi-check-circle-fill" viewbox="0 0 16 16">
+                                          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"></path>
+                                        </svg> 
+                                        <span class="extra-small me-2"><em>{{ 'testimonials.verified_review' | t }}</em></span>
+                                    {% elsif block.settings.show_verified_2 == 'show_achat_verified'%}
+                                        <span class="extra-small me-2"><em>{{ 'testimonials.purchase' | t }} <span class="small verified-block">{{ 'testimonials.verified' | t }}</span></em></span>
+                                    {% endif %}
+                                </p>
+                                {% if block.settings.show_stars %}
+                                    {% if block.settings.star_style == 'shopitrust' %}
+                                        <div class="d-flex mt-1 mb-0">
+                                            {% assign stars_rating_2 = block.settings.stars_rating_2 %}
+                                            {% assign colors = "#e8e8eb,#ff3722,#ff8622,#ffce00,#73cf11,#00b67a" | split: "," %}
+                                            {% assign full_stars_2 = stars_rating_2 | floor %}
+                                            {% assign half_star_present_2 = stars_rating_2 | modulo: 1 %}
+                                            {% assign next_star_2 = full_stars_2 | plus: 1 %}
+                                            {% for i in (1..5) %}
+                                                {% if i <= full_stars_2 %}
+                                                    <!-- Étoiles pleines -->
+                                                    {% assign color = colors[full_stars_2] %}
+                                                    <svg width="14" height="14" viewBox="0 0 16 16" fill="{{ color }}" class="m-1" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                        <path d="M16 0H0V16H16V0Z" fill="{{ color }}"></path>
+                                                        <path d="M5.8,9.3L8,10.8l3.5,2.5l-1.3-4.1l3.5-2.5H9.3L8,2.7L6.7,6.7H2.4L5.8,9.3z M13.6,6.7H9.3L8,2.7L6.7,6.7H2.4l3.5,2.5l-1.3,4.1L8,10.8l2.1-1.5L13.6,6.7z" fill="white"></path>
+                                                    </svg>
+                                                {% elsif i == next_star_2 and half_star_present_2 > 0 %}
+                                                    <!-- Demi-étoile, ajustez pour gérer spécifiquement 0.5 -->
+                                                    {% if full_stars_2 == 0 and stars_rating_2 == 0.5 %}
+                                                        {% assign gradient_color_1 = colors[1] %}
+                                                    {% else %}
+                                                        {% assign gradient_color_2 = colors[full_stars_2] %}
+                                                    {% endif %}
+                                                    <svg width="14" height="14" viewBox="0 0 16 16" class="m-1" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                        <defs>
+                                                            <linearGradient id="half_grad{{ i }}">
+                                                                <stop offset="50%" stop-color="{{ gradient_color_2 }}"/>
+                                                                <stop offset="50%" stop-color="{{ colors.first }}"/>
+                                                            </linearGradient>
+                                                        </defs>
+                                                        <path d="M16 0H0V16H16V0Z" fill="url(#half_grad{{ i }})"></path>
+                                                        <path d="M5.8,9.3L8,10.8l3.5,2.5l-1.3-4.1l3.5-2.5H9.3L8,2.7L6.7,6.7H2.4L5.8,9.3z M13.6,6.7H9.3L8,2.7L6.7,6.7H2.4l3.5,2.5l-1.3,4.1L8,10.8l2.1-1.5L13.6,6.7z" fill="white"></path>
+                                                    </svg>
+                                                {% else %}
+                                                    <!-- Étoiles vides -->
+                                                    <svg width="14" height="14" viewBox="0 0 16 16" fill="{{ colors.first }}" class="m-1" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                        <path d="M16 0H0V16H16V0Z" fill="{{ colors.first }}"></path>
+                                                        <path d="M5.8,9.3L8,10.8l3.5,2.5l-1.3-4.1l3.5-2.5H9.3L8,2.7L6.7,6.7H2.4L5.8,9.3z M13.6,6.7H9.3L8,2.7L6.7,6.7H2.4l3.5,2.5l-1.3,4.1L8,10.8l2.1-1.5L13.6,6.7z" fill="white"></path>
+                                                    </svg>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <div class="d-flex mt-0 mb-0" style="color: {{ block.settings.testi_star_color }};">
+                                            {% for i in (1..5) %}
+                                              {% if i <= block.settings.stars_rating_2 %}
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-star-fill m-1" viewBox="0 0 16 16" aria-hidden="true">
+                                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                                                </svg>
+                                              {% else %}
+                                                {% assign t = i | minus: 1 %}
+                                                {% if block.settings.stars_rating_2 > t and block.settings.stars_rating_2 < i %}
+                                                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-star-fill m-1" viewBox="0 0 16 16" aria-hidden="true">
+                                                    <defs>
+                                                      <linearGradient id="grad2">
+                                                        <stop offset="50%" stop-color="{{ block.settings.testi_star_color }}"/>
+                                                        <stop offset="50%" stop-color="{{ block.settings.testi_star_off }}"/>
+                                                      </linearGradient>
+                                                    </defs>
+                                                    <path fill="url(#grad2)" d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>                                                  
+                                                  </svg>
+                                                {% else %}
+                                                  <svg class="bi bi-star-fill m-1 icon color-stars-gray" style="fill: {{ block.settings.testi_star_off }}" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                                                  </svg>
+                                                {% endif %}
+                                              {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        {% endunless %}
+                        
+                        {% unless block.settings.description_2 == blank %}
+                            <div class="description fs-6 mt-2 mb-4">
+                                {{ block.settings.description_2 }}
+                            </div>
+                        {% endunless %}                      
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div> 
+</div>
+
+
+
+                                                          
+

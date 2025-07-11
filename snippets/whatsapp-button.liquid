@@ -1,0 +1,194 @@
+{% comment %}
+    SHOPIWEB - Whatsapp Button
+    © 2023 Shopiweb Premium
+    https://www.shopiweb.fr
+{% endcomment %}
+
+{% if settings.enable_whatsapp %}
+  <style>
+    #eg-whatsapp-button {
+      background: {{ settings.primary_color | default: '#25D366' }};
+    }
+
+    #eg-whatsapp-dialog-header {
+      background: {{ settings.secondary_color | default: '#075E54' }};
+    }
+
+    #eg-whatsapp-dialog-header-img-wrapper::after {
+      background: {{ settings.primary_color | default: '#25D366' }};
+      border: 2px solid {{ settings.secondary_color | default: '#075E54' }};
+    }
+
+    #eg-whatsapp-dialog-body {
+      background-color: {{ settings.dialog_bg_color | default: '#ffffff' }};
+    }
+  </style>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var stickyATC = document.getElementById('sticky-atc');
+      var currencySelector = document.getElementById('currency-selector');
+      var whatsappWrapper = document.querySelector('.eg-whatsapp-wrapper');
+
+      function updateWhatsAppWrapperStyle() {
+        var bottomValue = '2.2rem';
+
+        if (window.innerWidth <= 768) {
+          if (stickyATC && stickyATC.classList.contains('show')) {
+            bottomValue = currencySelector ? '9rem' : '6.2rem';
+          } else {
+            bottomValue = currencySelector ? '4rem' : '2.2rem';
+          }
+        } else {
+          bottomValue = currencySelector ? '4rem' : '2.2rem';
+        }
+
+        if (whatsappWrapper) {
+          whatsappWrapper.style.bottom = bottomValue;
+        }
+      }
+
+      updateWhatsAppWrapperStyle();
+      var observer = new MutationObserver(updateWhatsAppWrapperStyle);
+      observer.observe(document.body, { attributes: true, subtree: true });
+      window.addEventListener('resize', updateWhatsAppWrapperStyle);
+
+      if (!customElements.get('eg-whatsapp-wrapper')) {
+        class EgWhatsAppWrapper extends HTMLElement {
+          constructor() {
+            super();
+
+            this.whatsappButton = this.querySelector('#eg-whatsapp-button');
+            this.whatsappNumber = this.whatsappButton?.dataset.whatsappNumber;
+
+            if (this.whatsappButton) {
+              this.whatsappButton.addEventListener('click', () => {
+                if (this.whatsappButton.dataset.openDialog === 'true') {
+                  this.openDialog();
+                } else {
+                  this.whatsappButton.innerHTML = '<div class="eg-loading-spinner"></div>';
+                  setTimeout(() => {
+                    window.location.href = `https://wa.me/${this.whatsappNumber}`;
+                  }, 1000);
+                }
+              });
+            }
+
+            this.dialogSubmitButton = this.querySelector('#eg-whatsapp-dialog-btn');
+            const userInput = this.querySelector('#eg-whatsapp-dialog-user-input');
+            const closeBtn = this.querySelector('#eg-whatsapp-dialog-close');
+
+            this.dialogSubmitButton?.addEventListener('click', () => {
+              this.dialogSubmitButton.innerHTML = '<div class="eg-loading-spinner"></div>';
+              setTimeout(() => {
+                const text = encodeURIComponent(userInput?.value || '');
+                window.location.href = `https://wa.me/${this.whatsappNumber}?text=${text}`;
+              }, 1000);
+            });
+
+            userInput?.addEventListener('keypress', (e) => {
+              if (e.key === 'Enter') {
+                this.dialogSubmitButton?.click();
+              }
+            });
+
+            closeBtn?.addEventListener('click', () => {
+              this.classList.remove('eg-whatsapp-dialog-visible');
+            });
+          }
+
+          openDialog() {
+            const userInput = this.querySelector('#eg-whatsapp-dialog-user-input');
+            const typingMsg = this.querySelector('#eg-whatsapp-dialog-msg-typing');
+            const textMsg = this.querySelector('#eg-whatsapp-dialog-msg-text');
+
+            if (this.classList.contains('eg-whatsapp-dialog-visible')) {
+              this.classList.remove('eg-whatsapp-dialog-visible');
+            } else {
+              this.classList.add('eg-whatsapp-dialog-visible');
+              setTimeout(() => {
+                userInput?.focus();
+              }, 300);
+            }
+
+            setTimeout(() => {
+              if (typingMsg) typingMsg.style.display = 'none';
+              if (textMsg) textMsg.style.display = 'block';
+            }, 2000);
+          }
+        }
+
+        customElements.define('eg-whatsapp-wrapper', EgWhatsAppWrapper);
+      }
+    });
+  </script>
+
+  <eg-whatsapp-wrapper 
+    class="eg-whatsapp-wrapper"
+    style="z-index: {{ settings.btn_z_index | default: 9999 }}">
+
+    <button 
+      id="eg-whatsapp-button"
+      aria-label="{{ settings.btn_text | default: 'WhatsApp' }}" 
+      data-whatsapp-number="{{ settings.whatsapp_number | default: '33600000000' }}"
+      data-open-dialog="{{ settings.show_dialog | default: false }}">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white">
+        <path d="M24 11.7c0 6.45-5.27 11.68-11.78 11.68-2.07 0-4-.53-5.7-1.45L0 24l2.13-6.27a11.57 11.57 0 0 1-1.7-6.04C.44 5.23 5.72 0 12.23 0 18.72 0 24 5.23 24 11.7z"/>
+      </svg>
+      {% if settings.show_btn_text %}
+        <span id="eg-whatsapp-button-text">
+          {{ settings.btn_text | default: 'WhatsApp' }}
+        </span>
+      {% endif %}
+    </button>
+
+    <div id="eg-whatsapp-dialog" role="dialog" aria-modal="true" aria-labelledby="eg-whatsapp-dialog-label">
+      <div id="eg-whatsapp-dialog-header">
+        <div id="eg-whatsapp-dialog-header-img-wrapper">
+          {% if settings.dialog_header_img %}
+            <img 
+              id="eg-whatsapp-dialog-header-img"
+              src="{{ settings.dialog_header_img | image_url: width: 60, height: 60, crop: 'center' }}"
+              alt="{{ settings.dialog_header_img.alt | default: 'WhatsApp' }}"
+              width="60"
+              height="60"
+              loading="lazy">
+          {% endif %}
+        </div>
+        <div>
+          <h3 id="eg-whatsapp-dialog-label">{{ settings.dialog_name | default: 'Support' }}</h3>
+          {% unless settings.dialog_subtitle == blank %}
+            <p id="eg-whatsapp-dialog-subtitle">{{ settings.dialog_subtitle }}</p>
+          {% endunless %}
+        </div>
+        <button id="eg-whatsapp-dialog-close" aria-label="Close dialog">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div id="eg-whatsapp-dialog-body">
+        <div id="eg-whatsapp-dialog-msg">
+          <div id="eg-whatsapp-dialog-msg-typing" class="eg-typing-spinner" aria-label="Typing indicator"></div>
+          <div id="eg-whatsapp-dialog-msg-text" style="display: none;">
+            {{ settings.dialog_msg | default: 'Bonjour ! Comment pouvons-nous vous aider ?' }}
+          </div>
+        </div>
+      </div>
+
+      <div id="eg-whatsapp-dialog-footer">
+        <input id="eg-whatsapp-dialog-user-input" type="text" aria-label="Type a message" placeholder="{{ settings.dialog_text_placeholder | default: 'Écrivez un message…' }}">
+        <button 
+          id="eg-whatsapp-dialog-btn"
+          aria-label="Open WhatsApp"
+          data-whatsapp-number="{{ settings.whatsapp_number | default: '33600000000' }}">
+          <svg width="20" height="20" viewBox="0 0 438 404" xmlns="http://www.w3.org/2000/svg">
+            <path d="M436.69,200.45c-.2-3.03-1.22-5.94-2.94-8.44s-4.1-4.48-6.86-5.73L23.7,1.48C19.48-.42,14.68-.49,10.41,1.26,6.14,3.02,2.78,6.46,1.12,10.77s-.35,9.12,1.65,13.28L87.75,201.5,1.65,378.95c-2,4.16-2.19,8.97-.53,13.3s5.01,8.46,9.28,10.21,9.29,1.98,13.5,.08l403.2-184.8c3.08-1.41,5.66-3.71,7.41-6.62,1.75-2.91,2.58-6.28,2.39-9.71ZM343.07,184.71H116.97L52.4,51.53l290.67,133.18Zm0,33.6L52.39,351.49l64.57-133.18h226.11Z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </eg-whatsapp-wrapper>
+{% endif %}

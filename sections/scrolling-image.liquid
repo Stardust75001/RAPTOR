@@ -1,0 +1,613 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid 
+    assign pt = section.settings.pt | prepend: 'pt-'
+    assign pb = section.settings.pb | prepend: 'pb-'
+    assign mt = section.settings.mt | prepend: 'mt-'
+    assign mb = section.settings.mb | prepend: 'mb-'
+
+    assign bg_color = section.settings.bg_color
+
+    if section.settings.bg_gradient
+        assign bg_color = bg_color | append: ' bg-gradient'
+    endif
+
+    assign btn_shadow_sp = settings.btn_shadow_sp
+
+    assign overlay_color = section.settings.overlay_color
+%} 
+
+<style>
+  @media (max-width: 768px) {
+    #scrolling-image-wrapper-{{ section.id }} .splide__slide {
+      width: 75%;
+    }
+  }
+  
+  #scrolling-image-wrapper-{{ section.id }} .gradient-overlay-left, 
+  #scrolling-image-wrapper-{{ section.id }} .gradient-overlay-right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 150px;
+    z-index: 1;
+  }
+  
+  #scrolling-image-wrapper-{{ section.id }} .gradient-overlay-left {
+    left: 0;
+    background-image: linear-gradient(to right, 
+      {{ overlay_color }} 0%, 
+      {{ overlay_color }}E6 10%, 
+      {{ overlay_color }}CC 20%, 
+      {{ overlay_color }}B3 30%, 
+      {{ overlay_color }}99 40%, 
+      {{ overlay_color }}80 50%, 
+      {{ overlay_color }}66 60%, 
+      {{ overlay_color }}4D 70%, 
+      {{ overlay_color }}33 80%, 
+      {{ overlay_color }}1A 90%, 
+      {{ overlay_color }}00 100%);
+  }
+  
+  #scrolling-image-wrapper-{{ section.id }} .gradient-overlay-right {
+    right: 0;
+    background-image: linear-gradient(to left, 
+      {{ overlay_color }} 0%, 
+      {{ overlay_color }}E6 10%, 
+      {{ overlay_color }}CC 20%, 
+      {{ overlay_color }}B3 30%, 
+      {{ overlay_color }}99 40%, 
+      {{ overlay_color }}80 50%, 
+      {{ overlay_color }}66 60%, 
+      {{ overlay_color }}4D 70%, 
+      {{ overlay_color }}33 80%, 
+      {{ overlay_color }}1A 90%, 
+      {{ overlay_color }}00 100%);
+  }
+</style>
+
+<section 
+    id="scrolling-image-wrapper-{{ section.id }}" 
+    class="scrolling-image-wrapper enter-view  {{ bg_color }} {{ section.settings.text_align }} {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+    <div class="{{ section.settings.container }}" style="max-width: {{ section.settings.max_width }}px;">
+        {% render 'section-header' %}
+        {% unless section.settings.btn_text == blank %}
+            <div 
+                class="d-inline-flex animate__animated animate__faster opacity-0"
+                {% if settings.effect_apply_btn_enable %} 
+                  data-animate-class="{{ settings.animation_btn_name }}"
+                  style="animation-delay: 800ms;"
+                {% endif %}>
+                <a 
+                    class="btn mb-8 {{ section.settings.btn_color }} {{ btn_shadow_sp }} {{ section.settings.btn_size }}"
+                    href="{{ section.settings.btn_url }}">
+                    {{ section.settings.btn_text }}
+                </a>
+            </div>
+        {% endunless %}
+
+        <div class="position-relative">
+            <div class="gradient-overlay-left"></div>
+            {% for block in section.blocks %}
+                <div id="scrolling-image-slider-{{ section.id }}-{{ forloop.index }}" class="splide">
+                    <div class="splide__track pb-{{ section.settings.carousel_gap }}">
+                        <ul class="splide__list gap-{{ section.settings.carousel_gap }}">
+                            {% if block.settings.image_1 %}
+                                <li class="splide__slide">
+                                    <img 
+                                        class="img-fluid rounded {{ section.settings.img_thumbnail }} {{ section.settings.shadow_sp }} {{ section.settings.border_color }}"
+                                        style="border-width: {{ section.settings.border_width }}px;"
+                                        src="{{ block.settings.image_1 | image_url: width: 500, height: 500, crop: 'center' }}"
+                                        width="500"
+                                        height="500"
+                                        loading="lazy">
+                                </li>
+                            {% endif %}
+                            {% if block.settings.image_2 %}
+                                <li class="splide__slide">
+                                    <img 
+                                        class="img-fluid rounded {{ section.settings.img_thumbnail }} {{ section.settings.shadow_sp }} {{ section.settings.border_color }}"
+                                        style="border-width: {{ section.settings.border_width }}px;"
+                                        src="{{ block.settings.image_2 | image_url: width: 500, height: 500, crop: 'center' }}"
+                                        width="500"
+                                        height="500"
+                                        loading="lazy">
+                                </li>
+                            {% endif %}
+                            {% if block.settings.image_3 %}
+                                <li class="splide__slide">
+                                    <img 
+                                        class="img-fluid rounded {{ section.settings.img_thumbnail }} {{ section.settings.shadow_sp }} {{ section.settings.border_color }}"
+                                        style="border-width: {{ section.settings.border_width }}px;"
+                                        src="{{ block.settings.image_3 | image_url: width: 500, height: 500, crop: 'center' }}"
+                                        width="500"
+                                        height="500"
+                                        loading="lazy">
+                                </li>
+                            {% endif %}
+                            {% if block.settings.image_4 %}
+                                <li class="splide__slide">
+                                    <img 
+                                        class="img-fluid rounded {{ section.settings.img_thumbnail }} {{ section.settings.shadow_sp }} {{ section.settings.border_color }}"
+                                        style="border-width: {{ section.settings.border_width }}px;"
+                                        src="{{ block.settings.image_4 | image_url: width: 500, height: 500, crop: 'center' }}"
+                                        width="500"
+                                        height="500"
+                                        loading="lazy">
+                                </li>
+                            {% endif %}
+                            {% if block.settings.image_5 %}
+                                <li class="splide__slide">
+                                   <img 
+                                        class="img-fluid rounded {{ section.settings.img_thumbnail }} {{ section.settings.shadow_sp }} {{ section.settings.border_color }}"
+                                        style="border-width: {{ section.settings.border_width }}px;"
+                                        src="{{ block.settings.image_5 | image_url: width: 500, height: 500, crop: 'center' }}"
+                                        width="500"
+                                        height="500"
+                                        loading="lazy">
+                                 </li>
+                            {% endif %}
+                            {% if block.settings.image_6 %}
+                                <li class="splide__slide">
+                                   <img 
+                                        class="img-fluid rounded {{ section.settings.img_thumbnail }} {{ section.settings.shadow_sp }} {{ section.settings.border_color }}"
+                                        style="border-width: {{ section.settings.border_width }}px;"
+                                        src="{{ block.settings.image_6 | image_url: width: 500, height: 500, crop: 'center' }}"
+                                        width="500"
+                                        height="500"
+                                        loading="lazy">
+                                 </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="gradient-overlay-right"></div>
+        </div>
+    </div>
+</section>
+    
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  {% for block in section.blocks %}
+    {% liquid 
+      assign carousel_speed = block.settings.carousel_speed | times: 5000
+    %} 
+    new Splide('#scrolling-image-slider-{{ section.id }}-{{ forloop.index }}', {
+      type       : 'loop',
+      perPage    : 5,
+      perMove    : 1,
+      autoplay   : true,
+      interval   : 0,
+      arrows     : false, // Ensure arrows are disabled
+      pagination : false,
+      speed      : {{ carousel_speed }},
+      easing     : 'linear',
+      direction  : '{{ block.settings.direction | default: "ltr" }}',
+      breakpoints: {
+        768: {
+          perPage: 3,
+        },
+        480: {
+          perPage: 3,
+        },
+      },
+    }).mount();
+  {% endfor %}
+});
+</script>
+
+
+{% schema %}
+{
+  "name": "Scrolling Image",
+  "settings": [
+    {
+        "type": "paragraph", 
+        "content": "Documentation FR : [Image Défilante by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/sections\/image-defilante)"
+    },
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "select",
+      "id": "bg_color",
+      "label": "Couleur de l'arrière plan",
+      "default": "bg-body text-body",
+      "options": [
+        { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+        { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+        { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+        { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
+        { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+        { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Sombre" },
+        { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "bg_gradient",
+      "label": "Dégradé d'arrière-plan",
+      "default": false,
+      "info": "Ne s'applique pas aux couleurs claires"
+    },
+    {
+      "type": "select",
+      "id": "container",
+      "label": "Conteneur",
+      "default": "container",
+      "options": [
+        { "value": "container", "label": "Conteneur" },
+        { "value": "container-fluid", "label": "Pleine largeur" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "max_width",
+      "label": "Largeur max. (px)"
+    },
+    {
+      "type": "select",
+      "id": "text_align",
+      "label": "Alignement du texte",
+      "default": "text-center",
+      "options": [
+        { "value": "text-start", "label": "Gauche" },
+        { "value": "text-center", "label": "Centre" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "En-tête de la section"
+    },
+    {
+      "type": "image_picker",
+      "id": "subtitle_img",
+      "label": "Légende Image"
+    },
+    {
+      "type": "text",
+      "id": "brand_image_size",
+      "label": "Image Largeur/Hauteur (px)",
+      "default": "60"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Légende Texte"
+    },
+    {
+      "type": "select",
+      "id": "subtitle_size",
+      "label": "Taille de la légende",
+      "default": "fs-5",
+      "options": [
+        { "group": "Légende Standard", "value": "fs-1", "label": "Extra Grand" },
+        { "group": "Légende Standard", "value": "fs-2", "label": "Super Grand" },
+        { "group": "Légende Standard", "value": "fs-3", "label": "Très Grand" },
+        { "group": "Légende Standard", "value": "fs-4", "label": "Grand" },
+        { "group": "Légende Standard", "value": "fs-5", "label": "Moyen" },
+        { "group": "Légende Standard", "value": "fs-6", "label": "Petit" }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "color_caption",
+      "label": "Couleur de la légende",
+      "default": "#6c757d"
+    },
+    {
+      "type": "text",
+      "id": "title_overlay",
+      "label": "Titre overlay",
+      "info": "Visible sur ordinateur, masqué sur mobile pour optimiser la lisibilité."
+    },
+    {
+      "type": "select",
+      "id": "title_overlay_size",
+      "label": "Taille du titre overlay",
+      "default": "3",
+      "options": [
+        { "group": "Titre Overlay", "value": "4", "label": "Grand" },
+        { "group": "Titre Overlay", "value": "3", "label": "Moyen" },
+        { "group": "Titre Overlay", "value": "2", "label": "Petit" }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "color_title_overlay",
+      "label": "Couleur du titre overlay",
+      "default": "#000000"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "Titre",
+      "default": "Scrolling Images"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Balise titre (SEO)",
+      "default": "h2",
+      "options": [
+        { "value": "h1", "label": "h1" },
+        { "value": "h2", "label": "h2" },
+        { "value": "h3", "label": "h3" },
+        { "value": "h4", "label": "h4" },
+        { "value": "h5", "label": "h5" },
+        { "value": "h6", "label": "h6" },
+        { "value": "span", "label": "Aucune" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Taille du titre",
+      "default": "h2",
+      "options": [
+        { "group": "Titre Supérieur", "value": "display-1", "label": "Extra Extra Grand" },
+        { "group": "Titre Supérieur", "value": "display-2", "label": "Extra Grand" },
+        { "group": "Titre Supérieur", "value": "display-3", "label": "Ultra Grand" },
+        { "group": "Titre Supérieur", "value": "display-4", "label": "Super Grand" },
+        { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+        { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+        { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+        { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+        { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+        { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+      ]
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description (facultatif)",
+      "default": "<p>Ajouter une description facultative à cette section</p>"
+    },
+    {
+      "type": "select",
+      "id": "description_size",
+      "label": "Taille de description",
+      "default": "fs-5",
+      "options": [
+        { "group": "Description Standard", "value": "fs-1", "label": "Extra Grand" },
+        { "group": "Description Standard", "value": "fs-2", "label": "Super Grand" },
+        { "group": "Description Standard", "value": "fs-3", "label": "Très Grand" },
+        { "group": "Description Standard", "value": "fs-4", "label": "Grand" },
+        { "group": "Description Standard", "value": "fs-5", "label": "Moyen" },
+        { "group": "Description Standard", "value": "fs-6", "label": "Petit" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Texte du bouton",
+      "info": "Laisser vide pour désactiver"
+    },
+    {
+      "type": "url",
+      "id": "btn_url",
+      "label": "URL du bouton"
+    },
+    {
+      "type": "select",
+      "id": "btn_color",
+      "label": "Couleur du bouton",
+      "default": "btn-primary",
+      "options": [
+        { "group": "Normal", "value": "btn-link", "label": "Lien" },
+        { "group": "Normal", "value": "btn-light", "label": "Claire" },
+        { "group": "Normal", "value": "btn-dark", "label": "Sombre" },
+        { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
+        { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
+        { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
+        { "group": "Normal", "value": "btn-success", "label": "Succès" },
+        { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+        { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
+        { "group": "Normal", "value": "btn-info", "label": "Info" },
+        { "group": "Contour", "value": "btn-outline-light", "label": "Contour Claire" },
+        { "group": "Contour", "value": "btn-outline-dark", "label": "Contour Sombre" },
+        { "group": "Contour", "value": "btn-outline-primary", "label": "Contour Primaire" },
+        { "group": "Contour", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
+        { "group": "Contour", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
+        { "group": "Contour", "value": "btn-outline-success", "label": "Contour Succès" },
+        { "group": "Contour", "value": "btn-outline-danger", "label": "Contour Danger" },
+        { "group": "Contour", "value": "btn-outline-warning", "label": "Contour Avertissement" },
+        { "group": "Contour", "value": "btn-outline-info", "label": "Contour Info" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "btn_size",
+      "label": "Taille du bouton",
+      "default": "btn-md",
+      "options": [
+        { "value": "btn-sm", "label": "Petit" },
+        { "value": "btn-md", "label": "Normal" },
+        { "value": "btn-lg", "label": "Large" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Couleur du fondu",
+      "default": "#FFFFFF",
+      "info": "Choisissez la couleur pour les dégradés de l'overlay sur les côtés gauche et droit. Cette couleur sera utilisée avec différentes opacités pour créer l'effet de dégradé."
+    },
+    {
+      "type": "range",
+      "id": "carousel_gap",
+      "label": "Espacement entre les éléments",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "img_thumbnail",
+      "label": "Bordure de l'image",
+      "default": "img-thumbnail",
+      "options": [
+        { "value": "", "label": "Aucune" },
+        { "value": "img-thumbnail", "label": "Bordure" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "border_color",
+      "label": "Couleur de la bordure",
+      "options": [
+        { "value": "", "label": "Default" },
+        { "value": "border-primary", "label": "Primaire" },
+        { "value": "border-secondary", "label": "Secondaire" },
+        { "value": "border-tertiary", "label": "Tertiaire" },
+        { "value": "border-dark", "label": "Sombre" },
+        { "value": "border-success", "label": "Succès" },
+        { "value": "border-warning", "label": "Avertissement" },
+        { "value": "border-danger", "label": "Danger" },
+        { "value": "border-info", "label": "Info" }
+      ],
+      "default": ""
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Largeur de la bordure",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "type": "select",
+      "id": "shadow_sp",
+      "label": "Ombre",
+      "options": [
+        { "value": "shadow-none", "label": "Aucune" },
+        { "value": "shadow-1", "label": "Ombre légère" }
+      ],
+      "default": "shadow-none"
+    },
+    {
+      "type": "header",
+      "content": "Espacement de la section"
+    },
+    {
+      "type": "range",
+      "id": "pt",
+      "label": "Padding supérieure",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "pb",
+      "label": "Padding inférieure",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mt",
+      "label": "Marge supérieure",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mb",
+      "label": "Marge inférieure",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image_set",
+      "name": "Images",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image_1",
+          "label": "Image 1"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "Image 2"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_3",
+          "label": "Image 3"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_4",
+          "label": "Image 4"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_5",
+          "label": "Image 5"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_6",
+          "label": "Image 6"
+        },
+        {
+          "type": "range",
+          "id": "carousel_speed",
+          "label": "Vitesse",
+          "min": 1,
+          "max": 10,
+          "default": 5,
+          "step": 1,
+          "info": "Vitesse de défilement automatique"
+        },
+        {
+          "type": "select",
+          "id": "direction",
+          "label": "Direction",
+          "default": "ltr",
+          "options": [
+            { "value": "ltr", "label": "Gauche à Droite" },
+            { "value": "rtl", "label": "Droite à Gauche" }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Scrolling Image",
+      "category": "Image"
+    }
+  ]
+}
+{% endschema %}
+

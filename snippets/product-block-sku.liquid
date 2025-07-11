@@ -1,0 +1,10 @@
+{% liquid 
+    assign mt = block.settings.mt | prepend: 'mt-'
+    assign mb = block.settings.mb | prepend: 'mb-'
+%}
+
+{% if product.selected_or_first_available_variant.sku != blank %}
+    <p class="product-block-sku text-muted text-uppercase small {{ mt }} {{ mb }}">
+        {{ product.selected_or_first_available_variant.sku }}
+    </p>
+{% endif %}

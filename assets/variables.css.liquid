@@ -1,0 +1,250 @@
+/* ========================================================================
+   INFORMATIONS GÉNÉRALES SUR LE SITE
+   Propriété de © 2019/2024 Shopiweb.fr
+   Pour plus d'informations, visitez : https://www.shopiweb.fr
+   ======================================================================== */
+
+/* =====================
+   Polices de caractères
+   ===================== */
+{% comment %} 
+    Définition des polices pour les en-têtes et le corps du texte. 
+{% endcomment %}
+{% if settings.font_headings_custom == blank %}
+    {{ settings.font_headings | font_face: font_display: 'swap' }}
+{% else %}
+    @font-face {
+        font-family: "{{ settings.font_headings_custom | split: '.' | first }}";
+        src: url('{{ settings.font_headings_custom | file_url }}') format('{{ settings.font_headings_custom | split: '.' | last }}');
+        font-display: swap;
+    }
+{% endif %}
+
+{% unless settings.font_body.system %}
+    {{ settings.font_body | font_face: font_display: 'swap' }}
+    {{ settings.font_body | font_modify: 'weight', 'bold' | font_face: font_display: 'swap' }}
+    {{ settings.font_body | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}
+{% endunless %}
+
+/* =====================
+   Variable CSS
+   ===================== */
+{% comment %}
+    Définition des couleurs principales, secondaires, et autres variables CSS globales.
+{% endcomment %}
+:root {
+    --bs-primary: {{ settings.color_primary }};
+    --bs-primary-rgb: {{ settings.color_primary | color_to_rgb | remove: 'rgb(' | remove: ')' }};
+    --bs-primary-lighten-5: {{ settings.color_primary | color_lighten: 5 }};
+    --bs-primary-lighten-10: {{ settings.color_primary | color_lighten: 5 }};
+    --bs-primary-darken-5: {{ settings.color_primary | color_darken: 5 }};
+    --bs-primary-darken-10: {{ settings.color_primary | color_darken: 10 }};
+
+    --bs-secondary: {{ settings.color_secondary }};
+    --bs-secondary-rgb: {{ settings.color_secondary | color_to_rgb | remove: 'rgb(' | remove: ')' }};
+    --bs-secondary-lighten-5: {{ settings.color_secondary | color_lighten: 5 }};
+    --bs-secondary-lighten-10: {{ settings.color_secondary | color_lighten: 10 }};
+    --bs-secondary-darken-5: {{ settings.color_secondary | color_darken: 5 }};
+    --bs-secondary-darken-10: {{ settings.color_secondary | color_darken: 10 }};
+
+    --bs-tertiary: {{ settings.color_tertiary }};
+    --bs-tertiary-rgb: {{ settings.color_tertiary | color_to_rgb | remove: 'rgb(' | remove: ')' }};
+    --bs-tertiary-lighten-5: {{ settings.color_tertiary | color_lighten: 5 }};
+    --bs-tertiary-lighten-10: {{ settings.color_tertiary | color_lighten: 10 }};
+    --bs-tertiary-darken-5: {{ settings.color_tertiary | color_darken: 5 }};
+    --bs-tertiary-darken-10: {{ settings.color_tertiary | color_darken: 10 }};
+
+    --bs-dark: {{ settings.color_dark }};
+    --bs-dark-rgb: {{ settings.color_dark | color_to_rgb | remove: 'rgb(' | remove: ')' }};
+    --bs-dark-lighten-5: {{ settings.color_dark | color_lighten: 5 }};
+    --bs-dark-lighten-10: {{ settings.color_dark | color_lighten: 10 }};
+    --bs-dark-darken-5: {{ settings.color_dark | color_darken: 5 }};
+    --bs-dark-darken-10: {{ settings.color_dark | color_darken: 10 }};
+
+    --bs-light: {{ settings.color_light }};
+    --bs-light-rgb: {{ settings.color_light | color_to_rgb | remove: 'rgb(' | remove: ')' }};
+    --bs-light-lighten-5: {{ settings.color_light | color_lighten: 5 }};
+    --bs-light-lighten-10: {{ settings.color_light | color_lighten: 10 }};
+    --bs-light-darken-5: {{ settings.color_light | color_darken: 5 }};
+    --bs-light-darken-10: {{ settings.color_light | color_darken: 10 }};
+
+    --bs-body-bg: {{ settings.color_body_bg }};
+    --bs-body-bg-rgb: {{ settings.color_body_bg | color_to_rgb | remove: 'rgb(' | remove: ')' }};
+    --bs-body-color: {{ settings.color_body_text }};
+    --bs-body-color-rgb: {{ settings.color_body_text | color_to_rgb | remove: 'rgb(' | remove: ')' }};
+
+    --bs-border-radius: {{ settings.border_radius }};
+
+    --bs-link-color: var(--bs-primary);
+    --bs-link-color-rgb: {{ settings.color_primary | color_to_rgb | remove: 'rgb(' | remove: ')' }};
+    --bs-link-hover-color: var(--bs-primary-darken-10);
+    --bs-link-hover-color-rgb: {{ settings.color_primary | color_darken: 10 | color_to_rgb | remove: 'rgb(' | remove: ')' }};
+
+    --bs-success: {{ settings.color_success }};
+    --bs-success-darken: {{ settings.color_success | color_darken: 10 }};
+    --bs-success-rgb: {{ settings.color_success | color_to_rgb | remove: 'rgb(' | remove: ')' }};
+    --bs-danger: {{ settings.color_danger }};
+    --bs-danger-darken: {{ settings.color_danger | color_darken: 10 }};
+    --bs-danger-rgb: {{ settings.color_danger | color_to_rgb | remove: 'rgb(' | remove: ')' }};
+    --bs-warning: {{ settings.color_warning }};
+    --bs-warning-darken: {{ settings.color_warning | color_darken: 20 }};
+    --bs-warning-rgb: {{ settings.color_warning | color_to_rgb | remove: 'rgb(' | remove: ')' }};
+    --bs-info: {{ settings.color_info }};
+    --bs-info-darken: {{ settings.color_info | color_darken: 20 }};
+    --bs-info-rgb: {{ settings.color_info | color_to_rgb | remove: 'rgb(' | remove: ')' }};
+
+    {% if settings.font_headings_custom == blank %}
+        --bs-headings-font-family: {{ settings.font_headings.family }}, {{ settings.font_headings.fallback_families }};
+        --bs-headings-font-weight: {{ settings.font_headings.weight }};
+    {% else %}
+        --bs-headings-font-family: "{{ settings.font_headings_custom | split: '.' | first }}", sans-serif;
+    {% endif %}
+
+    {% unless settings.font_body.system %}
+        --bs-body-font-family:  {{ settings.font_body.family }}, {{ settings.font_body.fallback_families }};
+    {% endunless %}
+}
+
+
+/* =====================
+   Boutons
+   ===================== */
+{% comment %}
+    Styles personnalisés pour les boutons, y compris les espacements et les transformations de texte.
+{% endcomment %}
+body .btn {
+    letter-spacing: {{ settings.buttons_letter_spacing }}rem;
+    text-transform: {{ settings.buttons_text_transform }};
+    font-weight: {{ settings.buttons_font_weight }};
+}
+
+body .btn-md {
+    --bs-btn-padding-x: {{ settings.buttons_padding_x }}rem;
+    --bs-btn-padding-y: {{ settings.buttons_padding_y }}rem;
+}
+
+body .btn-lg {
+    --bs-btn-padding-x: {{ settings.buttons_padding_x | times: 1.5 }}rem;
+    --bs-btn-padding-y: {{ settings.buttons_padding_y | times: 1.5 }}rem;
+}
+
+{% if settings.buttons_bg_gradient %}
+    .btn {
+        background-image: var(--bs-gradient);
+    }
+{% endif %}
+
+{% if settings.btn_shadow_sp %} 
+    .btn-link {
+        box-shadow: none !important;
+        background-image: none !important;
+    }
+    .btn-shadow-1 {
+        border-radius: var(--bs-border-radius)!important;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    }
+    .btn-shadow-2 {
+        border-radius: var(--bs-border-radius)!important;
+        box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+    }
+    .btn-shadow-3 {
+        border-radius: var(--bs-border-radius)!important;
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+    }
+    .btn-shadow-4 {
+        border-radius: var(--bs-border-radius)!important;
+        box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+    }
+{% endif %}
+
+
+/* =====================
+   Formulaires
+   ===================== */
+{% comment %}
+    Styles spécifiques aux contrôles de formulaire comme les sélecteurs et les zones de texte.
+{% endcomment %}
+.form-control-md,
+.form-select-md {
+    padding-left: {{ settings.buttons_padding_x }}rem;
+    padding-right: {{ settings.buttons_padding_x }}rem;
+    padding-top: {{ settings.buttons_padding_y }}rem;
+    padding-bottom: {{ settings.buttons_padding_y }}rem;
+}
+
+.form-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='{{ settings.color_body_text | replace: '#', '%23' }}' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e")
+}
+
+[dir="ltr"] .form-select-md {
+    padding-right: 2.5rem;
+}
+
+[dir="rtl"] .form-select-md {
+    padding-left: 2.5rem;
+}
+
+
+/* =====================
+   Offcanvas / Modal
+   ===================== */
+{% comment %}
+    Paramètres d'arrière-plan et de filtre pour les modales et les offcanvas.
+{% endcomment %}
+body .offcanvas-backdrop,
+body .modal-backdrop {
+    background-color: rgba(0, 0, 0, {{ settings.offcanvas_backdrop_opacity | divided_by: 100.00 }});
+    {% if settings.offcanvas_backdrop_blur %}
+        backdrop-filter: blur(5px);
+    {% endif %}
+}
+
+/* =====================
+   Accordéon
+   ===================== */
+{% comment %}
+    Style spécifique pour les boutons d'accordéon et les icônes.
+{% endcomment %}
+.accordion {
+    --bs-accordion-btn-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='{{ settings.color_body_text | replace: '#', '%23' }}'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+    --bs-accordion-btn-active-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='{{ settings.color_body_text | replace: '#', '%23' }}'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
+
+/* =====================
+   Autres styles
+   ===================== */
+{% comment %}
+    Styles divers pour des éléments spécifiques comme les menus et les boutons de fermeture.
+{% endcomment %}
+#offcanvas-menu-nav .nav-link[aria-expanded]:after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='{{ settings.color_body_text | replace: '#', '%23' }}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='5' x2='12' y2='19'%3E%3C/line%3E%3Cline x1='5' y1='12' x2='19' y2='12'%3E%3C/line%3E%3C/svg%3E")
+}
+#offcanvas-menu-nav .nav-link[aria-expanded="true"]::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='{{ settings.color_body_text | replace: '#', '%23' }}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'%3E%3C/line%3E%3C/svg%3E");
+}
+
+.btn-close {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='{{ settings.color_body_text | replace: '#', '%23' }}'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e")
+}
+
+/* =====================
+   Personnalisation des prix
+   ===================== */
+{% comment %}
+    Couleur spécifique pour le prix final des produits.
+{% endcomment %}
+.product-item-price-final,
+.product-price-final {
+  color: {{ settings.color_price }}!important;
+}
+/* === Footer/Header vars from BUBBLE === */
+--footer-bg: #1c1f26;
+--footer-text: #ffffff;
+--footer-border-color: #444;
+--footer-link-hover: #bbb;
+--header-bg: #f8f9fa;
+--header-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+--header-text: #333;
+--sticky-header-bg: #f9f9f9;
+--sticky-border-color: #e1e1e1;
+

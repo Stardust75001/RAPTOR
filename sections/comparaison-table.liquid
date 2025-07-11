@@ -1,0 +1,948 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid 
+    assign pt = section.settings.pt | prepend: 'pt-'
+    assign pb = section.settings.pb | prepend: 'pb-'
+    assign mt = section.settings.mt | prepend: 'mt-'
+    assign mb = section.settings.mb | prepend: 'mb-'
+
+    assign bg_color = section.settings.bg_color
+
+    if section.settings.bg_gradient
+        assign bg_color = bg_color | append: ' bg-gradient'
+    endif
+%}
+
+{% liquid 
+    assign header_block = section.blocks | where: 'type', 'header' | first
+
+    unless header_block.settings.cell_1 == blank
+        assign header_cells = header_block.settings.cell_1 | append: ', '
+    endunless
+
+    unless header_block.settings.cell_2 == blank
+        assign header_cells = header_cells | append: header_block.settings.cell_2 | append: ', '
+    endunless
+
+    unless header_block.settings.cell_3 == blank
+        assign header_cells = header_cells | append: header_block.settings.cell_3 | append: ', '
+    endunless
+
+    unless header_block.settings.cell_4 == blank
+        assign header_cells = header_cells | append: header_block.settings.cell_4 | append: ', '
+    endunless
+
+    unless header_block.settings.cell_5 == blank
+        assign header_cells = header_cells | append: header_block.settings.cell_5 | append: ', '
+    endunless
+
+    unless header_block.settings.cell_6 == blank
+        assign header_cells = header_cells | append: header_block.settings.cell_6 | append: ', '
+    endunless
+
+    unless header_block.settings.cell_7 == blank
+        assign header_cells = header_cells | append: header_block.settings.cell_7 | append: ', '
+    endunless
+
+    assign header_cells = header_cells | split: ', '
+%}
+
+{% liquid 
+    assign footer_block = section.blocks | where: 'type', 'footer' | first
+
+    unless footer_block.settings.fcell_1 == blank
+        assign footer_cells = footer_block.settings.fcell_1 | append: ', '
+    endunless
+
+    unless footer_block.settings.fcell_2 == blank
+        assign footer_cells = footer_cells | append: footer_block.settings.fcell_2 | append: ', '
+    endunless
+
+    unless footer_block.settings.fcell_3 == blank
+        assign footer_cells = footer_cells | append: footer_block.settings.fcell_3 | append: ', '
+    endunless
+
+    unless footer_block.settings.fcell_4 == blank
+        assign footer_cells = footer_cells | append: footer_block.settings.fcell_4 | append: ', '
+    endunless
+
+    unless footer_block.settings.fcell_5 == blank
+        assign footer_cells = footer_cells | append: footer_block.settings.fcell_5 | append: ', '
+    endunless
+
+    unless footer_block.settings.fcell_6 == blank
+        assign footer_cells = footer_cells | append: footer_block.settings.fcell_6 | append: ', '
+    endunless
+
+    unless footer_block.settings.fcell_7 == blank
+        assign footer_cells = footer_cells | append: footer_block.settings.fcell_7 | append: ', '
+    endunless
+
+    assign footer_cells = footer_cells | split: ', '
+%}
+
+{% capture icon_checked %}
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+{% endcapture %}
+
+{% capture icon_checked_circle %}
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+    </svg>
+{% endcapture %}
+
+{% capture icon_unchecked %}
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+{% endcapture %}
+
+<div 
+    id="comparison-table-{{ section.id }}" 
+    class="comparison-table enter-view {{ bg_color }} {{ section.settings.text_align }} {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+    <div class="{{ section.settings.container }}" style="max-width: {{ section.settings.max_width }}px">
+        {% render 'section-header' %}
+            <div class="table-responsive {{ section.settings.img_thumbnail }} {{ section.settings.shadow_sp }} {{ section.settings.border_color }}"
+                  style="border-width: {{ section.settings.border_width }}px;">
+                <table 
+                    class="
+                        table align-middle mb-0
+                        bg-white text-body
+                        {{ section.settings.table_border_color }}
+                        {% if section.settings.table_bordered %}
+                            table-bordered
+                        {% else %}
+                            rounded
+                        {% endif %}
+                        {% if section.settings.table_striped %}
+                            table-striped
+                        {% endif %}
+                    ">
+                    <thead class="{{ section.settings.table_thead_color }}">
+                        {% assign header_block = section.blocks.first %}
+                        <tr>
+                            {% for cell in header_cells %}
+                                <th 
+                                    scope="col" 
+                                    class="py-5 text-nowrap {% if forloop.index == 2 %}{{ section.settings.table_second_col_color }} {{ section.settings.table_second_bg_color }}{% endif %}">
+                                    {% unless cell == '#' %}
+                                        {{ cell }}
+                                    {% endunless %}
+                                    {% case forloop.index %}
+                                        {% when 2 %}
+                                            {% unless header_block.settings.cell_2_img == blank %}
+                                                {% render 'comparison-table-header-img', image: header_block.settings.cell_2_img %}
+                                            {% endunless %}
+                                        {% when 3 %}
+                                            {% unless header_block.settings.cell_3_img == blank %}
+                                                {% render 'comparison-table-header-img', image: header_block.settings.cell_3_img %}
+                                            {% endunless %}
+                                        {% when 4 %}
+                                            {% unless header_block.settings.cell_4_img == blank %}
+                                                {% render 'comparison-table-header-img', image: header_block.settings.cell_4_img %}
+                                            {% endunless %}
+                                        {% when 5 %}
+                                            {% unless header_block.settings.cell_5_img == blank %}
+                                                {% render 'comparison-table-header-img', image: header_block.settings.cell_5_img %}
+                                            {% endunless %}
+                                        {% when 6 %}
+                                            {% unless header_block.settings.cell_6_img == blank %}
+                                                {% render 'comparison-table-header-img', image: header_block.settings.cell_6_img %}
+                                            {% endunless %}
+                                        {% when 7 %}
+                                            {% unless header_block.settings.cell_7_img == blank %}
+                                                {% render 'comparison-table-header-img', image: header_block.settings.cell_7_img %}
+                                            {% endunless %}
+                                    {% endcase %}
+                                </th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for block in section.blocks %}
+                            {% unless block.type == 'header' or block.type == 'footer' %}
+                                <tr>
+                                    <th scope="row" class="text-center">
+                                        {{ block.settings.title }}
+                                    </th>
+                                    {% for cell in header_cells %}
+                                        {% unless forloop.first %}
+                                            <td class="{% if forloop.index == 2 %}{{ section.settings.table_second_col_color }} {{ section.settings.table_second_bg_color }}{% endif %}">
+                                                {% comment %}theme-check-disable{% endcomment %}
+                                                {% if forloop.index == 2 %}
+                                                    {% if block.settings.cell_2_display == 'icon' %}
+                                                        {% if block.settings.cell_2 %}
+                                                            {{ icon_checked_circle }}
+                                                        {% else %}
+                                                            {{ icon_unchecked }}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {{ block.settings.cell_2_text }}
+                                                    {% endif %}
+                                                {% elsif forloop.index == 3 %}
+                                                    {% if block.settings.cell_3_display == 'icon' %}
+                                                        {% if block.settings.cell_3 %}
+                                                            {{ icon_checked }}
+                                                        {% else %}
+                                                            {{ icon_unchecked }}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {{ block.settings.cell_3_text }}
+                                                    {% endif %}
+                                                {% elsif forloop.index == 4 %}
+                                                    {% if block.settings.cell_4_display == 'icon' %}
+                                                        {% if block.settings.cell_4 %}
+                                                            {{ icon_checked }}
+                                                        {% else %}
+                                                            {{ icon_unchecked }}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {{ block.settings.cell_4_text }}
+                                                    {% endif %}
+                                                {% elsif forloop.index == 5 %}
+                                                    {% if block.settings.cell_5_display == 'icon' %}
+                                                        {% if block.settings.cell_5 %}
+                                                            {{ icon_checked }}
+                                                        {% else %}
+                                                            {{ icon_unchecked }}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {{ block.settings.cell_5_text }}
+                                                    {% endif %}
+                                                {% elsif forloop.index == 6 %}
+                                                    {% if block.settings.cell_6_display == 'icon' %}
+                                                        {% if block.settings.cell_6 %}
+                                                            {{ icon_checked }}
+                                                        {% else %}
+                                                            {{ icon_unchecked }}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {{ block.settings.cell_6_text }}
+                                                    {% endif %}
+                                                {% elsif forloop.index == 7 %}
+                                                    {% if block.settings.cell_7_display == 'icon' %}
+                                                        {% if block.settings.cell_7 %}
+                                                            {{ icon_checked }}
+                                                        {% else %}
+                                                            {{ icon_unchecked }}
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {{ block.settings.cell_7_text }}
+                                                    {% endif %}
+                                                {% endif %}
+                                                {% comment %}theme-check-enable{% endcomment %}
+                                            </td>
+                                        {% endunless %}
+                                    {% endfor %}
+                                </tr>
+                            {% endunless %}
+                        {% endfor %}
+                    </tbody>
+                    <tfoot class="{{ section.settings.table_tfoot_color }}">
+                        <tr>
+                            {% for fcell in footer_cells %}
+                                <th 
+                                    scope="col" 
+                                    class="py-5 text-nowrap {% if forloop.index == 2 %}{{ section.settings.table_second_col_color }} {{ section.settings.table_second_bg_color }}{% endif %}">
+                                    {% unless fcell == '#' %}
+                                        {{ fcell }}
+                                    {% endunless %}
+                                </th>
+                            {% endfor %}
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+    </div>
+</div>
+  
+{% schema %}
+{
+    "name": "Tableau Comparatif",
+    "settings": [
+        {
+            "type": "paragraph", 
+            "content": "Documentation FR : [Tableau Comparatif by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/sections\/tableau-comparatif)"
+        },
+        {
+            "type": "header",
+            "content": "General"
+        },
+        {
+            "type": "select",
+            "id": "bg_color",
+            "label": "Couleur de l'arrière plan",
+            "default": "bg-body text-body",
+            "options": [
+                { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+                { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+                { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+                { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
+                { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+                { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Sombre" },
+                { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "bg_gradient",
+            "label": "Dégradé d'arrière-plan",
+            "default": false,
+            "info": "Ne s'applique pas aux couleurs claires"
+        },
+        {
+            "type": "select",
+            "id": "container",
+            "label": "Conteneur",
+            "default": "container",
+            "options": [
+                { "value": "container", "label": "Conteneur" },
+                { "value": "container-fluid", "label": "Pleine largeur" }
+            ]
+        },
+        {
+            "type": "text",
+            "id": "max_width",
+            "label": "Largeur maximale (px)",
+            "info": "Ajuster la largeur du conteneur (en pixels)",
+            "default": "1023"
+        },
+        {
+            "type": "select",
+            "id": "text_align",
+            "label": "Alignement du texte",
+            "default": "text-center",
+            "options": [
+                { "value": "text-start", "label": "Gauche" },
+                { "value": "text-center", "label": "Centre" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "En-tête de la section"
+        },
+        {
+            "type": "image_picker",
+            "id": "subtitle_img",
+            "label": "Légende Image"
+        },
+        {
+            "type": "text",
+            "id": "brand_image_size",
+            "label": "Image Largeur/Hauteur (px)",
+            "default": "60"
+        },
+        {
+            "type": "text",
+            "id": "subtitle",
+            "label": "Légende Texte"
+        },
+        {
+            "type": "select",
+            "id": "subtitle_size",
+            "label": "Taille de la légende",
+            "default": "fs-5",
+            "options": [
+                { "group": "Légende Standard", "value": "fs-1", "label": "Extra Grand" },
+                { "group": "Légende Standard", "value": "fs-2", "label": "Super Grand" },
+                { "group": "Légende Standard", "value": "fs-3", "label": "Très Grand" },
+                { "group": "Légende Standard", "value": "fs-4", "label": "Grand" },
+                { "group": "Légende Standard", "value": "fs-5", "label": "Moyen" },
+                { "group": "Légende Standard", "value": "fs-6", "label": "Petit" } 
+            ]
+        },
+        {
+            "type": "color",
+            "id": "color_caption",
+            "label": "Couleur de la légende",
+            "default": "#6c757d"
+        },
+        {
+            "type": "text",
+            "id": "title_overlay",
+            "label": "Titre overlay",
+            "info": "Visible sur ordinateur, masqué sur mobile pour optimiser la lisibilité."
+        },
+        {
+            "type": "select",
+            "id": "title_overlay_size",
+            "label": "Taille du titre overlay",
+            "default": "3",
+            "options": [
+                { "group": "Titre Overlay", "value": "4", "label": "Grand" },
+                { "group": "Titre Overlay", "value": "3", "label": "Moyen" },
+                { "group": "Titre Overlay", "value": "2", "label": "Petit" }
+            ]
+        },
+        {
+            "type": "color",
+            "id": "color_title_overlay",
+            "label": "Couleur du titre overlay",
+            "default": "#000000"
+        },
+        {
+            "type": "inline_richtext",
+            "id": "title",
+            "label": "Titre",
+            "default": "Tableau Comparatif"
+        },
+        {
+            "type": "select",
+            "id": "heading_tag",
+            "label": "Balise titre (SEO)",
+            "default": "h2",
+            "options": [
+                { "value": "h1", "label": "h1" },
+                { "value": "h2", "label": "h2" },
+                { "value": "h3", "label": "h3" },
+                { "value": "h4", "label": "h4" },
+                { "value": "h5", "label": "h5" },
+                { "value": "h6", "label": "h6" },
+                { "value": "span", "label": "Aucune" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "title_size",
+            "label": "Taille du titre",
+            "default": "h2",
+            "options": [
+                { "group": "Titre Supérieur", "value": "display-1", "label": "Extra Extra Grand" },
+                { "group": "Titre Supérieur", "value": "display-2", "label": "Extra Grand" },
+                { "group": "Titre Supérieur", "value": "display-3", "label": "Ultra Grand" },
+                { "group": "Titre Supérieur", "value": "display-4", "label": "Super Grand" },
+                { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+            ]
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Description (facultatif)",
+            "default": "<p>Ajouter une description facultative à cette section</p>"
+        },
+        {
+            "type": "select",
+            "id": "description_size",
+            "label": "Taille de description",
+            "default": "fs-5",
+            "options": [
+                { "group": "Description Standard", "value": "fs-1", "label": "Extra Grand" },
+                { "group": "Description Standard", "value": "fs-2", "label": "Super Grand" },
+                { "group": "Description Standard", "value": "fs-3", "label": "Très Grand" },
+                { "group": "Description Standard", "value": "fs-4", "label": "Grand" },
+                { "group": "Description Standard", "value": "fs-5", "label": "Moyen" },
+                { "group": "Description Standard", "value": "fs-6", "label": "Petit" } 
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Tableau"
+        },
+        {
+            "type": "select",
+            "id": "img_thumbnail",
+            "label": "Bordure du tableau",
+            "default": "img-thumbnail",
+            "options": [
+                { "value": "", "label": "Aucune" },
+                { "value": "img-thumbnail", "label": "Bordure" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "border_color",
+            "label": "Couleur de la bordure",
+            "info": "Remarque : correspond à la couleur de la bordure du tableau",
+            "options": [
+                { "value": "", "label": "Default" },
+                { "value": "border-primary", "label": "Primaire" },
+                { "value": "border-secondary", "label": "Secondaire" },
+                { "value": "border-tertiary", "label": "Tertiaire" },
+                { "value": "border-dark", "label": "Sombre" },
+                { "value": "border-success", "label": "Succès" },
+                { "value": "border-warning", "label": "Avertissement" },
+                { "value": "border-danger", "label": "Danger" },
+                { "value": "border-info", "label": "Info" }
+            ],
+            "default": ""
+        },
+        {
+            "type": "range",
+            "id": "border_width",
+            "label": "Largeur de la bordure",
+            "min": 0,
+            "max": 10,
+            "step": 1,
+            "default": 1
+        },
+        {
+            "type": "select",
+            "id": "shadow_sp",
+            "label": "Ombre",
+            "options": [
+                { "value": "shadow-none", "label": "Aucune" },
+                { "value": "shadow-1", "label": "Ombre légère" },
+                { "value": "shadow-2", "label": "Ombre partiel" },
+                { "value": "shadow-3", "label": "Ombre profonde" },
+                { "value": "shadow-4", "label": "Ombre totale" }
+            ],
+            "default": "shadow-1"
+        },
+        {
+            "type": "checkbox",
+            "id": "table_bordered",
+            "label": "Activer la grille du tableau",
+            "info": "Remarque : un tableau avec une grille ne peut pas avoir de coins arrondis, pas d'ombre et de bordure.",
+            "default": false
+        },
+        {
+            "type": "select",
+            "id": "table_border_color",
+            "label": "Couleur des lignes du tableau",
+            "options": [
+                { "value": "", "label": "Par défaut" },
+                { "value": "border-primary", "label": "Primaire" },
+                { "value": "border-secondary", "label": "Secondaire" },
+                { "value": "border-tertiary", "label": "Tertiaire" },
+                { "value": "border-white", "label": "Blanc" },
+                { "value": "border-light", "label": "Claire" },
+                { "value": "border-dark", "label": "Sombre" },
+                { "value": "border-success", "label": "Succès" },
+                { "value": "border-warning", "label": "Avertissement" },
+                { "value": "border-danger", "label": "Danger" },
+                { "value": "border-info", "label": "Info" }
+            ],
+            "default": ""
+        },
+        {
+            "type": "select",
+            "id": "table_thead_color",
+            "label": "Couleur de l'en-tête tableau",
+            "default": "",
+            "options": [
+                { "value": "", "label": "Blanc" },
+                { "value": "table-light", "label": "Claire" },
+                { "value": "table-dark", "label": "Sombre" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "table_tfoot_color",
+            "label": "Couleur du pied de tableau",
+            "default": "",
+            "options": [
+                { "value": "", "label": "Blanc" },
+                { "value": "table-light", "label": "Claire" },
+                { "value": "table-dark", "label": "Sombre" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "table_second_col_color",
+            "label": "Couleur du texte de la deuxième colonne",
+            "info": "Sélectionnez une couleur différente pour mettre davantage en valeur votre produit.",
+            "default": "text-primary",
+            "options": [
+                { "group": "Par défaut", "value": "", "label": "Par défaut" },
+                { "group": "Intermédiaire", "value": "text-white", "label": "Blanc" },
+                { "group": "Intermédiaire", "value": "text-light", "label": "Claire" },
+                { "group": "Principal", "value": "text-primary", "label": "Primaire" },
+                { "group": "Principal", "value": "text-secondary", "label": "Secondaire" },
+                { "group": "Principal", "value": "text-tertiary", "label": "Tertiaire" },
+                { "group": "Intermédiaire", "value": "text-dark", "label": "Sombre" },
+                { "group": "Alerte", "value": "text-success", "label": "Succès" },
+                { "group": "Alerte", "value": "text-warning", "label": "Avertissement" },
+                { "group": "Alerte", "value": "text-danger", "label": "Danger" },
+                { "group": "Alerte", "value": "text-info", "label": "Info" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "table_second_bg_color",
+            "label": "Couleur d'arrière plan de la deuxième colonne",
+            "default": "",
+            "options": [
+                { "group": "Principal", "value": "bg-primary", "label": "Primaire" },
+                { "group": "Principal", "value": "bg-secondary", "label": "Secondaire" },
+                { "group": "Principal", "value": "bg-tertiary", "label": "Tertiaire" },
+                { "group": "Intermédiaire", "value": "bg-white", "label": "Blanc" },
+                { "group": "Intermédiaire", "value": "bg-light", "label": "Claire" },
+                { "group": "Intermédiaire", "value": "bg-dark", "label": "Sombre" },
+                { "group": "Par défaut", "value": "", "label": "Corps (body)" },
+                { "group": "Alerte", "value": "bg-success", "label": "Succès" },
+                { "group": "Alerte", "value": "bg-warning", "label": "Avertissement" },
+                { "group": "Alerte", "value": "bg-danger", "label": "Danger" },
+                { "group": "Alerte", "value": "bg-info", "label": "Info" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "table_striped",
+            "label": "Afficher la couleur en alternance des rangées",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Espacement de la section"
+        },
+        {
+            "type": "range",
+            "id": "pt",
+            "label": "Padding supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "pb",
+            "label": "Padding inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mt",
+            "label": "Marge supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mb",
+            "label": "Marge inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        }
+    ],
+    "blocks": [
+        {
+            "type": "header",
+            "name": "En-tête",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "cell_1",
+                    "label": "Colonne 1",
+                    "default": "#",
+                    "info": "Laisser # pour désactiver la cellule"
+                },
+                {
+                    "type": "text",
+                    "id": "cell_2",
+                    "label": "Colonne 2",
+                    "default": "Notre produit"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "cell_2_img",
+                    "label": "Colonne 2 - Image"
+                },
+                {
+                    "type": "text",
+                    "id": "cell_3",
+                    "label": "Colonne 3",
+                    "default": "Concurrent 1"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "cell_3_img",
+                    "label": "Colonne 3 - Image"
+                },
+                {
+                    "type": "text",
+                    "id": "cell_4",
+                    "label": "Colonne 4",
+                    "default": "Concurrent 2",
+                    "info": "Laisser vide pour désactiver"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "cell_4_img",
+                    "label": "Colonne 4 - Image"
+                },
+                {
+                    "type": "text",
+                    "id": "cell_5",
+                    "label": "Colonne 5",
+                    "default": "Concurrent 3",
+                    "info": "Laisser vide pour désactiver"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "cell_5_img",
+                    "label": "Colonne 5 - Image"
+                },
+                {
+                    "type": "text",
+                    "id": "cell_6",
+                    "label": "Colonne 6",
+                    "default": "Concurrent 4",
+                    "info": "Laisser vide pour désactiver"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "cell_6_img",
+                    "label": "Colonne 6 - Image"
+                },
+                {
+                    "type": "text",
+                    "id": "cell_7",
+                    "label": "Colonne 7",
+                    "default": "Concurrent 5",
+                    "info": "Laisser vide pour désactiver"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "cell_7_img",
+                    "label": "Colonne 7 - Image"
+                }
+            ]
+        },
+        {
+            "type": "item",
+            "name": "Rangée",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Titre",
+                    "default": "Nom de l'élément"
+                },
+                {
+                    "type": "header",
+                    "content": "Options de Colonne"
+                },
+                {
+                    "type": "select",
+                    "id": "cell_2_display",
+                    "label": "Affichage pour Colonne 2",
+                    "options": [
+                        { "value": "icon", "label": "Icône" },
+                        { "value": "text", "label": "Texte" }
+                    ],
+                    "default": "icon"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "cell_2",
+                    "label": "Colonne 2 icône",
+                    "default": true,
+                    "info": "Cocher pour icône 'validé', décocher pour 'non validé'."
+                },
+                {
+                    "type": "text",
+                    "id": "cell_2_text",
+                    "label": "Texte pour Colonne 2",
+                    "default": "Texte 2",
+                    "info": "Remplissez ce champ si vous choisissez d'afficher du texte"
+                },
+                {
+                    "type": "select",
+                    "id": "cell_3_display",
+                    "label": "Affichage pour Colonne 3",
+                    "options": [
+                        { "value": "icon", "label": "Icône" },
+                        { "value": "text", "label": "Texte" }
+                    ],
+                    "default": "icon"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "cell_3",
+                    "label": "Colonne 3",
+                    "default": false,
+                    "info": "Cocher pour icône 'validé', décocher pour 'non validé'."
+                },
+                {
+                    "type": "text",
+                    "id": "cell_3_text",
+                    "label": "Texte pour Colonne 3",
+                    "default": "Texte 3",
+                    "info": "Remplissez ce champ si vous choisissez d'afficher du texte"
+                },
+                {
+                    "type": "select",
+                    "id": "cell_4_display",
+                    "label": "Affichage pour Colonne 4",
+                    "options": [
+                        { "value": "icon", "label": "Icône" },
+                        { "value": "text", "label": "Texte" }
+                    ],
+                    "default": "icon"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "cell_4",
+                    "label": "Colonne 4",
+                    "default": false,
+                    "info": "Cocher pour icône 'validé', décocher pour 'non validé'."
+                },
+                {
+                    "type": "text",
+                    "id": "cell_4_text",
+                    "label": "Texte pour Colonne 4",
+                    "default": "Texte 4",
+                    "info": "Remplissez ce champ si vous choisissez d'afficher du texte"
+                },
+                {
+                    "type": "select",
+                    "id": "cell_5_display",
+                    "label": "Affichage pour Colonne 5",
+                    "options": [
+                        { "value": "icon", "label": "Icône" },
+                        { "value": "text", "label": "Texte" }
+                    ],
+                    "default": "icon"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "cell_5",
+                    "label": "Colonne 5",
+                    "default": false,
+                    "info": "Cocher pour icône 'validé', décocher pour 'non validé'."
+                },
+                {
+                    "type": "text",
+                    "id": "cell_5_text",
+                    "label": "Texte pour Colonne 5",
+                    "default": "Texte 5",
+                    "info": "Remplissez ce champ si vous choisissez d'afficher du texte"
+                },
+                {
+                    "type": "select",
+                    "id": "cell_6_display",
+                    "label": "Affichage pour Colonne 6",
+                    "options": [
+                        { "value": "icon", "label": "Icône" },
+                        { "value": "text", "label": "Texte" }
+                    ],
+                    "default": "icon"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "cell_6",
+                    "label": "Colonne 6",
+                    "default": false,
+                    "info": "Cocher pour icône 'validé', décocher pour 'non validé'."
+                },
+                {
+                    "type": "text",
+                    "id": "cell_6_text",
+                    "label": "Texte pour Colonne 6",
+                    "default": "Texte 6",
+                    "info": "Remplissez ce champ si vous choisissez d'afficher du texte"
+                },
+                {
+                    "type": "select",
+                    "id": "cell_7_display",
+                    "label": "Affichage pour Colonne 7",
+                    "options": [
+                        { "value": "icon", "label": "Icône" },
+                        { "value": "text", "label": "Texte" }
+                    ],
+                    "default": "icon"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "cell_7",
+                    "label": "Colonne 7",
+                    "default": false,
+                    "info": "Cocher pour icône 'validé', décocher pour 'non validé'."
+                },
+                {
+                    "type": "text",
+                    "id": "cell_7_text",
+                    "label": "Texte pour Colonne 7",
+                    "default": "Texte 7",
+                    "info": "Remplissez ce champ si vous choisissez d'afficher du texte"
+                }
+            ]
+        },
+        {
+            "type": "footer",
+            "name": "Pied de page",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "fcell_1",
+                    "label": "Colonne 1",
+                    "default": "#",
+                    "info": "Laisser # pour désactiver la cellule"
+                },
+                {
+                    "type": "text",
+                    "id": "fcell_2",
+                    "label": "Colonne 2",
+                    "default": "Notre résultat"
+                },
+                {
+                    "type": "text",
+                    "id": "fcell_3",
+                    "label": "Colonne 3",
+                    "default": "Résultat 1"
+                },
+                {
+                    "type": "text",
+                    "id": "fcell_4",
+                    "label": "Colonne 4",
+                    "default": "Résultat 2",
+                    "info": "Laisser vide pour désactiver"
+                },
+                {
+                    "type": "text",
+                    "id": "fcell_5",
+                    "label": "Colonne 5",
+                    "default": "Résultat 3",
+                    "info": "Laisser vide pour désactiver"
+                },
+                {
+                    "type": "text",
+                    "id": "fcell_6",
+                    "label": "Colonne 6",
+                    "default": "Résultat 4",
+                    "info": "Laisser vide pour désactiver"
+                },
+                {
+                    "type": "text",
+                    "id": "fcell_7",
+                    "label": "Colonne 7",
+                    "default": "Résultat 5",
+                    "info": "Laisser vide pour désactiver"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Tableau Comparatif",
+            "category": "General"
+        }
+    ]
+}
+{% endschema %}

@@ -1,0 +1,254 @@
+/* ========================================================================
+   INFORMATIONS GÉNÉRALES SUR LE SITE
+   Propriété de © 2019/2024 Shopiweb.fr
+   Pour plus d'informations, visitez : https://www.shopiweb.fr
+   ======================================================================== */
+
+/* =====================
+   Polices de caractères
+   ===================== */
+
+
+    @font-face {
+  font-family: Catamaran;
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("//thepetsociety.paris/cdn/fonts/catamaran/catamaran_n4.e84045be8cd3d4914a3d5046417b639b53601e03.woff2?h1=ZjZkNzJlLTBmLmFjY291bnQubXlzaG9waWZ5LmNvbQ&h2=YWNjb3VudC50aGVwZXRzb2NpZXR5LnBhcmlz&h3=dGhlcGV0c29jaWV0eS5wYXJpcw&hmac=00ed85112ac88610c685de42f55470633e2ea29c18f9a14cfd0df2a92f8f64a9") format("woff2"),
+       url("//thepetsociety.paris/cdn/fonts/catamaran/catamaran_n4.5365680d338b8fc183023a5abb3d544296988f08.woff?h1=ZjZkNzJlLTBmLmFjY291bnQubXlzaG9waWZ5LmNvbQ&h2=YWNjb3VudC50aGVwZXRzb2NpZXR5LnBhcmlz&h3=dGhlcGV0c29jaWV0eS5wYXJpcw&hmac=49a22275cae108b30e73a4d4158890a70086f794f0044df894155015db5c5319") format("woff");
+}
+
+
+
+
+    @font-face {
+  font-family: "Libre Franklin";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url("//thepetsociety.paris/cdn/fonts/libre_franklin/librefranklin_n4.52f58bee85b3ed9230f7586fabcd39d764d4b5da.woff2?h1=ZjZkNzJlLTBmLmFjY291bnQubXlzaG9waWZ5LmNvbQ&h2=YWNjb3VudC50aGVwZXRzb2NpZXR5LnBhcmlz&h3=dGhlcGV0c29jaWV0eS5wYXJpcw&hmac=9052b9b3051601475ff5d26d539fe25f56fed15eeaea86607817e01aeb50d215") format("woff2"),
+       url("//thepetsociety.paris/cdn/fonts/libre_franklin/librefranklin_n4.2300b55e95b4b328f7a2ab6fd4c9d3fec2957b9d.woff?h1=ZjZkNzJlLTBmLmFjY291bnQubXlzaG9waWZ5LmNvbQ&h2=YWNjb3VudC50aGVwZXRzb2NpZXR5LnBhcmlz&h3=dGhlcGV0c29jaWV0eS5wYXJpcw&hmac=769e6e5dd63e6c73460e67e9026948a11891dc233ab7d0ceeefa157cf1afa17c") format("woff");
+}
+
+    @font-face {
+  font-family: "Libre Franklin";
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url("//thepetsociety.paris/cdn/fonts/libre_franklin/librefranklin_n7.fa245752b96e66ae9115b50816ff998ec745d98a.woff2?h1=ZjZkNzJlLTBmLmFjY291bnQubXlzaG9waWZ5LmNvbQ&h2=YWNjb3VudC50aGVwZXRzb2NpZXR5LnBhcmlz&h3=dGhlcGV0c29jaWV0eS5wYXJpcw&hmac=215742b7bfff41922324fc1e0f1e456bf8ce1729746a169fbbd60b22b662644c") format("woff2"),
+       url("//thepetsociety.paris/cdn/fonts/libre_franklin/librefranklin_n7.715cc18300f90ef0b9b6b4d4f682308f8036860e.woff?h1=ZjZkNzJlLTBmLmFjY291bnQubXlzaG9waWZ5LmNvbQ&h2=YWNjb3VudC50aGVwZXRzb2NpZXR5LnBhcmlz&h3=dGhlcGV0c29jaWV0eS5wYXJpcw&hmac=d8c48da577b4dfa92da5d219a935850fd20db4ccc4186c673d7f82bb3de7d05f") format("woff");
+}
+
+    @font-face {
+  font-family: "Libre Franklin";
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+  src: url("//thepetsociety.paris/cdn/fonts/libre_franklin/librefranklin_i4.d32f3a6ecc15e6a46c928e13f37a71fbb142f687.woff2?h1=ZjZkNzJlLTBmLmFjY291bnQubXlzaG9waWZ5LmNvbQ&h2=YWNjb3VudC50aGVwZXRzb2NpZXR5LnBhcmlz&h3=dGhlcGV0c29jaWV0eS5wYXJpcw&hmac=b31ec69379bca78bbb8069e5f6b398b9eb1698e632d8beca721acd48bb0c744d") format("woff2"),
+       url("//thepetsociety.paris/cdn/fonts/libre_franklin/librefranklin_i4.31ccb424021c4515a5622dfb63fbc6514630e453.woff?h1=ZjZkNzJlLTBmLmFjY291bnQubXlzaG9waWZ5LmNvbQ&h2=YWNjb3VudC50aGVwZXRzb2NpZXR5LnBhcmlz&h3=dGhlcGV0c29jaWV0eS5wYXJpcw&hmac=fd4ce9894448529664726672d8c6f18aa9d8b7509f35be03efb3b54ce5600365") format("woff");
+}
+
+
+
+/* =====================
+   Variable CSS
+   ===================== */
+
+:root {
+    --bs-primary: #816c58;
+    --bs-primary-rgb: 129, 108, 88;
+    --bs-primary-lighten-5: #907962;
+    --bs-primary-lighten-10: #907962;
+    --bs-primary-darken-5: #725f4e;
+    --bs-primary-darken-10: #635343;
+
+    --bs-secondary: #889080;
+    --bs-secondary-rgb: 136, 144, 128;
+    --bs-secondary-lighten-5: #959c8e;
+    --bs-secondary-lighten-10: #a2a89b;
+    --bs-secondary-darken-5: #7b8473;
+    --bs-secondary-darken-10: #6f7667;
+
+    --bs-tertiary: #435661;
+    --bs-tertiary-rgb: 67, 86, 97;
+    --bs-tertiary-lighten-5: #4d6370;
+    --bs-tertiary-lighten-10: #58717f;
+    --bs-tertiary-darken-5: #394952;
+    --bs-tertiary-darken-10: #2e3b43;
+
+    --bs-dark: #212529;
+    --bs-dark-rgb: 33, 37, 41;
+    --bs-dark-lighten-5: #2c3237;
+    --bs-dark-lighten-10: #383f45;
+    --bs-dark-darken-5: #16181b;
+    --bs-dark-darken-10: #0a0c0d;
+
+    --bs-light: #f8f9fa;
+    --bs-light-rgb: 248, 249, 250;
+    --bs-light-lighten-5: #ffffff;
+    --bs-light-lighten-10: #ffffff;
+    --bs-light-darken-5: #e9ecef;
+    --bs-light-darken-10: #dae0e5;
+
+    --bs-body-bg: #ffffff;
+    --bs-body-bg-rgb: 255, 255, 255;
+    --bs-body-color: #212529;
+    --bs-body-color-rgb: 33, 37, 41;
+
+    --bs-border-radius: 0.5rem;
+
+    --bs-link-color: var(--bs-primary);
+    --bs-link-color-rgb: 129, 108, 88;
+    --bs-link-hover-color: var(--bs-primary-darken-10);
+    --bs-link-hover-color-rgb: 99, 83, 67;
+
+    --bs-success: #198754;
+    --bs-success-darken: #115c39;
+    --bs-success-rgb: 25, 135, 84;
+    --bs-danger: #dc3545;
+    --bs-danger-darken: #bd2130;
+    --bs-danger-rgb: 220, 53, 69;
+    --bs-warning: #ffc107;
+    --bs-warning-darken: #a07800;
+    --bs-warning-rgb: 255, 193, 7;
+    --bs-info: #0dcaf0;
+    --bs-info-darken: #08798f;
+    --bs-info-rgb: 13, 202, 240;
+
+    
+        --bs-headings-font-family: Catamaran, serif;
+        --bs-headings-font-weight: 400;
+    
+
+    
+        --bs-body-font-family:  "Libre Franklin", sans-serif;
+    
+}
+
+
+/* =====================
+   Boutons
+   ===================== */
+
+body .btn {
+    letter-spacing: 0.0rem;
+    text-transform: ;
+    font-weight: 500;
+}
+
+body .btn-md {
+    --bs-btn-padding-x: 0.8rem;
+    --bs-btn-padding-y: 0.4rem;
+}
+
+body .btn-lg {
+    --bs-btn-padding-x: 1.2rem;
+    --bs-btn-padding-y: 0.6rem;
+}
+
+
+
+ 
+    .btn-link {
+        box-shadow: none !important;
+        background-image: none !important;
+    }
+    .btn-shadow-1 {
+        border-radius: var(--bs-border-radius)!important;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    }
+    .btn-shadow-2 {
+        border-radius: var(--bs-border-radius)!important;
+        box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+    }
+    .btn-shadow-3 {
+        border-radius: var(--bs-border-radius)!important;
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+    }
+    .btn-shadow-4 {
+        border-radius: var(--bs-border-radius)!important;
+        box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+    }
+
+
+
+/* =====================
+   Formulaires
+   ===================== */
+
+.form-control-md,
+.form-select-md {
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+}
+
+.form-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23212529' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e")
+}
+
+[dir="ltr"] .form-select-md {
+    padding-right: 2.5rem;
+}
+
+[dir="rtl"] .form-select-md {
+    padding-left: 2.5rem;
+}
+
+
+/* =====================
+   Offcanvas / Modal
+   ===================== */
+
+body .offcanvas-backdrop,
+body .modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+    
+        backdrop-filter: blur(5px);
+    
+}
+
+/* =====================
+   Accordéon
+   ===================== */
+
+.accordion {
+    --bs-accordion-btn-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23212529'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+    --bs-accordion-btn-active-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23212529'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
+
+/* =====================
+   Autres styles
+   ===================== */
+
+#offcanvas-menu-nav .nav-link[aria-expanded]:after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23212529' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='5' x2='12' y2='19'%3E%3C/line%3E%3Cline x1='5' y1='12' x2='19' y2='12'%3E%3C/line%3E%3C/svg%3E")
+}
+#offcanvas-menu-nav .nav-link[aria-expanded="true"]::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23212529' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'%3E%3C/line%3E%3C/svg%3E");
+}
+
+.btn-close {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23212529'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e")
+}
+
+/* =====================
+   Personnalisation des prix
+   ===================== */
+
+.product-item-price-final,
+.product-price-final {
+  color: #198754!important;
+}
+/* === Footer/Header vars from BUBBLE === */
+--footer-bg: #1c1f26;
+--footer-text: #ffffff;
+--footer-border-color: #444;
+--footer-link-hover: #bbb;
+--header-bg: #f8f9fa;
+--header-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+--header-text: #333;
+--sticky-header-bg: #f9f9f9;
+--sticky-border-color: #e1e1e1;
+

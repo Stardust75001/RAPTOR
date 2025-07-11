@@ -1,0 +1,103 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid 
+  assign pt = section.settings.pt | prepend: 'pt-'
+  assign pb = section.settings.pb | prepend: 'pb-'
+  assign mt = section.settings.mt | prepend: 'mt-'
+  assign mb = section.settings.mb | prepend: 'mb-'
+
+  assign bg_color = section.settings.bg_color
+
+  if section.settings.bg_gradient
+    assign bg_color = bg_color | append: ' bg-gradient'
+  endif
+%}
+
+<section 
+  id="breadcrumbs-wrapper-{{ section.id }}" 
+  class="breadcrumbs-wrapper {{ bg_color }} {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+  <div class="{{ section.settings.container }}">
+    {% render 'breadcrumbs' %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Fil d'Ariane",
+  "settings": [
+    {
+        "type": "select",
+        "id": "bg_color",
+        "label": "Couleur de l'arrière plan",
+        "default": "bg-body text-body",
+        "options": [
+            { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
+            { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+            { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" }
+        ]
+    },
+    {
+        "type": "select",
+        "id": "container",
+        "label": "Conteneur",
+        "default": "container",
+        "options": [
+            { "value": "container", "label": "Conteneur" },
+            { "value": "container-fluid", "label": "Pleine largeur" }
+        ]
+    },
+    {
+        "type": "header",
+        "content": "Espacement de la section"
+    },
+    {
+        "type": "range",
+        "id": "pt",
+        "label": "Padding supérieure",
+        "min": 0,
+        "max": 20,
+        "step": 1,
+        "default": 0
+    },
+    {
+        "type": "range",
+        "id": "pb",
+        "label": "Padding inférieure",
+        "min": 0,
+        "max": 20,
+        "step": 1,
+        "default": 0
+    },
+    {
+        "type": "range",
+        "id": "mt",
+        "label": "Marge supérieure",
+        "min": 0,
+        "max": 20,
+        "step": 1,
+        "default": 0
+    },
+    {
+        "type": "range",
+        "id": "mb",
+        "label": "Marge inférieure",
+        "min": 0,
+        "max": 20,
+        "step": 1,
+        "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Fil d'Ariane"
+    }
+  ]
+}
+{% endschema %}

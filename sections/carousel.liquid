@@ -1,0 +1,214 @@
+<style>
+/* === Image Banner Wrapper === */
+.image-banner-wrapper {
+  position: relative;
+  text-align: center;
+  color: white;
+}
+
+.image-banner-wrapper img {
+  width: 100%;
+  display: block;
+}
+
+.image-banner-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 12px;
+  max-width: 90%;
+  text-align: center;
+}
+
+.image-banner-overlay h2,
+.image-banner-overlay p {
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+  margin: 0 0 10px;
+}
+
+/* === Button Group === */
+.btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.btn-group .btn {
+  background-color: #394d50;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  flex: 1 1 42%;
+  max-width: 42%;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* === Responsive Adjustments === */
+@media screen and (max-width: 768px) {
+  .image-banner-overlay h2 {
+    font-size: 1.2rem;
+  }
+
+  .image-banner-overlay p {
+    font-size: 0.9rem;
+  }
+
+  .btn-group {
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .btn-group .btn {
+    font-size: 0.75rem;
+    padding: 8px;
+    flex: 1 1 48%;
+    max-width: 48%;
+    min-width: 120px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .image-banner-overlay h2 {
+    font-size: 1.1rem;
+  }
+
+  .image-banner-overlay p {
+    font-size: 0.85rem;
+  }
+
+  .btn-group .btn {
+    font-size: 0.7rem;
+    padding: 6px;
+  }
+}
+</style>
+
+{% liquid
+  assign mt = section.settings.mt | prepend: 'mt-'
+  assign mb = section.settings.mb | prepend: 'mb-'
+  assign btn_shadow_sp = settings.btn_shadow_sp %}
+
+<section id="carousel-{{ section.id }}"
+         class="carousel bg-dark enter-view {{ section.settings.animation }} {{ section.settings.controls_style }} {{ section.settings.indicators_style }} {% if section.settings.ken_burns %}carousel-ken-burns{% endif %} {{ mt }} {{ mb }}"
+         data-bs-ride="{% if section.settings.autoplay %}carousel{% else %}false{% endif %}">
+
+  {% if section.settings.indicators and section.blocks.size > 1 %}
+    <div class="carousel-indicators">
+      {% for block in section.blocks %}
+        <button type="button"
+                data-bs-target="#carousel-{{ section.id }}"
+                data-bs-slide-to="{{ forloop.index0 }}"
+                class="{% if forloop.first %}active{% endif %}"
+                aria-current="{% if forloop.first %}true{% endif %}"
+                aria-label="Slide {{ forloop.index }}">
+        </button>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="carousel-inner">
+    {% for block in section.blocks %}
+      <div class="carousel-item d-flex justify-content-center {% if forloop.first %}active{% endif %}" data-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+
+        {% if block.settings.slide_link != blank %}
+        <a href="{{ block.settings.slide_link }}" class="carousel-item-link" style="display:block;">
+        {% endif %}
+
+        {% if block.settings.img_mobile != blank or block.settings.img_desktop != blank %}
+          <img class="carousel-item-img d-lg-none"
+               src="{{ block.settings.img_mobile | image_url: width: 960, crop: 'center' }}"
+               alt="{{ block.settings.img_mobile.alt | escape }}"
+               width="960"
+               height="{{ 960 | divided_by: block.settings.img_mobile.aspect_ratio | round }}"
+               style="opacity: {{ block.settings.img_mobile_opacity | default: 0.7 }}; height: {% if block.settings.img_mobile_height > 0 %}{{ block.settings.img_mobile_height }}px{% else %}auto{% endif %};"
+               loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+               fetchpriority="{% if forloop.first %}high{% else %}low{% endif %}">
+
+          <img class="carousel-item-img d-none d-lg-block"
+               src="{{ block.settings.img_desktop | image_url: width: 1920, crop: 'center' }}"
+               alt="{{ block.settings.img_desktop.alt | escape }}"
+               width="1920"
+               height="{{ 1920 | divided_by: block.settings.img_desktop.aspect_ratio | round }}"
+               style="opacity: {{ block.settings.img_desktop_opacity | default: 0.7 }}; height: {% if block.settings.img_desktop_height > 0 %}{{ block.settings.img_desktop_height }}px{% else %}auto{% endif %};"
+               loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+               fetchpriority="{% if forloop.first %}high{% else %}low{% endif %}">
+        {% else %}
+          {{ 'image' | placeholder_svg_tag: 'placeholder-svg bg-secondary' }}
+        {% endif %}
+
+        {% if block.settings.title or block.settings.description or block.settings.btn_text or block.settings.btn_secondary_text %}
+          <div class="carousel-caption {{ block.settings.caption_position_mobile }} {{ block.settings.caption_position_desktop }}"
+               style="color: {{ block.settings.caption_color | default: '#ffffff' }};">
+            <div style="max-width: {{ block.settings.caption_max_width | default: '720' }}px; margin: 0 auto;">
+
+              {% if block.settings.subtitle_img %}
+                <img class="img-fluid mb-5"
+                     src="{{ block.settings.subtitle_img.src | image_url: width: block.settings.brand_image_size }}"
+                     alt="{{ block.settings.subtitle_img.alt | escape }}"
+                     width="{{ block.settings.brand_image_size }}"
+                     height="auto"
+                     loading="lazy">
+              {% endif %}
+
+              {% if block.settings.subtitle %}
+                <div class="subtitle mb-3 {{ block.settings.subtitle_size }}">{{ block.settings.subtitle }}</div>
+              {% endif %}
+
+              {% if block.settings.title %}
+                <{{ block.settings.heading_tag | default: 'h2' }} class="title mb-3 {{ block.settings.title_size }}">
+                  {{ block.settings.title }}
+                </{{ block.settings.heading_tag | default: 'h2' }}>
+              {% endif %}
+
+              {% if block.settings.description %}
+                <div class="description rte mb-6 {{ block.settings.description_size }}">{{ block.settings.description }}</div>
+              {% endif %}
+
+             <div class="hero-buttons">
+  {% if block.settings.btn_text %}
+    <a class="btn {{ block.settings.btn_color }} {{ btn_shadow_sp }} {{ block.settings.btn_size }}"
+       href="{{ block.settings.btn_url }}">{{ block.settings.btn_text }}</a>
+  {% endif %}
+  {% if block.settings.btn_secondary_text %}
+    <a class="btn {{ block.settings.btn_secondary_color }} {{ btn_shadow_sp }} {{ block.settings.btn_secondary_size }}"
+       href="{{ block.settings.btn_secondary_url }}">{{ block.settings.btn_secondary_text }}</a>
+  {% endif %}
+</div>
+
+            </div>
+          </div>
+        {% endif %}
+
+        {% if block.settings.slide_link != blank %}
+        </a>
+        {% endif %}
+
+      </div>
+    {% endfor %}
+  </div>
+
+  {% if section.settings.controls and section.blocks.size > 1 %}
+    <button class="carousel-control-prev" type="button" data-bs-target="#carousel-{{ section.id }}" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">{{ 'general.accessibility.previous' | t }}</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carousel-{{ section.id }}" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">{{ 'general.accessibility.next' | t }}</span>
+    </button>
+  {% endif %}
+
+  {% if section.settings.svg_border_bottom != blank %}
+    <div class="diapo_svg" style="fill: {{ section.settings.color_diapo-svg | default: '#000' }}; transform: rotate({% if section.settings.reverse %}180deg{% else %}0deg{% endif %}); transition: 0.3s;">
+      {{ section.settings.svg_border_bottom }}
+    </div>
+  {% endif %}
+
+</section>

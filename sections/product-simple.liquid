@@ -1,0 +1,44 @@
+{% comment %}
+Section produit simple pour test
+{% endcomment %}
+
+<div class="product-page-simple">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                {% if product.images.size > 0 %}
+                    <img src="{{ product.featured_image | img_url: 'master' }}" alt="{{ product.title }}" class="img-fluid">
+                {% else %}
+                    {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                {% endif %}
+            </div>
+            <div class="col-md-6">
+                <h1>{{ product.title }}</h1>
+                <p class="price">{{ product.price | money }}</p>
+                <div class="description">{{ product.description }}</div>
+                
+                {% form 'product', product %}
+                    <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                    <button type="submit" class="btn btn-primary">Ajouter au panier</button>
+                {% endform %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "Produit simple",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Configuration"
+        }
+    ],
+    "presets": [
+        {
+            "name": "Produit simple"
+        }
+    ]
+}
+{% endschema %}

@@ -1,0 +1,36 @@
+<div class="top-social-bar">
+  <div class="social-icons-left">
+    <a href="https://www.instagram.com/spencerandthecity/" target="_blank" rel="noopener" aria-label="Instagram">
+      <img src="{{ 'instagram.png' | asset_url }}" alt="Instagram" class="social-img-icon" loading="lazy">
+    </a>
+    <a href="https://www.facebook.com/profile.php?id=61573834333893" target="_blank" rel="noopener" aria-label="Facebook">
+      <img src="{{ 'facebook.png' | asset_url }}" alt="Facebook" class="social-img-icon" loading="lazy">
+    </a>
+    <a href="https://www.tiktok.com/@thepetsociety_paris" target="_blank" rel="noopener" aria-label="TikTok">
+      <img src="{{ 'tiktok.png' | asset_url }}" alt="TikTok" class="social-img-icon" loading="lazy">
+    </a>
+    <a href="https://wa.me/33769238799" target="_blank" rel="noopener" aria-label="WhatsApp">
+      <img src="{{ 'WhatsApp.png' | asset_url }}" alt="WhatsApp" class="social-img-icon" loading="lazy">
+    </a>
+    <a href="mailto:hello@thepetsociety.paris" aria-label="Email">
+      <img src="{{ 'email-icon.png' | asset_url }}" alt="Email" class="social-img-icon" loading="lazy">
+    </a>
+  </div>
+
+  {% assign current_path = request.path | remove_first: '/fr' | remove_first: '/de' %}
+  {% if current_path == '' or current_path == '/' %}
+    {% assign current_path = '' %}
+  {% endif %}
+
+  <div class="language-selector-right">
+    <a href="/{{ current_path }}" aria-label="English">
+      <img src="{{ 'flag-en.png' | asset_url }}" alt="English" class="flag-icon" loading="lazy">
+    </a>
+    <a href="/fr{{ current_path }}" aria-label="Français">
+      <img src="{{ 'flag-fr.png' | asset_url }}" alt="Français" class="flag-icon" loading="lazy">
+    </a>
+    <a href="/de{{ current_path }}" aria-label="Deutsch">
+      <img src="{{ 'flag-de.png' | asset_url }}" alt="Deutsch" class="flag-icon" loading="lazy">
+    </a>
+  </div>
+</div>

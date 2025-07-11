@@ -1,0 +1,46 @@
+{% if shop.enabled_currencies.size > 1 %}
+    <div class="currency-selector btn-group dropup mx-2"
+         style="z-index: {{ settings.currency_selector_z_index }}">
+        <button
+            class="btn btn-sm px-4 d-flex align-items-center dropdown-toggle {{ btn_color | default: 'btn-outline-primary' }}" 
+            data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <div class="me-3">
+                {{ localization.country | image_url: width: 18, height: 18 | image_tag }}
+            </div>
+            <span class="small">
+                {{ localization.country.currency.iso_code }}
+            </span>
+        </button>
+        <div class="dropdown-menu shadow" style="min-width: 220px;">
+            {% form 'localization' %}
+                <ul 
+                    class="list-group list-group-flush small" 
+                    aria-labelledby="modal-localization-label">
+                    {% for country in localization.available_countries %}
+                        <li>
+                            <button
+                                name="country_code"
+                                value="{{ country.iso_code }}"
+                                type="submit"
+                                class="list-group-item list-group-item-action d-flex align-items-center {% if country.iso_code == localization.country.iso_code %}active{% endif %}"
+                                aria-current="{% if country.iso_code == localization.country.iso_code %}true{% endif %}">
+                                <div class="localization-form-item-img me-3" aria-hidden="true">
+                                    {{ country | image_url: width: 20, height: 20 | image_tag }}
+                                </div>
+                                <div class="localization-form-item-text d-flex w-100 align-items-center justify-content-between">
+                                    <span>
+                                        {{ country.name }}
+                                    </span>
+                                    <small class="opacity-50">
+                                        {{ country.currency.iso_code }} {{ country.currency.symbol }}
+                                    </small>
+                                </div>
+                            </button>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endform %}
+        </div>
+    </div>
+{% endif %}

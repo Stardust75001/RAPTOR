@@ -1,0 +1,266 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid
+    assign pt = section.settings.pt | prepend: 'pt-'
+    assign pb = section.settings.pb | prepend: 'pb-'
+    assign mt = section.settings.mt | prepend: 'mt-'
+    assign mb = section.settings.mb | prepend: 'mb-'
+
+    assign bg_color = section.settings.bg_color
+
+    if section.settings.bg_gradient
+        assign bg_color = bg_color | append: ' bg-gradient'
+    endif
+%}
+
+{% style %}
+#dynamic-{{ section.id }} .text-3d {
+  text-shadow:
+    0 1px 0 #CCC,
+    0 2px 0 #CCC,
+    0 3px 0 #CCC,
+    0 4px 0 #CCC,
+    0 5px 0 #CCC,
+    0 6px 0 transparent,
+    0 7px 0 transparent,
+    0 8px 10px rgba(0, 0, 0, 0.4);
+}
+
+#dynamic-{{ section.id }} .text-flaming {
+  text-shadow: 0 -1px 4px #FFF, 0 -2px 10px #ff0, 0 -10px 20px #ff8000, 0 -18px 40px #F00;
+  margin-top: 0.75rem!important;
+}
+
+#dynamic-{{ section.id }} .text-distant {
+  text-shadow: 1px 3px 0 #969696, 1px 13px 5px #aba8a8;
+}
+{% endstyle %}
+
+<section 
+    id="dynamic-{{ section.id }}" 
+    class="dynamic {{ bg_color }} {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+    <div class="text-center">
+          <{{ section.settings.heading_tag }} class="{{ section.settings.text_style }} {{ section.settings.title_size }}">
+            <strong>{{ section.settings.title }}</strong>
+            <span style="color:{{section.settings.color_typewriter_text}};" class="typewrite title {{ section.settings.title_size }}" data-period="2000" data-type='[ {{section.settings.typewriter_text}} ]'>
+              <span class="wrap"></span>
+            </span>
+          </{{ section.settings.heading_tag }}>
+    </div>
+</section>
+
+{% schema %}
+  {
+    "name": "Texte Dynamique",
+    "settings": [
+        {
+            "type": "paragraph", 
+            "content": "Documentation FR : [Texte dynamique by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/sections\/texte-dynamique)"
+        },
+        {
+            "type": "header",
+            "content": "General"
+        },
+        {
+            "type": "select",
+            "id": "bg_color",
+            "label": "Couleur de l'arrière plan",
+            "default": "bg-body text-body",
+            "options": [
+                { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+                { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+                { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+                { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
+                { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+                { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Sombre" },
+                { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "bg_gradient",
+            "label": "Dégradé d'arrière-plan",
+            "default": false,
+            "info": "Ne s'applique pas aux couleurs claires"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Titre",
+            "default": "Avec Shopiweb PREMIUM vous pouvez :"
+        },
+        {
+            "type": "select",
+            "id": "text_style",
+            "label": "Style du titre",
+            "default": "",
+            "options": [
+                { "value": "", "label": "Normal" },
+                { "value": "text-flaming", "label": "Flamme" },
+                { "value": "text-3d", "label": "3D" },
+                { "value": "text-distant", "label": "Distant" }
+
+            ]
+        },
+        {
+            "type": "select",
+            "id": "heading_tag",
+            "label": "Balise titre (SEO)",
+            "default": "h2",
+            "options": [
+                { "value": "h1", "label": "h1" },
+                { "value": "h2", "label": "h2" },
+                { "value": "h3", "label": "h3" },
+                { "value": "h4", "label": "h4" },
+                { "value": "h5", "label": "h5" },
+                { "value": "h6", "label": "h6" },
+                { "value": "span", "label": "Aucune" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "title_size",
+            "label": "Taille du titre",
+            "default": "h2",
+            "options": [
+                { "group": "Titre Supérieur", "value": "display-1", "label": "Extra Extra Grand" },
+                { "group": "Titre Supérieur", "value": "display-2", "label": "Extra Grand" },
+                { "group": "Titre Supérieur", "value": "display-3", "label": "Ultra Grand" },
+                { "group": "Titre Supérieur", "value": "display-4", "label": "Super Grand" },
+                { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+            ]
+        },
+		{
+			"type":"textarea",
+			"id":"typewriter_text",
+			"label":"Texte dynamique",
+            "default": "\"Booster les conversions.\", \"Stimuler vos ventes.\", \"Proposer une valeur unique.\"",
+			"info":"Veuillez ajouter du texte au format JSON. Exemple: \"Booster les conversions.\", \"Stimuler vos ventes.\", \"Proposer une valeur unique.\""
+		},
+		{
+			"type":"color",
+			"id":"color_typewriter_text",
+			"label":"Couleur du texte dynamique",
+			"default":"#F56900"
+		},
+        {
+            "type": "header",
+            "content": "Espacement de la section"
+        },
+        {
+            "type": "range",
+            "id": "pt",
+            "label": "Padding supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "pb",
+            "label": "Padding inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mt",
+            "label": "Marge supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mb",
+            "label": "Marge inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        }
+	],
+    "presets": [
+      {
+        "name": "Texte Dynamique"
+      }
+    ]
+  }
+{% endschema %}
+
+{% javascript %}
+
+ var TxtType = function(el, toRotate, period) {
+        this.toRotate = toRotate;
+        this.el = el;
+        this.loopNum = 0;
+        this.period = parseInt(period, 10) || 2000;
+        this.txt = '';
+        this.tick();
+        this.isDeleting = false;
+    };
+
+    TxtType.prototype.tick = function() {
+        var i = this.loopNum % this.toRotate.length;
+        var fullTxt = this.toRotate[i];
+
+        if (this.isDeleting) {
+        this.txt = fullTxt.substring(0, this.txt.length - 1);
+        } else {
+        this.txt = fullTxt.substring(0, this.txt.length + 1);
+        }
+
+        this.el.innerHTML = '<span class="wrap">'+this.txt+'</span>';
+
+        var that = this;
+        var delta = 200 - Math.random() * 100;
+
+        if (this.isDeleting) { delta /= 2; }
+
+        if (!this.isDeleting && this.txt === fullTxt) {
+        delta = this.period;
+        this.isDeleting = true;
+        } else if (this.isDeleting && this.txt === '') {
+        this.isDeleting = false;
+        this.loopNum++;
+        delta = 500;
+        }
+
+        setTimeout(function() {
+        that.tick();
+        }, delta);
+    };
+
+    window.onload = function() {
+        var elements = document.getElementsByClassName('typewrite');
+        for (var i=0; i<elements.length; i++) {
+            var toRotate = elements[i].getAttribute('data-type');
+            var period = elements[i].getAttribute('data-period');
+            if (toRotate) {
+              new TxtType(elements[i], JSON.parse(toRotate), period);
+            }
+        }
+        // INJECT CSS
+        var css = document.createElement("style");
+        css.type = "text/css";
+        css.innerHTML = ".typewrite > .wrap { border-right: 0.08em solid #fff}";
+        document.body.appendChild(css);
+    };
+
+{% endjavascript %}

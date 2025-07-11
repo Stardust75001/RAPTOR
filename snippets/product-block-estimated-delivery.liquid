@@ -1,0 +1,54 @@
+{% liquid
+    assign mt = block.settings.mt | prepend: 'mt-'
+    assign mb = block.settings.mb | prepend: 'mb-'
+
+    assign current_date = 'now' | date: "%s"
+    assign delivery_start_days = block.settings.delivery_start_days | times: 86400
+    assign delivery_end_days = block.settings.delivery_end_days | times: 86400
+
+    assign delivery_start_date = current_date | plus: delivery_start_days | date: "%A, %d %B"
+    assign delivery_end_date = current_date | plus: delivery_end_days | date: "%A, %d %B"
+
+    # Initialize the default connector in English
+    assign date_connector = "and"
+
+    if block.settings.language == "fr"
+        # Define day and month mappings
+        assign days_map = "Monday:Lundi,Tuesday:Mardi,Wednesday:Mercredi,Thursday:Jeudi,Friday:Vendredi,Saturday:Samedi,Sunday:Dimanche"
+        assign months_map = "January:Janvier,February:Février,March:Mars,April:Avril,May:Mai,June:Juin,July:Juillet,August:Août,September:Septembre,October:Octobre,November:Novembre,December:Décembre"
+
+        # Split day and month mappings into arrays
+        assign day_pairs = days_map | split: ","
+        assign month_pairs = months_map | split: ","
+
+        # Loop through day pairs to translate day names
+        for pair in day_pairs
+            assign key_value = pair | split: ":"
+            assign delivery_start_date = delivery_start_date | replace_first: key_value[0], key_value[1]
+            assign delivery_end_date = delivery_end_date | replace_first: key_value[0], key_value[1]
+        endfor
+
+        # Loop through month pairs to translate month names
+        for pair in month_pairs
+            assign key_value = pair | split: ":"
+            assign delivery_start_date = delivery_start_date | replace_first: key_value[0], key_value[1]
+            assign delivery_end_date = delivery_end_date | replace_first: key_value[0], key_value[1]
+        endfor
+
+        # Change connector to French
+        assign date_connector = "et"
+    endif
+%}
+
+<div id="product-estimated-delivery" class="{{ mt }} {{ mb }}" {{ block.shopify_attributes }}>
+    <div class="d-flex align-items-center">
+        {% unless block.settings.icon == blank %}
+            <div class="block-icon flex-shrink-0 me-4">
+                {{ block.settings.icon }}
+            </div>
+        {% endunless %}
+        <div class="delivery-message rte small fst-italic">
+            {{ block.settings.delivery_message }} <span style="color: {{ block.settings.color_estimation }}; font-weight: bold;">{{ delivery_start_date }}</span> {{ date_connector }} <span style="color: {{ block.settings.color_estimation }}; font-weight: bold;">{{ delivery_end_date }}</span>.
+        </div>
+    </div>
+</div>

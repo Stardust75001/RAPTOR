@@ -1,0 +1,150 @@
+{% if settings.cart_upsell_enable %}
+    {% liquid
+        assign layout = layout | default: settings.cart_upsell_layout
+      
+        case settings.offcanvas_img_orientation
+            when 'square'
+                assign img_width  = 600
+                assign img_height = 600
+            when 'landscape'
+                assign img_width  = 600
+                assign img_height = 480
+            when 'potrait'
+                assign img_width  = 480
+                assign img_height = 600
+        endcase
+
+        for line_item in cart.items
+            assign handles_in_cart = handles_in_cart | append: line_item.product.handle | append: ','
+        endfor
+
+        if settings.cart_upsell_collection == blank
+            assign metafield_namespace = settings.cart_upsell_metafield | split: '.' | first
+            assign metafield_key = settings.cart_upsell_metafield | split: '.' | last
+
+            for line_item in cart.items
+                for product in line_item.product.metafields[metafield_namespace][metafield_key].value
+                    unless handles_in_cart contains product.handle
+                        unless upsell_handles contains product.handle
+                            if product.available
+                                assign upsell_handles = upsell_handles | append: product.handle | append: ','
+                            endif
+                        endunless
+                    endunless
+                endfor
+            endfor
+        else
+            for product in settings.cart_upsell_collection.products
+                unless handles_in_cart contains product.handle
+                    if product.available
+                        assign upsell_handles = upsell_handles | append: product.handle | append: ','
+                    endif
+                endunless
+            endfor
+        endif
+    %}
+
+    {% unless upsell_handles == blank %}
+        {% assign upsell_handles = upsell_handles | split: ',' %}
+        <div id="cart-upsell" class="">
+            <h3 id="cart-upsell-title" class="h6 mb-4">
+                {{ settings.cart_upsell_title }}
+            </h3>
+            {% if layout == 'horizontal' %}
+                <ul id="cart-upsell-list" class="cart-upsell-list-horizontal product-listing list-unstyled">
+                    {% for handle in upsell_handles limit: settings.cart_upsell_limit %}
+                        {% assign product = all_products[handle] %}
+                        <li class="product-item text-center px-3">
+                            <a class="link-dark" href="{{ product.url }}">
+                                <img 
+                                    class="product-item-img img-fluid mb-3 rounded {{ settings.offcanvas_img_thumbnail }} {{ settings.offcanvas_shadow_sp }} {{ settings.offcanvas_border_color }}"
+                                    src="{{ product.featured_image | image_url: width: img_width, height: img_height, crop: 'center' }}" 
+                                    alt="{{ product.featured_image.alt | escape }}"
+                                    width="{{ img_width }}"
+                                    height="{{ img_height }}" 
+                                    loading="lazy">
+                                <h3 class="product-item-title h6 mb-2 {{ settings.cart_upsell_product_title_truncate }}" title="{{ product.title }}">
+                                    {{ product.title }}
+                                </h3>
+                            </a>
+                            {% render 'product-rating-badge', product: product %}
+                            <p class="product-item-price small mb-4">
+                                {% if product.first_available_variant.compare_at_price > product.price %}
+                                    <span class="product-item-price-final me-1">
+                                        <span class="visually-hidden">
+                                            {{ 'product.price_sale' | t }} &nbsp;
+                                        </span>
+                                        {{ product.first_available_variant.price | money }}
+                                    </span>
+                                    <span class="product-item-price-compare text-muted">
+                                        <span class="visually-hidden">
+                                            {{ 'product.price_regular' | t }} &nbsp;
+                                        </span>
+                                        <s>
+                                            {{ product.first_available_variant.compare_at_price | money }}
+                                        </s>
+                                    </span>
+                                {% else %}
+                                    <span class="product-item-price-final">
+                                        {{ product.first_available_variant.price | money }}
+                                    </span>
+                                {% endif %}
+                            </p>
+                            {% render 'cart-upsell-product-form', product: product %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <ul id="cart-upsell-list" class="cart-upsell-list-vertical product-listing list-unstyled">
+                    {% for handle in upsell_handles limit: settings.cart_upsell_limit %}
+                        {% assign product = all_products[handle] %}
+                        <li class="product-item py-3">
+                            <div class="row align-items-center mx-n3">
+                                <div class="col-4 px-3">
+                                    <a class="link-dark" href="{{ product.url }}">
+                                        <img 
+                                            class="product-item-img img-fluid mb-3 rounded {{ settings.offcanvas_img_thumbnail }} {{ settings.offcanvas_shadow_sp }} {{ settings.offcanvas_border_color }}"
+                                            src="{{ product.featured_image | image_url: width: img_width, height: img_height, crop: 'center' }}" 
+                                            alt="{{ product.featured_image.alt | escape }}"
+                                            width="{{ img_width }}"
+                                            height="{{ img_height }}" 
+                                            loading="lazy">
+                                    </a>
+                                </div>
+                                <div class="col-8 px-3">
+                                    <h3 class="product-item-title h6 mb-1 {{ settings.cart_upsell_product_title_truncate }}" title="{{ product.title }}">
+                                        {{ product.title }}
+                                    </h3>
+                                    {% render 'product-rating-badge', product: product %}
+                                    <p class="product-item-price small mb-3">
+                                        {% if product.first_available_variant.compare_at_price > product.price %}
+                                            <span class="product-item-price-final me-1">
+                                                <span class="visually-hidden">
+                                                    {{ 'product.price_sale' | t }} &nbsp;
+                                                </span>
+                                                {{ product.first_available_variant.price | money }}
+                                            </span>
+                                            <span class="product-item-price-compare text-muted">
+                                                <span class="visually-hidden">
+                                                    {{ 'product.price_regular' | t }} &nbsp;
+                                                </span>
+                                                <s>
+                                                    {{ product.first_available_variant.compare_at_price | money }}
+                                                </s>
+                                            </span>
+                                        {% else %}
+                                            <span class="product-item-price-final">
+                                                {{ product.first_available_variant.price | money }}
+                                            </span>
+                                        {% endif %}
+                                    </p>
+                                    {% render 'cart-upsell-product-form', product: product %}
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    {% endunless %}
+{% endif %}

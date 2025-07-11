@@ -1,0 +1,9 @@
+<div class="mt-2">
+    <img
+        class="img-fluid"
+        src="{{ image.src | image_url: width: 120 }}"
+        alt="{{ image.alt | escape }}"
+        width="120"
+        height="{{ 120 | divided_by: image.aspect_ratio | round }}"
+        loading="lazy">
+</div>

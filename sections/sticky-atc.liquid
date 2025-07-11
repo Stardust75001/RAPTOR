@@ -1,0 +1,286 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid
+    assign current_variant = product.selected_or_first_available_variant
+    assign image = current_variant.image | default: product.featured_image
+
+    assign bg_color = section.settings.bg_color
+
+    if section.settings.bg_gradient
+        assign bg_color = bg_color | append: ' bg-gradient'
+    endif
+
+    case section.settings.product_img_orientation
+        when 'square'
+            assign img_width  = 600
+            assign img_height = 600
+        when 'landscape'
+            assign img_width  = 600
+            assign img_height = 480
+        when 'portrait'
+            assign img_width  = 480
+            assign img_height = 600
+    endcase
+%}
+
+<section 
+    id="sticky-atc" 
+    class="fixed-bottom {{ bg_color }}">
+    <div class="container">
+        <div
+            class="mx-auto" 
+            style="max-width: {{ section.settings.max_width }}px;">
+            <div class="d-flex align-items-center">
+                <div class="flex-grow-1 overflow-hidden">
+                    <div class="d-flex align-items-center">
+                        <img 
+                            class="product-img img-fluid me-4 m-3 rounded {{ section.settings.product_img_thumbnail }} {{ section.settings.product_shadow_sp }} {{ section.settings.product_border_color }}"
+                            src="{{ image.src | image_url: width: img_width, height: img_height, crop: 'center' }}" 
+                            alt="{{ image.alt | escape }}"
+                            width="{{ img_width }}"
+                            height="{{ img_height }}"
+                            loading="lazy">
+                        <div class="overflow-hidden">
+                            <h3 class="product-title h6 mb-1 mb-sm-2 text-ellipsis">
+                                {{ product.title }}
+                            </h3>
+                            {% render 'product-rating-badge', product: product %}
+                            <p class="product-price fs-6 mb-0">
+                                {% if current_variant.compare_at_price > current_variant.price %}
+                                    <span class="product-price-final me-2">
+                                        <span class="visually-hidden">
+                                            {{ 'product.price_sale' | t }} &nbsp;
+                                        </span>
+                                        {{ current_variant.price | money }}
+                                    </span>
+                                    <span class="product-price-compare text-muted">
+                                        <span class="visually-hidden">
+                                            {{ 'product.price_regular' | t }} &nbsp;
+                                        </span>
+                                        <s>{{ current_variant.compare_at_price | money }}</s>
+                                    </span>
+                                {% else %}
+                                    <span class="product-price-final">
+                                        {{ current_variant.price | money }}
+                                    </span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="ms-4 flex-shrink-0">
+                    {% form 'product', product, onsubmit: 'handleAddToCartFormSubmit(this, event)' %}
+                        <input type="hidden" name="id" value="{{ current_variant.id }}">
+                        <div class="d-flex">
+                            <div class="quantity-wrapper me-3 d-none d-lg-block">
+                                <button 
+                                    class="btn"
+                                    type="button"
+                                    data-mode="minus"
+                                    onclick="onClickQtyPlusMinus(this)" 
+                                    aria-label="{{ 'general.accessibility.decrease_qty' | t }}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg>
+                                </button>
+                                <input 
+                                    class="form-control" 
+                                    type="text" 
+                                    name="quantity"
+                                    value="1"
+                                    data-min-qty="1"
+                                    aria-label="{{ 'product.quantity' | t }}">
+                                <button 
+                                    class="btn btn-plus"
+                                    type="button"
+                                    data-mode="plus"
+                                    onclick="onClickQtyPlusMinus(this)"
+                                    aria-label="{{ 'general.accessibility.increase_qty' | t }}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                            {% if product.available == false %}
+                                <button class="btn-atc btn btn-primary w-100" disabled>
+                                    {{ 'product.sold_out' | t }}
+                                </button>
+                            {% elsif product.has_only_default_variant %}
+                                <button
+                                    class="btn-atc btn btn-primary btn-md w-100"
+                                    type="submit"
+                                    name="add"
+                                    data-text-add-to-cart="{{ 'product.add_to_cart' | t }}">
+                                    {{ 'product.add_to_cart' | t }}
+                                </button>
+                            {% else %}
+                                <div class="btn-group w-100 dropup dropup-center">
+                                    <button 
+                                        type="button" 
+                                        class="btn-atc btn btn-primary btn-md dropdown-toggle" 
+                                        data-bs-toggle="dropdown" 
+                                        data-text-add-to-cart="{{ 'product.add_to_cart' | t }}"
+                                        aria-expanded="false">
+                                        {{ 'product.add_to_cart' | t }}
+                                    </button>
+                                    <ul class="dropdown-menu shadow w-100">
+                                        {% for variant in product.variants %}
+                                            <li class="{{ variant.inventory_policy }}">
+                                                <button
+                                                    class="dropdown-item" 
+                                                    onclick="handleAtcFormVariantClick(this, event)"
+                                                    data-variant-id="{{ variant.id }}"
+                                                    type="button"
+                                                    {% unless variant.available %}disabled{% endunless %}>
+                                                    <div class="d-flex flex-column justify-content-lg-between align-items-lg-center lh-sm">
+                                                        <span class="small">
+                                                            {{ variant.title }}
+                                                        </span>
+                                                        {% if variant.available %}
+                                                            {% if variant.inventory_quantity <= 0 or variant.inventory_quantity >= 10 %}
+                                                                <small class="text-success">
+                                                                    {{ 'product.in_stock' | t }}
+                                                                </small>
+                                                            {% else %}
+                                                                <small class="text-danger">
+                                                                    {{ 'product.stock_count' | t: count: variant.inventory_quantity }}
+                                                                </small>
+                                                            {% endif %}
+                                                        {% else %}
+                                                            <small class="">
+                                                                {{ 'product.sold_out' | t }}
+                                                            </small>
+                                                        {% endif %}
+                                                    </div>
+                                                </button>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endform %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% schema %}
+{
+    "name": "🏆 Sticky ATC",
+    "settings": [
+        {
+            "type": "header",
+            "content": "🏆 Application Sticky ATC",
+            "info": "👉 Application Version Shopiweb Premium"
+        },
+        {
+            "type": "paragraph",
+            "content": "Documentation FR : [Sticky ATC by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/page-produit\/sticky-atc)"
+        },
+        {
+            "type": "header",
+            "content": "General"
+        },
+        {
+            "type": "select",
+            "id": "bg_color",
+            "label": "Couleur de l'arrière plan",
+            "default": "bg-white text-body",
+            "options": [
+                { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+                { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+                { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+                { "group": "Intermédiaire", "value": "bg-white text-body", "label": "Blanc" },
+                { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+                { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Sombre" },
+                { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "bg_gradient",
+            "label": "Dégradé d'arrière-plan",
+            "default": false,
+            "info": "Ne s'applique pas aux couleurs claires"
+        },
+        {
+            "type": "text",
+            "id": "max_width",
+            "label": "Largeur max. (px)",
+            "default": "600"
+        },
+        {
+            "type": "header",
+            "content": "Produit"
+        },
+        {
+            "type": "select",
+            "id": "product_img_orientation",
+            "label": "Image orientation",
+            "default": "square",
+            "options": [
+                { "value": "square", "label": "Carré" },
+                { "value": "landscape", "label": "Paysage" },
+                { "value": "portrait", "label": "Portrait" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "product_img_thumbnail",
+            "label": "Bordure de l'image",
+            "default": "img-thumbnail",
+            "options": [
+                { "value": "", "label": "Aucune" },
+                { "value": "img-thumbnail", "label": "Bordure" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "product_border_color",
+            "label": "Couleur de la bordure",
+            "options": [
+                { "value": "", "label": "Default" },
+                { "value": "border-primary", "label": "Primaire" },
+                { "value": "border-secondary", "label": "Secondaire" },
+                { "value": "border-tertiary", "label": "Tertiaire" },
+                { "value": "border-dark", "label": "Sombre" },
+                { "value": "border-success", "label": "Succès" },
+                { "value": "border-warning", "label": "Avertissement" },
+                { "value": "border-danger", "label": "Danger" },
+                { "value": "border-info", "label": "Info" }
+            ],
+            "default": ""
+        },
+        {
+            "type": "select",
+            "id": "product_shadow_sp",
+            "label": "Ombre",
+            "options": [
+                { "value": "shadow-none", "label": "Aucune" },
+                { "value": "shadow-1", "label": "Ombre légère" },
+                { "value": "shadow-2", "label": "Ombre partiel" },
+                { "value": "shadow-3", "label": "Ombre profonde" },
+                { "value": "shadow-4", "label": "Ombre totale" }
+            ],
+            "default": "shadow-1"
+        }
+    ],
+    "templates": ["product"],
+    "presets": [
+        {
+            "name": "🏆 Sticky ATC",
+            "category": "Product"
+        }
+    ]
+}
+{% endschema %}

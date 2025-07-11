@@ -1,0 +1,698 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid 
+    assign pt = section.settings.pt | prepend: 'pt-'
+    assign pb = section.settings.pb | prepend: 'pb-'
+    assign mt = section.settings.mt | prepend: 'mt-'
+    assign mb = section.settings.mb | prepend: 'mb-'
+
+    if section.settings.collection == blank
+        assign products = section.settings.products
+    else
+        assign products = collections[section.settings.collection].products
+    endif
+
+    assign btn_shadow_sp = settings.btn_shadow_sp
+%}
+
+<section 
+    id="featured-products-{{ section.id }}" 
+    class="featured-products enter-view {{ section.settings.bg_color }} {{ section.settings.text_align }} {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+    <div class="{{ section.settings.container }}">
+        {% render 'section-header' %}
+        {% if section.settings.carousel_enable %}
+            <div 
+                class="splide mx-n3 mx-lg-n4"
+                data-arrows="{{ section.settings.carousel_arrows }}"
+                data-pagination="{{ section.settings.carousel_pagination }}"
+                data-easing="{{ section.settings.carousel_easing }}"
+                data-speed="{{ section.settings.carousel_speed }}"
+                data-autoplay="{{ section.settings.carousel_autoplay }}"
+                data-interval="{{ section.settings.carousel_interval | times: 1000 }}"
+                data-per-move="{{ section.settings.carousel_per_move }}"
+                data-rewind="{{ section.settings.carousel_rewind }}"
+                data-breakpoint-xs-partial="{{ section.settings.breakpoint_xs_partial }}"
+                data-breakpoint-xs="{{ section.settings.breakpoint_xs }}"
+                data-breakpoint-sm="{{ section.settings.breakpoint_sm }}"
+                data-breakpoint-md="{{ section.settings.breakpoint_md }}"
+                data-breakpoint-lg="{{ section.settings.breakpoint_lg }}"
+                data-breakpoint-xl="{{ section.settings.breakpoint_xl }}"
+                data-breakpoint-xxl="{{ section.settings.breakpoint_xxl }}"
+                data-text-slide-of="{{ 'general.accessibility.slide_of' | t }}"
+                role="group">
+                <div class="splide__track {% if section.settings.product_card_style == 'card' %}pb-8{% else %}pb-0{% endif %}">
+                    <ul class="product-listing splide__list">
+                        {% if products == blank %}
+                            {% for num in (1..12) %}
+                                <li class="product-item splide__slide p-3 p-lg-4 mb-4">
+                                    {% capture current %}{% cycle 1, 2, 3, 4 %}{% endcapture %}
+                                    {{ 'product-apparel-' | append: current | placeholder_svg_tag: 'placeholder-svg product-item-img bg-light rounded mb-4' }}
+                                    <h3 class="product-item-title mb-2 {{ section.settings.product_title_size }}">
+                                        Produit {{ current }}
+                                    </h3>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            {% liquid
+                                for product in products limit: section.settings.limit
+                                    render 'product-item', product: product
+                                endfor
+                            %}
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        {% else %}
+            {% liquid 
+                assign row_xs = section.settings.breakpoint_xs | prepend: 'row-cols-'
+                assign row_sm = section.settings.breakpoint_sm | prepend: 'row-cols-sm-'
+                assign row_md = section.settings.breakpoint_md | prepend: 'row-cols-md-'
+                assign row_lg = section.settings.breakpoint_lg | prepend: 'row-cols-lg-'
+                assign row_xl = section.settings.breakpoint_xl | prepend: 'row-cols-xl-'
+                assign row_xxl = section.settings.breakpoint_xxl | prepend: 'row-cols-xxl-'
+            %}
+            <ul class="product-listing list-unstyled row mx-n3 mx-lg-n4 mb-0 {{ row_xs }} {{ row_sm }} {{ row_md }} {{ row_lg }} {{ row_xl }} {{ row_xxl }}">
+                {% if products == blank %}
+                    {% for num in (1..12) %}
+                        <li class="product-item splide__slide p-3 p-lg-4 mb-4">
+                            {% capture current %}{% cycle 1, 2, 3, 4 %}{% endcapture %}
+                            {{ 'product-apparel-' | append: current | placeholder_svg_tag: 'placeholder-svg product-item-img bg-light mb-4' }}
+                            <h3 class="product-item-title mb-2 {{ section.settings.product_title_size }}">
+                                Produit {{ current }}
+                            </h3>
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    {% liquid
+                        for product in products limit: section.settings.limit
+                            render 'product-item', product: product
+                        endfor
+                    %}
+                {% endif %}
+            </ul>
+        {% endif %}
+        {% unless section.settings.btn_text == blank %}
+            <a 
+                class="btn mt-6 mb-0 {{ section.settings.btn_color }} {{ btn_shadow_sp }} animate__animated animate__faster opacity-0" 
+                href="{{ section.settings.btn_url }}"
+                {% if settings.effect_apply_btn_enable %} 
+                  data-animate-class="{{ settings.animation_btn_name }}"
+                  style="animation-delay: 800ms;"
+                {% endif %}>
+                {{ section.settings.btn_text }}
+            </a>
+        {% endunless %}
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Produits en Vedette",
+    "disabled_on": {
+      "groups": ["header", "footer"]
+    },
+    "settings": [
+        {
+            "type": "paragraph", 
+            "content": "Documentation FR : [Produits en vedette by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/sections\/collection-en-vedette)"
+        },
+        {
+            "type": "paragraph",
+            "content": "Vous pouvez choisir d'afficher vos produits en sélectionnant des produits individuels (le paramètre ci-dessous) ou par le biais d'une collection (le paramètre suivant ci-dessous)."
+        },
+        {
+            "type": "product_list",
+            "id": "products",
+            "label": "Produits"
+        },
+        {
+            "type": "collection",
+            "id": "collection",
+            "label": "Collection"
+        },
+        {
+            "type": "range",
+            "id": "limit",
+            "label": "Quantité maximale de produits à afficher",
+            "min": 2,
+            "max": 24,
+            "default": 12,
+            "step": 1
+        },
+        {
+            "type": "header",
+            "content": "General"
+        },
+        {
+            "type": "select",
+            "id": "bg_color",
+            "label": "Couleur de l'arrière plan",
+            "default": "bg-body text-body",
+            "options": [
+                { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
+                { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+                { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "container",
+            "label": "Conteneur",
+            "default": "container",
+            "options": [
+                { "value": "container", "label": "Conteneur" },
+                { "value": "container-fluid", "label": "Pleine largeur" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "text_align",
+            "label": "Alignement du texte",
+            "default": "text-center",
+            "options": [
+                { "value": "text-start", "label": "Gauche" },
+                { "value": "text-center", "label": "Centre" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "En-tête de la section"
+        },
+        {
+            "type": "image_picker",
+            "id": "subtitle_img",
+            "label": "Légende Image"
+        },
+        {
+            "type": "text",
+            "id": "brand_image_size",
+            "label": "Image Largeur/Hauteur (px)",
+            "default": "60"
+        },
+        {
+            "type": "text",
+            "id": "subtitle",
+            "label": "Légende Texte"
+        },
+        {
+            "type": "select",
+            "id": "subtitle_size",
+            "label": "Taille de la légende",
+            "default": "fs-5",
+            "options": [
+                { "group": "Légende Standard", "value": "fs-1", "label": "Extra Grand" },
+                { "group": "Légende Standard", "value": "fs-2", "label": "Super Grand" },
+                { "group": "Légende Standard", "value": "fs-3", "label": "Très Grand" },
+                { "group": "Légende Standard", "value": "fs-4", "label": "Grand" },
+                { "group": "Légende Standard", "value": "fs-5", "label": "Moyen" },
+                { "group": "Légende Standard", "value": "fs-6", "label": "Petit" } 
+            ]
+        },
+        {
+            "type": "color",
+            "id": "color_caption",
+            "label": "Couleur de la légende",
+            "default": "#6c757d"
+        },
+        {
+            "type": "text",
+            "id": "title_overlay",
+            "label": "Titre overlay",
+            "info": "Visible sur ordinateur, masqué sur mobile pour optimiser la lisibilité."
+        },
+        {
+            "type": "select",
+            "id": "title_overlay_size",
+            "label": "Taille du titre overlay",
+            "default": "3",
+            "options": [
+                { "group": "Titre Overlay", "value": "4", "label": "Grand" },
+                { "group": "Titre Overlay", "value": "3", "label": "Moyen" },
+                { "group": "Titre Overlay", "value": "2", "label": "Petit" }
+            ]
+        },
+        {
+            "type": "color",
+            "id": "color_title_overlay",
+            "label": "Couleur du titre overlay",
+            "default": "#000000"
+        },
+        {
+            "type": "inline_richtext",
+            "id": "title",
+            "label": "Titre",
+            "default": "Produits ou Collection en vedette"
+        },
+        {
+            "type": "select",
+            "id": "heading_tag",
+            "label": "Balise titre (SEO)",
+            "default": "h2",
+            "options": [
+                { "value": "h1", "label": "h1" },
+                { "value": "h2", "label": "h2" },
+                { "value": "h3", "label": "h3" },
+                { "value": "h4", "label": "h4" },
+                { "value": "h5", "label": "h5" },
+                { "value": "h6", "label": "h6" },
+                { "value": "span", "label": "Aucune" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "title_size",
+            "label": "Taille du titre",
+            "default": "h2",
+            "options": [
+                { "group": "Titre Supérieur", "value": "display-1", "label": "Extra Extra Grand" },
+                { "group": "Titre Supérieur", "value": "display-2", "label": "Extra Grand" },
+                { "group": "Titre Supérieur", "value": "display-3", "label": "Ultra Grand" },
+                { "group": "Titre Supérieur", "value": "display-4", "label": "Super Grand" },
+                { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+            ]
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Description (facultatif)",
+            "default": "<p>Ajouter une description facultative à cette section</p>"
+        },
+        {
+            "type": "select",
+            "id": "description_size",
+            "label": "Taille de description",
+            "default": "fs-5",
+            "options": [
+                { "group": "Description Standard", "value": "fs-1", "label": "Extra Grand" },
+                { "group": "Description Standard", "value": "fs-2", "label": "Super Grand" },
+                { "group": "Description Standard", "value": "fs-3", "label": "Très Grand" },
+                { "group": "Description Standard", "value": "fs-4", "label": "Grand" },
+                { "group": "Description Standard", "value": "fs-5", "label": "Moyen" },
+                { "group": "Description Standard", "value": "fs-6", "label": "Petit" } 
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Produit"
+        },
+        {
+            "type": "select",
+            "id": "product_card_style",
+            "label": "Style de la carte",
+            "default": "",
+            "options": [
+                { "value": "", "label": "Par défaut" },
+                { "value": "card", "label": "Carte" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "product_img_mode",
+            "label": "Mode image",
+            "options": [
+                { "value": "simple", "label": "Simple image" },
+                { "value": "hover", "label": "Changement au hover" },
+                { "value": "gallery", "label": "Gallerie d'images" }
+            ],
+            "default": "gallery"
+        },
+        {
+            "type": "select",
+            "id": "product_img_orientation",
+            "label": "Image orientation",
+            "default": "square",
+            "options": [
+                { "value": "square", "label": "Carré" },
+                { "value": "landscape", "label": "Paysage" },
+                { "value": "potrait", "label": "Portrait" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "product_img_thumbnail",
+            "label": "Bordure de l'image",
+            "default": "img-thumbnail",
+            "info": "Ne s'applique pas au style 'carte'",
+            "options": [
+                { "value": "", "label": "Aucun" },
+                { "value": "img-thumbnail", "label": "Bordure" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "product_border_color",
+            "label": "Couleur de la bordure",
+            "options": [
+                { "value": "", "label": "Default" },
+                { "value": "border-primary", "label": "Primaire" },
+                { "value": "border-secondary", "label": "Secondaire" },
+                { "value": "border-dark", "label": "Foncé" },
+                { "value": "border-success", "label": "Succès" },
+                { "value": "border-warning", "label": "Avertissement" },
+                { "value": "border-danger", "label": "Danger" },
+                { "value": "border-info", "label": "Info" }
+            ],
+            "default": ""
+        },
+        {
+            "type": "select",
+            "id": "product_shadow_sp",
+            "label": "Ombre",
+            "options": [
+                { "value": "shadow-none", "label": "Aucune" },
+                { "value": "shadow-1", "label": "Ombre légère" },
+                { "value": "shadow-2", "label": "Ombre partiel" },
+                { "value": "shadow-3", "label": "Ombre profonde" },
+                { "value": "shadow-4", "label": "Ombre totale" }
+            ],
+            "default": "shadow-1"
+        },
+        {
+            "type": "checkbox",
+            "id": "product_show_sale_badge",
+            "label": "Afficher le badge de vente",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "product_sale_badge_color",
+            "label": "Couleur du badge de vente",
+            "default": "bg-success text-white",
+            "options": [
+                { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+                { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+                { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+                { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
+                { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+                { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Sombre" },
+                { "group": "Par défaut", "value": "", "label": "Corps (body)" },
+                { "group": "Alerte", "value": "bg-success text-white", "label": "Succès" },
+                { "group": "Alerte", "value": "bg-warning text-dark", "label": "Avertissement" },
+                { "group": "Alerte", "value": "bg-danger text-white", "label": "Danger" },
+                { "group": "Alerte", "value": "bg-info text-white", "label": "Info" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "product_title_size",
+            "label": "Taille du titre",
+            "default": "h5",
+            "options": [
+                { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "product_title_truncate",
+            "label": "Tronquer le titre",
+            "default": "",
+            "info": "Utile si les titres de vos produits sont longs",
+            "options": [
+                { "value": "", "label": "Non (default)" },
+                { "value": "text-truncate", "label": "Une ligne" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "product_show_vendor",
+            "label": "Afficher le distributeur",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "product_show_color_swatches",
+            "label": "Afficher les pastilles 'swatches'",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "product_show_atc_form",
+            "label": "Afficher le bouton 'Ajouter au panier'",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "product_form_show_inventory",
+            "label": "Afficher l'inventaire dans le bouton 'Ajouter au panier'",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "product_show_wishlist_btn",
+            "label": "Afficher le bouton de la liste de souhaits",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Carrousel"
+        },
+        {
+            "type": "checkbox",
+            "id": "carousel_enable",
+            "label": "Activer le carrousel",
+            "info": "Si cette option est désactivée, la liste des produits s'empilera et les paramètres du carrousel ci-dessous ne s'appliqueront pas.",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "carousel_arrows",
+            "label": "Afficher les flèches",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "carousel_pagination",
+            "label": "Afficher la pagination",
+            "default": true
+        },
+        {
+            "type": "text",
+            "id": "carousel_easing",
+            "label": "Easing",
+            "default": "cubic-bezier(.42,.65,.27,.99)",
+            "info": "[En savoir plus](https://cubic-bezier.com)"
+        },
+        {
+            "type": "range",
+            "id": "carousel_speed",
+            "label": "Vitesse (ms)",
+            "min": 50,
+            "max": 1000,
+            "default": 400,
+            "step": 50,
+            "info": "Vitesse de transition en millisecondes."
+        },
+        {
+            "type": "checkbox",
+            "id": "carousel_autoplay",
+            "label": "Autoplay",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "carousel_interval",
+            "label": "Intervalle de lecture automatique (sec)",
+            "min": 1,
+            "max": 10,
+            "default": 5,
+            "step": 1
+        },
+        {
+            "type": "select",
+            "id": "carousel_per_move",
+            "label": "Par déplacement",
+            "info": "Nombre de slides à déplacer.",
+            "default": "0",
+            "options": [
+                { "value": "0", "label": "Tout en vue" },
+                { "value": "1", "label": "Un par un" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "carousel_rewind",
+            "label": "Rembobiner",
+            "default": true,
+            "info": "Revenir au premier slide"
+        },
+        {
+            "type": "header",
+            "content": "Points d'arrêt",
+            "info": "Ajuster les éléments par diapositive en fonction de la résolution de l'écran"
+        },
+        {
+            "type": "checkbox",
+            "id": "breakpoint_xs_partial",
+            "label": "Diapositive partielle",
+            "default": true,
+            "info": "Affiche une partie de la diapositive suivante dans la vue mobile. Ne fonctionne qu'en mode curseur."
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_xs",
+            "label": "Éléments par slide / xs",
+            "info": "Largeur d'écran : moins de 576px",
+            "min": 1,
+            "max": 3,
+            "step": 1,
+            "default": 1
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_sm",
+            "label": "Éléments par slide / sm",
+            "info": "Largeur d'écran : ≥576px",
+            "min": 1,
+            "max": 3,
+            "step": 1,
+            "default": 2
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_md",
+            "label": "Éléments par slide / md",
+            "info": "Largeur d'écran : ≥768px",
+            "min": 1,
+            "max": 4,
+            "step": 1,
+            "default": 2
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_lg",
+            "label": "Éléments par slide / lg",
+            "info": "Largeur d'écran : ≥992px",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "default": 3
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_xl",
+            "label": "Éléments par slide / xl",
+            "info": "Largeur d'écran : ≥1200px",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "default": 4
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_xxl",
+            "label": "Éléments par slide / xxl",
+            "info": "Largeur d'écran : ≥1400px",
+            "min": 1,
+            "max": 8,
+            "step": 1,
+            "default": 4
+        },
+        {
+            "type": "header",
+            "content": "Bouton 'Voir plus'"
+        },
+        {
+            "type": "text",
+            "id": "btn_text",
+            "label": "Texte du bouton",
+            "default": "Voir plus de produits",
+            "info": "Laisser vide pour désactiver"
+        },
+        {
+            "type": "url",
+            "id": "btn_url",
+            "label": "URL du bouton"
+        },
+        {
+            "type": "select",
+            "id": "btn_color",
+            "label": "Couleur du bouton",
+            "default": "btn-primary",
+            "options": [
+                { "group": "Normal", "value": "btn-link", "label": "Lien" },
+                { "group": "Normal", "value": "btn-light", "label": "Claire" },
+                { "group": "Normal", "value": "btn-dark", "label": "Sombre" },
+                { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
+                { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
+                { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
+                { "group": "Normal", "value": "btn-success", "label": "Succès" },
+                { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+                { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
+                { "group": "Normal", "value": "btn-info", "label": "Info" },
+                { "group": "Contour", "value": "btn-outline-light", "label": "Contour Claire" },
+                { "group": "Contour", "value": "btn-outline-dark", "label": "Contour Sombre" },
+                { "group": "Contour", "value": "btn-outline-primary", "label": "Contour Primaire" },
+                { "group": "Contour", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
+                { "group": "Contour", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
+                { "group": "Contour", "value": "btn-outline-success", "label": "Contour Succès" },
+                { "group": "Contour", "value": "btn-outline-danger", "label": "Contour Danger" },
+                { "group": "Contour", "value": "btn-outline-warning", "label": "Contour Avertissement" },
+                { "group": "Contour", "value": "btn-outline-info", "label": "Contour Info" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Espacement de la section"
+        },
+        {
+          "type": "range",
+          "id": "pt",
+          "label": "Padding supérieure",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "pb",
+          "label": "Padding inférieure",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "mt",
+          "label": "Marge supérieure",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "mb",
+          "label": "Marge inférieure",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 0
+        }
+    ],
+    "presets": [
+        {
+            "name": "Produits en Vedette",
+            "category": "Products"
+        }
+    ]
+}
+{% endschema %}

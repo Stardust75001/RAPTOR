@@ -1,0 +1,293 @@
+{% liquid
+    assign mt = block.settings.mt | prepend: 'mt-'
+    assign mb = block.settings.mb | prepend: 'mb-'
+%}
+  
+<style>
+@media screen and (max-width: 992px) {
+    .product-block-tabs .nav {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+    .product-block-tabs .nav-tabs {
+        justify-content: flex-start !important;
+    }
+}
+</style>
+
+<div class="product-block-tabs {{ mt }} {{ mb }}" {{ block.shopify_attributes }}>
+  
+    <div 
+        id="nav-tabs-{{ block.id }}" 
+        class="nav {{ block.settings.tabs_style }} {% if block.settings.tabs_style == 'nav-pills' %}pb-2{% endif %} {{ block.settings.tabs_position }}" 
+        role="tablist">
+        {% unless block.settings.tab_title_1 == blank %}
+          <li class="nav-item" role="presentation">
+            <button id="tab-{{ block.id }}" 
+                    class="nav-link {% if block.settings.open_first_tab == true and block.settings.tab_title_1 != blank %}active{% endif %}"
+                    data-bs-toggle="tab" 
+                    data-bs-target="#tab-pane-{{ block.id }}" 
+                    type="button" 
+                    role="tab" 
+                    aria-controls="tab-pane-{{ block.id }}" 
+                    aria-selected="{% if block.settings.open_first_tab == true and block.settings.tab_title_1 != blank %}true{% else %}false{% endif %}">
+                    <div class="d-flex align-items-center p-lg-0 {% if block.settings.tabs_style == 'nav-pills' %}p-0{% else %}p-2{% endif %}">
+                        {% unless block.settings.icon_1 == blank %}
+                            <div class="me-3 flex-shrink-0">
+                                {{ block.settings.icon_1 }}
+                            </div>
+                        {% endunless %}
+                        {{  block.settings.tab_title_1 }}
+                    </div>
+            </button>
+          </li>
+        {% endunless %}
+        {% unless block.settings.tab_title_2 == blank %}
+          <li class="nav-item" role="presentation">
+            <button id="tab-{{ block.id }}" 
+                    class="nav-link {% if forloop.first %}active{% endif %}" 
+                    data-bs-toggle="tab" 
+                    data-bs-target="#tab-pane2-{{ block.id }}" 
+                    type="button" 
+                    role="tab" 
+                    aria-controls="tab-pane2-{{ block.id }}" 
+                    aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
+                    <div class="d-flex align-items-center p-lg-0 {% if block.settings.tabs_style == 'nav-pills' %}p-0{% else %}p-2{% endif %}">
+                        {% unless block.settings.icon_2 == blank %}
+                            <div class="me-3 flex-shrink-0">
+                                {{ block.settings.icon_2 }}
+                            </div>
+                        {% endunless %}
+                        {{  block.settings.tab_title_2 }}
+                    </div>
+            </button>
+          </li>
+        {% endunless %}
+        {% unless block.settings.tab_title_3 == blank %}
+          <li class="nav-item" role="presentation">
+            <button id="tab-{{ block.id }}" 
+                  class="nav-link {% if forloop.first %}active{% endif %}" 
+                  data-bs-toggle="tab" 
+                  data-bs-target="#tab-pane3-{{ block.id }}" 
+                  type="button" 
+                  role="tab" 
+                  aria-controls="tab-pane3-{{ block.id }}" 
+                  aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
+                  <div class="d-flex align-items-center p-lg-0 {% if block.settings.tabs_style == 'nav-pills' %}p-0{% else %}p-2{% endif %}">
+                      {% unless block.settings.icon_3 == blank %}
+                          <div class="me-3 flex-shrink-0">
+                              {{ block.settings.icon_3 }}
+                          </div>
+                      {% endunless %}
+                      {{  block.settings.tab_title_3 }}
+                  </div>
+            </button>
+          </li>
+        {% endunless %}
+        {% unless block.settings.tab_title_4 == blank %}
+          <li class="nav-item" role="presentation">
+            <button id="tab-{{ block.id }}" 
+                  class="nav-link {% if forloop.first %}active{% endif %}" 
+                  data-bs-toggle="tab" 
+                  data-bs-target="#tab-pane4-{{ block.id }}" 
+                  type="button" 
+                  role="tab" 
+                  aria-controls="tab-pane4-{{ block.id }}" 
+                  aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
+                  <div class="d-flex align-items-center p-lg-0 {% if block.settings.tabs_style == 'nav-pills' %}p-0{% else %}p-2{% endif %}">
+                      {% unless block.settings.icon_4 == blank %}
+                          <div class="me-3 flex-shrink-0">
+                              {{ block.settings.icon_4 }}
+                          </div>
+                      {% endunless %}
+                      {{  block.settings.tab_title_4 }}
+                  </div>
+            </button>
+          </li>
+        {% endunless %}
+    </div>
+      
+    <div class="tab-content">
+        <div 
+            id="tab-pane-{{ block.id }}" 
+            class="tab-pane fade p-5 {% if block.settings.open_first_tab == true and block.settings.tab_title_1 != blank %}show active{% endif %}" 
+            role="tabpanel" 
+            aria-labelledby="tab-{{ block.id }}" 
+            tabindex="0">
+            <div class="row align-items-center {{ block.settings.img_align_desktop_1 }}">
+                {% unless block.settings.img_1 == blank %}
+                    {% liquid
+                            case block.settings.img_orientation_1
+                                when 'square'
+                                    assign img_width  = 900
+                                    assign img_height = 900
+                                when 'landscape'
+                                    assign img_width  = 900
+                                    assign img_height = 720
+                                when 'potrait'
+                                    assign img_width  = 720
+                                    assign img_height = 900
+                            endcase
+                    %}
+                    <div class="col-lg-5 mb-6 mb-lg-0">
+                        <img
+                            class="img-fluid rounded {{ block.settings.img_thumbnail_1 }} {{ block.settings.shadow_sp_1 }}"
+                            src="{{ block.settings.img_1.src | image_url: width: img_width, height: img_height, crop: block.settings.img_crop_1 }}"
+                            alt="{{ block.settings.img_1.alt | escape }}"
+                            width="{{ img_width }}"
+                            height="{{ img_height }}"
+                            loading="lazy">
+                    </div>
+                {% endunless %}
+                <div class="{% if block.settings.img_1 == blank %}col-lg-12{% else %}col-lg-7{% endif %} mb-6 mb-lg-0">
+                    {% unless block.settings.title_pane_1 == blank %}
+                        <h3 class="title mb-4 {{ block.settings.title_size_1 }}">
+                            {{ block.settings.title_pane_1 }}
+                        </h3>
+                    {% endunless %}
+                    {% unless block.settings.description_1 == blank %}
+                        <div class="description small rte">
+                            {{ block.settings.description_1 }}
+                        </div>
+                    {% endunless %}
+                </div>
+            </div>
+        </div>
+        <div 
+            id="tab-pane2-{{ block.id }}" 
+            class="tab-pane fade p-5 {% if forloop.first %}show active{% endif %}" 
+            role="tabpanel" 
+            aria-labelledby="tab-{{ block.id }}" 
+            tabindex="0">
+            <div class="row align-items-center {{ block.settings.img_align_desktop_2 }}">
+                {% unless block.settings.img_2 == blank %}
+                    {% liquid
+                            case block.settings.img_orientation_2
+                                when 'square'
+                                    assign img_width  = 900
+                                    assign img_height = 900
+                                when 'landscape'
+                                    assign img_width  = 900
+                                    assign img_height = 720
+                                when 'potrait'
+                                    assign img_width  = 720
+                                    assign img_height = 900
+                            endcase
+                    %}
+                    <div class="col-lg-5 mb-6 mb-lg-0">
+                        <img
+                            class="img-fluid rounded {{ block.settings.img_thumbnail_2 }} {{ block.settings.shadow_sp_2 }}"
+                            src="{{ block.settings.img_2.src | image_url: width: img_width, height: img_height, crop: block.settings.img_crop_2 }}"
+                            alt="{{ block.settings.img_2.alt | escape }}"
+                            width="{{ img_width }}"
+                            height="{{ img_height }}"
+                            loading="lazy">
+                    </div>
+                {% endunless %}
+                <div class="{% if block.settings.img_2 == blank %}col-lg-12{% else %}col-lg-7{% endif %} mb-6 mb-lg-0">
+                    {% unless block.settings.title_pane_2 == blank %}
+                        <h3 class="title mb-4 {{ block.settings.title_size_2 }}">
+                            {{ block.settings.title_pane_2 }}
+                        </h3>
+                    {% endunless %}
+                    {% unless block.settings.description_2 == blank %}
+                        <div class="description small rte">
+                            {{ block.settings.description_2 }}
+                        </div>
+                    {% endunless %}
+                </div>
+            </div>
+        </div>
+        <div 
+            id="tab-pane3-{{ block.id }}" 
+            class="tab-pane fade p-5 {% if forloop.first %}show active{% endif %}" 
+            role="tabpanel" 
+            aria-labelledby="tab-{{ block.id }}" 
+            tabindex="0">
+            <div class="row align-items-center {{ block.settings.img_align_desktop_3 }}">
+                {% unless block.settings.img_3 == blank %}
+                    {% liquid
+                            case block.settings.img_orientation_3
+                                when 'square'
+                                    assign img_width  = 900
+                                    assign img_height = 900
+                                when 'landscape'
+                                    assign img_width  = 900
+                                    assign img_height = 720
+                                when 'potrait'
+                                    assign img_width  = 720
+                                    assign img_height = 900
+                            endcase
+                    %}
+                    <div class="col-lg-5 mb-6 mb-lg-0">
+                        <img
+                            class="img-fluid rounded {{ block.settings.img_thumbnail_3 }} {{ block.settings.shadow_sp_3 }}"
+                            src="{{ block.settings.img_3.src | image_url: width: img_width, height: img_height, crop: block.settings.img_crop_3 }}"
+                            alt="{{ block.settings.img_3.alt | escape }}"
+                            width="{{ img_width }}"
+                            height="{{ img_height }}"
+                            loading="lazy">
+                    </div>
+                {% endunless %}
+                <div class="{% if block.settings.img_3 == blank %}col-lg-12{% else %}col-lg-7{% endif %} mb-6 mb-lg-0">
+                    {% unless block.settings.title_pane_3 == blank %}
+                        <h3 class="title mb-4 {{ block.settings.title_size_3 }}">
+                            {{ block.settings.title_pane_3 }}
+                        </h3>
+                    {% endunless %}
+                    {% unless block.settings.description_3 == blank %}
+                        <div class="description small rte">
+                            {{ block.settings.description_3 }}
+                        </div>
+                    {% endunless %}
+                </div>
+            </div>
+        </div>
+        <div 
+            id="tab-pane4-{{ block.id }}" 
+            class="tab-pane fade p-5 {% if forloop.first %}show active{% endif %}" 
+            role="tabpanel" 
+            aria-labelledby="tab-{{ block.id }}" 
+            tabindex="0">
+            <div class="row align-items-center {{ block.settings.img_align_desktop_4 }}">
+                {% unless block.settings.img_4 == blank %}
+                    {% liquid
+                            case block.settings.img_orientation_4
+                                when 'square'
+                                    assign img_width  = 900
+                                    assign img_height = 900
+                                when 'landscape'
+                                    assign img_width  = 900
+                                    assign img_height = 720
+                                when 'potrait'
+                                    assign img_width  = 720
+                                    assign img_height = 900
+                            endcase
+                    %}
+                    <div class="col-lg-5 mb-6 mb-lg-0">
+                        <img
+                            class="img-fluid rounded {{ block.settings.img_thumbnail_4 }} {{ block.settings.shadow_sp_4 }}"
+                            src="{{ block.settings.img_4.src | image_url: width: img_width, height: img_height, crop: block.settings.img_crop_4 }}"
+                            alt="{{ block.settings.img_4.alt | escape }}"
+                            width="{{ img_width }}"
+                            height="{{ img_height }}"
+                            loading="lazy">
+                    </div>
+                {% endunless %}
+                <div class="{% if block.settings.img_4 == blank %}col-lg-12{% else %}col-lg-7{% endif %} mb-6 mb-lg-0">
+                    {% unless block.settings.title_pane_4 == blank %}
+                        <h3 class="title mb-4 {{ block.settings.title_size_4 }}">
+                            {{ block.settings.title_pane_4 }}
+                        </h3>
+                    {% endunless %}
+                    {% unless block.settings.description_4 == blank %}
+                        <div class="description small rte">
+                            {{ block.settings.description_4 }}
+                        </div>
+                    {% endunless %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

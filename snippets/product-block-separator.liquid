@@ -1,0 +1,16 @@
+{% liquid 
+    assign mt = block.settings.mt | prepend: 'mt-'
+    assign mb = block.settings.mb | prepend: 'mb-'
+%}
+
+<div class="product-block-separator separator" {{ block.shopify_attributes }}>
+  <hr class="{{ mt }} {{ mb }}" 
+      style=" 
+      border-style: {{ block.settings.bbstyle }};
+      border-width: {{ block.settings.bbwidth }}px;
+      width: {{ block.settings.bblength }}%;
+      height: 100%;
+      border-color: {{ block.settings.color_border }};
+      opacity: {{ block.settings.opacity }};">
+</div>
+

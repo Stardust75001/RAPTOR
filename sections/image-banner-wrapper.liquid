@@ -1,0 +1,163 @@
+{% comment %}
+Section : Image avec texte + boutons (responsive, image mobile dédiée, no-gap auto)
+{% endcomment %}
+
+{% liquid
+  assign mt = section.settings.mt | prepend: 'mt-'
+  assign mb = section.settings.mb | prepend: 'mb-'
+  assign pt = section.settings.pt | prepend: 'pt-'
+  assign pb = section.settings.pb | prepend: 'pb-'
+  assign custom_class = section.settings.custom_class
+%}
+
+<section class="image-banner-wrapper custom-image-banner-class {{ custom_class }} {{ mt }} {{ mb }} {{ pt }} {{ pb }}">
+  {% if section.settings.image != blank or section.settings.image_mobile != blank %}
+    <picture>
+      {% if section.settings.image_mobile != blank %}
+        <source media="(max-width: 768px)" srcset="{{ section.settings.image_mobile | image_url: width: 800 }}">
+      {% endif %}
+      <img src="{{ section.settings.image | image_url: width: 1920 }}"
+           alt="{{ section.settings.title | escape }}"
+           loading="lazy"
+           class="image-banner-img">
+    </picture>
+  {% endif %}
+
+  <div class="image-banner-overlay">
+    {% if section.settings.title != blank %}
+      <h2 class="image-banner-title">{{ section.settings.title }}</h2>
+    {% endif %}
+    {% if section.settings.text != blank %}
+      <p class="image-banner-text">{{ section.settings.text }}</p>
+    {% endif %}
+    <div class="image-banner-buttons">
+      {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+        <a href="{{ section.settings.button_link }}" class="btn btn-primary">
+          {{ section.settings.button_label }}
+        </a>
+      {% endif %}
+      {% if section.settings.button_label_2 != blank and section.settings.button_link_2 != blank %}
+        <a href="{{ section.settings.button_link_2 }}" class="btn btn-secondary">
+          {{ section.settings.button_label_2 }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Image + boutons",
+  "tag": "section",
+  "class": "image-banner-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image desktop"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Image mobile"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Texte"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Label bouton principal"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Lien bouton principal"
+    },
+    {
+      "type": "text",
+      "id": "button_label_2",
+      "label": "Label bouton secondaire"
+    },
+    {
+      "type": "url",
+      "id": "button_link_2",
+      "label": "Lien bouton secondaire"
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Classe CSS personnalisée"
+    },
+    {
+      "type": "select",
+      "id": "mt",
+      "label": "Marge haute",
+      "options": [
+        { "value": "0", "label": "0" },
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" },
+        { "value": "5", "label": "5" }
+      ],
+      "default": "0"
+    },
+    {
+      "type": "select",
+      "id": "mb",
+      "label": "Marge basse",
+      "options": [
+        { "value": "0", "label": "0" },
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" },
+        { "value": "5", "label": "5" }
+      ],
+      "default": "0"
+    },
+    {
+      "type": "select",
+      "id": "pt",
+      "label": "Padding haut",
+      "options": [
+        { "value": "0", "label": "0" },
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" },
+        { "value": "5", "label": "5" }
+      ],
+      "default": "0"
+    },
+    {
+      "type": "select",
+      "id": "pb",
+      "label": "Padding bas",
+      "options": [
+        { "value": "0", "label": "0" },
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" },
+        { "value": "5", "label": "5" }
+      ],
+      "default": "0"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image + boutons",
+      "category": "Bannière"
+    }
+  ]
+}
+{% endschema %}

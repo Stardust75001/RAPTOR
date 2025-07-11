@@ -1,0 +1,54 @@
+{% comment %} 
+Template de test pour vérifier que les données produit sont correctement récupérées
+{% endcomment %}
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <h1>TEST - Données du produit</h1>
+            
+            <div class="alert alert-info">
+                <h4>Informations du produit actuel :</h4>
+                <ul>
+                    <li><strong>Titre :</strong> {{ product.title | default: "ERREUR : Titre non trouvé" }}</li>
+                    <li><strong>Prix :</strong> {{ product.price | money | default: "ERREUR : Prix non trouvé" }}</li>
+                    <li><strong>ID :</strong> {{ product.id | default: "ERREUR : ID non trouvé" }}</li>
+                    <li><strong>Handle :</strong> {{ product.handle | default: "ERREUR : Handle non trouvé" }}</li>
+                    <li><strong>Vendor :</strong> {{ product.vendor | default: "Aucun vendeur" }}</li>
+                    <li><strong>Type :</strong> {{ product.type | default: "Aucun type" }}</li>
+                    <li><strong>Nombre de variantes :</strong> {{ product.variants.size | default: "0" }}</li>
+                    <li><strong>Nombre d'images :</strong> {{ product.images.size | default: "0" }}</li>
+                    <li><strong>Disponible :</strong> {{ product.available | default: "Inconnu" }}</li>
+                </ul>
+            </div>
+
+            {% if product.description != blank %}
+                <div class="alert alert-success">
+                    <h4>Description :</h4>
+                    {{ product.description | truncate: 200 }}
+                </div>
+            {% else %}
+                <div class="alert alert-warning">
+                    <h4>Aucune description trouvée</h4>
+                </div>
+            {% endif %}
+
+            {% if product.images.size > 0 %}
+                <div class="alert alert-success">
+                    <h4>Images trouvées :</h4>
+                    <img src="{{ product.featured_image | img_url: '200x200' }}" alt="{{ product.title }}" class="img-thumbnail">
+                </div>
+            {% else %}
+                <div class="alert alert-warning">
+                    <h4>Aucune image trouvée</h4>
+                </div>
+            {% endif %}
+
+            <div class="mt-4">
+                <a href="{{ product.url }}" class="btn btn-primary">Retour à la page produit normale</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% render 'single-product' %}

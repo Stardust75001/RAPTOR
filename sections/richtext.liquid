@@ -1,0 +1,54 @@
+<section class="shop-multicolumn">
+  {% for block in section.blocks %}
+    <div class="column">
+      {% if block.settings.image != blank %}
+        <img src="{{ block.settings.image | image_url: width: 160 }}" alt="{{ block.settings.title | escape }}" width="32" height="32" loading="lazy">
+      {% endif %}
+      {% if block.settings.title != blank %}
+        <h3>{{ block.settings.title }}</h3>
+      {% endif %}
+      {% if block.settings.text != blank %}
+        <p>{{ block.settings.text }}</p>
+      {% endif %}
+    </div>
+  {% endfor %}
+</section>
+
+{% schema %}
+{
+  "name": "Colonnes multiples",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Colonne",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Icône"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titre",
+          "default": "Titre de la colonne"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Texte",
+          "default": "Description de la colonne."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Colonnes multiples",
+      "category": "Texte"
+    }
+  ]
+}
+{% endschema %}

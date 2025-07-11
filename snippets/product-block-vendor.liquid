@@ -1,0 +1,34 @@
+{% liquid 
+    assign mt = block.settings.mt | prepend: 'mt-'
+    assign mb = block.settings.mb | prepend: 'mb-'
+
+    assign metafield_namespace = block.settings.metafield | split: '.' | first
+    assign metafield_key = block.settings.metafield | split: '.' | last
+
+    assign brand_image = product.metafields[metafield_namespace][metafield_key]
+
+    assign img_width = block.settings.brand_image_size
+%}
+
+<div class="product-block-brand-image-text d-flex align-items-center gap-3 {{ block.settings.image_text_align }} {{ mt }} {{ mb }}" {{ block.shopify_attributes }}>
+    {% if block.settings.show_brand_image and brand_image %}
+        <div class="product-block-brand-image {{ mt }} {{ mb }}">
+            <img
+              class="img-fluid brand-image"
+              src="{{ brand_image | image_url: width: img_width }}"
+              alt="{{ 'Image de marque' | escape }}"
+              width="{{ img_width }}"
+              height="auto"
+              loading="lazy">
+        </div>
+    {% endif %}
+    
+    {% if block.settings.show_vendor and product.vendor %}
+        <div class="product-block-text {{ mt }} {{ mb }}">
+            <p class="product-vendor my-1 {{ block.settings.font_size }} {{ block.settings.text_transform }} fw-{{ block.settings.text_font_weight }} {% if block.settings.is_badge %}badge {{ block.settings.badge_color }}{% else %}text-muted{% endif %}">
+                {{ product.vendor }}
+            </p>
+        </div>
+    {% endif %}
+</div>
+

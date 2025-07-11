@@ -1,0 +1,792 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid 
+    assign pt = section.settings.pt | prepend: 'pt-'
+    assign pb = section.settings.pb | prepend: 'pb-'
+    assign mt = section.settings.mt | prepend: 'mt-'
+    assign mb = section.settings.mb | prepend: 'mb-'
+
+    assign bg_color = section.settings.bg_color
+
+    if section.settings.bg_gradient
+        assign bg_color = bg_color | append: ' bg-gradient'
+    endif
+
+    assign btn_shadow_sp = settings.btn_shadow_sp
+
+    assign brand_img_width = section.settings.brand_image_size
+%}
+
+{% style %}
+#background-text-{{ section.id }} {
+    font-size: calc(2em * {{ section.settings.title_overlay_size }});
+}
+  
+.timeline-list::before {
+    width: {{ section.settings.timeline_line_width }}px;   
+    background: rgba(var(--{{ section.settings.timeline_line_color }}-rgb), .5);
+}
+.timeline-list-item::before {
+    background: rgba(var(--{{ section.settings.timeline_line_color }}-rgb), 1);
+    width: {{ section.settings.timeline_dot_diameter }}px;
+    height: {{ section.settings.timeline_dot_diameter }}px;
+    transform: translateX({{ section.settings.timeline_dot_diameter | divided_by: 2 }}px);
+}
+.timeline-list-item:nth-child(odd)::before {
+    transform: translateX(-{{ section.settings.timeline_dot_diameter | divided_by: 2 }}px);
+}
+@media (max-width: 575px) {
+    .timeline-list-item::before {
+        transform: translateX(-{{ section.settings.timeline_dot_diameter | divided_by: 2 }}px);
+    }
+}
+{% endstyle %}
+
+<section 
+    id="timeline-{{ section.id }}" 
+    class="timeline overflow-hidden {{ bg_color }} {{ section.settings.text_align }} {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+    <div class="{{ section.settings.container }}" style="max-width: {{ section.settings.max_width }}px;">
+        {% unless section.settings.subtitle_img == blank %}
+            <div>
+                <img
+                    class="img-fluid mb-5"
+                    src="{{ section.settings.subtitle_img.src | image_url: width: brand_img_width }}"
+                    alt="{{ section.settings.subtitle_img.alt | escape }}"
+                    width="{{ brand_img_width }}"
+                    height="auto"
+                    loading="lazy">
+            </div>
+        {% endunless %}
+        
+        {% unless section.settings.subtitle == blank %}
+            <div>
+                <p class="subtitle text-uppercase fw-500 mb-3 {{ section.settings.subtitle_size }}"
+                    style="color:{{ section.settings.color_caption }};">
+                    {{ section.settings.subtitle }}
+                </p>
+            </div>
+        {% endunless %} 
+      
+        {% unless section.settings.title == blank %}
+            <div class="overlay-text-container my-4" style="position: relative;">
+                {% unless section.settings.title_overlay == blank %}
+                    <div id="background-text-{{ section.id }}" class="background-text-overlay d-none d-lg-block"
+                          style="color:{{ section.settings.color_title_overlay }};">
+                        {{ section.settings.title_overlay }}
+                    </div>
+                {% endunless %}
+                <{{ section.settings.heading_tag }} class="title mb-4 {{ section.settings.title_size }}">
+                    {{ section.settings.title }}
+                    {% if settings.custom_svg_h2 != blank %}
+                        <div class="h2_svg">
+                          <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {{ settings.custom_svg_h2 }}</span>
+                        </div>
+                    {% else %}
+                        {% if settings.svg_h2 != 'none' %}
+                            <div class="h2_svg mb-4">
+                              <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {% render 'svg-subtitle', svg_h2: settings.svg_h2 %}</span>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                </{{ section.settings.heading_tag }}>
+            </div>
+        {% endunless %}
+        {% unless section.settings.description == blank %}
+            <div class="description rte text-muted {% if section.settings.title_overlay %}mt-lg-6{% else %}mt-0{% endif %} mb-5 {{ section.settings.description_size }}">
+                {{ section.settings.description }}
+            </div>
+        {% endunless %}
+        <ul class="timeline-list">
+            {% for block in section.blocks %}
+                {% liquid
+                    case block.settings.img_orientation
+                        when 'square'
+                            assign img_width  = 600
+                            assign img_height = 600
+                        when 'landscape-4x3'
+                            assign img_width  = 600
+                            assign img_height = 600 | divided_by: 4 | times: 3 | round
+                        when 'landscape-16x9'
+                            assign img_width  = 600
+                            assign img_height = 600 | divided_by: 16 | times: 9 | round
+                        when 'potrait-3x4'
+                            assign img_width  = 600 
+                            assign img_height = 600 | divided_by: 3 | times: 4 | round
+                        when 'potrait-9x16'
+                            assign img_width  = 600 
+                            assign img_height = 600 | divided_by: 9 | times: 16 | round
+                        when 'adapt'
+                            assign img_width  = 600
+                            assign img_height = 600 | divided_by: block.settings.img.aspect_ratio | round
+                    endcase
+                %}
+                <li class="timeline-list-item enter-view py-4" {{ block.shopify_attributes }}>
+                    <div 
+                        class="{% unless block.settings.animation == '' %}animate__animated opacity-0 {{ block.settings.animation_speed }}{% endunless %}"
+                        data-animate-class="{{ block.settings.animation }}"
+                        style="animation-delay: {{ forloop.index | times: 150 }}ms;">
+                        <div 
+                            class="card {{ block.settings.shadow_sp }} {{ block.settings.border_color }}"
+                            style="border-width: {{ block.settings.border_width }}px;">
+                            {% unless block.settings.img == blank %}
+                                <img
+                                    class="img-fluid card-img-top"
+                                    src="{{ block.settings.img.src | image_url: width: img_width, height: img_height, crop: block.settings.img_crop }}"
+                                    alt="{{ block.settings.img.alt | escape }}"
+                                    width="{{ img_width }}"
+                                    height="{{ img_height }}"
+                                    loading="lazy">
+                            {% endunless %}
+                            <div class="card-body {{ block.settings.text_align }}">
+                                {% unless block.settings.date == blank %}
+                                    <p class="badge text-uppercase mb-5 {{ block.settings.date_bg_color }}">
+                                        {{ block.settings.date }}
+                                    </p>
+                                {% endunless %}
+                                {% unless block.settings.title == blank %}
+                                    <h3 class="title mb-3 {{ block.settings.title_size }}">
+                                        {{ block.settings.title }}
+                                    </h3>
+                                {% endunless %}
+                                {% unless block.settings.description == blank %}
+                                    <div class="description rte mb-0 {{ block.settings.description_size }}">
+                                        {{ block.settings.description }}
+                                    </div>
+                                {% endunless %}
+                                {% unless block.settings.btn_text == blank %}
+                                    <a class="btn mt-5 w-100 {{ block.settings.btn_color }} {{ btn_shadow_sp }} {{ block.settings.btn_size }}" href="{{ block.settings.btn_url }}">
+                                        {{ block.settings.btn_text }}
+                                    </a>
+                                {% endunless %}
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        {% unless section.settings.btn_text == blank %}
+            <a 
+                class="btn btn-md mt-4 mb-0 {{ section.settings.btn_color }} {{ btn_shadow_sp }} {{ section.settings.btn_size }}" 
+                href="{{ section.settings.btn_url }}">
+                {{ section.settings.btn_text }}
+            </a>
+        {% endunless %}
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Chronologie",
+    "settings": [
+        {
+            "type": "paragraph", 
+            "content": "Documentation FR : [Chronologie by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/sections\/chronologie)"
+        },
+        {
+            "type": "header",
+            "content": "General"
+        },
+        {
+            "type": "select",
+            "id": "bg_color",
+            "label": "Couleur de l'arrière plan",
+            "default": "bg-body text-body",
+            "options": [
+                { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+                { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+                { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+                { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
+                { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+                { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Sombre" },
+                { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "bg_gradient",
+            "label": "Dégradé d'arrière-plan",
+            "default": false,
+            "info": "Ne s'applique pas aux couleurs claires"
+        },
+        {
+            "type": "select",
+            "id": "container",
+            "label": "Conteneur",
+            "default": "container",
+            "options": [
+                { "value": "container", "label": "Conteneur" },
+                { "value": "container-fluid", "label": "Pleine largeur" }
+            ]
+        },
+        {
+            "type": "text",
+            "id": "max_width",
+            "label": "Largeur maximale (px)",
+            "info": "Ajuster la largeur du conteneur (en pixels)"
+        },
+        {
+            "type": "select",
+            "id": "text_align",
+            "label": "Alignement du texte",
+            "default": "text-center",
+            "options": [
+                { "value": "text-start", "label": "Gauche" },
+                { "value": "text-center", "label": "Centre" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "En-tête de la section"
+        },
+        {
+            "type": "image_picker",
+            "id": "subtitle_img",
+            "label": "Légende Image"
+        },
+        {
+            "type": "text",
+            "id": "brand_image_size",
+            "label": "Image Largeur/Hauteur (px)",
+            "default": "60"
+        },
+        {
+            "type": "text",
+            "id": "subtitle",
+            "label": "Légende Texte",
+            "default": "Proposition de valeur unique"
+        },
+        {
+            "type": "select",
+            "id": "subtitle_size",
+            "label": "Taille de la légende",
+            "default": "fs-5",
+            "options": [
+                { "group": "Légende Standard", "value": "fs-1", "label": "Extra Grand" },
+                { "group": "Légende Standard", "value": "fs-2", "label": "Super Grand" },
+                { "group": "Légende Standard", "value": "fs-3", "label": "Très Grand" },
+                { "group": "Légende Standard", "value": "fs-4", "label": "Grand" },
+                { "group": "Légende Standard", "value": "fs-5", "label": "Moyen" },
+                { "group": "Légende Standard", "value": "fs-6", "label": "Petit" } 
+            ]
+        },
+        {
+            "type": "color",
+            "id": "color_caption",
+            "label": "Couleur de la légende",
+            "default": "#6c757d"
+        },
+        {
+            "type": "text",
+            "id": "title_overlay",
+            "label": "Titre overlay",
+            "info": "Visible sur ordinateur, masqué sur mobile pour optimiser la lisibilité."
+        },
+        {
+            "type": "select",
+            "id": "title_overlay_size",
+            "label": "Taille du titre overlay",
+            "default": "3",
+            "options": [
+                { "group": "Titre Overlay", "value": "4", "label": "Grand" },
+                { "group": "Titre Overlay", "value": "3", "label": "Moyen" },
+                { "group": "Titre Overlay", "value": "2", "label": "Petit" }
+            ]
+        },
+        {
+            "type": "color",
+            "id": "color_title_overlay",
+            "label": "Couleur du titre overlay",
+            "default": "#000000"
+        },
+        {
+            "type": "inline_richtext",
+            "id": "title",
+            "label": "Titre",
+            "default": "Chronologie"
+        },
+        {
+            "type": "select",
+            "id": "heading_tag",
+            "label": "Balise titre (SEO)",
+            "default": "h2",
+            "options": [
+                { "value": "h1", "label": "h1" },
+                { "value": "h2", "label": "h2" },
+                { "value": "h3", "label": "h3" },
+                { "value": "h4", "label": "h4" },
+                { "value": "h5", "label": "h5" },
+                { "value": "h6", "label": "h6" },
+                { "value": "span", "label": "Aucune" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "title_size",
+            "label": "Taille du titre",
+            "default": "h2",
+            "options": [
+                { "group": "Titre Supérieur", "value": "display-1", "label": "Extra Extra Grand" },
+                { "group": "Titre Supérieur", "value": "display-2", "label": "Extra Grand" },
+                { "group": "Titre Supérieur", "value": "display-3", "label": "Ultra Grand" },
+                { "group": "Titre Supérieur", "value": "display-4", "label": "Super Grand" },
+                { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+            ]
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Description (facultatif)",
+            "default": "<p>Ajouter une description facultative à cette section</p>"
+        },
+        {
+            "type": "select",
+            "id": "description_size",
+            "label": "Taille de description",
+            "default": "fs-5",
+            "options": [
+                { "group": "Description Standard", "value": "fs-1", "label": "Extra Grand" },
+                { "group": "Description Standard", "value": "fs-2", "label": "Super Grand" },
+                { "group": "Description Standard", "value": "fs-3", "label": "Très Grand" },
+                { "group": "Description Standard", "value": "fs-4", "label": "Grand" },
+                { "group": "Description Standard", "value": "fs-5", "label": "Moyen" },
+                { "group": "Description Standard", "value": "fs-6", "label": "Petit" } 
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Chronologie"
+        },
+        {
+            "type": "range",
+            "id": "timeline_line_width",
+            "label": "Largeur de la ligne",
+            "unit": "px",
+            "min": 1,
+            "max": 20,
+            "step": 1,
+            "default": 4
+        },
+        {
+            "type": "select",
+            "id": "timeline_line_color",
+            "label": "Couleur de la ligne",
+            "default": "bs-primary",
+            "options": [
+                { "group": "Principal", "value": "bs-primary", "label": "Primaire" },
+                { "group": "Principal", "value": "bs-secondary", "label": "Secondaire" },
+                { "group": "Principal", "value": "bs-tertiary", "label": "Tertiaire" },
+                { "group": "Intermédiaire", "value": "bs-white", "label": "Blanc" },
+                { "group": "Intermédiaire", "value": "bs-light", "label": "Claire" },
+                { "group": "Intermédiaire", "value": "bs-dark", "label": "Sombre" },
+                { "group": "Par défaut", "value": "bs-body", "label": "Corps (body)" },
+                { "group": "Alerte", "value": "bs-success", "label": "Succès" },
+                { "group": "Alerte", "value": "bs-warning", "label": "Avertissement" },
+                { "group": "Alerte", "value": "bs-danger", "label": "Danger" },
+                { "group": "Alerte", "value": "bs-info", "label": "Info" }
+            ]
+        },
+        {
+            "type": "range",
+            "id": "timeline_dot_diameter",
+            "label": "Diamètre des points",
+            "unit": "px",
+            "min": 1,
+            "max": 40,
+            "step": 1,
+            "default": 20
+        },
+        {
+            "type": "header",
+            "content": "Bouton 'En savoir plus'"
+        },
+        {
+            "type": "text",
+            "id": "btn_text",
+            "label": "Texte du bouton",
+            "default": "En savoir plus",
+            "info": "Laisser vide pour désactiver"
+        },
+        {
+            "type": "url",
+            "id": "btn_url",
+            "label": "URL du bouton"
+        },
+        {
+            "type": "select",
+            "id": "btn_color",
+            "label": "Couleur du bouton",
+            "default": "btn-primary",
+            "options": [
+                { "group": "Normal", "value": "btn-link", "label": "Lien" },
+                { "group": "Normal", "value": "btn-light", "label": "Claire" },
+                { "group": "Normal", "value": "btn-dark", "label": "Sombre" },
+                { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
+                { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
+                { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
+                { "group": "Normal", "value": "btn-success", "label": "Succès" },
+                { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+                { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
+                { "group": "Normal", "value": "btn-info", "label": "Info" },
+                { "group": "Contour", "value": "btn-outline-light", "label": "Contour Claire" },
+                { "group": "Contour", "value": "btn-outline-dark", "label": "Contour Sombre" },
+                { "group": "Contour", "value": "btn-outline-primary", "label": "Contour Primaire" },
+                { "group": "Contour", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
+                { "group": "Contour", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
+                { "group": "Contour", "value": "btn-outline-success", "label": "Contour Succès" },
+                { "group": "Contour", "value": "btn-outline-danger", "label": "Contour Danger" },
+                { "group": "Contour", "value": "btn-outline-warning", "label": "Contour Avertissement" },
+                { "group": "Contour", "value": "btn-outline-info", "label": "Contour Info" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Espacement de la section"
+        },
+        {
+            "type": "range",
+            "id": "pt",
+            "label": "Padding supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "pb",
+            "label": "Padding inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mt",
+            "label": "Marge supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mb",
+            "label": "Marge inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        }
+    ],
+    "blocks": [
+        {
+            "type": "item",
+            "name": "Item",
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "General"
+                },
+                {
+                    "type": "select",
+                    "id": "text_align",
+                    "label": "Alignement du texte",
+                    "default": "text-start",
+                    "options": [
+                        { "value": "text-start", "label": "Gauche" },
+                        { "value": "text-center", "label": "Centre" },
+                        { "value": "text-end", "label": "Droite" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "border_color",
+                    "label": "Couleur de la bordure",
+                    "options": [
+                        { "value": "", "label": "Default" },
+                        { "value": "border-primary", "label": "Primaire" },
+                        { "value": "border-secondary", "label": "Secondaire" },
+                        { "value": "border-tertiary", "label": "Tertiaire" },
+                        { "value": "border-dark", "label": "Sombre" },
+                        { "value": "border-success", "label": "Succès" },
+                        { "value": "border-warning", "label": "Avertissement" },
+                        { "value": "border-danger", "label": "Danger" },
+                        { "value": "border-info", "label": "Info" }
+                    ],
+                    "default": ""
+                },
+                {
+                    "type": "range",
+                    "id": "border_width",
+                    "label": "Largeur de la bordure",
+                    "min": 0,
+                    "max": 10,
+                    "step": 1,
+                    "default": 1
+                },
+                {
+                    "type": "select",
+                    "id": "shadow_sp",
+                    "label": "Ombre",
+                    "options": [
+                        { "value": "shadow-none", "label": "Aucune" },
+                        { "value": "shadow-1", "label": "Ombre légère" },
+                        { "value": "shadow-2", "label": "Ombre partiel" },
+                        { "value": "shadow-3", "label": "Ombre profonde" },
+                        { "value": "shadow-4", "label": "Ombre totale" }
+                    ],
+                    "default": "shadow-1"
+                },
+                {
+                    "type": "header",
+                    "content": "Animation"
+                },
+                {
+                    "type": "select",
+                    "id": "animation",
+                    "label": "Effet d'animation",
+                    "default": "animate__zoomIn",
+                    "options": [
+                        { "group": "Désactivé", "value": "", "label": "Pas d'animation" },
+                        { "group": "Retour", "value": "animate__backInDown", "label": "Back In Down" },
+                        { "group": "Retour", "value": "animate__backInLeft", "label": "Back In Left" },
+                        { "group": "Retour", "value": "animate__backInRight", "label": "Back In Right" },
+                        { "group": "Retour", "value": "animate__backInUp", "label": "Back In Up" },
+                        { "group": "Rebond", "value": "animate__bounceIn", "label": "Bounce In" },
+                        { "group": "Rebond", "value": "animate__bounceInDown", "label": "Bounce-in-down" },
+                        { "group": "Rebond", "value": "animate__bounceInLeft", "label": "Bounce-in-left" },
+                        { "group": "Rebond", "value": "animate__bounceInRight", "label": "Bounce-in-right" },
+                        { "group": "Rebond", "value": "animate__bounceInUp", "label": "Bounce-in-up" },
+                        { "group": "Fondu", "value": "animate__fadeIn", "label": "Fade In" },
+                        { "group": "Fondu", "value": "animate__fadeInDown", "label": "Fade-in-down" },
+                        { "group": "Fondu", "value": "animate__fadeInDownBig", "label": "Fade-in-down Big" },
+                        { "group": "Fondu", "value": "animate__fadeInLeft", "label": "Fade-in-left" },
+                        { "group": "Fondu", "value": "animate__fadeInLeftBig", "label": "Fade-in-left Big" },
+                        { "group": "Fondu", "value": "animate__fadeInRight", "label": "Fade-in-right" },
+                        { "group": "Fondu", "value": "animate__fadeInRightBig", "label": "Fade-in-right Big" },
+                        { "group": "Fondu", "value": "animate__fadeInUp", "label": "Fade-in-up" },
+                        { "group": "Fondu", "value": "animate__fadeInUpBig", "label": "Fade-in-up Big" },
+                        { "group": "Fondu", "value": "animate__fadeInTopLeft", "label": "Fade-in Top Left" },
+                        { "group": "Fondu", "value": "animate__fadeInTopRight", "label": "Fade-in Top Right" },
+                        { "group": "Fondu", "value": "animate__fadeInBottomLeft", "label": "Fade-in Bottom Left" },
+                        { "group": "Fondu", "value": "animate__fadeInBottomRight", "label": "Fade-in Bottom Right" },
+                        { "group": "Flip", "value": "animate__flip", "label": "Flip" },
+                        { "group": "Flip", "value": "animate__flipInX", "label": "Flip In X" },
+                        { "group": "Flip", "value": "animate__flipInY", "label": "Flip In Y" },
+                        { "group": "Flip", "value": "animate__flipOutX", "label": "Flip Out X" },
+                        { "group": "Flip", "value": "animate__flipOutY", "label": "Flip Out Y" },
+                        { "group": "Vitesse Lumière", "value": "animate__lightSpeedInRight", "label": "Light Speed In Right" },
+                        { "group": "Vitesse Lumière", "value": "animate__lightSpeedInLeft", "label": "Light Speed In Left" },
+                        { "group": "Rotation", "value": "animate__rotateIn", "label": "Rotate In" },
+                        { "group": "Rotation", "value": "animate__rotateInDownLeft", "label": "Rotate In Down Left" },
+                        { "group": "Rotation", "value": "animate__rotateInDownRight", "label": "Rotate In Down Right" },
+                        { "group": "Rotation", "value": "animate__rotateInUpLeft", "label": "Rotate In Up Left" },
+                        { "group": "Rotation", "value": "animate__rotateInUpRight", "label": "Rotate In Up Right" },
+                        { "group": "Zoom", "value": "animate__zoomIn", "label": "Zoom In" },
+                        { "group": "Zoom", "value": "animate__zoomInDown", "label": "Zoom In Down" },
+                        { "group": "Zoom", "value": "animate__zoomInLeft", "label": "Zoom In Left" },
+                        { "group": "Zoom", "value": "animate__zoomInRight", "label": "Zoom In Right" },
+                        { "group": "Zoom", "value": "animate__zoomInUp", "label": "Zoom In Up" },
+                        { "group": "Glissement", "value": "animate__slideInDown", "label": "Slide In Down" },
+                        { "group": "Glissement", "value": "animate__slideInLeft", "label": "Slide In Left" },
+                        { "group": "Glissement", "value": "animate__slideInRight", "label": "Slide In Right" },
+                        { "group": "Glissement", "value": "animate__slideInUp", "label": "Slide In Up" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "animation_speed",
+                    "label": "Vitesse d'animation",
+                    "default": "animate__fast",
+                    "options": [
+                        { "value": "animate__slower", "label": "Plus lent" },
+                        { "value": "animate__slow", "label": "Lent" },
+                        { "value": "", "label": "Normal" },
+                        { "value": "animate__fast", "label": "Rapide" },
+                        { "value": "animate__faster", "label": "Plus rapide" }
+            
+                    ]
+                },
+                {
+                    "type": "header",
+                    "content": "Image"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "img",
+                    "label": "Image"
+                },
+                {
+                    "type": "select",
+                    "id": "img_orientation",
+                    "label": "Image orientation",
+                    "default": "landscape-16x9",
+                    "options": [
+                        { "value": "square", "label": "Carré" },
+                        { "value": "landscape-4x3", "label": "Paysage" },
+                        { "value": "landscape-16x9", "label": "Paysage x2" },
+                        { "value": "potrait-3x4", "label": "Portrait" },
+                        { "value": "potrait-9x16", "label": "Portrait x2" },
+                        { "value": "adapt", "label": "Adapter à l'image" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "img_crop",
+                    "label": "Recadrage de l'image",
+                    "default": "center",
+                    "options": [
+                        { "value": "top", "label": "Haut" },
+                        { "value": "center", "label": "Centre" },
+                        { "value": "bottom", "label": "Bas" },
+                        { "value": "left", "label": "Gauche" },
+                        { "value": "right", "label": "Droite" }
+                    ]
+                },
+                {
+                    "type": "header",
+                    "content": "Texte"
+                },
+                {
+                    "type": "text",
+                    "id": "date",
+                    "label": "Date",
+                    "default": "Janvier 2024"
+                },
+                {
+                    "type": "select",
+                    "id": "date_bg_color",
+                    "label": "Couleur de l'arrière plan 'Date'",
+                    "default": "bg-primary text-white",
+                    "options": [
+                        { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+                        { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+                        { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+                        { "group": "Intermédiaire", "value": "bg-white text-body", "label": "Blanc" },
+                        { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+                        { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Sombre" },
+                        { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" },
+                        { "group": "Alerte", "value": "bg-success text-white", "label": "Succès" },
+                        { "group": "Alerte", "value": "bg-warning text-white", "label": "Avertissement" },
+                        { "group": "Alerte", "value": "bg-danger text-white", "label": "Danger" },
+                        { "group": "Alerte", "value": "bg-info text-white", "label": "Info" }
+                    ]
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Titre",
+                    "default": "Chronologie Item"
+                },
+                {
+                    "type": "select",
+                    "id": "title_size",
+                    "label": "Taille du titre",
+                    "default": "h4",
+                    "options": [
+                        { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                        { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                        { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                        { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                        { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                        { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+                    ]
+                },
+                {
+                    "type": "richtext",
+                    "id": "description",
+                    "label": "Description",
+                    "default": "<p>Associez du texte à une image pour mettre l'accent sur le produit, la collection ou l'article de blog de votre choix. Ajoutez des détails sur la disponibilité, le style, ou donnez même un avis.</p>"
+                },
+                {
+                    "type": "select",
+                    "id": "description_size",
+                    "label": "Taille de description",
+                    "default": "fs-6",
+                    "options": [
+                        { "group": "Description Standard", "value": "fs-1", "label": "Extra Grand" },
+                        { "group": "Description Standard", "value": "fs-2", "label": "Super Grand" },
+                        { "group": "Description Standard", "value": "fs-3", "label": "Très Grand" },
+                        { "group": "Description Standard", "value": "fs-4", "label": "Grand" },
+                        { "group": "Description Standard", "value": "fs-5", "label": "Moyen" },
+                        { "group": "Description Standard", "value": "fs-6", "label": "Petit" }
+                    ]
+                },
+                {
+                    "type": "header",
+                    "content": "Bouton"
+                },
+                {
+                    "type": "text",
+                    "id": "btn_text",
+                    "label": "Texte du bouton",
+                    "default": "En savoir plus",
+                    "info": "Laisser vide pour désactiver"
+                },
+                {
+                    "type": "url",
+                    "id": "btn_url",
+                    "label": "URL du bouton"
+                },
+                {
+                    "type": "select",
+                    "id": "btn_color",
+                    "label": "Couleur du bouton",
+                    "default": "btn-primary",
+                    "options": [
+                        { "group": "Normal", "value": "btn-link", "label": "Lien" },
+                        { "group": "Normal", "value": "btn-light", "label": "Claire" },
+                        { "group": "Normal", "value": "btn-dark", "label": "Sombre" },
+                        { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
+                        { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
+                        { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
+                        { "group": "Normal", "value": "btn-success", "label": "Succès" },
+                        { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+                        { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
+                        { "group": "Normal", "value": "btn-info", "label": "Info" },
+                        { "group": "Contour", "value": "btn-outline-light", "label": "Contour Claire" },
+                        { "group": "Contour", "value": "btn-outline-dark", "label": "Contour Sombre" },
+                        { "group": "Contour", "value": "btn-outline-primary", "label": "Contour Primaire" },
+                        { "group": "Contour", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
+                        { "group": "Contour", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
+                        { "group": "Contour", "value": "btn-outline-success", "label": "Contour Succès" },
+                        { "group": "Contour", "value": "btn-outline-danger", "label": "Contour Danger" },
+                        { "group": "Contour", "value": "btn-outline-warning", "label": "Contour Avertissement" },
+                        { "group": "Contour", "value": "btn-outline-info", "label": "Contour Info" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "btn_size",
+                    "label": "Taille du bouton",
+                    "default": "btn-sm",
+                    "options": [
+                        { "value": "btn-sm", "label": "Petit" },
+                        { "value": "btn-md", "label": "Normal" },
+                        { "value": "btn-lg", "label": "Large" }
+                    ]
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Chronologie",
+            "category": "General"
+        }
+    ]
+}
+{% endschema %}

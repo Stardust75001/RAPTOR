@@ -1,0 +1,544 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid 
+    if section.index > 1
+      assign media_loading = 'lazy'
+    else
+      assign media_loading = 'eager'
+    endif
+  
+    assign pt = section.settings.pt | prepend: 'pt-'
+    assign pb = section.settings.pb | prepend: 'pb-'
+    assign mt = section.settings.mt | prepend: 'mt-'
+    assign mb = section.settings.mb | prepend: 'mb-'
+
+    assign btn_shadow_sp = settings.btn_shadow_sp %}
+
+<section
+    id="parallax-scroll-{{ section.id }}" 
+    class="parallax-scroll {{ pt }} {{ pb }} {{ mt }} {{ mb }}"
+    style=" 
+       --text-color: {{ section.settings.text_color }};
+       --overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+       --overlay-blur: {{ section.settings.overlay_blur | append: 'px' }}
+    ">
+    <div 
+      class="media-wrapper">
+        {% if section.settings.video_mobile or section.settings.video_desktop %}
+            <div class="media-mobile">
+                {{ section.settings.video_mobile | video_tag: 
+                    class: 'parallax-scroll-media',
+                    image_size: '800x', 
+                    autoplay: true, 
+                    loop: true, 
+                    muted: true, 
+                    controls: false,
+                    loading: media_loading
+                }}
+            </div>
+            <div class="media-desktop">
+                {{ section.settings.video_desktop | video_tag: 
+                    class: 'parallax-scroll-media',
+                    image_size: '1600x', 
+                    autoplay: true, 
+                    loop: true, 
+                    muted: true, 
+                    controls: false,
+                    loading: media_loading
+                }}
+            </div>
+        {% elsif section.settings.img_mobile or section.settings.img_desktop %}
+            <div class="media-mobile">
+                <img 
+                  class="parallax-scroll-media"
+                  src="{{ section.settings.img_mobile | image_url: width: '800' }}" 
+                  alt="{{ section.settings.img_mobile.alt }}"
+                  width="800"
+                  height="{{ 800 | divided_by: section.settings.img_mobile.aspect_ratio | round }}"
+                  loading="{{ media_loading }}">
+            </div>
+            <div class="media-desktop">
+                <img 
+                  class="parallax-scroll-media"
+                  src="{{ section.settings.img_desktop | image_url: width: '1600' }}" 
+                  alt="{{ section.settings.img_desktop.alt }}"
+                  width="1600"
+                  height="{{ 1600 | divided_by: section.settings.img_desktop.aspect_ratio | round }}"
+                  loading="{{ media_loading }}">
+            </div>
+        {% else %}
+            {% capture current %}{% cycle 1, 2 %}{% endcapture %}
+            {{ 'hero-apparel-' | append: current | placeholder_svg_tag }}
+        {% endif %}
+    </div>
+    <div class="parallax-scroll-caption-wrapper">
+        {% for block in section.blocks %}
+            <div 
+              class="parallax-scroll-caption-inner" 
+              style="max-width: {{ block.settings.caption_max_width | append: 'px' }}; color: var(--text-color);">
+                <div class="parallax-scroll-caption-inner-inner enter-view">
+                    {% unless block.settings.subtitle_img == blank %}
+                        {% assign img_width = block.settings.brand_image_size %}
+                        <div 
+                            class="animate__animated animate__faster opacity-0"
+                            {% if settings.effect_apply_caption_enable %}
+                              data-animate-class="{{ settings.animation_caption_name }}"
+                              style="animation-delay: 1200ms;"
+                            {% endif %}>
+                                <img
+                                    class="img-fluid mb-5"
+                                    src="{{ block.settings.subtitle_img.src | image_url: width: img_width }}"
+                                    alt="{{ block.settings.subtitle_img.alt | escape }}"
+                                    width="{{ img_width }}"
+                                    height="auto"
+                                    loading="lazy">
+                        </div>
+                    {% endunless %}
+                    {% unless block.settings.subtitle == blank %}
+                         <div 
+                            class="animate__animated animate__faster opacity-0"
+                            {% if settings.effect_apply_caption_enable %}
+                              data-animate-class="{{ settings.animation_caption_name }}"
+                              style="animation-delay: 1000ms;"
+                            {% endif %}>
+                                <p class="subtitle text-uppercase fw-500 mb-3 {{ block.settings.subtitle_size }}"
+                                   style="color:{{ block.settings.color_caption }};">
+                                  {{ block.settings.subtitle }}
+                                </p>
+                        </div>
+                    {% endunless %}
+                    {% unless block.settings.title == blank %}
+                        <{{ block.settings.heading_tag }} class="title mb-4 mb-desktop-5 {{ block.settings.title_size }} animate__animated animate__faster opacity-0"
+                          {% if settings.effect_apply_title_enable %}
+                            data-animate-class="{{ settings.animation_title_name }}"
+                            style="animation-delay: 200ms;"
+                          {% endif %}>
+                          {{ block.settings.title }}
+                          {% if settings.custom_svg_h2 != blank %}
+                            <div class="h2_svg animate__animated animate__faster opacity-0"
+                                {% if settings.effect_apply_svg_enable %} 
+                                  data-animate-class="{{ settings.animation_svg_name }}"
+                                  style="animation-delay: 400ms;"
+                                {% endif %}
+                            >
+                              <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {{ settings.custom_svg_h2 }}</span>
+                            </div>
+                          {% else %}
+                            {% if settings.svg_h2 != 'none' %}
+                              <div class="h2_svg mb-4 animate__animated animate__faster opacity-0"
+                                    {% if settings.effect_apply_svg_enable %} 
+                                      data-animate-class="{{ settings.animation_svg_name }}"
+                                      style="animation-delay: 400ms;"
+                                    {% endif %}>
+                                <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {% render 'svg-subtitle', svg_h2: settings.svg_h2 %}</span>
+                              </div>
+                            {% endif %}
+                          {% endif %}
+                        </{{ block.settings.heading_tag }}>
+                    {% endunless %}
+                    {% unless block.settings.description == blank %}
+                        <div class="description rte mb-5 {{ block.settings.description_size }} animate__animated animate__faster opacity-0"
+                            {% if settings.effect_apply_description_enable %} 
+                              data-animate-class="{{ settings.animation_description_name }}"
+                              style="animation-delay: 600ms;"
+                            {% endif %}>
+                            {{ block.settings.description }}
+                        </div>
+                    {% endunless %}
+                    {% if block.settings.btn_primary_text != blank or block.settings.btn_secondary_text != blank %}
+                        <div class="btn-wrapper m-n2">
+                          {% unless block.settings.btn_primary_text == blank %}
+                            <div 
+                                class="d-inline-flex mt-7 animate__animated animate__faster opacity-0"
+                                {% if settings.effect_apply_btn_enable %} 
+                                  data-animate-class="{{ settings.animation_btn_name }}"
+                                  style="animation-delay: 1400ms;"
+                                {% endif %}>
+                                <a 
+                                  class="btn m-2 {{ block.settings.btn_primary_color }} {{ btn_shadow_sp }}"  
+                                  href="{{ block.settings.btn_primary_url }}">
+                                  {{ block.settings.btn_primary_text }}
+                                </a>
+                            </div>
+                          {% endunless %}
+                          {% unless block.settings.btn_secondary_text == blank %}
+                            <div 
+                                class="d-inline-flex mt-7 animate__animated animate__faster opacity-0"
+                                {% if settings.effect_apply_btn_enable %} 
+                                  data-animate-class="{{ settings.animation_btn_name }}"
+                                  style="animation-delay: 1600ms;"
+                                {% endif %}>
+                                <a 
+                                  class="btn m-2 {{ block.settings.btn_secondary_color }} {{ btn_shadow_sp }}"  
+                                  href="{{ block.settings.btn_secondary_url }}">
+                                  {{ block.settings.btn_secondary_text }}
+                                </a>
+                            </div>
+                          {% endunless %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+
+{% schema %}
+{
+    "name": "Parallaxe Défilante",
+    "tag": "section",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Stylisation"
+        },
+        {
+            "type": "color",
+            "id": "text_color",
+            "label": "Couleur du texte",
+            "default": "#ffffff"
+        },
+        {
+            "type": "header",
+            "content": "Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "img_mobile",
+            "label": "Image - mobile"
+        },
+        {
+            "type": "image_picker",
+            "id": "img_desktop",
+            "label": "Image - bureau"
+        },
+        {
+            "type": "header",
+            "content": "Vidéo"
+        },
+        {
+            "type": "video",
+            "id": "video_mobile",
+            "label": "Vidéo - mobile"
+        },
+        {
+            "type": "video",
+            "id": "video_desktop",
+            "label": "Vidéo - bureau" 
+        },
+        {
+            "type": "header",
+            "content": "Overlay"
+        },
+        {
+            "type": "range",
+            "id": "overlay_opacity",
+            "label": "Opacité",
+            "min": 0,
+            "max": 100,
+            "step": 10,
+            "default": 30,
+            "unit": "%"
+        },
+        {
+            "type": "range",
+            "id": "overlay_blur",
+            "label": "Flou",
+            "min": 0,
+            "max": 10,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "header",
+            "content": "Espacement de la section"
+        },
+        {
+            "type": "range",
+            "id": "pt",
+            "label": "Padding supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "pb",
+            "label": "Padding inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mt",
+            "label": "Marge supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mb",
+            "label": "Marge inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        }
+    ],
+    "blocks": [
+        {
+            "type": "slide",
+            "name": "Slide",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "caption_max_width",
+                    "label": "Largeur max. (px)",
+                    "default": "720"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "subtitle_img",
+                    "label": "Légende Image"
+                },
+                {
+                    "type": "text",
+                    "id": "brand_image_size",
+                    "label": "Image Largeur/Hauteur (px)",
+                    "default": "60"
+                },
+                {
+                    "type": "text",
+                    "id": "subtitle",
+                    "label": "Légende Texte",
+                    "default": "Proposition de valeur unique"
+                },
+                {
+                    "type": "select",
+                    "id": "subtitle_size",
+                    "label": "Taille de la légende",
+                    "default": "fs-5",
+                    "options": [
+                        { "group": "Légende Standard", "value": "fs-1", "label": "Extra Grand" },
+                        { "group": "Légende Standard", "value": "fs-2", "label": "Super Grand" },
+                        { "group": "Légende Standard", "value": "fs-3", "label": "Très Grand" },
+                        { "group": "Légende Standard", "value": "fs-4", "label": "Grand" },
+                        { "group": "Légende Standard", "value": "fs-5", "label": "Moyen" },
+                        { "group": "Légende Standard", "value": "fs-6", "label": "Petit" } 
+                    ]
+                },
+                {
+                    "type": "color",
+                    "id": "color_caption",
+                    "label": "Couleur de la légende",
+                    "default": "#ffffff"
+                },
+                {
+                  "type": "inline_richtext",
+                  "id": "title",
+                  "label": "Titre",
+                  "default": "Titre du Slide",
+                  "info": "Laisser vide pour désactiver"
+                },
+                {
+                    "type": "select",
+                    "id": "heading_tag",
+                    "label": "Balise titre (SEO)",
+                    "default": "h2",
+                    "options": [
+                        { "value": "h1", "label": "h1" },
+                        { "value": "h2", "label": "h2" },
+                        { "value": "h3", "label": "h3" },
+                        { "value": "h4", "label": "h4" },
+                        { "value": "h5", "label": "h5" },
+                        { "value": "h6", "label": "h6" },
+                        { "value": "span", "label": "Aucune" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "title_size",
+                    "label": "Taille du titre",
+                    "default": "h2",
+                    "options": [
+                        { "group": "Titre Supérieur", "value": "display-1", "label": "Extra Extra Grand" },
+                        { "group": "Titre Supérieur", "value": "display-2", "label": "Extra Grand" },
+                        { "group": "Titre Supérieur", "value": "display-3", "label": "Ultra Grand" },
+                        { "group": "Titre Supérieur", "value": "display-4", "label": "Super Grand" },
+                        { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                        { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                        { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                        { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                        { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                        { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+                    ]
+                },
+                {
+                    "type": "richtext",
+                    "id": "description",
+                    "label": "Description",
+                    "default": "<p>Associez du texte à une image pour mettre l'accent sur le produit, la collection ou l'article de blog de votre choix.</p>"
+                },
+                {
+                    "type": "select",
+                    "id": "description_size",
+                    "label": "Taille de description",
+                    "default": "fs-5",
+                    "options": [
+                        { "group": "Description Standard", "value": "fs-1", "label": "Extra Grand" },
+                        { "group": "Description Standard", "value": "fs-2", "label": "Super Grand" },
+                        { "group": "Description Standard", "value": "fs-3", "label": "Très Grand" },
+                        { "group": "Description Standard", "value": "fs-4", "label": "Grand" },
+                        { "group": "Description Standard", "value": "fs-5", "label": "Moyen" },
+                        { "group": "Description Standard", "value": "fs-6", "label": "Petit" } 
+                    ]
+                },
+                {
+                    "type": "header",
+                    "content": "Premier bouton"
+                },
+                {
+                    "type": "text",
+                    "id": "btn_primary_text",
+                    "label": "Texte du bouton 1",
+                    "info": "Laisser vide pour désactiver"
+                },
+                {
+                    "type": "url",
+                    "id": "btn_primary_url",
+                    "label": "Lien du bouton"
+                },
+                {
+                    "type": "select",
+                    "id": "btn_primary_color",
+                    "label": "Couleur du bouton",
+                    "default": "btn-primary",
+                    "options": [
+                        { "group": "Normal", "value": "btn-link", "label": "Lien" },
+                        { "group": "Normal", "value": "btn-light", "label": "Claire" },
+                        { "group": "Normal", "value": "btn-dark", "label": "Sombre" },
+                        { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
+                        { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
+                        { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
+                        { "group": "Normal", "value": "btn-success", "label": "Succès" },
+                        { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+                        { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
+                        { "group": "Normal", "value": "btn-info", "label": "Info" },
+                        { "group": "Contour", "value": "btn-outline-light", "label": "Contour Claire" },
+                        { "group": "Contour", "value": "btn-outline-dark", "label": "Contour Sombre" },
+                        { "group": "Contour", "value": "btn-outline-primary", "label": "Contour Primaire" },
+                        { "group": "Contour", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
+                        { "group": "Contour", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
+                        { "group": "Contour", "value": "btn-outline-success", "label": "Contour Succès" },
+                        { "group": "Contour", "value": "btn-outline-danger", "label": "Contour Danger" },
+                        { "group": "Contour", "value": "btn-outline-warning", "label": "Contour Avertissement" },
+                        { "group": "Contour", "value": "btn-outline-info", "label": "Contour Info" }
+                    ]
+                },
+                {
+                    "type": "header",
+                    "content": "Second bouton"
+                },
+                {
+                    "type": "text",
+                    "id": "btn_secondary_text",
+                    "label": "Texte du bouton 2",
+                    "info": "Laisser vide pour désactiver"
+                },
+                {
+                    "type": "url",
+                    "id": "btn_secondary_url",
+                    "label": "Lien du bouton"
+                },
+                {
+                    "type": "select",
+                    "id": "btn_secondary_color",
+                    "label": "Couleur du bouton",
+                    "default": "btn-secondary",
+                    "options": [
+                        { "group": "Normal", "value": "btn-link", "label": "Lien" },
+                        { "group": "Normal", "value": "btn-light", "label": "Claire" },
+                        { "group": "Normal", "value": "btn-dark", "label": "Sombre" },
+                        { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
+                        { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
+                        { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
+                        { "group": "Normal", "value": "btn-success", "label": "Succès" },
+                        { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+                        { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
+                        { "group": "Normal", "value": "btn-info", "label": "Info" },
+                        { "group": "Contour", "value": "btn-outline-light", "label": "Contour Claire" },
+                        { "group": "Contour", "value": "btn-outline-dark", "label": "Contour Sombre" },
+                        { "group": "Contour", "value": "btn-outline-primary", "label": "Contour Primaire" },
+                        { "group": "Contour", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
+                        { "group": "Contour", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
+                        { "group": "Contour", "value": "btn-outline-success", "label": "Contour Succès" },
+                        { "group": "Contour", "value": "btn-outline-danger", "label": "Contour Danger" },
+                        { "group": "Contour", "value": "btn-outline-warning", "label": "Contour Avertissement" },
+                        { "group": "Contour", "value": "btn-outline-info", "label": "Contour Info" }
+                    ]
+                }
+            ]
+        }
+    ],
+    "disabled_on": {
+      "groups": ["header", "footer"]
+    },
+    "presets": [
+        {
+            "name": "Parallaxe Défilante",
+            "category": "General",
+            "blocks": [
+                {
+                    "type": "slide",
+                    "settings": {
+                        "title": "Titre du Slide 1",
+                        "subtitle": "Proposition de valeur unique 1",
+                        "description": "<p>Associez du texte à une image pour mettre l'accent sur le produit, la collection ou l'article de blog de votre choix.</p>",
+                        "btn_primary_text": "Texte du bouton 1",
+                        "btn_primary_url": "#",
+                        "btn_secondary_text": "Texte du bouton 1",
+                        "btn_secondary_url": "#"
+                    }
+                },
+                {
+                    "type": "slide",
+                    "settings": {
+                        "title": "Titre du Slide 2",
+                        "subtitle": "Proposition de valeur unique 2",
+                        "description": "<p>Associez du texte à une image pour mettre l'accent sur le produit, la collection ou l'article de blog de votre choix.</p>",
+                        "btn_primary_text": "Texte du bouton 2",
+                        "btn_primary_url": "#",
+                        "btn_secondary_text": "Texte du bouton 2",
+                        "btn_secondary_url": "#"
+                    }
+                },
+                {
+                    "type": "slide",
+                    "settings": {
+                        "title": "Titre du Slide 3",
+                        "subtitle": "Proposition de valeur unique 3",
+                        "description": "<p>Associez du texte à une image pour mettre l'accent sur le produit, la collection ou l'article de blog de votre choix.</p>",
+                        "btn_primary_text": "Texte du bouton 3",
+                        "btn_primary_url": "#",
+                        "btn_secondary_text": "Texte du bouton 3",
+                        "btn_secondary_url": "#"
+                    }
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

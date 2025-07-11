@@ -1,0 +1,737 @@
+{% liquid 
+    assign pt = section.settings.pt | prepend: 'pt-'
+    assign pb = section.settings.pb | prepend: 'pb-'
+
+    assign bg_color = section.settings.bg_color
+
+    if section.settings.bg_gradient
+        assign bg_color = bg_color | append: ' bg-gradient'
+    endif
+
+    assign about_bg_color = section.settings.about_bg_color
+
+    if section.settings.about_bg_gradient
+        assign about_bg_color = about_bg_color | append: ' bg-gradient'
+    endif
+
+    assign btn_shadow_sp = settings.btn_shadow_sp
+%}
+
+{% style %}  
+/* Image2 SVG */
+    .navbar-brand svg {
+      width: {{ section.settings.logo_svg_height }}%;
+    }
+{% endstyle %} 
+
+<footer id="footer" class="{{ bg_color }} {{ pt }} {{ pb }}">
+  <div class="footer-logo-wrapper d-flex justify-content-center align-items-center">
+  {% if settings.logo %}
+    <img loading="lazy" height="auto" width="auto" src="{{ settings.logo | image_url }}" alt="{{ shop.name }}" class="footer-logo-img">
+  {% endif %}
+</div>
+    <div class="{{ section.settings.container }}">
+        <div id="footer-blocks" class="row mb-10">
+            {% if section.settings.show_about_area %}
+                <div class="col-lg-4">
+                    <div id="footer-about" class="me-xl-10 mb-7 mb-lg-0 rounded {% if section.settings.about_bg_transparent %}bg-transparent{% else %}{{ about_bg_color }}{% endif %}">
+                        <a class="navbar-brand mb-3" href="{{ routes.root_url }}" aria-label="{{ shop.name }}">
+                            {% if section.settings.about_logo != blank %}
+                                {% assign logo_height_x2 = section.settings.about_logo_height | times: 2 %}
+                                <img
+                                    class="img-fluid"
+                                    src="{{ section.settings.about_logo | image_url: height: logo_height_x2 }}" 
+                                    alt="{{ shop.name }}"
+                                    width="{{ section.settings.about_logo_height | times: section.settings.about_logo.aspect_ratio | round }}" 
+                                    height="{{ section.settings.about_logo_height }}"
+                                    loading="lazy">
+                            {% elsif section.settings.about_logo == blank and section.settings.svg_logo_footer != blank %}
+                                {{ section.settings.svg_logo_footer }}
+                            {% else section.settings.about_logo == blank or section.settings.svg_logo_footer == blank %}
+                                <span class="fs-3">
+                                    {{ shop.name }}
+                                </span>
+                            {% endif %}
+                        </a>
+                        {% unless section.settings.about_description == blank %}
+                            <div class="description mb-5 small">
+                                {{ section.settings.about_description }}
+                            </div>
+                        {% endunless %}
+                        {% unless section.settings.about_phone_text == blank %}
+                            <div id="footer-about-phone mb-1">
+                                <a class="rte small d-inline-flex align-items-center" href="{{ section.settings.about_phone_url }}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-telephone-fill me-3" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/>
+                                    </svg>
+                                    {{ section.settings.about_phone_text }}
+                                </a>
+                            </div>
+                        {% endunless %}
+                        {% unless section.settings.about_email_text == blank %}
+                            <div id="footer-about-email mb-1">
+                                <a class="rte small d-inline-flex align-items-center" href="{{ section.settings.about_email_url }}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope-fill me-3" viewBox="0 0 16 16">
+                                        <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0 4.697ZM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757Zm3.436-.586L16 11.801V4.697l-5.803 3.546Z"></path>
+                                    </svg>
+                                    {{ section.settings.about_email_text }}
+                                </a>
+                            </div>
+                        {% endunless %}
+                        {% unless section.settings.about_adresse_text == blank %}
+                            <div id="footer-about-adresse mb-0">
+                                <div class="small rte d-inline-flex align-items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill me-3" viewBox="0 0 16 16">
+                                        <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+                                    </svg>
+                                    {{ section.settings.about_adresse_text }}
+                                </div>
+                            </div>
+                        {% endunless %}
+                    </div>
+                </div>
+            {% endif %}
+            <div class="{% if section.settings.show_about_area %}col-lg-8{% else %}col-lg-12{% endif %}">
+                <ul class="list-unstyled row mb-0">
+                    {% for block in section.blocks %}
+                        <li class="footer-block col-lg" {{ block.shopify_attributes }}>
+                            <a 
+                                class="nav-link h6 collapsed d-lg-none" 
+                                href="#block-collapse-{{ block.id }}"
+                                data-bs-toggle="collapse"
+                                aria-expanded="false" 
+                                aria-controls="block-collapse-{{ block.id }}"
+                                role="button">
+                                {{ block.settings.title }}
+                            </a>
+                            <h3 class="title d-none d-lg-inline-block {{ block.settings.title_size }}">
+                                <span>
+                                    {{ block.settings.title }}
+                                </span>
+                            </h3>
+                            <div id="block-collapse-{{ block.id }}" class="collapse d-lg-block">
+                                <div class="mt-4 mb-6 my-lg-0">
+                                    {% case block.type %}
+                                        {% when 'richtext' %}
+                                            {% unless block.settings.description == blank %}
+                                                <div class="rte mt-2 small">
+                                                    {{ block.settings.description }}
+                                                </div>
+                                            {% endunless %}
+                                            {% unless block.settings.btn_text == blank %}
+                                                <a class="btn btn-sm w-100 mt-6 {{ block.settings.btn_color }} {{ btn_shadow_sp }} {{ block.settings.btn_size }}" href="{{ block.settings.btn_url }}">
+                                                    {{ block.settings.btn_text }}
+                                                </a>
+                                            {% endunless %}
+                                        {% when 'menu' %}
+                                            <ul class="nav flex-column mb-0">
+                                                {% for link in linklists[block.settings.menu].links %}
+                                                    {% if link.title != ':' %}
+                                                        <li class="nav-item">
+                                                            <a class="nav-link px-0 py-3 py-lg-2" href="{{ link.url }}">
+                                                                {{ link.title }}
+                                                            </a>
+                                                        </li>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </ul>
+
+                                        {%- when 'image' -%}
+                                            {% unless block.settings.description == blank %}
+                                                <div class="rte mt-2 mb-5 small">
+                                                    {{ block.settings.description }}
+                                                </div>
+                                            {% endunless %}
+                                            {% unless block.settings.image_footer == blank -%}
+                                              {% assign image_height_2x = block.settings.image_footer_height | times: 2 %}
+                                              <a class="d-flex align-items-center" href="{{ block.settings.image_link_url }}">
+                                                  <img
+                                                      class="img-fluid mx-auto d-block rounded mt-4"
+                                                      src= "{{ block.settings.image_footer | image_url: height: image_height_2x }}"
+                                                      alt="{{ shop.name }}"
+                                                      width="{{ block.settings.image_footer_height | times: block.settings.image_footer.aspect_ratio | round }}" 
+                                                      height="{{ block.settings.image_footer_height }}"
+                                                      loading="lazy">
+                                              </a>
+                                            {%- else -%}
+                                              {{ 'detailed-apparel-1' | placeholder_svg_tag: 'placeholder-svg rounded' }}
+                                            {%- endunless -%}
+
+                                      {% when 'newsletter' %}
+  {% unless block.settings.description == blank %}
+    <div class="rte mt-2 mb-3 small">
+      {{ block.settings.description }}
+    </div>
+  {% endunless %}
+
+  {% form 'customer' %}
+    <input type="hidden" name="contact[tags]" value="newsletter">
+    {{ form.errors | default_errors }}
+
+    {% if form.posted_successfully? %}
+      <p class="alert alert-success">
+        {{ 'general.newsletter.confirmation_text' | t }}
+      </p>
+    {% endif %}
+
+    <div class="newsletter-form">
+      <div class="newsletter-input-row">
+        <input 
+          type="text" 
+          name="contact[first_name]" 
+          class="form-control form-control-sm newsletter-name-input" 
+          placeholder="{{ 'general.newsletter.name_placeholder' | t }}"
+          aria-label="{{ 'general.newsletter.name_placeholder' | t }}"
+          autocorrect="off"
+          autocapitalize="words" />
+
+        <input 
+          type="email" 
+          name="contact[email]" 
+          class="form-control form-control-sm newsletter-email-input" 
+          value="{% if customer.email != blank %}{{ customer.email }}{% endif %}" 
+          placeholder="{{ 'general.newsletter.input_label' | t }}" 
+          aria-label="{{ 'general.newsletter.input_label' | t }}" 
+          autocorrect="off" 
+          autocapitalize="off" />
+      </div>
+
+      <button 
+        class="btn btn-sm {{ block.settings.btn_color }} {{ btn_shadow_sp }} {{ block.settings.btn_size }}" 
+        type="submit" 
+        name="commit">
+        {{ 'general.newsletter.submit_button' | t }}
+      </button>
+    </div>
+
+    {% unless block.settings.notice == blank %}
+      <div class="notice rte mt-3 lh-sm extra-small text-center">
+        {{ block.settings.notice }}
+      </div>
+    {% endunless %}
+  {% endform %}
+
+                                    {% endcase %}
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        
+        <hr class="d-none d-sm-block mb-7">
+
+        <div id="footer-copyright" class="small text-center">
+            <div class="row align-items-center">
+                <div class="col-lg-4"></div>
+                <div class="col-lg-4 mb-3 mb-lg-0 d-flex flex-column align-items-center">
+                  <div class="footer-social-icons">
+                    <a href="https://www.instagram.com/spencerandthecity/" target="_blank" rel="noopener" aria-label="Instagram">
+  <img height="auto" width="auto" src="{{ 'instagram.png' | asset_url }}" alt="Instagram" class="social-img-icon" loading="lazy">
+</a>
+<a href="https://www.facebook.com/profile.php?id=61573834333893" target="_blank" rel="noopener" aria-label="Facebook">
+  <img height="auto" width="auto" src="{{ 'facebook.png' | asset_url }}" alt="Facebook" class="social-img-icon" loading="lazy">
+</a>
+<a href="https://www.tiktok.com/@thepetsociety_paris" target="_blank" rel="noopener" aria-label="TikTok">
+  <img height="auto" width="auto" src="{{ 'tiktok.png' | asset_url }}" alt="TikTok" class="social-img-icon" loading="lazy">
+</a>
+<a href="https://wa.me/33769238799" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <img height="auto" width="auto" src="{{ 'WhatsApp.png' | asset_url }}" alt="WhatsApp" class="social-img-icon" loading="lazy">
+</a>
+<a href="mailto:hello@thepetsociety.paris" aria-label="Email">
+  <img height="auto" width="auto" src="{{ 'email-icon.png' | asset_url }}" alt="Email" class="social-img-icon" loading="lazy">
+</a>
+                  </div>
+                  <p class="mb-0 small">
+                    &copy; {{ 'now' | date: "%Y" }} {{ shop.name }}. {{ 'general.all_rights_reserved' | t }}
+                  </p>
+                </div>
+                <div class="col-lg-4">
+                    {% if section.settings.show_payment_icons %}
+                        <div class="payment-icons-wrapper">
+                            {% render 'payment-icons' %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        {% if section.settings.language_selector_show or section.settings.currency_selector_show %}
+                <div class="d-flex justify-content-center py-2 mx-4 mt-4 mt-lg-2 mb-2 mb-lg-0">
+                    {% if section.settings.language_selector_show %}
+                        {% render 'language-dropdown' %}
+                    {% endif %}
+                    {% if section.settings.currency_selector_show %}
+                        {% render 'dropdown-currency', btn_color: section.settings.lang_currency_btn_color %}
+                    {% endif %}
+                </div>
+        {% endif %}
+
+        
+    </div>
+</footer>
+
+{% schema %}
+{
+    "name": "Pied de page",
+    "settings": [
+        {
+            "type": "paragraph", 
+            "content": "EN Documentation: [Pied de page by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/pied-de-page\/pied-de-page)"
+        },
+        {
+            "type": "select",
+            "id": "bg_color",
+            "label": "Background color",
+            "default": "bg-dark text-white",
+            "options": [
+                { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+                { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+                { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+                { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "White" },
+                { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Light" },
+                { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Dark" },
+                { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "bg_gradient",
+            "label": "Background gradient",
+            "default": false,
+            "info": "Does not apply to light colors"
+        },
+        {
+            "type": "select",
+            "id": "container",
+            "label": "Conteneur",
+            "default": "container",
+            "options": [
+                { "value": "container", "label": "Conteneur" },
+                { "value": "container-fluid", "label": "Pleine largeur" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "show_payment_icons",
+            "label": "Show payment icons",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_social_icons",
+            "label": "Show social icons",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_powered_by",
+            "label": "Afficher Propulsé par Shopify",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_theme_by",
+            "label": "Afficher Thème créé par Shopiweb",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "language_selector_show",
+            "label": "Show language selector",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "currency_selector_show",
+            "label": "Show currency selector",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "lang_currency_btn_color",
+            "label": "Button color langue\/devise",
+            "default": "btn-outline-light",
+            "options": [
+                { "group": "Normal", "value": "btn-link", "label": "Link" },
+                { "group": "Normal", "value": "btn-light", "label": "Light" },
+                { "group": "Normal", "value": "btn-dark", "label": "Dark" },
+                { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
+                { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
+                { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
+                { "group": "Normal", "value": "btn-success", "label": "Success" },
+                { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+                { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
+                { "group": "Normal", "value": "btn-info", "label": "Info" },
+                { "group": "Outline", "value": "btn-outline-light", "label": "Contour Claire" },
+                { "group": "Outline", "value": "btn-outline-dark", "label": "Contour Sombre" },
+                { "group": "Outline", "value": "btn-outline-primary", "label": "Contour Primaire" },
+                { "group": "Outline", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
+                { "group": "Outline", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
+                { "group": "Outline", "value": "btn-outline-success", "label": "Success Outline" },
+                { "group": "Outline", "value": "btn-outline-danger", "label": "Contour Danger" },
+                { "group": "Outline", "value": "btn-outline-warning", "label": "Contour Avertissement" },
+                { "group": "Outline", "value": "btn-outline-info", "label": "Contour Info" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "À propos de nous"
+        },
+        {
+            "type": "checkbox",
+            "id": "show_about_area",
+            "label": "Afficher la zone \"À propos\"",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "about_bg_color",
+            "label": "Background color",
+            "default": "bg-dark text-white",
+            "options": [
+                { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+                { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+                { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+                { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "White" },
+                { "group": "Intermédiaire", "value": "bg-light text-dark", "label": "Light" },
+                { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Dark" },
+                { "group": "Par défaut", "value": "", "label": "Corps (body)" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "about_bg_gradient",
+            "label": "Background gradient",
+            "default": false,
+            "info": "Does not apply to light colors"
+        },
+        {
+            "type": "checkbox",
+            "id": "about_bg_transparent",
+            "label": "Arrière-plan transparent",
+            "default": false
+        },
+        {
+            "type": "image_picker",
+            "id": "about_logo",
+            "label": "Logo"
+        },
+        {
+            "type": "range",
+            "id": "about_logo_height",
+            "label": "Taille du logo image",
+            "min": 20,
+            "max": 100,
+            "step": 2,
+            "default": 40
+        },
+        {
+            "type":"header",
+            "content": "⚙️ SVG Logo",
+            "info": "⚙️ Fonctionnalité 👉 Version Shopiweb Premium"
+        },
+        {
+            "type": "html",
+            "id": "svg_logo_footer",
+            "label": "Logo SVG (recommandé)",
+            "info": "Insérez le code SVG dans cette zone, sinon laisser vide."
+        },
+        {
+            "type": "range",
+            "id": "logo_svg_height",
+            "label": "Taille du logo svg",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "default": 50
+        },
+        {
+            "type": "richtext",
+            "id": "about_description",
+            "label": "Description"
+        },
+        {
+            "type": "text",
+            "id": "about_phone_text",
+            "label": "Numéro de téléphone",
+            "default": "+33769238799",
+            "info": "Leave empty to disable"
+        },
+        {
+            "type": "url",
+            "id": "about_phone_url",
+            "label": "tel:+33769238799"
+        },
+        {
+            "type": "text",
+            "id": "about_email_text",
+            "label": "Adresse e-mail",
+            "default": "hello@thepetsociety.paris",
+            "info": "Leave empty to disable"
+        },
+        {
+            "type": "url",
+            "id": "about_email_url",
+            "label": "Lien de l'adresse e-mail"
+        },
+        {
+            "type": "text",
+            "id": "about_adresse_text",
+            "label": "Adresse",
+            "default": "229 rue Saint Honoré - 75001 PARIS",
+            "info": "Leave empty to disable"
+        },
+        {
+            "type": "header",
+            "content": "Espacement de la section"
+        },
+        {
+            "type": "range",
+            "id": "pt",
+            "label": "Top padding",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 10
+        },
+        {
+            "type": "range",
+            "id": "pb",
+            "label": "Bottom padding",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 10
+        }
+    ],
+    "blocks": [
+        {
+            "type": "richtext",
+            "name": "Texte",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Titre"
+                },
+                {
+                    "type": "select",
+                    "id": "title_size",
+                    "label": "Taille du titre",
+                    "default": "h6",
+                    "options": [
+                        { "group": "Titre Standard", "value": "h1", "label": "Very Large" },
+                        { "group": "Titre Standard", "value": "h2", "label": "Large" },
+                        { "group": "Titre Standard", "value": "h3", "label": "Medium" },
+                        { "group": "Titre Standard", "value": "h4", "label": "Small" },
+                        { "group": "Titre Standard", "value": "h5", "label": "Very Small" },
+                        { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+                    ]
+                },
+                {
+                    "type": "richtext",
+                    "id": "description",
+                    "label": "Description"
+                },
+                {
+                    "type": "text",
+                    "id": "btn_text",
+                    "label": "Button text",
+                    "info": "Leave empty to disable"
+                },
+                {
+                    "type": "url",
+                    "id": "btn_url",
+                    "label": "URL du bouton"
+                },
+                {
+                    "type": "select",
+                    "id": "btn_color",
+                    "label": "Button color",
+                    "default": "btn-primary",
+                    "options": [
+                        { "group": "Normal", "value": "btn-link", "label": "Link" },
+                        { "group": "Normal", "value": "btn-light", "label": "Light" },
+                        { "group": "Normal", "value": "btn-dark", "label": "Dark" },
+                        { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
+                        { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
+                        { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
+                        { "group": "Normal", "value": "btn-success", "label": "Success" },
+                        { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+                        { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
+                        { "group": "Normal", "value": "btn-info", "label": "Info" },
+                        { "group": "Outline", "value": "btn-outline-light", "label": "Contour Claire" },
+                        { "group": "Outline", "value": "btn-outline-dark", "label": "Contour Sombre" },
+                        { "group": "Outline", "value": "btn-outline-primary", "label": "Contour Primaire" },
+                        { "group": "Outline", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
+                        { "group": "Outline", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
+                        { "group": "Outline", "value": "btn-outline-success", "label": "Success Outline" },
+                        { "group": "Outline", "value": "btn-outline-danger", "label": "Contour Danger" },
+                        { "group": "Outline", "value": "btn-outline-warning", "label": "Contour Avertissement" },
+                        { "group": "Outline", "value": "btn-outline-info", "label": "Contour Info" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "btn_size",
+                    "label": "Taille du bouton",
+                    "default": "btn-sm",
+                    "options": [
+                        { "value": "btn-sm", "label": "Small" },
+                        { "value": "btn-md", "label": "Normal" },
+                        { "value": "btn-lg", "label": "Large" }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "menu",
+            "name": "Menu",
+            "settings": [
+                {
+                    "type": "link_list",
+                    "id": "menu",
+                    "label": "Menu"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Titre"
+                },
+                {
+                    "type": "select",
+                    "id": "title_size",
+                    "label": "Taille du titre",
+                    "default": "h6",
+                    "options": [
+                        { "group": "Titre Standard", "value": "h1", "label": "Very Large" },
+                        { "group": "Titre Standard", "value": "h2", "label": "Large" },
+                        { "group": "Titre Standard", "value": "h3", "label": "Medium" },
+                        { "group": "Titre Standard", "value": "h4", "label": "Small" },
+                        { "group": "Titre Standard", "value": "h5", "label": "Very Small" },
+                        { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+                    ]
+                }
+            ]
+        },
+        {
+          "type": "image",
+          "name": "Image",
+          "limit": 1,
+          "settings": [
+            {
+                "type": "text",
+                "id": "title",
+                "label": "Titre"
+            },
+            {
+                "type": "select",
+                "id": "title_size",
+                "label": "Taille du titre",
+                "default": "h6",
+                "options": [
+                    { "group": "Titre Standard", "value": "h1", "label": "Very Large" },
+                    { "group": "Titre Standard", "value": "h2", "label": "Large" },
+                    { "group": "Titre Standard", "value": "h3", "label": "Medium" },
+                    { "group": "Titre Standard", "value": "h4", "label": "Small" },
+                    { "group": "Titre Standard", "value": "h5", "label": "Very Small" },
+                    { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+                ]
+            },
+            {
+                "type": "richtext",
+                "id": "description",
+                "label": "Description"
+            },
+            {
+              "type": "image_picker",
+              "id": "image_footer",
+              "label": "Image",
+              "info": "Résolution recommandée de (500x500), sinon laisser vide."
+            },
+            {
+                "type": "range",
+                "id": "image_footer_height",
+                "label": "Largeur de l'image",
+                "min": 20,
+                "max": 200,
+                "step": 2,
+                "default": 100
+            },
+            {
+                "type": "url",
+                "id": "image_link_url",
+                "label": "URL de l'image"
+            }
+          ]
+        },
+        {
+            "type": "newsletter",
+            "name": "Newsletter",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Titre",
+                    "default": "Newsletter"
+                },
+                {
+                    "type": "select",
+                    "id": "title_size",
+                    "label": "Taille du titre",
+                    "default": "h6",
+                    "options": [
+                        { "group": "Titre Standard", "value": "h1", "label": "Very Large" },
+                        { "group": "Titre Standard", "value": "h2", "label": "Large" },
+                        { "group": "Titre Standard", "value": "h3", "label": "Medium" },
+                        { "group": "Titre Standard", "value": "h4", "label": "Small" },
+                        { "group": "Titre Standard", "value": "h5", "label": "Very Small" },
+                        { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+                    ]
+                },
+                {
+                    "type": "richtext",
+                    "id": "description",
+                    "label": "Description"
+                }, 
+                {
+                    "type": "select",
+                    "id": "btn_color",
+                    "label": "Button color",
+                    "default": "btn-primary",
+                    "options": [
+                        { "group": "Normal", "value": "btn-link", "label": "Link" },
+                        { "group": "Normal", "value": "btn-light", "label": "Light" },
+                        { "group": "Normal", "value": "btn-dark", "label": "Dark" },
+                        { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
+                        { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
+                        { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
+                        { "group": "Normal", "value": "btn-success", "label": "Success" },
+                        { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+                        { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
+                        { "group": "Normal", "value": "btn-info", "label": "Info" },
+                        { "group": "Outline", "value": "btn-outline-light", "label": "Contour Claire" },
+                        { "group": "Outline", "value": "btn-outline-dark", "label": "Contour Sombre" },
+                        { "group": "Outline", "value": "btn-outline-primary", "label": "Contour Primaire" },
+                        { "group": "Outline", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
+                        { "group": "Outline", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
+                        { "group": "Outline", "value": "btn-outline-success", "label": "Success Outline" },
+                        { "group": "Outline", "value": "btn-outline-danger", "label": "Contour Danger" },
+                        { "group": "Outline", "value": "btn-outline-warning", "label": "Contour Avertissement" },
+                        { "group": "Outline", "value": "btn-outline-info", "label": "Contour Info" }
+                    ]
+                },
+                {
+                    "type": "richtext",
+                    "id": "notice",
+                    "label": "Notice",
+                    "default": "<p>En vous inscrivant pour recevoir des courriels, vous acceptez nos conditions général de vente et notre politique de confidentialité.</p>"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

@@ -1,0 +1,58 @@
+{% liquid
+    case settings.offcanvas_img_orientation
+        when 'square'
+            assign img_width  = 600
+            assign img_height = 600
+        when 'landscape'
+            assign img_width  = 600
+            assign img_height = 480
+        when 'potrait'
+            assign img_width  = 480
+            assign img_height = 600
+    endcase
+%}
+
+{% if settings.wishlist_enable %}
+<div 
+    id="offcanvas-wishlist" 
+    class="offcanvas offcanvas-end offcanvas-mobile-full {{ settings.offcanvas_opening_direction }}" 
+    tabindex="-1" 
+    aria-labelledby="offcanvas-wishlist-label">
+    <div class="offcanvas-header {{ settings.offcanvas_header_bg }}">
+        <h2 
+            id="offcanvas-wishlist-label" 
+            class="offcanvas-title {{ settings.offcanvas_header_title_size }}">
+            {{ 'general.wishlist.offcanvas_title' | t }}
+        </h2>
+        <button 
+            class="btn-close {% if settings.offcanvas_header_bg contains 'text-white' %}btn-close-white{% endif %}" 
+            type="button" 
+            data-bs-dismiss="offcanvas" 
+            aria-label="{{ 'general.accessibility.close' | t }}">
+        </button>
+    </div>
+    <div class="offcanvas-body">
+        <div id="offcanvas-wishlist-empty" class="text-muted" hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" class="opacity-75 mb-2" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+            {{ 'general.wishlist.empty_html' | t }} 
+        </div>
+        <ul {{ settings.offcanvas_shadow_sp }} {{ settings.offcanvas_border_color }}
+            id="offcanvas-wishlist-product-listing" 
+            class="product-listing list-unstyled mb-6"
+            data-img-width="{{ img_width }}"
+            data-img-height="{{ img_height }}"
+            data-img-thumbnail="{{ settings.offcanvas_img_thumbnail }} {{ settings.offcanvas_shadow_sp }} {{ settings.offcanvas_border_color }}"
+            data-show-atc-form="{{ settings.wishlist_show_atc_form }}"
+            data-text-wishlist-remove="{{ 'general.wishlist.remove_from_wishlist' | t }}"
+            data-text-price-regular="{{ 'product.price_regular' | t }}"
+            data-text-price-from="{{ 'product.price_from' | t }}"
+            data-text-price-sale="{{ 'product.price_sale' | t }}"
+            data-text-add="{{ 'product.add' | t }}"
+            data-text-select-variant="{{ 'product.select_variant' }}"
+            hidden>
+        </ul>
+    </div>
+</div>
+{% endif %}

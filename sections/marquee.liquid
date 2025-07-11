@@ -1,0 +1,300 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid
+    assign pt = section.settings.pt | prepend: 'pt-'
+    assign pb = section.settings.pb | prepend: 'pb-'
+    assign mt = section.settings.mt | prepend: 'mt-'
+    assign mb = section.settings.mb | prepend: 'mb-'
+
+    assign bg_color = section.settings.bg_color
+
+    if section.settings.bg_gradient
+        assign bg_color = bg_color | append: ' bg-gradient'
+    endif
+%}
+
+<section 
+    id="marquee-{{ section.id }}" 
+    class="marquee overflow-hidden {{ bg_color }} {{ section.settings.separator }} {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+    <ul 
+        class="list-unstyled mb-0 {{ section.settings.font_size }} {{ section.settings.text_transform }}"
+        data-animation-duration="{{ section.settings.animation_duration }}"
+        data-marquee-direction="{{ section.settings.marquee_direction }}"
+        data-section-id="{{ section.id }}"
+        aria-label="{{ section.settings.list_label }}">
+        {% for block in section.blocks %}
+            <li class="px-{{ section.settings.gap }}" {{ block.shopify_attributes }}>
+                {% unless block.settings.url == blank %}
+                    <a href="{{ block.settings.url }}">
+                {% endunless %}
+                {% if block.type == 'image' %}
+                    <img
+                        class="img-fluid"
+                        src="{{ block.settings.img.src | image_url: width: block.settings.img_width }}"
+                        alt="{{ block.settings.img.alt | escape }}"
+                        width="{{ block.settings.img_width }}"
+                        height="{{ block.settings.img_width | divided_by: block.settings.img.aspect_ratio | round }}"
+                        loading="lazy">
+                {% else %}
+                    {{ block.settings.text }}
+                {% endif %}
+                {% unless block.settings.url == blank %}
+                    </a>
+                {% endunless %}
+            </li>
+        {% endfor %}
+    </ul>
+</section>
+
+{% schema %}
+{
+    "name": "Texte/Logo Défilant",
+    "settings": [
+        {
+            "type": "paragraph", 
+            "content": "Documentation FR : [Texte/Logo défilant by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/sections\/texte-logo-defilant)"
+        },
+        {
+            "type": "header",
+            "content": "General"
+        },
+        {
+            "type": "select",
+            "id": "bg_color",
+            "label": "Couleur d'arrière-plan",
+            "default": "bg-dark text-white",
+            "options": [
+                { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+                { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+                { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+                { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
+                { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+                { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Sombre" },
+                { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" },
+                { "group": "Alerte", "value": "bg-success text-white", "label": "Succès" },
+                { "group": "Alerte", "value": "bg-warning text-dark", "label": "Avertissement" },
+                { "group": "Alerte", "value": "bg-danger text-white", "label": "Danger" },
+                { "group": "Alerte", "value": "bg-info text-white", "label": "Info" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "bg_gradient",
+            "label": "Dégradé d'arrière-plan",
+            "default": false,
+            "info": "Ne s'applique pas aux couleurs claires"
+        },
+        {
+            "type": "select",
+            "id": "font_size",
+            "label": "Taille du texte",
+            "default": "fs-4",
+            "options": [
+                { "group": "Texte Standard", "value": "fs-1", "label": "Extra Grand" },
+                { "group": "Texte Standard", "value": "fs-2", "label": "Super Grand" },
+                { "group": "Texte Standard", "value": "fs-3", "label": "Très Grand" },
+                { "group": "Texte Standard", "value": "fs-4", "label": "Grand" },
+                { "group": "Texte Standard", "value": "fs-5", "label": "Moyen" },
+                { "group": "Texte Standard", "value": "fs-6", "label": "Petit" } 
+            ]
+        },
+        {
+            "type": "select",
+            "id": "text_transform",
+            "label": "Transformation de texte",
+            "default": "text-capitalize",
+            "options": [
+                { "value": "", "label": "Normal" },
+                { "value": "text-capitalize", "label": "Capitale" },
+                { "value": "text-lowercase", "label": "Minuscule" },
+                { "value": "text-uppercase", "label": "Majuscule" }
+
+            ]
+        },
+        {
+            "type": "text",
+            "id": "list_label",
+            "label": "Libellé de la liste",
+            "default": "Caractéristiques promotionnelles",
+            "info": "Utilisé à des fins d'accessibilité"
+        },
+        {
+            "type": "header",
+            "content": "Effect"
+        },
+        {
+            "type": "range",
+            "id": "animation_duration",
+            "label": "Vitesse",
+            "min": 0,
+            "max": 60,
+            "step": 1,
+            "default": 20,
+            "unit": "sec",
+            "info": "Vitesse de défilement automatique"
+        },
+        {
+            "type": "select",
+            "id": "marquee_direction",
+            "label": "Sens de défilement",
+            "default": "left",
+            "info": "Sens de défilement automatique",
+            "options": [
+                { "value": "left", "label": "Gauche" },
+                { "value": "right", "label": "Droite" }
+
+            ]
+        },
+        {
+            "type": "select",
+            "id": "separator",
+            "label": "Séparateur",
+            "default": "separator-dot",
+            "options": [
+                { "value": "", "label": "Aucun" },
+                { "value": "separator-dot", "label": "Point" }
+
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Gap",
+            "info": "Espacement entre les éléments."
+        },
+        {
+            "type": "range",
+            "id": "gap",
+            "label": "Espacement",
+            "min": 0,
+            "max": 12,
+            "step": 1,
+            "default": 6
+        },
+        {
+            "type": "header",
+            "content": "Espacement de la section"
+        },
+        {
+            "type": "range",
+            "id": "pt",
+            "label": "Padding supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "pb",
+            "label": "Padding inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mt",
+            "label": "Marge supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mb",
+            "label": "Marge inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        }
+    ],
+    "blocks": [
+        {
+            "type": "item",
+            "name": "Item",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "text",
+                    "label": "Texte"
+                },
+                {
+                    "type": "url",
+                    "id": "url",
+                    "label": "URL"
+                }
+            ]
+        },
+        {
+            "type": "image",
+            "name": "Image",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "img",
+                    "label": "Image"
+                },
+                {
+                    "type": "text",
+                    "id": "img_width",
+                    "label": "Largeur de l'image (px)",
+                    "default": "120"
+                },
+                {
+                    "type": "url",
+                    "id": "url",
+                    "label": "URL"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Texte/Logo Défilant",
+            "category": "General",
+            "blocks": [
+                {
+                    "type": "item",
+                    "settings": {
+                        "text": "Un message promotionnel"
+                    }
+                },
+                {
+                    "type": "item",
+                    "settings": {
+                        "text": "Encore un autre message promotionnel"
+                    }
+                },
+                {
+                    "type": "item",
+                    "settings": {
+                        "text": "Essayez d'être bref"
+                    }
+                },
+                {
+                    "type": "item",
+                    "settings": {
+                        "text": "100% Shopiweb premium"
+                    }
+                },
+                {
+                    "type": "item",
+                    "settings": {
+                        "text": "Ajustez les paramètres de la section au besoin"
+                    }
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

@@ -1,0 +1,149 @@
+{% liquid
+    assign current_variant = product.selected_or_first_available_variant
+
+    case section.settings.gallery_img_orientation
+        when 'square'
+            assign img_width  = 1200
+            assign img_height = 1200
+        when 'landscape'
+            assign img_width  = 1200
+            assign img_height = 960
+        when 'potrait'
+            assign img_width  = 960
+            assign img_height = 1200
+       when 'adapt'
+            assign img_width  = 1200
+            assign img_height = 1200 | divided_by: media.aspect_ratio | round
+    endcase
+%}
+
+<div 
+    id="product-gallery-{{ product.id }}"
+    class="product-gallery mb-6 mb-lg-0" 
+    data-product-id="{{ product.id }}"
+    aria-label="{{ 'general.accessibility.product_media_gallery' | t }}"
+    {% if section.settings.first_to_variant %}
+        data-start="{{ current_variant.featured_media.position | minus: 1 }}"
+    {% else %}
+        data-start="{{ product.featured_media.position | minus: 1 }}"
+    {% endif %}
+    data-media-count="{{ product.media.size }}"
+    data-show-thumbs-mobile="{% if section.settings.gallery_show_thumbnails_mobile %}true{% else %}false{% endif %}">
+    {% unless product.metafields.shopiweb.custom_badge == blank %}
+        <span 
+            class="img-badge-custom badge" 
+            style="background: {{ product.metafields.shopiweb.custom_badge | split: ':' | last }};"
+            aria-hidden="true">
+            {{ product.metafields.shopiweb.custom_badge | split: ':' | first }}
+        </span>
+    {% endunless %}
+    <div class="main-splide splide 
+         {% if section.settings.gallery_img_orientation == 'adapt' %}main-splide-adapt{% endif %}
+         {% if section.settings.gallery_mobile_full_width %}main-splide-mobile-full-width{% endif %}">
+        <div class="splide__track">
+            <ul class="splide__list">
+                {% for media in product.media %}
+                    <li class="splide__slide">
+                        {% case media.media_type %}
+                            {% when 'image' %}
+                                {% liquid 
+                                    if section.settings.gallery_img_orientation == 'adapt'
+                                        assign img_height = 1200 | divided_by: media.aspect_ratio | round
+                                    endif
+                                %}
+                                {% if section.settings.gallery_enable_lightbox %}
+                                    <a href="{{ media.src | image_url: width: '2040' }}" class="glightbox" data-gallery="product-gallery-{{ product.id }}">
+                                {% endif %}
+                                    <img
+                                        class="img-fluid rounded {{ section.settings.gallery_img_thumbnail }}"
+                                        src="{{ media.src | image_url: width: img_width, height: img_height, crop: 'center' }}"
+                                        alt="{{ media.alt | escape }}"
+                                        width="{{ img_width }}"
+                                        height="{{ img_height }}"
+                                        loading="lazy">
+                                {% if section.settings.gallery_enable_lightbox %}
+                                    </a>
+                                {% endif %}
+                            {% when 'external_video' %}
+                                <div class="ratio">
+                                    {% if section.settings.gallery_enable_lightbox %}
+                                        <a href="{{ media | external_video_url }}" class="glightbox ratio" data-gallery="product-gallery-{{ product.id }}">
+                                    {% endif %}
+                                        {{ media | external_video_tag }}
+                                    {% if section.settings.gallery_enable_lightbox %}
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            {% when 'video' %}
+                                <div class="ratio">
+                                    {% if section.settings.gallery_enable_lightbox %}
+                                        <a href="{{ media.sources.last.url }}" class="glightbox ratio" data-gallery="product-gallery-{{ product.id }}">
+                                    {% endif %}
+                                        {{ media | video_tag: controls: true, image_size: '1200x' }}
+                                    {% if section.settings.gallery_enable_lightbox %}
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            {% when 'model' %}
+                                <div class="product-gallery-model-3d w-100 h-100">
+                                    <div class="ratio bg-transparent">
+                                        {{ media | model_viewer_tag: image_size: '1200x' }}
+                                    </div>
+                                    <ul 
+                                        class="list-unstyled position-absolute bottom-0 end-0 mb-3 me-3" 
+                                        aria-label="{{ 'general.accessibility.model_3d_list_label' | t }}">
+                                        <li>
+                                            <button class="btn btn-light border" data-model-3d-increase-zoom aria-label="{{ 'general.accessibility.model_3d_increase' | t }}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                                                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                                                </svg>
+                                            </button>
+                                            <button class="btn btn-light border" data-model-3d-decrease-zoom aria-label="{{ 'general.accessibility.model_3d_decrease' | t }}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-dash" viewBox="0 0 16 16">
+                                                    <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"/>
+                                                </svg>
+                                            </button>
+                                            <button class="btn btn-light border" data-model-3d-fullscreen aria-label="{{ 'general.accessibility.model_3d_fullscreen' | t }}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-fullscreen" viewBox="0 0 16 16">
+                                                    <path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1h-4zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zM.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5z"/>
+                                                </svg>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-fullscreen-exit" viewBox="0 0 16 16" hidden>
+                                                    <path d="M5.5 0a.5.5 0 0 1 .5.5v4A1.5 1.5 0 0 1 4.5 6h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5zm5 0a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 10 4.5v-4a.5.5 0 0 1 .5-.5zM0 10.5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 6 11.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zm10 1a1.5 1.5 0 0 1 1.5-1.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4z"/>
+                                                </svg>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                        {% endcase %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div 
+        class="
+            thumbs-splide splide mt-3 mt-lg-4
+            {% unless section.settings.gallery_show_thumbnails_mobile %}
+                d-none d-lg-block
+            {% endunless %}
+        " 
+        {% if product.media.size <= 1 %}
+            hidden
+        {% endif %}>
+        <div class="splide__track">
+            <ul class="splide__list">
+                {% for media in product.media %}
+                    <li class="splide__slide {% if media.media_type contains 'video' %}is-video{% endif %} {% if media.media_type == 'model' %}is-model{% endif %} ">
+                        <img 
+                            class="img-fluid rounded img-thumbnail"
+                            src="{{ media.preview_image | image_url: width: '160', height: '160', crop: 'center' }}"
+                            alt="{{ media.preview_image.alt }}"
+                            width="160"
+                            height="160"
+                            loading="lazy">
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>

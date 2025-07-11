@@ -1,0 +1,751 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid
+    assign pt = section.settings.pt | prepend: 'pt-'
+    assign pb = section.settings.pb | prepend: 'pb-'
+    assign mt = section.settings.mt | prepend: 'mt-'
+    assign mb = section.settings.mb | prepend: 'mb-'
+  
+    assign bg_color = section.settings.bg_color
+  
+    if section.settings.bg_gradient
+      assign bg_color = bg_color | append: ' bg-gradient'
+    endif
+
+    assign btn_shadow_sp = settings.btn_shadow_sp
+  
+    assign block_count = 0
+%}
+
+<style>
+  @media (min-width: 1200px) {
+      #accordion-{{ section.id }} {
+          height: {{ section.settings.accordion_height }}px;
+      }
+   }
+  
+  #accordion-visual-{{ section.id }} .accordion-item,
+  #accordion-visual-{{ section.id }} .accordion-body,
+  #accordion-visual-{{ section.id }} .accordion-collapse {
+      background-color: transparent !important;
+  }
+  #accordion-visual-{{ section.id }} .accordion-button {
+      background-color: {{ section.settings.accordion_bg_color }};
+  }
+  #accordion-visual-{{ section.id }} .accordion-button,
+  #accordion-visual-{{ section.id }} .accordion-body {
+      color: {{ section.settings.accordion_text_color }};
+  }
+
+  .accordion-visual .accordion-header img {
+      opacity: {{ section.settings.img_opacity }};
+    }
+  
+  {%- for block in section.blocks -%}
+    /* Base Icon Style */
+    .accordion-visual .icon-{{ block.id }} {
+        filter: none;
+        position: absolute;
+        bottom: 1.25rem;
+        border-radius: 50%;
+        background-image: none;
+        background-color: none !important;
+        font-size: 1.4rem;
+        line-height: 2.25rem;
+        text-align: center;
+        text-shadow: 2px 2px 2px rgba(0, 0, 0, .25);
+        
+        /* Icon SVG */
+        .accordion-visual .icon-{{ block.id }} svg {
+            height: {{ block.settings.icon_width }}px;
+            width: {{ block.settings.icon_width }}px;
+        }
+    }
+    
+    /* Media Queries */
+    @media (min-width: 1200px) {
+        .accordion-visual .icon-{{ block.id }} {
+            left: initial;
+            transform: none;
+        }
+    }
+    
+    @media (max-width: 767px) {
+        .accordion-visual .icon-{{ block.id }} {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .accordion-visual .icon-{{ block.id }} svg {
+            height: calc({{ block.settings.icon_width }}px * 0.8); /* 80% of the original size */
+            width: calc({{ block.settings.icon_width }}px * 0.8);
+        }
+    }
+    
+    @media (min-width: 768px) {
+        .accordion-visual .icon-{{ block.id }} {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .accordion-visual .icon-{{ block.id }} svg {
+            height: calc({{ block.settings.icon_width }}px * 0.8); /* 80% of the original size */
+            width: calc({{ block.settings.icon_width }}px * 0.8);
+        }
+    }
+    
+    /* Icon visibility when accordion is expanded */
+    .accordion-visual .accordion-button:not(.collapsed) .icon-{{ block.id }} {
+        display: none;
+    }
+  {%- endfor -%}
+  
+</style>
+
+<section
+    id="accordion-visual-{{ section.id }}"
+    class="accordion-visual enter-view {{ bg_color }} {{ section.settings.text_align }} {{ pt }} {{ pb }} {{ mt }} {{ mb }}"
+>
+    <div class="{{ section.settings.container }}"
+         style="max-width: {{ section.settings.max_width }}px;">
+        {% render 'section-header' %}
+        <div
+            id="accordion-{{ section.id }}"
+            class="accordion pt-4"
+        >
+            {% for block in section.blocks %}
+                {% assign block_count = block_count | plus: 2 %}
+                <div
+                    class="accordion-item {% unless section.settings.animation == '' %}animate__animated opacity-0 {{ section.settings.animation_speed }}{% endunless %}"
+                    data-animate-class="{{ section.settings.animation }}"
+                    style="animation-delay: {{ block_count }}00ms;"
+                >
+                    <{{ block.settings.heading_tag }}
+                        id="accordion-header-{{ block.id }}"
+                        class="accordion-header"
+                    >
+                        <button
+                            class="accordion-button {% unless forloop.first and section.settings.show_expanded %}collapsed{% endunless %}"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#accordion-collapse-{{ block.id }}"
+                            aria-expanded="{% if forloop.first and section.settings.show_expanded %}true{% else %}false{% endif %}"
+                            aria-controls="accordion-collapse-{{ block.id }}"
+                        >
+                            <img
+                                class="img-fluid w-100 {{ section.settings.img_thumbnail }} {{ section.settings.shadow_sp }} {{ section.settings.border_color }}"
+                                src="{{ block.settings.image.src | image_url: width: 900, height: 900, crop: 'center' }}"
+                                alt="{{ block.settings.image.alt | escape }}"
+                                width="900"
+                                height="900"
+                                style="border-width: {{ section.settings.border_width }}px; --accordion-visual-image-blur: {{ section.settings.accordion_item_blur}}px;"
+                                loading="lazy"
+                            >
+                            <span class="text-center fw-{{ section.settings.text_font_weight }}">
+                                {{ block.settings.title_img | escape }}
+                            </span>
+                            {% unless block.settings.btn_icon == blank %}
+                                <div class="icon-{{ block.id }}">{{ block.settings.btn_icon }}</div>
+                            {% endunless %}
+                        </button>
+                    </{{ block.settings.heading_tag }}>
+                    <div
+                        id="accordion-collapse-{{ block.id }}"
+                        class="accordion-collapse collapse {% if forloop.first and section.settings.show_expanded %}show{% endif %}"
+                        aria-labelledby="accordion-header-{{ block.id }}"
+                        data-bs-parent="#accordion-{{ section.id }}"
+                    >
+                        <div class="accordion-body rte">
+                            <div>
+                                {% unless block.settings.title == blank %}
+                                    <{{ block.settings.heading_tag }} class="title {{ block.settings.title_size }}">
+                                        {{ block.settings.title }}
+                                    </{{ block.settings.heading_tag }}>
+                                {% endunless %}
+                                {% unless block.settings.description == blank %}
+                                    <div class="description rte mb-6 {{ block.settings.description_size }}">
+                                        {{ block.settings.description }}
+                                    </div>
+                                {% endunless %}
+                                {% unless block.settings.btn_text == blank %}
+                                    <a
+                                        href="{{ block.settings.btn_url }}"
+                                        class="btn mb-1 {{ block.settings.btn_color }} {{ btn_shadow_sp }} {{ block.settings.btn_size }}  mb-3 text-center"
+                                    >
+                                        {{ block.settings.btn_text }}
+                                    </a>
+                                {% endunless %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Accordéon Visuel",
+    "settings": [
+        {
+            "type": "paragraph", 
+            "content": "Documentation FR : [Accordéon Visuel by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/sections\/accordéon-visuel)"
+        },
+        {
+            "type": "header",
+            "content": "General"
+        },
+        {
+            "type": "select",
+            "id": "bg_color",
+            "label": "Couleur de l'arrière plan",
+            "default": "bg-body text-body",
+            "options": [
+                { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+                { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+                { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+                { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
+                { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+                { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Sombre" },
+                { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "bg_gradient",
+            "label": "Dégradé d'arrière-plan",
+            "default": false,
+            "info": "Ne s'applique pas aux couleurs claires"
+        },
+        {
+            "type": "select",
+            "id": "container",
+            "label": "Conteneur",
+            "default": "container",
+            "options": [
+                { "value": "container", "label": "Conteneur" },
+                { "value": "container-fluid", "label": "Pleine largeur" }
+            ]
+        },
+        {
+            "type": "text",
+            "id": "max_width",
+            "label": "Largeur max. (px)"
+        },
+        {
+            "type": "select",
+            "id": "text_align",
+            "label": "Alignement du texte",
+            "default": "text-center",
+            "options": [
+                { "value": "text-start", "label": "Gauche" },
+                { "value": "text-center", "label": "Centre" },
+                { "value": "text-end", "label": "Droite" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "En-tête de la section"
+        },
+        {
+            "type": "image_picker",
+            "id": "subtitle_img",
+            "label": "Légende Image"
+        },
+        {
+            "type": "text",
+            "id": "brand_image_size",
+            "label": "Image Largeur/Hauteur (px)",
+            "default": "60"
+        },
+        {
+            "type": "text",
+            "id": "subtitle",
+            "label": "Légende Texte",
+            "default": "Proposition de valeur unique"
+        },
+        {
+            "type": "select",
+            "id": "subtitle_size",
+            "label": "Taille de la légende",
+            "default": "fs-5",
+            "options": [
+                { "group": "Légende Standard", "value": "fs-1", "label": "Extra Grand" },
+                { "group": "Légende Standard", "value": "fs-2", "label": "Super Grand" },
+                { "group": "Légende Standard", "value": "fs-3", "label": "Très Grand" },
+                { "group": "Légende Standard", "value": "fs-4", "label": "Grand" },
+                { "group": "Légende Standard", "value": "fs-5", "label": "Moyen" },
+                { "group": "Légende Standard", "value": "fs-6", "label": "Petit" } 
+            ]
+        },
+        {
+            "type": "color",
+            "id": "color_caption",
+            "label": "Couleur de la légende",
+            "default": "#6c757d"
+        },
+        {
+            "type": "text",
+            "id": "title_overlay",
+            "label": "Titre overlay",
+            "info": "Visible sur ordinateur, masqué sur mobile pour optimiser la lisibilité."
+        },
+        {
+            "type": "select",
+            "id": "title_overlay_size",
+            "label": "Taille du titre overlay",
+            "default": "3",
+            "options": [
+                { "group": "Titre Overlay", "value": "4", "label": "Grand" },
+                { "group": "Titre Overlay", "value": "3", "label": "Moyen" },
+                { "group": "Titre Overlay", "value": "2", "label": "Petit" }
+            ]
+        },
+        {
+            "type": "color",
+            "id": "color_title_overlay",
+            "label": "Couleur du titre overlay",
+            "default": "#000000"
+        },
+        {
+            "type": "inline_richtext",
+            "id": "title",
+            "label": "Titre",
+            "default": "Accordéon Visuel"
+        },
+        {
+            "type": "select",
+            "id": "heading_tag",
+            "label": "Balise titre (SEO)",
+            "default": "h2",
+            "options": [
+                { "value": "h1", "label": "h1" },
+                { "value": "h2", "label": "h2" },
+                { "value": "h3", "label": "h3" },
+                { "value": "h4", "label": "h4" },
+                { "value": "h5", "label": "h5" },
+                { "value": "h6", "label": "h6" },
+                { "value": "span", "label": "Aucune" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "title_size",
+            "label": "Taille du titre",
+            "default": "h2",
+            "options": [
+                { "group": "Titre Supérieur", "value": "display-1", "label": "Extra Extra Grand" },
+                { "group": "Titre Supérieur", "value": "display-2", "label": "Extra Grand" },
+                { "group": "Titre Supérieur", "value": "display-3", "label": "Ultra Grand" },
+                { "group": "Titre Supérieur", "value": "display-4", "label": "Super Grand" },
+                { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+            ]
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Description",
+            "default": "<p>Associez du texte à une image pour mettre l'accent sur le produit, la collection ou l'article de blog de votre choix. Ajoutez des détails sur la disponibilité, le style, ou donnez même un avis.</p>"
+        },
+        {
+            "type": "select",
+            "id": "description_size",
+            "label": "Taille de description",
+            "default": "fs-5",
+            "options": [
+                { "group": "Description Standard", "value": "fs-1", "label": "Extra Grand" },
+                { "group": "Description Standard", "value": "fs-2", "label": "Super Grand" },
+                { "group": "Description Standard", "value": "fs-3", "label": "Très Grand" },
+                { "group": "Description Standard", "value": "fs-4", "label": "Grand" },
+                { "group": "Description Standard", "value": "fs-5", "label": "Moyen" },
+                { "group": "Description Standard", "value": "fs-6", "label": "Petit" } 
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Images",
+            "info": "Paramètres globaux pour les images"
+        },
+        {
+            "type": "text",
+            "id": "accordion_height",
+            "label": "Hauteur images (px)",
+            "info": "Uniquement sur bureau",
+            "default": "540"
+        },
+        {
+            "type": "checkbox",
+            "id": "show_expanded",
+            "label": "Afficher la première image développée",
+            "default": true
+        },
+        {
+            "type": "color",
+            "id": "accordion_bg_color",
+            "label": "Couleur des images",
+            "default": "#ffffff"
+        },
+        {
+            "type": "range",
+            "id": "img_opacity",
+            "label": "Opacité",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "default": 0.3
+        },
+        {
+            "type": "range",
+            "id": "accordion_item_blur",
+            "label": "Flou images",
+            "min": 0,
+            "max": 10,
+            "step": 1,
+            "default": 2
+        },
+        {
+            "type": "color",
+            "id": "accordion_text_color",
+            "label": "Couleur des textes",
+            "default": "#333333"
+        },
+        {
+            "type": "select",
+            "id": "text_font_weight",
+            "label": "Poids de la police",
+            "default": "normal",
+            "options": [
+                { "value": "normal", "label": "Normal" },
+                { "value": "bold", "label": "Bold" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "img_thumbnail",
+            "label": "Bordure de l'image",
+            "default": "img-thumbnail",
+            "options": [
+                { "value": "", "label": "Aucune" },
+                { "value": "img-thumbnail", "label": "Bordure" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "border_color",
+            "label": "Couleur de la bordure",
+            "options": [
+                { "value": "", "label": "Default" },
+                { "value": "border-primary", "label": "Primaire" },
+                { "value": "border-secondary", "label": "Secondaire" },
+                { "value": "border-tertiary", "label": "Tertiaire" },
+                { "value": "border-dark", "label": "Sombre" },
+                { "value": "border-success", "label": "Succès" },
+                { "value": "border-warning", "label": "Avertissement" },
+                { "value": "border-danger", "label": "Danger" },
+                { "value": "border-info", "label": "Info" }
+            ],
+            "default": ""
+        },
+        {
+            "type": "range",
+            "id": "border_width",
+            "label": "Largeur de la bordure",
+            "min": 1,
+            "max": 10,
+            "step": 1,
+            "default": 1
+        },
+        {
+            "type": "select",
+            "id": "shadow_sp",
+            "label": "Ombre",
+            "options": [
+                { "value": "shadow-none", "label": "Aucune" },
+                { "value": "shadow-1", "label": "Ombre légère" },
+                { "value": "shadow-2", "label": "Ombre partiel" },
+                { "value": "shadow-3", "label": "Ombre profonde" },
+                { "value": "shadow-4", "label": "Ombre totale" }
+            ],
+            "default": "shadow-1"
+        },
+        {
+            "type": "header",
+            "content": "Animation"
+        },
+        {
+            "type": "select",
+            "id": "animation",
+            "label": "Effet d'animation",
+            "default": "animate__zoomIn",
+            "options": [
+                { "group": "Désactivé", "value": "", "label": "Pas d'animation" },
+                { "group": "Retour", "value": "animate__backInDown", "label": "Back In Down" },
+                { "group": "Retour", "value": "animate__backInLeft", "label": "Back In Left" },
+                { "group": "Retour", "value": "animate__backInRight", "label": "Back In Right" },
+                { "group": "Retour", "value": "animate__backInUp", "label": "Back In Up" },
+                { "group": "Rebond", "value": "animate__bounceIn", "label": "Bounce In" },
+                { "group": "Rebond", "value": "animate__bounceInDown", "label": "Bounce-in-down" },
+                { "group": "Rebond", "value": "animate__bounceInLeft", "label": "Bounce-in-left" },
+                { "group": "Rebond", "value": "animate__bounceInRight", "label": "Bounce-in-right" },
+                { "group": "Rebond", "value": "animate__bounceInUp", "label": "Bounce-in-up" },
+                { "group": "Fondu", "value": "animate__fadeIn", "label": "Fade In" },
+                { "group": "Fondu", "value": "animate__fadeInDown", "label": "Fade-in-down" },
+                { "group": "Fondu", "value": "animate__fadeInDownBig", "label": "Fade-in-down Big" },
+                { "group": "Fondu", "value": "animate__fadeInLeft", "label": "Fade-in-left" },
+                { "group": "Fondu", "value": "animate__fadeInLeftBig", "label": "Fade-in-left Big" },
+                { "group": "Fondu", "value": "animate__fadeInRight", "label": "Fade-in-right" },
+                { "group": "Fondu", "value": "animate__fadeInRightBig", "label": "Fade-in-right Big" },
+                { "group": "Fondu", "value": "animate__fadeInUp", "label": "Fade-in-up" },
+                { "group": "Fondu", "value": "animate__fadeInUpBig", "label": "Fade-in-up Big" },
+                { "group": "Fondu", "value": "animate__fadeInTopLeft", "label": "Fade-in Top Left" },
+                { "group": "Fondu", "value": "animate__fadeInTopRight", "label": "Fade-in Top Right" },
+                { "group": "Fondu", "value": "animate__fadeInBottomLeft", "label": "Fade-in Bottom Left" },
+                { "group": "Fondu", "value": "animate__fadeInBottomRight", "label": "Fade-in Bottom Right" },
+                { "group": "Flip", "value": "animate__flip", "label": "Flip" },
+                { "group": "Flip", "value": "animate__flipInX", "label": "Flip In X" },
+                { "group": "Flip", "value": "animate__flipInY", "label": "Flip In Y" },
+                { "group": "Flip", "value": "animate__flipOutX", "label": "Flip Out X" },
+                { "group": "Flip", "value": "animate__flipOutY", "label": "Flip Out Y" },
+                { "group": "Vitesse Lumière", "value": "animate__lightSpeedInRight", "label": "Light Speed In Right" },
+                { "group": "Vitesse Lumière", "value": "animate__lightSpeedInLeft", "label": "Light Speed In Left" },
+                { "group": "Rotation", "value": "animate__rotateIn", "label": "Rotate In" },
+                { "group": "Rotation", "value": "animate__rotateInDownLeft", "label": "Rotate In Down Left" },
+                { "group": "Rotation", "value": "animate__rotateInDownRight", "label": "Rotate In Down Right" },
+                { "group": "Rotation", "value": "animate__rotateInUpLeft", "label": "Rotate In Up Left" },
+                { "group": "Rotation", "value": "animate__rotateInUpRight", "label": "Rotate In Up Right" },
+                { "group": "Zoom", "value": "animate__zoomIn", "label": "Zoom In" },
+                { "group": "Zoom", "value": "animate__zoomInDown", "label": "Zoom In Down" },
+                { "group": "Zoom", "value": "animate__zoomInLeft", "label": "Zoom In Left" },
+                { "group": "Zoom", "value": "animate__zoomInRight", "label": "Zoom In Right" },
+                { "group": "Zoom", "value": "animate__zoomInUp", "label": "Zoom In Up" },
+                { "group": "Glissement", "value": "animate__slideInDown", "label": "Slide In Down" },
+                { "group": "Glissement", "value": "animate__slideInLeft", "label": "Slide In Left" },
+                { "group": "Glissement", "value": "animate__slideInRight", "label": "Slide In Right" },
+                { "group": "Glissement", "value": "animate__slideInUp", "label": "Slide In Up" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "animation_speed",
+            "label": "Vitesse d'animation",
+            "default": "animate__fast",
+            "options": [
+                { "value": "animate__slower", "label": "Plus lent" },
+                { "value": "animate__slow", "label": "Lent" },
+                { "value": "", "label": "Normal" },
+                { "value": "animate__fast", "label": "Rapide" },
+                { "value": "animate__faster", "label": "Plus rapide" }
+    
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Espacement de la section"
+        },
+        {
+            "type": "range",
+            "id": "pt",
+            "label": "Padding supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "pb",
+            "label": "Padding inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mt",
+            "label": "Marge supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mb",
+            "label": "Marge inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        }
+    ],
+    "blocks": [
+        {
+            "type": "text",
+            "name": "Item",
+            "limit": 8,
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "Image"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                },
+                {
+                    "type": "text",
+                    "id": "title_img",
+                    "label": "Titre de l'image"
+                },
+                {
+                    "type": "html",
+                    "id": "btn_icon",
+                    "label": "Icône",
+                    "info": "Vous pouvez obtenir des icônes svg à partir de bibliothèques telles que [Bootstrap Icons](https://icons.getbootstrap.com)"
+                },
+                {
+                    "type": "range",
+                    "id": "icon_width",
+                    "min": 20,
+                    "max": 50,
+                    "step": 2,
+                    "unit": "px",
+                    "label": "Largeur de l'icône svg",
+                    "default": 34
+                },
+                {
+                    "type": "header",
+                    "content": "Contenu"
+                },
+                {
+                  "type": "text",
+                  "id": "title",
+                  "label": "Titre"
+                },
+                {
+                    "type": "select",
+                    "id": "heading_tag",
+                    "label": "Balise titre (SEO)",
+                    "default": "h3",
+                    "options": [
+                        { "value": "h1", "label": "h1" },
+                        { "value": "h2", "label": "h2" },
+                        { "value": "h3", "label": "h3" },
+                        { "value": "h4", "label": "h4" },
+                        { "value": "h5", "label": "h5" },
+                        { "value": "h6", "label": "h6" },
+                        { "value": "span", "label": "Aucune" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "title_size",
+                    "label": "Taille du titre",
+                    "default": "h3",
+                    "options": [
+                        { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                        { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                        { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                        { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                        { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                        { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+                    ]
+                },
+                {
+                    "type": "richtext",
+                    "id": "description",
+                    "label": "Description",
+                    "default": "<p>Associez un texte de grande taille à une image pour mettre l'accent sur le produit, la collection ou l'article de blog de votre choix. Ajoutez des détails sur la disponibilité, le style ou même un commentaire.</p>"
+                },
+                {
+                    "type": "select",
+                    "id": "description_size",
+                    "label": "Taille de description",
+                    "default": "fs-5",
+                    "options": [
+                        { "group": "Description Standard", "value": "fs-1", "label": "Extra Grand" },
+                        { "group": "Description Standard", "value": "fs-2", "label": "Super Grand" },
+                        { "group": "Description Standard", "value": "fs-3", "label": "Très Grand" },
+                        { "group": "Description Standard", "value": "fs-4", "label": "Grand" },
+                        { "group": "Description Standard", "value": "fs-5", "label": "Moyen" },
+                        { "group": "Description Standard", "value": "fs-6", "label": "Petit" } 
+                    ]
+                },
+                {
+                    "type": "header",
+                    "content": "Bouton"
+                },
+                {
+                    "type": "text",
+                    "id": "btn_text",
+                    "label": "Texte du bouton",
+                    "default": "En savoir plus",
+                    "info": "Laisser vide pour désactiver"
+                },
+                {
+                    "type": "url",
+                    "id": "btn_url",
+                    "label": "URL du bouton"
+                },
+                {
+                    "type": "select",
+                    "id": "btn_color",
+                    "label": "Couleur du bouton",
+                    "default": "btn-primary",
+                    "options": [
+                        { "group": "Normal", "value": "btn-link", "label": "Lien" },
+                        { "group": "Normal", "value": "btn-light", "label": "Claire" },
+                        { "group": "Normal", "value": "btn-dark", "label": "Sombre" },
+                        { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
+                        { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
+                        { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
+                        { "group": "Normal", "value": "btn-success", "label": "Succès" },
+                        { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+                        { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
+                        { "group": "Normal", "value": "btn-info", "label": "Info" },
+                        { "group": "Contour", "value": "btn-outline-light", "label": "Contour Claire" },
+                        { "group": "Contour", "value": "btn-outline-dark", "label": "Contour Sombre" },
+                        { "group": "Contour", "value": "btn-outline-primary", "label": "Contour Primaire" },
+                        { "group": "Contour", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
+                        { "group": "Contour", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
+                        { "group": "Contour", "value": "btn-outline-success", "label": "Contour Succès" },
+                        { "group": "Contour", "value": "btn-outline-danger", "label": "Contour Danger" },
+                        { "group": "Contour", "value": "btn-outline-warning", "label": "Contour Avertissement" },
+                        { "group": "Contour", "value": "btn-outline-info", "label": "Contour Info" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "btn_size",
+                    "label": "Taille du bouton",
+                    "default": "btn-md",
+                    "options": [
+                        { "value": "btn-sm", "label": "Petit" },
+                        { "value": "btn-md", "label": "Normal" },
+                        { "value": "btn-lg", "label": "Large" }
+                    ]
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Accordéon Visuel",
+            "category": "Image"
+        }
+    ]
+}
+{% endschema %}

@@ -1,0 +1,538 @@
+{
+  "sections": {
+    "6a194339-2ac1-456d-a637-4033ab2fd031": {
+      "type": "faq",
+      "blocks": {
+        "template--16715093704925__6a194339-2ac1-456d-a637-4033ab2fd031-16875110704571fef7-0": {
+          "type": "text",
+          "settings": {
+            "icon": "",
+            "title": "Où expédiez-vous vos produits ?",
+            "heading_tag": "h3",
+            "description": "<p>Partagez des informations sur votre marque avec vos clients. Décrivez un produit, faites des annonces ou accueillez les clients dans votre magasin.<\/p>",
+            "img_orientation": "landscape",
+            "img_crop": "center",
+            "img_thumbnail": "img-thumbnail",
+            "border_color": "",
+            "border_width": 1,
+            "shadow_sp": "shadow-1",
+            "img_align_desktop": "flex-lg-row"
+          }
+        },
+        "template--16715093704925__6a194339-2ac1-456d-a637-4033ab2fd031-16875110704571fef7-1": {
+          "type": "text",
+          "settings": {
+            "icon": "",
+            "title": "Combien de temps faut-il pour recevoir ma commande ?",
+            "heading_tag": "h3",
+            "description": "<p>Partagez des informations sur votre marque avec vos clients. Décrivez un produit, faites des annonces ou accueillez les clients dans votre magasin.<\/p>",
+            "img_orientation": "landscape",
+            "img_crop": "center",
+            "img_thumbnail": "img-thumbnail",
+            "border_color": "",
+            "border_width": 1,
+            "shadow_sp": "shadow-1",
+            "img_align_desktop": "flex-lg-row"
+          }
+        },
+        "template--16715093704925__6a194339-2ac1-456d-a637-4033ab2fd031-16875110704571fef7-2": {
+          "type": "text",
+          "settings": {
+            "icon": "",
+            "title": "Quels sont les modes de paiement acceptés ?",
+            "heading_tag": "h3",
+            "description": "<p>Partagez des informations sur votre marque avec vos clients. Décrivez un produit, faites des annonces ou accueillez les clients dans votre magasin.<\/p>",
+            "img_orientation": "landscape",
+            "img_crop": "center",
+            "img_thumbnail": "img-thumbnail",
+            "border_color": "",
+            "border_width": 1,
+            "shadow_sp": "shadow-1",
+            "img_align_desktop": "flex-lg-row"
+          }
+        },
+        "template--16715093704925__6a194339-2ac1-456d-a637-4033ab2fd031-16875110704571fef7-3": {
+          "type": "text",
+          "settings": {
+            "icon": "",
+            "title": "Comment suivre ma commande ?",
+            "heading_tag": "h3",
+            "description": "<p>Partagez des informations sur votre marque avec vos clients. Décrivez un produit, faites des annonces ou accueillez les clients dans votre magasin.<\/p>",
+            "img_orientation": "landscape",
+            "img_crop": "center",
+            "img_thumbnail": "img-thumbnail",
+            "border_color": "",
+            "border_width": 1,
+            "shadow_sp": "shadow-1",
+            "img_align_desktop": "flex-lg-row"
+          }
+        },
+        "template--16715093704925__6a194339-2ac1-456d-a637-4033ab2fd031-16875110704571fef7-4": {
+          "type": "text",
+          "settings": {
+            "icon": "",
+            "title": "Puis-je faire un cadeau à quelqu'un d'autre ?",
+            "heading_tag": "h3",
+            "description": "<p>Partagez des informations sur votre marque avec vos clients. Décrivez un produit, faites des annonces ou accueillez les clients dans votre magasin.<\/p>",
+            "img_orientation": "landscape",
+            "img_crop": "center",
+            "img_thumbnail": "img-thumbnail",
+            "border_color": "",
+            "border_width": 1,
+            "shadow_sp": "shadow-1",
+            "img_align_desktop": "flex-lg-row"
+          }
+        },
+        "template--16715093704925__6a194339-2ac1-456d-a637-4033ab2fd031-16875110704571fef7-5": {
+          "type": "text",
+          "settings": {
+            "icon": "",
+            "title": "Comment puis-je obtenir le remboursement de ma commande ?",
+            "heading_tag": "h3",
+            "description": "<p>Partagez des informations sur votre marque avec vos clients. Décrivez un produit, faites des annonces ou accueillez les clients dans votre magasin.<\/p>",
+            "img_orientation": "landscape",
+            "img_crop": "center",
+            "img_thumbnail": "img-thumbnail",
+            "border_color": "",
+            "border_width": 1,
+            "shadow_sp": "shadow-1",
+            "img_align_desktop": "flex-lg-row"
+          }
+        }
+      },
+      "block_order": [
+        "template--16715093704925__6a194339-2ac1-456d-a637-4033ab2fd031-16875110704571fef7-0",
+        "template--16715093704925__6a194339-2ac1-456d-a637-4033ab2fd031-16875110704571fef7-1",
+        "template--16715093704925__6a194339-2ac1-456d-a637-4033ab2fd031-16875110704571fef7-2",
+        "template--16715093704925__6a194339-2ac1-456d-a637-4033ab2fd031-16875110704571fef7-3",
+        "template--16715093704925__6a194339-2ac1-456d-a637-4033ab2fd031-16875110704571fef7-4",
+        "template--16715093704925__6a194339-2ac1-456d-a637-4033ab2fd031-16875110704571fef7-5"
+      ],
+      "settings": {
+        "background_img_opacity": 0.7,
+        "background_img_blur": 0,
+        "bg_color": "bg-body text-body",
+        "bg_gradient": false,
+        "max_width": "991",
+        "accordion_style": "accordion-default",
+        "show_expanded": true,
+        "accordion_custom_bg": "#ffffff",
+        "accordion_custom_title_color": "#212529",
+        "accordion_custom_bg_plus": "#f56900",
+        "accordion_custom_plus_color": "#ffffff",
+        "accordion_custom_bg_actif": "#f56900",
+        "accordion_custom_title_color_actif": "#ffffff",
+        "accordion_custom_bg_plus_actif": "#ffffff",
+        "accordion_custom_plus_color_actif": "#f56900",
+        "img_thumbnail_faq": "img-thumbnail",
+        "border_color_faq": "border-0",
+        "border_width_faq": 1,
+        "shadow_sp_faq": "shadow-2",
+        "text_align": "text-center",
+        "subtitle_img": "shopify:\/\/shop_images\/scrolled-banner-allcat_d2d6fc30-0542-4794-b366-db5ef37ebde2.svg",
+        "brand_image_size": "60",
+        "subtitle": "Proposition de valeur unique",
+        "subtitle_size": "fs-5",
+        "color_caption": "#6c757d",
+        "title_overlay": "FAQ",
+        "title_overlay_size": "3",
+        "color_title_overlay": "#000000",
+        "title": "Section FAQ informative",
+        "heading_tag": "h2",
+        "title_size": "h2",
+        "description": "<p>En apportant des réponses aux questions courantes que les clients potentiels peuvent se poser, les entreprises peuvent dissiper les doutes ou les inquiétudes qui pourraient les empêcher de passer à l'action.<\/p>",
+        "description_size": "fs-5",
+        "img_orientation": "landscape",
+        "img_crop": "center",
+        "img_thumbnail": "img-thumbnail",
+        "border_color": "",
+        "border_width": 1,
+        "shadow_sp": "shadow-1",
+        "img_align_desktop": "flex-lg-row",
+        "pt": 10,
+        "pb": 10,
+        "mt": 0,
+        "mb": 10
+      }
+    },
+    "caf29b02-d530-4401-af0b-e860b66a56e9": {
+      "type": "faq",
+      "blocks": {
+        "template--16715093704925__caf29b02-d530-4401-af0b-e860b66a56e9-16875110704571fef7-0": {
+          "type": "text",
+          "settings": {
+            "icon": "",
+            "title": "Où expédiez-vous vos produits ?",
+            "heading_tag": "h3",
+            "description": "<p>Partagez des informations sur votre marque avec vos clients. Décrivez un produit, faites des annonces ou accueillez les clients dans votre magasin.<\/p>",
+            "img_orientation": "landscape",
+            "img_crop": "center",
+            "img_thumbnail": "img-thumbnail",
+            "border_color": "",
+            "border_width": 1,
+            "shadow_sp": "shadow-1",
+            "img_align_desktop": "flex-lg-row"
+          }
+        },
+        "template--16715093704925__caf29b02-d530-4401-af0b-e860b66a56e9-16875110704571fef7-1": {
+          "type": "text",
+          "settings": {
+            "icon": "",
+            "title": "Combien de temps faut-il pour recevoir ma commande ?",
+            "heading_tag": "h3",
+            "description": "<p>Partagez des informations sur votre marque avec vos clients. Décrivez un produit, faites des annonces ou accueillez les clients dans votre magasin.<\/p>",
+            "img_orientation": "landscape",
+            "img_crop": "center",
+            "img_thumbnail": "img-thumbnail",
+            "border_color": "",
+            "border_width": 1,
+            "shadow_sp": "shadow-1",
+            "img_align_desktop": "flex-lg-row"
+          }
+        },
+        "template--16715093704925__caf29b02-d530-4401-af0b-e860b66a56e9-16875110704571fef7-2": {
+          "type": "text",
+          "settings": {
+            "icon": "",
+            "title": "Quels sont les modes de paiement acceptés ?",
+            "heading_tag": "h3",
+            "description": "<p>Partagez des informations sur votre marque avec vos clients. Décrivez un produit, faites des annonces ou accueillez les clients dans votre magasin.<\/p>",
+            "img_orientation": "landscape",
+            "img_crop": "center",
+            "img_thumbnail": "img-thumbnail",
+            "border_color": "",
+            "border_width": 1,
+            "shadow_sp": "shadow-1",
+            "img_align_desktop": "flex-lg-row"
+          }
+        },
+        "template--16715093704925__caf29b02-d530-4401-af0b-e860b66a56e9-16875110704571fef7-3": {
+          "type": "text",
+          "settings": {
+            "icon": "",
+            "title": "Comment suivre ma commande ?",
+            "heading_tag": "h3",
+            "description": "<p>Partagez des informations sur votre marque avec vos clients. Décrivez un produit, faites des annonces ou accueillez les clients dans votre magasin.<\/p>",
+            "img_orientation": "landscape",
+            "img_crop": "center",
+            "img_thumbnail": "img-thumbnail",
+            "border_color": "",
+            "border_width": 1,
+            "shadow_sp": "shadow-1",
+            "img_align_desktop": "flex-lg-row"
+          }
+        },
+        "template--16715093704925__caf29b02-d530-4401-af0b-e860b66a56e9-16875110704571fef7-4": {
+          "type": "text",
+          "settings": {
+            "icon": "",
+            "title": "Puis-je faire un cadeau à quelqu'un d'autre ?",
+            "heading_tag": "h3",
+            "description": "<p>Partagez des informations sur votre marque avec vos clients. Décrivez un produit, faites des annonces ou accueillez les clients dans votre magasin.<\/p>",
+            "img_orientation": "landscape",
+            "img_crop": "center",
+            "img_thumbnail": "img-thumbnail",
+            "border_color": "",
+            "border_width": 1,
+            "shadow_sp": "shadow-1",
+            "img_align_desktop": "flex-lg-row"
+          }
+        },
+        "template--16715093704925__caf29b02-d530-4401-af0b-e860b66a56e9-16875110704571fef7-5": {
+          "type": "text",
+          "settings": {
+            "icon": "",
+            "title": "Comment puis-je obtenir le remboursement de ma commande ?",
+            "heading_tag": "h3",
+            "description": "<p>Partagez des informations sur votre marque avec vos clients. Décrivez un produit, faites des annonces ou accueillez les clients dans votre magasin.<\/p>",
+            "img_orientation": "landscape",
+            "img_crop": "center",
+            "img_thumbnail": "img-thumbnail",
+            "border_color": "",
+            "border_width": 1,
+            "shadow_sp": "shadow-1",
+            "img_align_desktop": "flex-lg-row"
+          }
+        }
+      },
+      "block_order": [
+        "template--16715093704925__caf29b02-d530-4401-af0b-e860b66a56e9-16875110704571fef7-0",
+        "template--16715093704925__caf29b02-d530-4401-af0b-e860b66a56e9-16875110704571fef7-1",
+        "template--16715093704925__caf29b02-d530-4401-af0b-e860b66a56e9-16875110704571fef7-2",
+        "template--16715093704925__caf29b02-d530-4401-af0b-e860b66a56e9-16875110704571fef7-3",
+        "template--16715093704925__caf29b02-d530-4401-af0b-e860b66a56e9-16875110704571fef7-4",
+        "template--16715093704925__caf29b02-d530-4401-af0b-e860b66a56e9-16875110704571fef7-5"
+      ],
+      "settings": {
+        "background_img_opacity": 0.7,
+        "background_img_blur": 0,
+        "bg_color": "bg-body text-body",
+        "bg_gradient": false,
+        "max_width": "991",
+        "accordion_style": "accordion-flush",
+        "show_expanded": true,
+        "accordion_custom_bg": "#ffffff",
+        "accordion_custom_title_color": "#212529",
+        "accordion_custom_bg_plus": "#f56900",
+        "accordion_custom_plus_color": "#ffffff",
+        "accordion_custom_bg_actif": "#f56900",
+        "accordion_custom_title_color_actif": "#ffffff",
+        "accordion_custom_bg_plus_actif": "#ffffff",
+        "accordion_custom_plus_color_actif": "#f56900",
+        "img_thumbnail_faq": "img-thumbnail",
+        "border_color_faq": "border-0",
+        "border_width_faq": 1,
+        "shadow_sp_faq": "shadow-none",
+        "text_align": "text-center",
+        "subtitle_img": "shopify:\/\/shop_images\/scrolled-banner-allcat_d2d6fc30-0542-4794-b366-db5ef37ebde2.svg",
+        "brand_image_size": "60",
+        "subtitle": "Proposition de valeur unique",
+        "subtitle_size": "fs-5",
+        "color_caption": "#6c757d",
+        "title_overlay": "FAQ",
+        "title_overlay_size": "3",
+        "color_title_overlay": "#000000",
+        "title": "Expédition",
+        "heading_tag": "h2",
+        "title_size": "h2",
+        "description": "<p>Ajouter une description facultative à cette section<\/p>",
+        "description_size": "fs-5",
+        "img_orientation": "landscape",
+        "img_crop": "center",
+        "img_thumbnail": "img-thumbnail",
+        "border_color": "",
+        "border_width": 1,
+        "shadow_sp": "shadow-1",
+        "img_align_desktop": "flex-lg-row",
+        "pt": 0,
+        "pb": 10,
+        "mt": 0,
+        "mb": 10
+      }
+    },
+    "f334f03f-f77a-4198-86c4-fb75717fe379": {
+      "type": "faq",
+      "blocks": {
+        "template--16715093704925__f334f03f-f77a-4198-86c4-fb75717fe379-16875110704571fef7-0": {
+          "type": "text",
+          "settings": {
+            "icon": "",
+            "title": "Où expédiez-vous vos produits ?",
+            "heading_tag": "h3",
+            "description": "<p>Partagez des informations sur votre marque avec vos clients. Décrivez un produit, faites des annonces ou accueillez les clients dans votre magasin.<\/p>",
+            "img_orientation": "landscape",
+            "img_crop": "center",
+            "img_thumbnail": "img-thumbnail",
+            "border_color": "",
+            "border_width": 1,
+            "shadow_sp": "shadow-1",
+            "img_align_desktop": "flex-lg-row"
+          }
+        },
+        "template--16715093704925__f334f03f-f77a-4198-86c4-fb75717fe379-16875110704571fef7-1": {
+          "type": "text",
+          "settings": {
+            "icon": "",
+            "title": "Combien de temps faut-il pour recevoir ma commande ?",
+            "heading_tag": "h3",
+            "description": "<p>Partagez des informations sur votre marque avec vos clients. Décrivez un produit, faites des annonces ou accueillez les clients dans votre magasin.<\/p>",
+            "img_orientation": "landscape",
+            "img_crop": "center",
+            "img_thumbnail": "img-thumbnail",
+            "border_color": "",
+            "border_width": 1,
+            "shadow_sp": "shadow-1",
+            "img_align_desktop": "flex-lg-row"
+          }
+        },
+        "template--16715093704925__f334f03f-f77a-4198-86c4-fb75717fe379-16875110704571fef7-2": {
+          "type": "text",
+          "settings": {
+            "icon": "",
+            "title": "Quels sont les modes de paiement acceptés ?",
+            "heading_tag": "h3",
+            "description": "<p>Partagez des informations sur votre marque avec vos clients. Décrivez un produit, faites des annonces ou accueillez les clients dans votre magasin.<\/p>",
+            "img_orientation": "landscape",
+            "img_crop": "center",
+            "img_thumbnail": "img-thumbnail",
+            "border_color": "",
+            "border_width": 1,
+            "shadow_sp": "shadow-1",
+            "img_align_desktop": "flex-lg-row"
+          }
+        },
+        "template--16715093704925__f334f03f-f77a-4198-86c4-fb75717fe379-16875110704571fef7-3": {
+          "type": "text",
+          "settings": {
+            "icon": "",
+            "title": "Comment suivre ma commande ?",
+            "heading_tag": "h3",
+            "description": "<p>Partagez des informations sur votre marque avec vos clients. Décrivez un produit, faites des annonces ou accueillez les clients dans votre magasin.<\/p>",
+            "img_orientation": "landscape",
+            "img_crop": "center",
+            "img_thumbnail": "img-thumbnail",
+            "border_color": "",
+            "border_width": 1,
+            "shadow_sp": "shadow-1",
+            "img_align_desktop": "flex-lg-row"
+          }
+        },
+        "template--16715093704925__f334f03f-f77a-4198-86c4-fb75717fe379-16875110704571fef7-4": {
+          "type": "text",
+          "settings": {
+            "icon": "",
+            "title": "Puis-je faire un cadeau à quelqu'un d'autre ?",
+            "heading_tag": "h3",
+            "description": "<p>Partagez des informations sur votre marque avec vos clients. Décrivez un produit, faites des annonces ou accueillez les clients dans votre magasin.<\/p>",
+            "img_orientation": "landscape",
+            "img_crop": "center",
+            "img_thumbnail": "img-thumbnail",
+            "border_color": "",
+            "border_width": 1,
+            "shadow_sp": "shadow-1",
+            "img_align_desktop": "flex-lg-row"
+          }
+        },
+        "template--16715093704925__f334f03f-f77a-4198-86c4-fb75717fe379-16875110704571fef7-5": {
+          "type": "text",
+          "settings": {
+            "icon": "",
+            "title": "Comment puis-je obtenir le remboursement de ma commande ?",
+            "heading_tag": "h3",
+            "description": "<p>Partagez des informations sur votre marque avec vos clients. Décrivez un produit, faites des annonces ou accueillez les clients dans votre magasin.<\/p>",
+            "img_orientation": "landscape",
+            "img_crop": "center",
+            "img_thumbnail": "img-thumbnail",
+            "border_color": "",
+            "border_width": 1,
+            "shadow_sp": "shadow-1",
+            "img_align_desktop": "flex-lg-row"
+          }
+        }
+      },
+      "block_order": [
+        "template--16715093704925__f334f03f-f77a-4198-86c4-fb75717fe379-16875110704571fef7-0",
+        "template--16715093704925__f334f03f-f77a-4198-86c4-fb75717fe379-16875110704571fef7-1",
+        "template--16715093704925__f334f03f-f77a-4198-86c4-fb75717fe379-16875110704571fef7-2",
+        "template--16715093704925__f334f03f-f77a-4198-86c4-fb75717fe379-16875110704571fef7-3",
+        "template--16715093704925__f334f03f-f77a-4198-86c4-fb75717fe379-16875110704571fef7-4",
+        "template--16715093704925__f334f03f-f77a-4198-86c4-fb75717fe379-16875110704571fef7-5"
+      ],
+      "settings": {
+        "background_img_opacity": 0.7,
+        "background_img_blur": 0,
+        "bg_color": "bg-body text-body",
+        "bg_gradient": false,
+        "max_width": "991",
+        "accordion_style": "accordion-custom",
+        "show_expanded": true,
+        "accordion_custom_bg": "#212529",
+        "accordion_custom_title_color": "#ffffff",
+        "accordion_custom_bg_plus": "#c99700",
+        "accordion_custom_plus_color": "#ffffff",
+        "accordion_custom_bg_actif": "#212529",
+        "accordion_custom_title_color_actif": "#ffffff",
+        "accordion_custom_bg_plus_actif": "#ffffff",
+        "accordion_custom_plus_color_actif": "#c99700",
+        "img_thumbnail_faq": "img-thumbnail",
+        "border_color_faq": "border-0",
+        "border_width_faq": 1,
+        "shadow_sp_faq": "shadow-2",
+        "text_align": "text-center",
+        "subtitle_img": "shopify:\/\/shop_images\/scrolled-banner-allcat_d2d6fc30-0542-4794-b366-db5ef37ebde2.svg",
+        "brand_image_size": "60",
+        "subtitle": "Proposition de valeur unique",
+        "subtitle_size": "fs-5",
+        "color_caption": "#6c757d",
+        "title_overlay": "",
+        "title_overlay_size": "3",
+        "color_title_overlay": "#000000",
+        "title": "Paiements",
+        "heading_tag": "h2",
+        "title_size": "h2",
+        "description": "<p>Ajouter une description facultative à cette section<\/p>",
+        "description_size": "fs-5",
+        "img_orientation": "landscape",
+        "img_crop": "center",
+        "img_thumbnail": "img-thumbnail",
+        "border_color": "",
+        "border_width": 1,
+        "shadow_sp": "shadow-1",
+        "img_align_desktop": "flex-lg-row",
+        "pt": 0,
+        "pb": 10,
+        "mt": 0,
+        "mb": 10
+      }
+    },
+    "a1739fa5-e424-4af6-81cb-bcfcb6e62407": {
+      "type": "featured-products",
+      "settings": {
+        "products": [
+
+        ],
+        "collection": "",
+        "limit": 12,
+        "bg_color": "bg-light text-body",
+        "container": "container",
+        "text_align": "text-center",
+        "brand_image_size": "60",
+        "subtitle": "",
+        "subtitle_size": "fs-5",
+        "color_caption": "#6c757d",
+        "title_overlay": "",
+        "title_overlay_size": "3",
+        "color_title_overlay": "#000000",
+        "title": "Produits ou Collection en vedette",
+        "heading_tag": "h2",
+        "title_size": "h2",
+        "description": "<p>Ajouter une description facultative à cette section<\/p>",
+        "description_size": "fs-5",
+        "product_card_style": "",
+        "product_img_mode": "gallery",
+        "product_img_orientation": "square",
+        "product_img_thumbnail": "img-thumbnail",
+        "product_border_color": "",
+        "product_shadow_sp": "shadow-1",
+        "product_show_sale_badge": true,
+        "product_sale_badge_color": "bg-success text-white",
+        "product_title_size": "h5",
+        "product_title_truncate": "",
+        "product_show_vendor": true,
+        "product_show_color_swatches": true,
+        "product_show_atc_form": true,
+        "product_form_show_inventory": true,
+        "product_show_wishlist_btn": true,
+        "carousel_enable": true,
+        "carousel_arrows": true,
+        "carousel_pagination": true,
+        "carousel_easing": "cubic-bezier(.42,.65,.27,.99)",
+        "carousel_speed": 400,
+        "carousel_autoplay": false,
+        "carousel_interval": 5,
+        "carousel_per_move": "0",
+        "carousel_rewind": true,
+        "breakpoint_xs_partial": true,
+        "breakpoint_xs": 1,
+        "breakpoint_sm": 2,
+        "breakpoint_md": 2,
+        "breakpoint_lg": 3,
+        "breakpoint_xl": 4,
+        "breakpoint_xxl": 4,
+        "btn_text": "Voir plus de produits",
+        "btn_url": "",
+        "btn_color": "btn-primary",
+        "pt": 10,
+        "pb": 10,
+        "mt": 0,
+        "mb": 0
+      }
+    }
+  },
+  "order": [
+    "6a194339-2ac1-456d-a637-4033ab2fd031",
+    "caf29b02-d530-4401-af0b-e860b66a56e9",
+    "f334f03f-f77a-4198-86c4-fb75717fe379",
+    "a1739fa5-e424-4af6-81cb-bcfcb6e62407"
+  ]
+}

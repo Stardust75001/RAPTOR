@@ -1,0 +1,51 @@
+{% liquid
+    assign mt = block.settings.mt | prepend: 'mt-'
+    assign mb = block.settings.mb | prepend: 'mb-'
+
+    assign current_variant = product.selected_or_first_available_variant
+%}
+
+{% if current_variant.compare_at_price > current_variant.price %}
+    {% capture countdown_timer %}
+        {% if block.settings.countdown_timer == blank %}
+        {% else %}
+        {% assign block_expiration_time = block.settings.countdown_timer | date: '%s' %}
+            <span class="visually-hidden">
+                {{ 'general.countdown_timer.expires' | t }}
+            </span>
+            <ul 
+                class="timer-countdown list-unstyled" 
+                data-time="{{ block_expiration_time }}"
+                data-text-d="{{ 'general.countdown_timer.d' | t }}"
+                data-text-h="{{ 'general.countdown_timer.h' | t }}"
+                data-text-m="{{ 'general.countdown_timer.m' | t }}"
+                data-text-s="{{ 'general.countdown_timer.s' | t }}"
+                data-text-days="{{ 'general.countdown_timer.days' | t }}"
+                data-text-hours="{{ 'general.countdown_timer.hours' | t }}"
+                data-text-minutes="{{ 'general.countdown_timer.minutes' | t }}"
+                data-text-seconds="{{ 'general.countdown_timer.seconds' | t }}"
+                hidden>
+                <li data-days></li>
+                <li data-hours></li>
+                <li data-minutes></li>
+                <li data-seconds></li>
+            </ul>
+        {% endif %}
+    {% endcapture %}
+    <div 
+        id="product-limited-offer" 
+        class="{{ mt }} {{ mb }}" 
+        style="color: {{ block.settings.color }}" {{ block.shopify_attributes }}>
+        <div class="d-flex align-items-center">
+            {% unless block.settings.icon == blank %}
+                <div class="block-icon d-flex flex-shrink-0 me-4">
+                    {{ block.settings.icon }}
+                </div>
+            {% endunless %}
+            <p class="mb-0 small fst-italic me-2">
+                {{ block.settings.text }}
+            </p>
+            {{ countdown_timer }}
+        </div>
+    </div>
+{% endif %}

@@ -1,0 +1,578 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid 
+    assign pt = section.settings.pt | prepend: 'pt-'
+    assign pb = section.settings.pb | prepend: 'pb-'
+    assign mt = section.settings.mt | prepend: 'mt-'
+    assign mb = section.settings.mb | prepend: 'mb-'
+
+    assign row_xs = section.settings.breakpoint_xs | prepend: 'row-cols-'
+    assign row_sm = section.settings.breakpoint_sm | prepend: 'row-cols-sm-'
+    assign row_md = section.settings.breakpoint_md | prepend: 'row-cols-md-'
+    assign row_lg = section.settings.breakpoint_lg | prepend: 'row-cols-lg-'
+    assign row_xl = section.settings.breakpoint_xl | prepend: 'row-cols-xl-'
+    assign row_xxl = section.settings.breakpoint_xxl | prepend: 'row-cols-xxl-'
+%}
+
+<section 
+    id="search" 
+    class="{{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+    <div id="search-header" class="mb-9 bg-light overflow-hidden">
+        <div class="container">
+            <div 
+                class="mx-auto text-center py-10"
+                style="max-width: {{ section.settings.form_max_width }}px">
+                <{{ section.settings.heading_tag }} class="title mb-4 {{ section.settings.title_size }}">
+                    {% if search.performed %}
+                        {{ 'general.search_page.title_search_performed' | t }}
+                        {% if settings.custom_svg_h2 != blank %}
+                          <div class="h2_svg">
+                            <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {{ settings.custom_svg_h2 }}</span>
+                          </div>
+                        {% else %}
+                          {% if settings.svg_h2 != 'none' %}
+                            <div class="h2_svg mb-4">
+                              <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {% render 'svg-subtitle', svg_h2: settings.svg_h2 %}</span>
+                            </div>
+                          {% endif %}
+                        {% endif %}
+                    {% else %}
+                        {{ 'general.search_page.title' | t }}
+                        {% if settings.custom_svg_h2 != blank %}
+                          <div class="h2_svg">
+                            <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {{ settings.custom_svg_h2 }}</span>
+                          </div>
+                        {% else %}
+                          {% if settings.svg_h2 != 'none' %}
+                            <div class="h2_svg mb-4">
+                              <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {% render 'svg-subtitle', svg_h2: settings.svg_h2 %}</span>
+                            </div>
+                          {% endif %}
+                        {% endif %}
+                    {% endif %}
+                </{{ section.settings.heading_tag }}>
+                <form action="{{ routes.search_url }}"> 
+                    <div class="d-lg-flex">
+                        <input 
+                            class="form-control mb-3 mb-lg-0 me-lg-3"
+                            type="search"
+                            placeholder="{{ 'general.search_page.form.input_label' | t }}"
+                            aria-label="{{ 'general.search_page.form.input_label' | t }}"
+                            name="q"
+                            value="{{ search.terms | escape }}">
+                        {% if section.settings.show_search_types_select %}
+                            <select 
+                                name="type" 
+                                class="form-select mb-3 mb-lg-0 me-lg-3" 
+                                aria-label="{{ 'general.search_page.form.select_label' | t }}">
+                                <option value="product">
+                                    {{ 'general.search_page.types.products' | t }}
+                                </option>
+                                <option value="article">
+                                    {{ 'general.search_page.types.articles' | t }}
+                                </option>
+                                <option value="page">
+                                    {{ 'general.search_page.types.pages' | t }}
+                                </option>
+                            </select>
+                        {% else %}
+                            <input type="hidden" name="type" value="product">
+                        {% endif %}
+                        <button 
+                            type="submit"
+                            class="btn btn-primary">
+                            {{ 'general.search_page.form.btn_text' | t }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {% if search.performed %}
+        <div class="{{ section.settings.container }}">
+            {% if search.results_count == 0 %}        
+                <p class="alert alert-warning py-3" role="status">
+                    {{ 'general.search_page.no_results' | t: terms: search.terms }}
+                </p>
+            {% else %}
+                <p class="alert alert-success py-3" role="status">
+                    {{ 'general.search_page.results_with_count_and_term' | t: terms: search.terms, count: search.results_count }}
+                </p>
+                {% paginate search.results by section.settings.limit %}
+                    {% if search.results.first.object_type == 'product' %}
+                        <ul class="product-listing list-unstyled row mx-n3 mx-lg-n4 mb-0 {{ section.settings.text_align }} {{ row_xs }} {{ row_sm }} {{ row_md }} {{ row_lg }} {{ row_xl }} {{ row_xxl }}">
+                            {% for item in search.results %}
+                                {% render 'product-item', product: item %}
+                            {% endfor %}
+                        </ul>
+                    {% elsif search.results.first.object_type == 'article' %}
+                        <ul class="article-list list-unstyled row mx-n3 mx-lg-n4 mb-0 {{ row_xs }} {{ row_sm }} {{ row_md }} {{ row_lg }} {{ row_xl }} {{ row_xxl }}">
+                            {% for item in search.results %}
+                                {% render 'article-item', article: item %}
+                            {% endfor %}
+                        </ul>
+                    {% elsif search.results.first.object_type == 'page' %}
+                        <ul class="page-list list-unstyled row mx-n3 mx-lg-n4 mb-0 {{ row_xs }} {{ row_sm }} {{ row_md }} {{ row_lg }} {{ row_xl }} {{ row_xxl }}">
+                            {% for page in search.results %}
+                                <li class="page-item p-3 p-lg-4">
+                                    <div class="card h-100 {{ section.settings.shadow_sp }} {{ section.settings.border_color }}">
+                                        <div class="card-body">
+                                            <h3 class="title {{ section.settings.page_title_size }} mb-0">
+                                                <a href="{{ page.url }}" class="">
+                                                    {{ page.title }}
+                                                </a>
+                                            </h3>
+                                            {% if section.settings.page_excerpt %}
+                                                <div class="page-excerpt rte small mt-3">
+                                                    {{ page.content | strip_html | truncatewords: 20 }}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    {% render 'pagination' with paginate: paginate %}
+                {% endpaginate %}
+            {% endif %}
+        </div>
+    {% endif %}
+
+</section>
+
+{% schema %}
+{
+    "name": "Recherche",
+    "settings": [
+        {
+            "type": "header",
+            "content": "General"
+        },
+        {
+            "type": "select",
+            "id": "container",
+            "label": "Conteneur",
+            "default": "container",
+            "options": [
+                { "value": "container", "label": "Conteneur" },
+                { "value": "container-fluid", "label": "Pleine largeur" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "text_align",
+            "label": "Alignement du texte",
+            "default": "text-center",
+            "options": [
+                { "value": "text-start", "label": "Gauche" },
+                { "value": "text-center", "label": "Centre" }
+            ]
+        },
+        {
+            "type": "range",
+            "id": "limit",
+            "label": "Produits par page",
+            "min": 10,
+            "max": 50,
+            "default": 48,
+            "step": 1
+        },
+        {
+            "type": "select",
+            "id": "heading_tag",
+            "label": "Balise titre (SEO)",
+            "default": "h1",
+            "options": [
+                { "value": "h1", "label": "h1" },
+                { "value": "h2", "label": "h2" },
+                { "value": "h3", "label": "h3" },
+                { "value": "h4", "label": "h4" },
+                { "value": "h5", "label": "h5" },
+                { "value": "h6", "label": "h6" },
+                { "value": "span", "label": "Aucune" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "title_size",
+            "label": "Taille du titre",
+            "default": "h1",
+           "options": [
+                { "group": "Titre Supérieur", "value": "display-1", "label": "Extra Extra Grand" },
+                { "group": "Titre Supérieur", "value": "display-2", "label": "Extra Grand" },
+                { "group": "Titre Supérieur", "value": "display-3", "label": "Ultra Grand" },
+                { "group": "Titre Supérieur", "value": "display-4", "label": "Super Grand" },
+                { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+            ]
+        },
+        {
+            "type": "text",
+            "id": "form_max_width",
+            "label": "Largeur maximale du formulaire (px)",
+            "default": "540"
+        },
+        {
+            "type": "checkbox",
+            "id": "show_search_types_select",
+            "label": "Afficher les types de recherche sélectionner",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Produit"
+        },
+        {
+            "type": "select",
+            "id": "product_img_mode",
+            "label": "Mode image",
+            "options": [
+                { "value": "simple", "label": "Simple image" },
+                { "value": "hover", "label": "Changement au hover" },
+                { "value": "gallery", "label": "Gallerie d'images" }
+            ],
+            "default": "gallery"
+        },
+        {
+            "type": "select",
+            "id": "product_img_orientation",
+            "label": "Image orientation",
+            "default": "square",
+            "options": [
+                { "value": "square", "label": "Carré" },
+                { "value": "landscape", "label": "Paysage" },
+                { "value": "potrait", "label": "Portrait" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "product_img_thumbnail",
+            "label": "Bordure de l'image",
+            "default": "img-thumbnail",
+            "options": [
+                { "value": "", "label": "Aucune" },
+                { "value": "img-thumbnail", "label": "Bordure" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "product_border_color",
+            "label": "Couleur de la bordure",
+            "options": [
+                { "value": "", "label": "Default" },
+                { "value": "border-primary", "label": "Primaire" },
+                { "value": "border-secondary", "label": "Secondaire" },
+                { "value": "border-tertiary", "label": "Tertiaire" },
+                { "value": "border-dark", "label": "Sombre" },
+                { "value": "border-success", "label": "Succès" },
+                { "value": "border-warning", "label": "Avertissement" },
+                { "value": "border-danger", "label": "Danger" },
+                { "value": "border-info", "label": "Info" }
+            ],
+            "default": ""
+        },
+        {
+            "type": "select",
+            "id": "product_shadow_sp",
+            "label": "Ombre",
+            "options": [
+                { "value": "shadow-none", "label": "Aucune" },
+                { "value": "shadow-1", "label": "Ombre légère" },
+                { "value": "shadow-2", "label": "Ombre partiel" },
+                { "value": "shadow-3", "label": "Ombre profonde" },
+                { "value": "shadow-4", "label": "Ombre totale" }
+            ],
+            "default": "shadow-1"
+        },
+        {
+            "type": "checkbox",
+            "id": "product_show_sale_badge",
+            "label": "Afficher le badge de vente",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "product_sale_badge_color",
+            "label": "Couleur du badge de vente",
+            "default": "bg-success text-white",
+            "options": [
+                { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+                { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+                { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+                { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
+                { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+                { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Sombre" },
+                { "group": "Par défaut", "value": "", "label": "Corps (body)" },
+                { "group": "Alerte", "value": "bg-success text-white", "label": "Succès" },
+                { "group": "Alerte", "value": "bg-warning text-dark", "label": "Avertissement" },
+                { "group": "Alerte", "value": "bg-danger text-white", "label": "Danger" },
+                { "group": "Alerte", "value": "bg-info text-white", "label": "Info" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "product_title_size",
+            "label": "Taille du titre",
+            "default": "h6",
+            "options": [
+                { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "product_show_atc_form",
+            "label": "Afficher le bouton 'Ajouter au panier'",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "product_form_show_inventory",
+            "label": "Afficher l'inventaire dans le bouton 'Ajouter au panier'",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "product_show_wishlist_btn",
+            "label": "Afficher la liste de souhaits",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Article"
+        },
+        {
+            "type": "select",
+            "id": "article_img_orientation",
+            "label": "Image orientation",
+            "default": "landscape-2",
+            "options": [
+                { "value": "square", "label": "Carré" },
+                { "value": "landscape", "label": "Paysage" },
+                { "value": "landscape-2", "label": "Paysage 2x" },
+                { "value": "landscape-3", "label": "Paysage 3x" },
+                { "value": "potrait", "label": "Portrait" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "img_thumbnail",
+            "label": "Bordure de l'image",
+            "default": "img-thumbnail",
+            "options": [
+                { "value": "", "label": "Aucune" },
+                { "value": "img-thumbnail", "label": "Bordure" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "border_color",
+            "label": "Couleur de la bordure",
+            "options": [
+                { "value": "", "label": "Default" },
+                { "value": "border-primary", "label": "Primaire" },
+                { "value": "border-secondary", "label": "Secondaire" },
+                { "value": "border-tertiary", "label": "Tertiaire" },
+                { "value": "border-dark", "label": "Sombre" },
+                { "value": "border-success", "label": "Succès" },
+                { "value": "border-warning", "label": "Avertissement" },
+                { "value": "border-danger", "label": "Danger" },
+                { "value": "border-info", "label": "Info" }
+            ],
+            "default": ""
+        },
+        {
+            "type": "select",
+            "id": "shadow_sp",
+            "label": "Ombre",
+            "options": [
+                { "value": "shadow-none", "label": "Aucune" },
+                { "value": "shadow-1", "label": "Ombre légère" },
+                { "value": "shadow-2", "label": "Ombre partiel" },
+                { "value": "shadow-3", "label": "Ombre profonde" },
+                { "value": "shadow-4", "label": "Ombre totale" }
+            ],
+            "default": "shadow-1"
+        },
+        {
+            "type": "select",
+            "id": "article_title_size",
+            "label": "Taille du titre",
+            "default": "h5",
+            "options": [
+                { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "article_meta",
+            "label": "Afficher les méta de l'article",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "article_excerpt",
+            "label": "Afficher l'extrait de l'article",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Page"
+        },
+        {
+            "type": "select",
+            "id": "page_title_size",
+            "label": "Taille du titre",
+            "default": "h5",
+            "options": [
+                { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "page_excerpt",
+            "label": "Afficher l'extrait de la page",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Points d'arrêt",
+            "info": "Ajuster les éléments par ligne en fonction de la résolution de l'écran"
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_xs",
+            "label": "Éléments par ligne / xs",
+            "info": "Largeur d'écran : moins de 576px",
+            "min": 1,
+            "max": 3,
+            "step": 1,
+            "default": 2
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_sm",
+            "label": "Éléments par ligne / sm",
+            "info": "Largeur d'écran : ≥576px",
+            "min": 1,
+            "max": 3,
+            "step": 1,
+            "default": 2
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_md",
+            "label": "Éléments par ligne / md",
+            "info": "Largeur d'écran : ≥768px",
+            "min": 1,
+            "max": 4,
+            "step": 1,
+            "default": 3
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_lg",
+            "label": "Éléments par ligne / lg",
+            "info": "Largeur d'écran : ≥992px",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "default": 3
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_xl",
+            "label": "Éléments par ligne / xl",
+            "info": "Largeur d'écran : ≥1200px",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "default": 4
+        },
+        {
+            "type": "range",
+            "id": "breakpoint_xxl",
+            "label": "Éléments par ligne / xxl",
+            "info": "Largeur d'écran : ≥1400px",
+            "min": 1,
+            "max": 8,
+            "step": 1,
+            "default": 4
+        },
+        {
+            "type": "header",
+            "content": "Espacement de la section"
+        },
+        {
+            "type": "range",
+            "id": "pt",
+            "label": "Padding supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "pb",
+            "label": "Padding inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mt",
+            "label": "Marge supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mb",
+            "label": "Marge inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        }
+    ],
+    "templates": ["search"],
+    "presets": [
+        {
+            "name": "Recherche",
+            "category": "Search"
+        }
+    ]
+}
+{% endschema %}

@@ -1,0 +1,427 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid 
+    assign pt = section.settings.pt | prepend: 'pt-'
+    assign pb = section.settings.pb | prepend: 'pb-'
+    assign mt = section.settings.mt | prepend: 'mt-'
+    assign mb = section.settings.mb | prepend: 'mb-'
+
+    case section.settings.img_orientation
+        when 'square'
+            assign img_width  = 1600
+            assign img_height = 1600
+        when 'landscape'
+            assign img_width  = 1600
+            assign img_height = 1280
+        when 'landscape-2'
+            assign img_width  = 1600
+            assign img_height = 1060
+        when 'landscape-3'
+            assign img_width  = 1600
+            assign img_height = 800
+        when 'potrait'
+            assign img_width  = 1280
+            assign img_height = 1600
+    endcase
+%}
+
+{% render 'scroll-progress-bar' %}
+<article class="article {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+    <div class="container enter-view">
+        {% if section.settings.show_img and article.image %}
+            <img
+                class="article-img img-fluid mb-7 rounded {{ section.settings.img_thumbnail }} {{ section.settings.shadow_sp }} {{ section.settings.border_color }}"
+                style="border-width: {{ section.settings.border_width }}px;"
+                src="{{ article.image.src | image_url: width: img_width, height: img_height, crop: 'center' }}"
+                alt="{{ article.image.alt | escape }}"
+                width="{{ img_width }}"
+                height="{{ img_height }}"
+                loading="lazy">
+        {% endif %}
+        <div class="mx-auto" style="max-width: {{ section.settings.max_width }}px">
+            {% unless article.title  == blank %}
+                <{{ section.settings.heading_tag }} class="article-title title mb-4 {{ section.settings.title_size }} animate__animated animate__faster opacity-0"
+                    {% if settings.effect_apply_title_enable %}
+                      data-animate-class="{{ settings.animation_title_name }}"
+                      style="animation-delay: 200ms;"
+                    {% endif %}>
+                      {{ article.title }}
+                      {% if settings.custom_svg_h2 != blank %}
+                        <div class="h2_svg animate__animated animate__faster opacity-0"
+                            {% if settings.effect_apply_svg_enable %} 
+                              data-animate-class="{{ settings.animation_svg_name }}"
+                              style="animation-delay: 400ms;"
+                            {% endif %}
+                        >
+                          <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {{ settings.custom_svg_h2 }}</span>
+                        </div>
+                      {% else %}
+                        {% if settings.svg_h2 != 'none' %}
+                          <div class="h2_svg mb-4 animate__animated animate__faster opacity-0"
+                                {% if settings.effect_apply_svg_enable %} 
+                                  data-animate-class="{{ settings.animation_svg_name }}"
+                                  style="animation-delay: 400ms;"
+                                {% endif %}>
+                            <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {% render 'svg-subtitle', svg_h2: settings.svg_h2 %}</span>
+                          </div>
+                        {% endif %}
+                      {% endif %}
+                </{{ section.settings.heading_tag }}>
+            {% endunless %}
+            {% if section.settings.article_meta_author or section.settings.article_meta_date %}
+                <p class="article-meta text-muted mb-5">
+                  {% if section.settings.article_meta_author %}
+                    {{ article.author }}
+                  {% endif %}
+              
+                  {% if section.settings.article_meta_date %}
+                    {% if section.settings.article_meta_author %}
+                      @
+                    {% endif %}
+                    {{ article.created_at | time_tag: ' %d %b, %Y' }}
+                  {% endif %}
+                </p>
+            {% endif %}
+            <div class="article-content rte mb-6">
+                {{ article.content }}
+            </div>
+            {% if section.settings.show_tags and article.tags.size > 0 %}
+                <div class="article-tags small text-muted mb-7">
+                    {{ 'blogs.posted_in' | t }}: 
+                    {% for tag in article.tags %}
+                        <a href="{{ blog.url }}/tagged/{{ tag | handle }}">
+                            {{ tag }}</a>{% unless forloop.last %}, {% endunless %} {% comment %}Do not use in new line{% endcomment %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if section.settings.show_breadcrumbs or section.settings.show_share_btn %}
+                <div class="d-flex justify-content-between align-items-center bg-light py-4 px-4 rounded">
+                    {% if section.settings.show_breadcrumbs %}
+                        <div class="breadcrumbs-wrapper me-6">
+                            {% render 'breadcrumbs' %}
+                        </div>
+                    {% endif %}
+                    {% if section.settings.show_share_btn %}
+                        <div class="ms-auto">
+                            {% render 'share-button', title: product.title, url: product.url %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</article>
+
+{% if section.settings.show_prev_next_nav %}
+    {% render 'article-prev-next' %}
+{% endif %}
+
+<script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "Article",
+        "articleBody": {{ article.content | strip_html | json }},
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": {{ request.origin | append: page.url | json }}
+        },
+        "headline": {{ article.title | json }},
+        {% if article.excerpt != blank %}
+            "description": {{ article.excerpt | strip_html | json }},
+        {% endif %}
+        {% if article.image %}
+            "image": [
+                {{ article | image_url: width: article.image.width | prepend: "https:" | json }}
+            ],
+        {% endif %}
+        "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
+        "dateCreated": {{ article.created_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
+        "author": {
+            "@type": "Person",
+            "name": {{ article.author | json }}
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": {{ shop.name | json }}
+        }
+    }
+    </script>
+
+{% schema %}
+{
+    "name": "Article de Blog",
+    "settings": [
+        {
+            "type": "checkbox",
+            "id": "show_img",
+            "label": "Afficher l'image",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "img_orientation",
+            "label": "Image orientation",
+            "default": "landscape-3",
+            "options": [
+                { "value": "square", "label": "Carré" },
+                { "value": "landscape", "label": "Paysage" },
+                { "value": "landscape-2", "label": "Paysage 2x" },
+                { "value": "landscape-3", "label": "Paysage 3x" },
+                { "value": "potrait", "label": "Portrait" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "img_thumbnail",
+            "label": "Bordure de l'image",
+            "default": "img-thumbnail",
+            "options": [
+                { "value": "", "label": "Aucune" },
+                { "value": "img-thumbnail", "label": "Bordure" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "border_color",
+            "label": "Couleur de la bordure",
+            "options": [
+                { "value": "", "label": "Default" },
+                { "value": "border-primary", "label": "Primaire" },
+                { "value": "border-secondary", "label": "Secondaire" },
+                { "value": "border-tertiary", "label": "Tertiaire" },
+                { "value": "border-dark", "label": "Sombre" },
+                { "value": "border-success", "label": "Succès" },
+                { "value": "border-warning", "label": "Avertissement" },
+                { "value": "border-danger", "label": "Danger" },
+                { "value": "border-info", "label": "Info" }
+            ],
+            "default": ""
+        },
+        {
+            "type": "range",
+            "id": "border_width",
+            "label": "Largeur de la bordure",
+            "min": 0,
+            "max": 10,
+            "step": 1,
+            "default": 1
+        },
+        {
+            "type": "select",
+            "id": "shadow_sp",
+            "label": "Ombre",
+            "options": [
+                { "value": "shadow-none", "label": "Aucune" },
+                { "value": "shadow-1", "label": "Ombre légère" },
+                { "value": "shadow-2", "label": "Ombre partiel" },
+                { "value": "shadow-3", "label": "Ombre profonde" },
+                { "value": "shadow-4", "label": "Ombre totale" }
+            ],
+            "default": "shadow-1"
+        },
+        {
+            "type": "select",
+            "id": "heading_tag",
+            "label": "Balise titre (SEO)",
+            "default": "h1",
+            "options": [
+                { "value": "h1", "label": "h1" },
+                { "value": "h2", "label": "h2" },
+                { "value": "h3", "label": "h3" },
+                { "value": "h4", "label": "h4" },
+                { "value": "h5", "label": "h5" },
+                { "value": "h6", "label": "h6" },
+                { "value": "span", "label": "Aucune" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "title_size",
+            "label": "Taille du titre",
+            "default": "h1",
+            "options": [
+                { "group": "Titre Supérieur", "value": "display-1", "label": "Extra Extra Grand" },
+                { "group": "Titre Supérieur", "value": "display-2", "label": "Extra Grand" },
+                { "group": "Titre Supérieur", "value": "display-3", "label": "Ultra Grand" },
+                { "group": "Titre Supérieur", "value": "display-4", "label": "Super Grand" },
+                { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+            ]
+        },
+        {
+            "type": "text",
+            "id": "max_width",
+            "label": "Largeur max. (px)",
+            "default": "720"
+        },
+        {
+            "type": "checkbox",
+            "id": "article_meta_author",
+            "label": "Afficher l'auteur de l'article",
+            "info": "Auteur",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "article_meta_date",
+            "label": "Afficher la date de l'article",
+            "info": "Date",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_tags",
+            "label": "Afficher les tags",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_breadcrumbs",
+            "label": "Afficher le  Fil d'Ariane",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_share_btn",
+            "label": "Afficher le bouton Partager",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "🏆 Application Précédent/Suivant",
+            "info": "👉 Application Version Shopiweb Premium"
+        },
+        {
+            "type": "paragraph",
+            "content": "Affiche les articles précédents et suivants."
+        },
+        {
+            "type": "checkbox",
+            "id": "show_prev_next_nav",
+            "label": "Afficher la navigation \"Précédent/Suivant\"",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "img_orientation_prev_next_nav",
+            "label": "Image orientation",
+            "default": "square",
+            "options": [
+                { "value": "square", "label": "Carré" },
+                { "value": "landscape", "label": "Paysage" },
+                { "value": "potrait", "label": "Portrait" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "img_thumbnail_prev_next_nav",
+            "label": "Bordure de l'image",
+            "default": "img-thumbnail",
+            "options": [
+                { "value": "", "label": "Aucune" },
+                { "value": "img-thumbnail", "label": "Bordure" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "border_color_prev_next_nav",
+            "label": "Couleur de la bordure",
+            "options": [
+                { "value": "", "label": "Default" },
+                { "value": "border-primary", "label": "Primaire" },
+                { "value": "border-secondary", "label": "Secondaire" },
+                { "value": "border-tertiary", "label": "Tertiaire" },
+                { "value": "border-dark", "label": "Sombre" },
+                { "value": "border-success", "label": "Succès" },
+                { "value": "border-warning", "label": "Avertissement" },
+                { "value": "border-danger", "label": "Danger" },
+                { "value": "border-info", "label": "Info" }
+            ],
+            "default": ""
+        },
+        {
+            "type": "select",
+            "id": "shadow_sp_prev_next_nav",
+            "label": "Ombre",
+            "options": [
+                { "value": "shadow-none", "label": "Aucune" },
+                { "value": "shadow-1", "label": "Ombre légère" },
+                { "value": "shadow-2", "label": "Ombre partiel" },
+                { "value": "shadow-3", "label": "Ombre profonde" },
+                { "value": "shadow-4", "label": "Ombre totale" }
+            ],
+            "default": "shadow-1"
+        },
+        {
+            "type": "header",
+            "content": "🏆 Application Progression Lecture",
+            "info": "👉 Application Version Shopiweb Premium"
+        },
+        {
+            "type": "checkbox",
+            "id": "show_scroll_progress_bar",
+            "label": "Afficher une barre de progression au défilement",
+            "info": "Utile pour les longs articles, permettant au visiteur de savoir combien il reste à lire",
+            "default": false
+        },
+        {
+            "type": "header",
+            "content": "Espacement de la section"
+        },
+        {
+            "type": "range",
+            "id": "pt",
+            "label": "Padding supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "pb",
+            "label": "Padding inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mt",
+            "label": "Marge supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mb",
+            "label": "Marge inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        }
+    ],
+    "templates": ["article"],
+    "presets": [
+        {
+            "name": "Article de Blog",
+            "category": "Blog"
+        }
+    ]
+}
+{% endschema %}

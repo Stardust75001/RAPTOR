@@ -1,0 +1,36 @@
+{% liquid
+    assign mt = block.settings.mt | prepend: 'mt-'
+    assign mb = block.settings.mb | prepend: 'mb-'
+%}
+
+
+<div id="product-live-visitors" class="{{ mt }} {{ mb }}" {{ block.shopify_attributes }}>
+    <div class="d-flex align-items-center">
+        {% unless block.settings.icon == blank %}
+            <div class="block-icon d-flex flex-shrink-0 me-4">
+                {{ block.settings.icon }}
+            </div>
+        {% endunless %}
+        <div class="bloc-snipers rte small fst-italic mb-0">
+            {{ block.settings.debutlive }} 
+          <span class="sniper" style="color: {{ block.settings.color_live }}; font-weight: bold;"> </span> 
+              {{ block.settings.finlive }}
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // Set interval to update the number of live visitors
+    setInterval(function() {
+        const min = {{ block.settings.min }};
+        const max = {{ block.settings.max }};
+        const randomNumber = Math.floor(Math.random() * (max - min + 1) + min);
+
+        const numberDisplay = document.querySelector('.sniper');
+        if (numberDisplay) {
+            numberDisplay.textContent = randomNumber;
+        }
+    }, 3000);
+</script>
+

@@ -1,0 +1,26 @@
+{% liquid 
+    if request.page_type == 'cart' 
+        assign show_testimonial = section.settings.show_testimonial
+    else
+        assign show_testimonial = settings.cart_show_testimonial
+    endif
+%}
+
+{% if show_testimonial %}
+    <div 
+        id="cart-testimonial" 
+        class="rounded bg-light mb-3 {% if settings.cart_testimonial_img %}has-testimonial-img{% endif %}">
+        {% unless settings.cart_testimonial_img == blank %}
+            <img
+                class="img-fluid rounded me-3"
+                src="{{ settings.cart_testimonial_img.src | image_url: width: 90, height: 90, crop: 'center' }}"
+                alt="{{ settings.cart_testimonial_img.alt | escape }}"
+                width="60"
+                height="60"
+                loading="lazy">
+        {% endunless %}
+        <div class="rte description text-center fs-6">
+            {{ settings.cart_testimonial }}
+        </div>
+    </div>
+{% endif %}

@@ -1,0 +1,519 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid 
+    assign pt = section.settings.pt | prepend: 'pt-'
+    assign pb = section.settings.pb | prepend: 'pb-'
+    assign mt = section.settings.mt | prepend: 'mt-'
+    assign mb = section.settings.mb | prepend: 'mb-'
+
+    case section.settings.img_orientation
+        when 'square'
+            assign img_width  = 900
+            assign img_height = 900
+        when 'landscape'
+            assign img_width  = 900
+            assign img_height = 720
+        when 'potrait'
+            assign img_width  = 720
+            assign img_height = 900
+    endcase
+%}
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const init = async () => {
+            if (Shopify.designMode) return
+        
+            const modal = document.querySelector('#age-verification-modal')
+            const bsModal = bootstrap.Modal.getOrCreateInstance(modal, {
+                backdrop: 'static'
+            })
+        
+            if (window.location.href.includes('age-verification-modal')) {
+                bsModal.show()
+                return
+            }
+        
+            if (document.cookie.indexOf('age-verification-modal') > -1) return
+                
+            bsModal.show()
+    
+            const minAge = Number(modal.dataset.minAge)
+    
+            let m, d, y
+    
+            let agePassed = false
+    
+            const getAge = birthDate => Math.floor((new Date() - new Date(birthDate).getTime()) / 3.15576e+10)
+    
+            const continueBtn = modal.querySelector('.modal-body .btn')
+    
+            continueBtn.addEventListener('click', () => {
+                window.createNewCookie('age-verification-modal', true, Number(modal.dataset.daysToWait))
+                bsModal.hide()
+            })
+    
+            setInterval(() => {
+                modal.querySelectorAll('.modal-body input').forEach(input => {
+                    if (input.id.includes('month')) {
+                        m = input.value
+                    } else if (input.id.includes('day')) {
+                        d = input.value
+                    } else {
+                        y = input.value
+                    }
+    
+                    agePassed = false
+    
+                    if ((m >= 1 && m <= 12) && (d >= 1 && d <= 31) && (y >= 1900 && y <= new Date().getFullYear())) {
+                        if (m.length === 1) m = `0${m}`
+                        if (d.length === 1) d = `0${d}`
+    
+                        if (getAge(`${y}-${m}-${d}`) >= minAge) {
+                            agePassed = true
+                        } else {
+                            agePassed = false
+                        }
+                    }
+    
+                    if (agePassed) {
+                        continueBtn.disabled = false
+                    } else {
+                        continueBtn.disabled = true
+                    }
+                })
+            }, 1000)
+        }
+        init()
+        
+        document.addEventListener('shopify:section:select', (e) => {
+            if (e.target.querySelector('#age-verification-modal')) {
+                const bsModal = bootstrap.Modal.getOrCreateInstance('#age-verification-modal')
+                bsModal.hide()
+                bsModal.show()
+            }
+        })
+    })
+</script>
+
+<div 
+    id="age-verification-modal"
+    class="modal fade" 
+    tabindex="-1" 
+    aria-label="{{ section.settings.title }}" 
+    aria-hidden="true"
+    data-days-to-wait="{{ section.settings.days_to_wait }}"
+    data-min-age="{{ section.settings.min_age }}">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-body {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+                <div class="row align-items-center {{ section.settings.img_align_desktop }}">
+                    <div class="col-lg-6 mb-6 mb-lg-0">
+                        {% unless section.settings.image %}
+                            {{ 'image' | placeholder_svg_tag: 'bg-light' }}
+                        {% else %}
+                            <img
+                                class="img-fluid rounded {{ section.settings.img_thumbnail }} {{ section.settings.shadow_sp }} {{ section.settings.border_color }}"
+                                src="{{ section.settings.image.src | image_url: width: img_width, height: img_height, crop: section.settings.img_crop }}"
+                                alt="{{ section.settings.image.alt | escape }}"
+                                width="{{ img_width }}"
+                                height="{{ img_height }}"
+                                loading="lazy">
+                        {% endunless %}
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="{{ section.settings.text_align }}">
+                            <h2 class="title mb-4 {{ section.settings.title_size }}">
+                                {{ section.settings.title }}
+                                {% if settings.custom_svg_h2 != blank %}
+                                    <div class="h2_svg">
+                                      <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {{ settings.custom_svg_h2 }}</span>
+                                    </div>
+                              {% else %}
+                                  {% if settings.svg_h2 != 'none' %}
+                                    <div class="h2_svg mb-4">
+                                      <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {% render 'svg-subtitle', svg_h2: settings.svg_h2 %}</span>
+                                    </div>
+                                  {% endif %}
+                              {% endif %}
+                            </h2>
+                            <div class="description rte mb-7 {{ section.settings.description_size }}">
+                                {{ section.settings.description }}
+                            </div>
+                            <div class="row row-cols-3 mx-n2 mb-4">
+                                <div class="px-2">
+                                    <input 
+                                        id="age-verification-form-month"
+                                        class="form-control {{ section.settings.input_group_size }}"
+                                        type="number" 
+                                        min="1" 
+                                        max="12" 
+                                        aria-label="{{ section.settings.text_month_label }}" 
+                                        placeholder="{{ section.settings.text_month_placeholder }}">
+                                </div>
+                                <div class="px-2">
+                                    <input 
+                                        id="age-verification-form-day"
+                                        class="form-control {{ section.settings.input_group_size }}"
+                                        type="number" 
+                                        min="1" 
+                                        max="31" 
+                                        aria-label="{{ section.settings.text_day_label }}" 
+                                        placeholder="{{ section.settings.text_day_placeholder }}">
+                                </div>
+                                <div class="px-2">
+                                    <input 
+                                        id="age-verification-form-year"
+                                        class="form-control {{ section.settings.input_group_size }}"
+                                        type="number"  
+                                        min="1900" 
+                                        max="{{ 'now' | date: "%Y" }}" 
+                                        aria-label="{{ section.settings.text_year_label }}" 
+                                        placeholder="{{ section.settings.text_year_placeholder }}">
+                                </div>
+                            </div>
+                            <button 
+                                class="btn w-100 {{ section.settings.btn_color }} {{ section.settings.btn_size }}" 
+                                type="button"
+                                disabled>
+                                {{ section.settings.btn_text }}
+                            </button>
+                        </div>
+                        {% unless section.settings.notice == blank %}
+                            <div class="notice rte mt-4 lh-sm extra-small text-center">
+                                {{ section.settings.notice }}
+                            </div>
+                        {% endunless %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% schema %}
+{
+    "name": "🏆 Âge Verification Popup",
+    "limit": 1,
+    "enabled_on": {
+        "groups": ["footer"]
+    },
+    "settings": [
+        {
+          "type": "header",
+          "content": "🏆 Application Âge Verification Popup",
+          "info": "👉 Version de l'application Shopiweb Premium"
+        },
+        {
+            "type": "paragraph", 
+            "content": "Documentation FR : [Âge Verification Popup by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/sections\/age-verification-popup)"
+        },
+        {
+            "type": "paragraph",
+            "content": "REMARQUE : comme la fenêtre popup ne s'affichera qu'une seule fois, vous pouvez la déclencher par une URL directe (paramètre). Par exemple : https://my-store.myshopify.com/?age-verfication-modal=true"
+        },
+        {
+            "type": "range",
+            "id": "min_age",
+            "label": "Âge minimum",
+            "min": 16,
+            "max": 21,
+            "default": 18
+        },
+        {
+            "type": "header",
+            "content": "Déclenchement"
+        },
+        {
+            "type": "range",
+            "id": "days_to_wait",
+            "label": "Jours d'attente",
+            "info": "Nombre de jours à attendre avant d'afficher à nouveau la fenêtre popup.",
+            "default": 30,
+            "min": 1,
+            "max": 100,
+            "step": 1
+        },
+        {
+            "type": "header",
+            "content": "General"
+        },
+        {
+            "type": "select",
+            "id": "text_align",
+            "label": "Alignement du texte",
+            "default": "text-start",
+            "options": [
+                { "value": "text-start", "label": "Gauche" },
+                { "value": "text-center", "label": "Centre" }
+            ]
+        },
+        {
+            "type": "inline_richtext",
+            "id": "title",
+            "label": "Titre",
+            "default": "Vérification de l'âge"
+        },
+        {
+            "type": "select",
+            "id": "title_size",
+            "label": "Taille du titre",
+            "default": "h3",
+            "options": [
+                { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+            ]
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Description",
+            "default": "<p>Veuillez confirmer votre âge pour continuer. <strong>Vous devez avoir plus de 18 ans ou l'âge de la majorité dans la juridiction à partir de laquelle vous accédez au site Web.</strong></p>"
+        },
+        {
+            "type": "select",
+            "id": "description_size",
+            "label": "Taille de description",
+            "default": "fs-5",
+            "options": [
+                { "group": "Description Standard", "value": "fs-1", "label": "Extra Grand" },
+                { "group": "Description Standard", "value": "fs-2", "label": "Super Grand" },
+                { "group": "Description Standard", "value": "fs-3", "label": "Très Grand" },
+                { "group": "Description Standard", "value": "fs-4", "label": "Grand" },
+                { "group": "Description Standard", "value": "fs-5", "label": "Moyen" },
+                { "group": "Description Standard", "value": "fs-6", "label": "Petit" } 
+            ]
+        },
+        {
+            "type": "select",
+            "id": "input_group_size",
+            "label": "Taille des éléments du formulaire",
+            "default": "",
+            "options": [
+                { "value": "", "label": "Normal" },
+                { "value": "input-group-lg", "label": "Large" }
+            ]
+        },
+        {
+            "type": "text",
+            "id": "btn_text",
+            "label": "Texte du bouton",
+            "default": "Continuer"
+        },
+        {
+            "type": "select",
+            "id": "btn_color",
+            "label": "Couleur du bouton",
+            "default": "btn-primary",
+            "options": [
+                { "group": "Normal", "value": "btn-link", "label": "Lien" },
+                { "group": "Normal", "value": "btn-light", "label": "Claire" },
+                { "group": "Normal", "value": "btn-dark", "label": "Sombre" },
+                { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
+                { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
+                { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
+                { "group": "Normal", "value": "btn-success", "label": "Succès" },
+                { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+                { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
+                { "group": "Normal", "value": "btn-info", "label": "Info" },
+                { "group": "Contour", "value": "btn-outline-light", "label": "Contour Claire" },
+                { "group": "Contour", "value": "btn-outline-dark", "label": "Contour Sombre" },
+                { "group": "Contour", "value": "btn-outline-primary", "label": "Contour Primaire" },
+                { "group": "Contour", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
+                { "group": "Contour", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
+                { "group": "Contour", "value": "btn-outline-success", "label": "Contour Succès" },
+                { "group": "Contour", "value": "btn-outline-danger", "label": "Contour Danger" },
+                { "group": "Contour", "value": "btn-outline-warning", "label": "Contour Avertissement" },
+                { "group": "Contour", "value": "btn-outline-info", "label": "Contour Info" }
+            ]
+        },
+        {
+            "type": "richtext",
+            "id": "notice",
+            "label": "Notice",
+            "default": "<p>En continuant à visiter notre magasin, vous acceptez nos conditions d'utilisation et notre politique de confidentialité.</p>"
+        },
+        {
+            "type": "header",
+            "content": "Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+        },
+        {
+            "type": "select",
+            "id": "img_orientation",
+            "label": "Image orientation",
+            "default": "landscape",
+            "options": [
+                { "value": "square", "label": "Carré" },
+                { "value": "landscape", "label": "Paysage" },
+                { "value": "potrait", "label": "Portrait" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "img_crop",
+            "label": "Recadrage de l'image",
+            "default": "center",
+            "options": [
+                { "value": "top", "label": "Haut" },
+                { "value": "center", "label": "Centre" },
+                { "value": "bottom", "label": "Bas" },
+                { "value": "left", "label": "Gauche" },
+                { "value": "right", "label": "Droite" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "img_thumbnail",
+            "label": "Bordure de l'image",
+            "default": "img-thumbnail",
+            "options": [
+                { "value": "", "label": "Aucune" },
+                { "value": "img-thumbnail", "label": "Bordure" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "border_color",
+            "label": "Couleur de la bordure",
+            "options": [
+                { "value": "", "label": "Default" },
+                { "value": "border-primary", "label": "Primaire" },
+                { "value": "border-secondary", "label": "Secondaire" },
+                { "value": "border-tertiary", "label": "Tertiaire" },
+                { "value": "border-dark", "label": "Sombre" },
+                { "value": "border-success", "label": "Succès" },
+                { "value": "border-warning", "label": "Avertissement" },
+                { "value": "border-danger", "label": "Danger" },
+                { "value": "border-info", "label": "Info" }
+            ],
+            "default": ""
+        },
+        {
+            "type": "select",
+            "id": "shadow_sp",
+            "label": "Ombre",
+            "options": [
+                { "value": "shadow-none", "label": "Aucune" },
+                { "value": "shadow-1", "label": "Ombre légère" },
+                { "value": "shadow-2", "label": "Ombre partiel" },
+                { "value": "shadow-3", "label": "Ombre profonde" },
+                { "value": "shadow-4", "label": "Ombre totale" }
+            ],
+            "default": "shadow-1"
+        },
+        {
+            "type": "select",
+            "id": "img_align_desktop",
+            "label": "Alignement de l'image (bureau)",
+            "default": "flex-lg-row",
+            "options": [
+                { "value": "flex-lg-row", "label": "Gauche" },
+                { "value": "flex-lg-row-reverse", "label": "Droite" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Traduction"
+        },
+        {
+            "type": "text",
+            "id": "text_month_label",
+            "label": "Mois label",
+            "default": "Mois"
+        },
+        {
+            "type": "text",
+            "id": "text_month_placeholder",
+            "label": "Mois placeholder",
+            "default": "MM"
+        },
+        {
+            "type": "text",
+            "id": "text_day_label",
+            "label": "Jour label",
+            "default": "Jour"
+        },
+        {
+            "type": "text",
+            "id": "text_day_placeholder",
+            "label": "Jour placeholder",
+            "default": "JJ"
+        },
+        {
+            "type": "text",
+            "id": "text_year_label",
+            "label": "Année label",
+            "default": "Année"
+        },
+        {
+            "type": "text",
+            "id": "text_year_placeholder",
+            "label": "Année placeholder",
+            "default": "AAAA"
+        },
+        {
+            "type": "header",
+            "content": "Espacement de la section"
+        },
+        {
+            "type": "range",
+            "id": "pt",
+            "label": "Padding supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 6
+        },
+        {
+            "type": "range",
+            "id": "pb",
+            "label": "Padding inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 6
+        },
+        {
+            "type": "range",
+            "id": "mt",
+            "label": "Marge supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mb",
+            "label": "Marge inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        }
+    ],
+    "presets": [
+        {
+            "name": "🏆 Âge Verification Popup",
+            "category": "General"
+        }
+    ]
+}
+{% endschema %}

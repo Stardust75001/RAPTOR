@@ -1,0 +1,1735 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid 
+    assign pt = section.settings.pt | prepend: 'pt-'
+    assign pb = section.settings.pb | prepend: 'pb-'
+    assign mt = section.settings.mt | prepend: 'mt-'
+    assign mb = section.settings.mb | prepend: 'mb-'
+
+    assign bg_color = section.settings.bg_color
+
+    if section.settings.bg_gradient
+        assign bg_color = bg_color | append: ' bg-gradient'
+    endif
+
+    assign btn_shadow_sp = settings.btn_shadow_sp %}
+
+{% style %}
+  {% for block in section.blocks %}
+      /* Image SVG */
+      .custom_icon-{{ block.id }} svg {
+        height: {{ block.settings.image_width_custom }}px;
+        width: {{ block.settings.image_width_custom }}px;
+      } 
+  
+      /* Image SVG mobile */
+      @media screen and (max-width: 990px) {
+        .custom_icon-{{ block.id }} svg {
+          height: {{ block.settings.image_width_custom }}px;
+          width: {{ block.settings.image_width_custom }}px;
+        }
+      } 
+  {% endfor %}
+{% endstyle %}
+
+<script src="{{ 'vendor-masonry-collage.min.js' | asset_url }}" defer></script>
+
+<section
+    id="collage-dynamique-{{ section.id }}" 
+    class="collage-dynamique enter-view {% unless section.settings.background_img %}{{ bg_color }}{% endunless %} {{ section.settings.text_align }} {{ pt }} {{ pb }} {{ mt }} {{ mb }}"
+    
+    {% if section.settings.background_img %}
+        style="background-image: url('{{ section.settings.background_img.src | image_url }}'); background-size: cover; background-repeat: no-repeat; position: relative;"
+    {% endif %}>
+
+    {% if section.settings.background_img %}
+        <div class="background-overlay" style="background: rgba(0, 0, 0, {{ section.settings.background_img_opacity }});"></div>
+        <div class="background-overlay-blur" style="backdrop-filter: blur({{ section.settings.background_img_blur }}px);"></div>
+    {% endif %}
+  
+    <div class="{{ section.settings.container }} {% if section.settings.background_img %}{{ bg_color | split: ' ' | last }}{% endif %}" 
+         style="max-width: {{ section.settings.max_width }}px; position: relative; z-index: 1;">
+      
+        {% render 'section-header' %}
+
+        <div class="row" data-masonry='{"percentPosition": true }'>
+            {% for block in section.blocks %}
+                {% case block.type %}
+  
+                    {% when 'text' %}
+                        <div class="{{ section.settings.column_layout }} mb-6 custom_icon-{{ block.id }} 
+                          {% unless section.settings.animation == '' %}animate__animated opacity-0 {{ section.settings.animation_speed }}{% endunless %}"
+                          data-animate-class="{{ section.settings.animation }}"
+                          style="animation-delay: {{ forloop.index | times: 150 }}ms;" {{ block.shopify_attributes }}>
+                            
+                            <div class="card {{ block.settings.bg_color }} {% if block.settings.bg_gradient %}bg-gradient {% endif %} {{ section.settings.shadow_sp }} {{ section.settings.border_color }} {{ block.settings.text_align }} p-3"
+                                 style="border-width: {{ section.settings.border_width }}px;">
+                                <div class="card-body {{ block.settings.text_align }}">
+                                    <div class="{% if block.settings.icon_position == 'left' %}d-flex align-items-center{% endif %}">
+                                        {% unless block.settings.icon == blank %}
+                                            <div class="{% if block.settings.icon_position == 'left' %}block-icon flex-shrink-0 me-5{% else %}mb-5{% endif %}">
+                                                {{ block.settings.icon }}
+                                            </div>
+                                        {% endunless %}
+                                        <div class="block-inner">
+                                            {% unless block.settings.title == blank %}
+                                              <{{ block.settings.heading_tag }} class="card-title {{ block.settings.title_size }}">{{ block.settings.title }}</{{ block.settings.heading_tag }}>
+                                            {% endunless %}
+                                            {% unless block.settings.description == blank %}
+                                                <div class="card-text {{ block.settings.description_size }}">{{ block.settings.description }}</div>
+                                            {% endunless %}
+                                            {% unless block.settings.btn_text == blank %}
+                                                <a class="card-btn btn w-75 {{ block.settings.btn_color }} {{ btn_shadow_sp }} {{ block.settings.btn_size }}" href="{{ block.settings.btn_url }}">
+                                                    {{ block.settings.btn_text }}
+                                                </a>
+                                            {% endunless %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+  
+                    {% when 'image' %}
+                        <div class="{{ section.settings.column_layout }} mb-6
+                          {% unless section.settings.animation == '' %}animate__animated opacity-0 {{ section.settings.animation_speed }}{% endunless %}"
+                          data-animate-class="{{ section.settings.animation }}"
+                          style="animation-delay: {{ forloop.index | times: 150 }}ms;" {{ block.shopify_attributes }}>
+                  
+                            <div class="card {{ section.settings.shadow_sp }} {{ section.settings.border_color }}"
+                                 style="border-width: {{ section.settings.border_width }}px;">
+                                {% unless block.settings.image_link == blank %}
+                                    <a href="{{ block.settings.image_link }}" class="collage-image-link">
+                                {% endunless %}
+                                {% if block.settings.image == blank %}
+                                    {{ 'detailed-apparel-1' | placeholder_svg_tag: 'placeholder-svg rounded' }}
+                                {% else %}
+                                    <img
+                                        class="img-fluid rounded"
+                                        src="{{ block.settings.image.src | image_url }}"
+                                        alt="{{ block.settings.image.alt | escape }}"
+                                        width="100"
+                                        height="auto"
+                                        loading="lazy">
+                                {% endif %}
+                                {% unless block.settings.image_link == blank %}
+                                    </a>
+                                {% endunless %}
+                            </div>
+                        </div>
+            
+                    {% when 'image_text' %}
+                        <div class="{{ section.settings.column_layout }} mb-6
+                             {% unless section.settings.animation == '' %}animate__animated opacity-0 {{ section.settings.animation_speed }}{% endunless %}"
+                             data-animate-class="{{ section.settings.animation }}"
+                             style="animation-delay: {{ forloop.index | times: 150 }}ms;" {{ block.shopify_attributes }}>
+                  
+                            <div class="card {{ section.settings.shadow_sp }} {{ section.settings.border_color }}"
+                                 style="border-width: {{ section.settings.border_width }}px;">
+                                {% if block.settings.image == blank %}
+                                    {{ 'detailed-apparel-1' | placeholder_svg_tag: 'placeholder-svg rounded-top' }}
+                                {% else %}
+                                    <img
+                                        class="img-fluid rounded-top"
+                                        src="{{ block.settings.image.src | image_url }}"
+                                        alt="{{ block.settings.image.alt | escape }}"
+                                        width="100"
+                                        height="auto"
+                                        loading="lazy">
+                                {% endif %}
+                                <div class="p-3">
+                                    <div class="card-body">
+                                        <{{ block.settings.heading_tag }} class="card-title {{ block.settings.title_size }}">{{ block.settings.title }}</{{ block.settings.heading_tag }}>
+                                        <div class="card-text {{ block.settings.description_size }}">{{ block.settings.description }}</div>
+                                        {% unless block.settings.btn_text == blank %}
+                                            <a class="card-btn btn w-75 {{ block.settings.btn_color }} {{ btn_shadow_sp }} {{ block.settings.btn_size }}" href="{{ block.settings.btn_url }}">
+                                                {{ block.settings.btn_text }}
+                                            </a>
+                                        {% endunless %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    {% when 'video' %}
+                        <div class="{{ section.settings.column_layout }} mb-6
+                             {% unless section.settings.animation == '' %}animate__animated opacity-0 {{ section.settings.animation_speed }}{% endunless %}"
+                             data-animate-class="{{ section.settings.animation }}"
+                             style="animation-delay: {{ forloop.index | times: 150 }}ms;" {{ block.shopify_attributes }}>
+                  
+                            <div class="card {{ section.settings.shadow_sp }} {{ section.settings.border_color }}"
+                                 style="border-width: {{ section.settings.border_width }}px;">
+                                {% if block.settings.video == blank %}
+                                    {% capture current %}{% cycle 1, 2, 3 %}{% endcapture %}
+                                    {{ 'hero-apparel-' | append: current | placeholder_svg_tag: 'placeholder-svg rounded' }}
+                                {% else %}
+                                    {{ block.settings.video | video_tag: class: 'rounded', image_size: '600x', autoplay: block.settings.autoplay, loop: block.settings.loop, muted: block.settings.muted, controls: block.settings.controls }}
+                                {% endif %}
+                            </div>
+                        </div>
+  
+                    {% when 'collection' %}
+                        <div class="{{ section.settings.column_layout }} mb-6
+                             {% unless section.settings.animation == '' %}animate__animated opacity-0 {{ section.settings.animation_speed }}{% endunless %}"
+                             data-animate-class="{{ section.settings.animation }}"
+                             style="animation-delay: {{ forloop.index | times: 150 }}ms;" {{ block.shopify_attributes }}>
+                  
+                            <div class="card {{ section.settings.shadow_sp }} {{ section.settings.border_color }}"
+                                 style="border-width: {{ section.settings.border_width }}px;">
+                                {% liquid
+  
+                                    assign collection = block.settings.collection
+                                  
+                                    assign image = collection.image | default: collection.products.first.featured_image
+                                    assign title = collection.title 
+                                
+                                    unless block.settings.img == blank
+                                        assign image = block.settings.img
+                                    endunless
+                                
+                                    unless block.settings.title == blank
+                                        assign title = block.settings.title
+                                    endunless %}
+                                <a 
+                                    class="overflow-hidden" 
+                                    href="{{ collection.url }}">
+                                    {% if image == blank %}
+                                        {% capture current %}{% cycle 1, 2, 3, 4 %}{% endcapture %}
+                                        {{ 'collection-apparel-' | append: current | placeholder_svg_tag: 'placeholder-svg rounded' }}
+                                    {% else %}
+                                        <img 
+                                            class="collection-item-img img-fluid rounded"
+                                            src="{{ image | image_url }}" 
+                                            alt="{{ image.alt | escape }}"
+                                            width="100"
+                                            height="auto"
+                                            loading="lazy">
+                                    {% endif %}
+                                    <{{ block.settings.heading_tag }} class="collection-item-title text-white mb-0 {{ block.settings.title_size | default: 'h5' }}">
+                                        {{ title | default: 'Collection title' }}
+                                    </{{ block.settings.heading_tag }}>
+                                </a>
+                            </div>
+                        </div>
+                  
+                    {% when 'product' %}
+                         {% assign product = block.settings.product %}
+                          <div class="{{ section.settings.column_layout }} mb-6
+                               {% unless section.settings.animation == '' %}animate__animated opacity-0 {{ section.settings.animation_speed }}{% endunless %}"
+                               data-animate-class="{{ section.settings.animation }}"
+                               style="animation-delay: {{ forloop.index | times: 150 }}ms;" {{ block.shopify_attributes }}>
+                  
+                              <div class="card {{ section.settings.shadow_sp }} {{ section.settings.border_color }}"
+                                   style="border-width: {{ section.settings.border_width }}px;">
+                                  {% if product == blank %}
+                                      {% capture current %}{% cycle 1, 2, 3, 4 %}{% endcapture %}
+                                          {{ 'product-apparel-' | append: current | placeholder_svg_tag: 'placeholder-svg product-item-img bg-light rounded-top' }}
+                                      {% else %}
+                                          {% unless product.metafields.shopiweb.custom_badge == blank %}
+                                              <span 
+                                                  class="img-badge-custom badge" 
+                                                  style="background: {{ product.metafields.shopiweb.custom_badge | split: ':' | last }};">
+                                                  {{ product.metafields.shopiweb.custom_badge | split: ':' | first }}
+                                              </span>
+                                          {% endunless %}  
+                                          {% if block.settings.product_show_sale_badge and product.available and product.compare_at_price > product.price %}
+                                            <div class="badge-ribbon">
+                                              <span class="badge-ribbon-sale {{ block.settings.product_sale_badge_color }}">
+                                                  <svg class="icon icon--price_tag me-2" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" focusable="false" role="presentation"><path fill="currentColor" d="M7.59 1.34a1 1 0 01.7-.29h5.66a1 1 0 011 1v5.66a1 1 0 01-.3.7L7.6 15.5a1 1 0 01-1.42 0L.52 9.83a1 1 0 010-1.42l7.07-7.07zm6.36 6.37l-7.07 7.07-5.66-5.66L8.3 2.05h5.66v5.66z" fill-rule="evenodd"></path>
+                                                    <path fill="currentColor" d="M9.7 6.3a1 1 0 101.42-1.42 1 1 0 00-1.41 1.41zM9 7a2 2 0 102.83-2.83A2 2 0 009 7z" fill-rule="evenodd"></path></svg>
+                                                  {% comment %} {{ 'product.save' | t }}{% endcomment %} -{{ product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price | round | append: '%' }}
+                                              </span>
+                                            </div>
+                                          {% endif %}
+                                          <img 
+                                            class="img-fluid rounded-top"
+                                            src="{{ product.featured_image.src | image_url }}" 
+                                            alt="{{ product.featured_image.alt | escape }}"
+                                            width="100"
+                                            height="auto"
+                                            loading="lazy">
+                                  {% endif %}
+                                  <div class="card-body">
+                                      <div class="p-3">
+                                          <{{ block.settings.heading_tag }} class="product-item-title mb-2 {{ block.settings.product_title_size }} {{ block.settings.product_title_truncate }}">
+                                              {{ product.title }}
+                                          </{{ block.settings.heading_tag }}>
+                                          {% if block.settings.product_show_vendor and product.vendor %}
+                                              <div class="product-item-vendor mt-2 mb-2 text-muted small text-uppercase">{{ product.vendor }}</div>
+                                          {% endif %}
+                                          {% comment %}
+                                          {% render 'product-rating-badge', product: product %}
+                                          {% endcomment %}
+                                          <p class="product-item-price mb-0">
+                                              {% if product.compare_at_price > product.price %}
+                                                  <span class="product-item-price-final me-1">
+                                                      <span class="visually-hidden">
+                                                          {{ 'product.price_sale' | t }} &nbsp;
+                                                      </span>
+                                                      {% if product.price_varies %}
+                                                          {{ 'product.price_from' | t }}
+                                                      {% endif %}
+                                                      {{ product.price | money }}
+                                                  </span>
+                                                  <span class="product-item-price-compare text-muted">
+                                                      <span class="visually-hidden">
+                                                          {{ 'product.price_regular' | t }} &nbsp;
+                                                      </span>
+                                                      <s>{{ product.compare_at_price | money }}</s>
+                                                  </span>
+                                              {% else %}
+                                                  <span class="product-item-price-final">
+                                                      {% if product.price_varies %}
+                                                          {{ 'product.price_from' | t }}
+                                                      {% endif %}
+                                                      {{ product.price | money }}
+                                                  </span>
+                                              {% endif %}
+                                          </p>
+                                          {% unless block.settings.btn_text == blank %}
+                                              <a class="card-btn btn w-75 mt-4 {{ block.settings.btn_color }} {{ btn_shadow_sp }} {{ block.settings.btn_size }}" href="{{ block.settings.btn_url }}">
+                                                  {{ block.settings.btn_text }}
+                                              </a>
+                                          {% endunless %}
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+
+                    {% when 'accordion' %}
+                        <div class="{{ section.settings.column_layout }} block-collage-accordion mb-6
+                             {% unless section.settings.animation == '' %}animate__animated opacity-0 {{ section.settings.animation_speed }}{% endunless %}"
+                             data-animate-class="{{ section.settings.animation }}"
+                             style="animation-delay: {{ forloop.index | times: 150 }}ms;" {{ block.shopify_attributes }}>
+                            
+                            <div class="card {{ section.settings.shadow_sp }} {{ section.settings.border_color }}"
+                                 style="border-width: {{ section.settings.border_width }}px;">
+
+                                {% liquid 
+                                    unless block.settings.title_1 == blank
+                                        assign title_array = block.settings.title_1 | append: ','
+                                        assign icon_array = block.settings.icon_1 | append: ','
+                                    endunless
+                                    unless block.settings.title_2 == blank
+                                        assign title_array = block.settings.title_2 | append: ',' | prepend: title_array
+                                        assign icon_array = block.settings.icon_2 | append: ',' | prepend: icon_array
+                                        endunless
+                                    unless block.settings.title_3 == blank
+                                        assign title_array = block.settings.title_3 | append: ',' | prepend: title_array
+                                        assign icon_array = block.settings.icon_3 | append: ',' | prepend: icon_array
+                                    endunless
+                                    unless block.settings.title_4 == blank
+                                        assign title_array = block.settings.title_4 | append: ',' | prepend: title_array
+                                        assign icon_array = block.settings.icon_4 | append: ',' | prepend: icon_array
+                                    endunless
+                                    unless block.settings.title_5 == blank
+                                        assign title_array = block.settings.title_5 | append: ',' | prepend: title_array
+                                        assign icon_array = block.settings.icon_5 | append: ',' | prepend: icon_array
+                                    endunless
+                                
+                                    assign title_array = title_array | split: ',' 
+                                    assign icon_array = icon_array | split: ',' %}
+
+                                <div 
+                                id="accordion-template--{{ block.id }}" 
+                                class="accordion accordion-default">
+                                    {% for title in title_array %}
+                                        <div class="accordion-item">
+                                            <h3 
+                                                id="accordion-template--{{ block.id }}-heading-{{ forloop.index }}" 
+                                                class="accordion-header">
+                                                <button 
+                                                    class="accordion-button {% unless block.settings.open_first_item == true and forloop.first %}collapsed{% endunless %}" 
+                                                    type="button" 
+                                                    data-bs-toggle="collapse" 
+                                                    data-bs-target="#accordion-template--{{ block.id }}-collapse-{{ forloop.index }}" 
+                                                    aria-expanded="{% if block.settings.open_first_item == true and forloop.first %}true{% else %}false{% endif %}" 
+                                                    aria-controls="accordion-template--{{ block.id }}-collapse-{{ forloop.index }}">
+                                                    <div class="d-flex align-items-center">
+                                                        {% unless icon_array[forloop.index0] == blank %}
+                                                            <div class="me-3">
+                                                                {{ icon_array[forloop.index0] }}
+                                                            </div>
+                                                        {% endunless %}
+                                                        {{ title }}
+                                                    </div>
+                                                </button>
+                                            </h3>
+                                            <div 
+                                                id="accordion-template--{{ block.id }}-collapse-{{ forloop.index }}" 
+                                                class="accordion-collapse collapse {% if block.settings.open_first_item == true and forloop.first %}show{% endif %}" 
+                                                aria-labelledby="accordion-template--{{ block.id }}-heading-{{ forloop.index }}" 
+                                                data-bs-parent="#accordion-template--{{ block.id }}">
+                                                <div class="accordion-body rte pt-4 pb-6">
+                                                    {% case forloop.index %}
+                                                        {% when 1 %}
+                                                            {{ block.settings.description_1 }}
+                                                        {% when 2 %}
+                                                            {{ block.settings.description_2 }}
+                                                        {% when 3 %}
+                                                            {{ block.settings.description_3 }}
+                                                        {% when 4 %}
+                                                            {{ block.settings.description_4 }}
+                                                        {% when 5 %}
+                                                            {{ block.settings.description_5 }}
+                                                        {% when 6 %}
+                                                            {{ block.settings.description_6 }}
+                                                    {% endcase %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                    {% when 'contact_form' %}
+                        <div class="{{ section.settings.column_layout }} mb-6
+                             {% unless section.settings.animation == '' %}animate__animated opacity-0 {{ section.settings.animation_speed }}{% endunless %}"
+                             data-animate-class="{{ section.settings.animation }}"
+                             style="animation-delay: {{ forloop.index | times: 150 }}ms;" {{ block.shopify_attributes }}>
+                               
+                            <div class="card {{ section.settings.shadow_sp }} {{ section.settings.border_color }}"
+                                 style="border-width: {{ section.settings.border_width }}px;">
+                                
+                                <div class="p-3">
+                                    <div class="card-body">
+                                        <{{ block.settings.heading_tag }} class="card-title {{ block.settings.title_size }}">{{ block.settings.title }}</{{ block.settings.heading_tag }}>
+                                        {% unless block.settings.description == blank %}
+                                        <div class="card-text description text-center rte mb-6 text-muted {{ block.settings.description_size }}">{{ block.settings.description }}</div>
+                                        {% endunless %}
+                                        {% form 'contact' %}
+                                            {% if form.posted_successfully? %}
+                                                <p class="form-success alert alert-success mb-4" role="alert">
+                                                    {{ 'general.contact.success' | t }}
+                                                </p>
+                                            {% endif %}
+                                            {{ form.errors | default_errors }}
+                                            <div class="mb-4">
+                                                <input 
+                                                    id="contact-form-name"
+                                                    class="form-control" 
+                                                    type="text" 
+                                                    name="contact[name]"
+                                                    value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"  
+                                                    placeholder="{{ 'general.contact.name' | t }}"
+                                                    aria-label="{{ 'general.contact.name' | t }}"
+                                                    required>
+                                            </div>
+                                            <div class="mb-4">
+                                                <input 
+                                                    id="contact-form-email"
+                                                    class="form-control" 
+                                                    type="email" 
+                                                    name="contact[email]"
+                                                    value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"  
+                                                    placeholder="{{ 'general.contact.email' | t }}"
+                                                    aria-label="{{ 'general.contact.email' | t }}"
+                                                    spellcheck="false"
+                                                    autocapitalize="off"
+                                                    required>
+                                            </div>
+                                            <div class="mb-4">
+                                                <input 
+                                                    id="contact-form-phone"
+                                                    class="form-control" 
+                                                    type="tel" 
+                                                    name="contact[phone]"
+                                                    value="{{ customer.phone }}"  
+                                                    placeholder="{{ 'general.contact.phone' | t }}"
+                                                    aria-label="{{ 'general.contact.phone' | t }}"
+                                                    pattern="[0-9\-]*"
+                                                    autocomplete="tel">
+                                            </div>
+                                            <div class="mb-4">
+                                                <textarea
+                                                    id="contact-form-message"
+                                                    class="form-control"
+                                                    name="contact[message]"
+                                                    value="{{ customer.message }}"  
+                                                    placeholder="{{ 'general.contact.message' | t }}"
+                                                    aria-label="{{ 'general.contact.message' | t }}"
+                                                    rows="8"
+                                                    required>
+                                                    {{ form.body }}
+                                                </textarea>
+                                            </div>
+                                            <button 
+                                                type="submit" 
+                                                class="btn w-75 {{ block.settings.btn_color }} {{ btn_shadow_sp }} {{ block.settings.btn_size }}">
+                                                {{ 'general.contact.send' | t }}
+                                            </button>
+                                        {% endform %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    {% comment %}
+                    {% when 'image_compare' %}
+                        <link href="{{ 'vendor-image-compare-viewer.min.css' | asset_url }}" rel="stylesheet" media="print" onload="this.media='all'">
+                        <script src="{{ 'vendor-image-compare-viewer.min.js' | asset_url }}" defer></script>
+
+                        <div class="{{ section.settings.column_layout }} mb-6
+                             {% unless section.settings.animation == '' %}animate__animated opacity-0 {{ section.settings.animation_speed }}{% endunless %}"
+                             data-animate-class="{{ section.settings.animation }}"
+                             style="animation-delay: {{ forloop.index | times: 150 }}ms;" {{ block.shopify_attributes }}>
+                  
+                            <div class="card {{ section.settings.shadow_sp }} {{ section.settings.border_color }}"
+                                 style="border-width: {{ section.settings.border_width }}px;">
+                                {% if block.settings.image_before == blank %}
+                                    {{ 'detailed-apparel-1' | placeholder_svg_tag: 'placeholder-svg rounded' }}
+                                {% else %}
+                                    <div 
+                                        class="image-compare-slider rounded"
+                                        data-control-color="{{ block.settings.controlColor }}"
+                                        data-add-circle="{{ block.settings.addCircle }}"
+                                        data-show-labels="{{ block.settings.show_labels }}"
+                                        data-label-before="{{ block.settings.label_before }}"
+                                        data-label-after="{{ block.settings.label_after }}"
+                                        data-label-on-hover="{{ block.settings.label_on_hover }}"
+                                        data-smoothing="{{ block.settings.smoothing }}"
+                                        data-smoothing-amount="{{ block.settings.smoothing_amount }}"
+                                        data-hover-start="{{ block.settings.hover_start }}"
+                                        data-vertical-mode="{{ block.settings.vertical_mode }}"
+                                        data-starting-point="{{ block.settings.starting_point }}">
+                                        <img
+                                            class="img-fluid rounded"
+                                            src="{{ block.settings.image_before.src | image_url: width: 600 }}"
+                                            alt="{{ block.settings.image_before.alt | escape }}"
+                                            width="600"
+                                            height="{{ 600 | divided_by: block.settings.img.aspect_ratio }}"
+                                            loading="lazy">
+                                        <img
+                                            class="img-fluid rounded"
+                                            src="{{ block.settings.image_after.src | image_url: width: 600 }}"
+                                            alt="{{ block.settings.image_after.alt | escape }}"
+                                            width="600"
+                                            height="{{ 600 | divided_by: block.settings.img.aspect_ratio }}"
+                                            loading="lazy">
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endcomment %}
+
+                    {% when 'liquid_code' %}
+                        <div class="{{ section.settings.column_layout }} mb-6
+                             {% unless section.settings.animation == '' %}animate__animated opacity-0 {{ section.settings.animation_speed }}{% endunless %}"
+                             data-animate-class="{{ section.settings.animation }}"
+                             style="animation-delay: {{ forloop.index | times: 150 }}ms;" {{ block.shopify_attributes }}>
+                          
+                            {% if block.settings.disable_card_display %}
+                                {{ block.settings.liquid }}
+                            {% else %}
+                                <div class="card {{ section.settings.shadow_sp }} {{ section.settings.border_color }}"
+                                     style="border-width: {{ section.settings.border_width }}px;">
+                                    {{ block.settings.liquid }}
+                                </div>
+                            {% endif %}
+                        </div>
+          
+                {% endcase %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% schema %}
+{
+    "name": "Collage Dynamique",
+    "max_blocks": 12,
+    "settings": [
+        {
+            "type": "paragraph", 
+            "content": "Documentation FR : [Collage Dynamique by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/sections\/collage-dynamique)"
+        },
+        {
+            "type": "header",
+            "content": "General"
+        },
+        {
+            "type": "image_picker",
+            "id": "background_img",
+            "label": "Image d'arrière plan",
+            "info": "Si aucune image n'est sélectionnée, les options de couleur d'arrière-plan ci-dessous seront appliquées."
+        },
+        {
+            "type": "range",
+            "id": "background_img_opacity",
+            "label": "Opacité",
+            "min": 0,
+            "max": 1,
+            "step": 0.1,
+            "default": 0.7
+        },
+        {
+            "type": "range",
+            "id": "background_img_blur",
+            "label": "Flou",
+            "min": 0,
+            "max": 10,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "select",
+            "id": "bg_color",
+            "label": "Couleur de l'arrière plan",
+            "default": "bg-body text-body",
+            "options": [
+                { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+                { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+                { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+                { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
+                { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+                { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Sombre" },
+                { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "bg_gradient",
+            "label": "Dégradé d'arrière-plan",
+            "default": false,
+            "info": "Ne s'applique pas aux couleurs claires"
+        },
+        {
+            "type": "select",
+            "id": "container",
+            "label": "Conteneur",
+            "default": "container",
+            "options": [
+                { "value": "container", "label": "Conteneur" },
+                { "value": "container-fluid", "label": "Pleine largeur" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "column_layout",
+            "label": "Disposition des colonnes",
+            "default": "col-sm-6 col-lg-4",
+            "info": "Ne s'applique pas en mobile",
+            "options": [
+                { "value": "col-sm-6 col-lg-6", "label": "2 colonnes" },
+                { "value": "col-sm-6 col-lg-4", "label": "3 colonnes" }
+            ]
+        },
+        {
+            "type": "text",
+            "id": "max_width",
+            "label": "Largeur maximale (px)",
+            "info": "Ajuster la largeur du conteneur (en pixels)",
+            "default": "1320"
+        },
+        {
+            "type": "select",
+            "id": "text_align",
+            "label": "Alignement du texte",
+            "default": "text-center",
+            "options": [
+                { "value": "text-start", "label": "Gauche" },
+                { "value": "text-center", "label": "Centre" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "En-tête de la section"
+        },
+        {
+            "type": "image_picker",
+            "id": "subtitle_img",
+            "label": "Légende Image"
+        },
+        {
+            "type": "text",
+            "id": "brand_image_size",
+            "label": "Image Largeur/Hauteur (px)",
+            "default": "60"
+        },
+        {
+            "type": "text",
+            "id": "subtitle",
+            "label": "Légende Texte"
+        },
+        {
+            "type": "select",
+            "id": "subtitle_size",
+            "label": "Taille de la légende",
+            "default": "fs-5",
+            "options": [
+                { "group": "Légende Standard", "value": "fs-1", "label": "Extra Grand" },
+                { "group": "Légende Standard", "value": "fs-2", "label": "Super Grand" },
+                { "group": "Légende Standard", "value": "fs-3", "label": "Très Grand" },
+                { "group": "Légende Standard", "value": "fs-4", "label": "Grand" },
+                { "group": "Légende Standard", "value": "fs-5", "label": "Moyen" },
+                { "group": "Légende Standard", "value": "fs-6", "label": "Petit" } 
+            ]
+        },
+        {
+            "type": "color",
+            "id": "color_caption",
+            "label": "Couleur de la légende",
+            "default": "#6c757d"
+        },
+        {
+            "type": "text",
+            "id": "title_overlay",
+            "label": "Titre overlay",
+            "info": "Visible sur ordinateur, masqué sur mobile pour optimiser la lisibilité."
+        },
+        {
+            "type": "select",
+            "id": "title_overlay_size",
+            "label": "Taille du titre overlay",
+            "default": "3",
+            "options": [
+                { "group": "Titre Overlay", "value": "4", "label": "Grand" },
+                { "group": "Titre Overlay", "value": "3", "label": "Moyen" },
+                { "group": "Titre Overlay", "value": "2", "label": "Petit" }
+            ]
+        },
+        {
+            "type": "color",
+            "id": "color_title_overlay",
+            "label": "Couleur du titre overlay",
+            "default": "#000000"
+        },
+        {
+            "type": "inline_richtext",
+            "id": "title",
+            "label": "Titre",
+            "default": "Collage Dynamique"
+        },
+        {
+            "type": "select",
+            "id": "heading_tag",
+            "label": "Balise titre (SEO)",
+            "default": "h2",
+            "options": [
+                { "value": "h1", "label": "h1" },
+                { "value": "h2", "label": "h2" },
+                { "value": "h3", "label": "h3" },
+                { "value": "h4", "label": "h4" },
+                { "value": "h5", "label": "h5" },
+                { "value": "h6", "label": "h6" },
+                { "value": "span", "label": "Aucune" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "title_size",
+            "label": "Taille du titre",
+            "default": "h2",
+            "options": [
+                { "group": "Titre Supérieur", "value": "display-1", "label": "Extra Extra Grand" },
+                { "group": "Titre Supérieur", "value": "display-2", "label": "Extra Grand" },
+                { "group": "Titre Supérieur", "value": "display-3", "label": "Ultra Grand" },
+                { "group": "Titre Supérieur", "value": "display-4", "label": "Super Grand" },
+                { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+            ]
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Description (facultatif)",
+            "default": "<p>Ajouter une description facultative à cette section</p>"
+        },
+        {
+            "type": "select",
+            "id": "description_size",
+            "label": "Taille de description",
+            "default": "fs-5",
+            "options": [
+                { "group": "Description Standard", "value": "fs-1", "label": "Extra Grand" },
+                { "group": "Description Standard", "value": "fs-2", "label": "Super Grand" },
+                { "group": "Description Standard", "value": "fs-3", "label": "Très Grand" },
+                { "group": "Description Standard", "value": "fs-4", "label": "Grand" },
+                { "group": "Description Standard", "value": "fs-5", "label": "Moyen" },
+                { "group": "Description Standard", "value": "fs-6", "label": "Petit" } 
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Carte"
+        },
+        {
+            "type": "select",
+            "id": "border_color",
+            "label": "Couleur de la bordure",
+            "options": [
+                { "value": "", "label": "Default" },
+                { "value": "border-primary", "label": "Primaire" },
+                { "value": "border-secondary", "label": "Secondaire" },
+                { "value": "border-tertiary", "label": "Tertiaire" },
+                { "value": "border-dark", "label": "Sombre" },
+                { "value": "border-success", "label": "Succès" },
+                { "value": "border-warning", "label": "Avertissement" },
+                { "value": "border-danger", "label": "Danger" },
+                { "value": "border-info", "label": "Info" }
+            ],
+            "default": ""
+        },
+        {
+            "type": "range",
+            "id": "border_width",
+            "label": "Largeur de la bordure",
+            "info": "Appliquer 0 pour désactiver la bordure.",
+            "min": 0,
+            "max": 10,
+            "step": 1,
+            "default": 1
+        },
+        {
+            "type": "select",
+            "id": "shadow_sp",
+            "label": "Ombre",
+            "options": [
+                { "value": "shadow-none", "label": "Aucune" },
+                { "value": "shadow-1", "label": "Ombre légère" },
+                { "value": "shadow-2", "label": "Ombre partiel" },
+                { "value": "shadow-3", "label": "Ombre profonde" },
+                { "value": "shadow-4", "label": "Ombre totale" }
+            ],
+            "default": "shadow-1"
+        },
+        {
+            "type": "header",
+            "content": "Animation"
+        },
+        {
+            "type": "select",
+            "id": "animation",
+            "label": "Effet d'animation",
+            "default": "animate__zoomIn",
+            "options": [
+                { "group": "Désactivé", "value": "", "label": "Pas d'animation" },
+                { "group": "Retour", "value": "animate__backInDown", "label": "Back In Down" },
+                { "group": "Retour", "value": "animate__backInLeft", "label": "Back In Left" },
+                { "group": "Retour", "value": "animate__backInRight", "label": "Back In Right" },
+                { "group": "Retour", "value": "animate__backInUp", "label": "Back In Up" },
+                { "group": "Rebond", "value": "animate__bounceIn", "label": "Bounce In" },
+                { "group": "Rebond", "value": "animate__bounceInDown", "label": "Bounce-in-down" },
+                { "group": "Rebond", "value": "animate__bounceInLeft", "label": "Bounce-in-left" },
+                { "group": "Rebond", "value": "animate__bounceInRight", "label": "Bounce-in-right" },
+                { "group": "Rebond", "value": "animate__bounceInUp", "label": "Bounce-in-up" },
+                { "group": "Fondu", "value": "animate__fadeIn", "label": "Fade In" },
+                { "group": "Fondu", "value": "animate__fadeInDown", "label": "Fade-in-down" },
+                { "group": "Fondu", "value": "animate__fadeInDownBig", "label": "Fade-in-down Big" },
+                { "group": "Fondu", "value": "animate__fadeInLeft", "label": "Fade-in-left" },
+                { "group": "Fondu", "value": "animate__fadeInLeftBig", "label": "Fade-in-left Big" },
+                { "group": "Fondu", "value": "animate__fadeInRight", "label": "Fade-in-right" },
+                { "group": "Fondu", "value": "animate__fadeInRightBig", "label": "Fade-in-right Big" },
+                { "group": "Fondu", "value": "animate__fadeInUp", "label": "Fade-in-up" },
+                { "group": "Fondu", "value": "animate__fadeInUpBig", "label": "Fade-in-up Big" },
+                { "group": "Fondu", "value": "animate__fadeInTopLeft", "label": "Fade-in Top Left" },
+                { "group": "Fondu", "value": "animate__fadeInTopRight", "label": "Fade-in Top Right" },
+                { "group": "Fondu", "value": "animate__fadeInBottomLeft", "label": "Fade-in Bottom Left" },
+                { "group": "Fondu", "value": "animate__fadeInBottomRight", "label": "Fade-in Bottom Right" },
+                { "group": "Flip", "value": "animate__flip", "label": "Flip" },
+                { "group": "Flip", "value": "animate__flipInX", "label": "Flip In X" },
+                { "group": "Flip", "value": "animate__flipInY", "label": "Flip In Y" },
+                { "group": "Flip", "value": "animate__flipOutX", "label": "Flip Out X" },
+                { "group": "Flip", "value": "animate__flipOutY", "label": "Flip Out Y" },
+                { "group": "Vitesse Lumière", "value": "animate__lightSpeedInRight", "label": "Light Speed In Right" },
+                { "group": "Vitesse Lumière", "value": "animate__lightSpeedInLeft", "label": "Light Speed In Left" },
+                { "group": "Rotation", "value": "animate__rotateIn", "label": "Rotate In" },
+                { "group": "Rotation", "value": "animate__rotateInDownLeft", "label": "Rotate In Down Left" },
+                { "group": "Rotation", "value": "animate__rotateInDownRight", "label": "Rotate In Down Right" },
+                { "group": "Rotation", "value": "animate__rotateInUpLeft", "label": "Rotate In Up Left" },
+                { "group": "Rotation", "value": "animate__rotateInUpRight", "label": "Rotate In Up Right" },
+                { "group": "Zoom", "value": "animate__zoomIn", "label": "Zoom In" },
+                { "group": "Zoom", "value": "animate__zoomInDown", "label": "Zoom In Down" },
+                { "group": "Zoom", "value": "animate__zoomInLeft", "label": "Zoom In Left" },
+                { "group": "Zoom", "value": "animate__zoomInRight", "label": "Zoom In Right" },
+                { "group": "Zoom", "value": "animate__zoomInUp", "label": "Zoom In Up" },
+                { "group": "Glissement", "value": "animate__slideInDown", "label": "Slide In Down" },
+                { "group": "Glissement", "value": "animate__slideInLeft", "label": "Slide In Left" },
+                { "group": "Glissement", "value": "animate__slideInRight", "label": "Slide In Right" },
+                { "group": "Glissement", "value": "animate__slideInUp", "label": "Slide In Up" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "animation_speed",
+            "label": "Vitesse d'animation",
+            "default": "animate__fast",
+            "options": [
+                { "value": "animate__slower", "label": "Plus lent" },
+                { "value": "animate__slow", "label": "Lent" },
+                { "value": "", "label": "Normal" },
+                { "value": "animate__fast", "label": "Rapide" },
+                { "value": "animate__faster", "label": "Plus rapide" }
+    
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Espacement de la section"
+        },
+        {
+          "type": "range",
+          "id": "pt",
+          "label": "Padding supérieure",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "pb",
+          "label": "Padding inférieure",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "mt",
+          "label": "Marge supérieure",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "mb",
+          "label": "Marge inférieure",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 0
+        }
+    ],
+    "blocks": [
+        {
+          "type": "text",
+          "name": "Texte",
+          "settings": [
+            {
+                "type": "header",
+                "content": "General"
+            },
+            {
+                "type": "select",
+                "id": "bg_color",
+                "label": "Couleur de l'arrière plan",
+                "default": "bg-white text-dark",
+                "options": [
+                    { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+                    { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+                    { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+                    { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
+                    { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+                    { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Sombre" },
+                    { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" }
+                ]
+            },
+            {
+                "type": "checkbox",
+                "id": "bg_gradient",
+                "label": "Dégradé d'arrière-plan",
+                "default": false,
+                "info": "Ne s'applique pas aux couleurs claires"
+            },
+            {
+                "type": "header",
+                "content": "Icône"
+            },
+            {
+                "type": "html",
+                "id": "icon",
+                "label": "Icône",
+                "info": "Vous pouvez obtenir des icônes svg à partir de bibliothèques telles que [Bootstrap Icons](https://icons.getbootstrap.com)"
+            },
+            {
+              "type": "range",
+              "id": "image_width_custom",
+              "min": 25,
+              "max": 300,
+              "step": 5,
+              "unit": "px",
+              "label": "Largeur de l'icône svg",
+              "default": 50
+            },
+            {
+                "type": "select",
+                "id": "icon_position",
+                "label": "Position de l'icône",
+                "default": "left",
+                "options": [
+                    { "value": "left", "label": "Gauche" },
+                    { "value": "top", "label": "Haut"  }
+                ]
+            },
+            {
+                "type": "header",
+                "content": "Texte"
+            },
+            {
+                "type": "select",
+                "id": "text_align",
+                "label": "Alignement du texte",
+                "default": "text-center",
+                "options": [
+                    { "value": "text-start", "label": "Gauche" },
+                    { "value": "text-center", "label": "Centre" }
+                ]
+            },
+            {
+                "type": "text",
+                "id": "title",
+                "label": "Titre",
+                "default": "Titre de la carte"
+            },
+            {
+                "type": "select",
+                "id": "heading_tag",
+                "label": "Balise titre (SEO)",
+                "default": "h5",
+                "options": [
+                    { "value": "h1", "label": "h1" },
+                    { "value": "h2", "label": "h2" },
+                    { "value": "h3", "label": "h3" },
+                    { "value": "h4", "label": "h4" },
+                    { "value": "h5", "label": "h5" },
+                    { "value": "h6", "label": "h6" },
+                    { "value": "span", "label": "Aucune" }
+                ]
+            },
+            {
+                "type": "select",
+                "id": "title_size",
+                "label": "Taille du titre",
+                "default": "h4",
+                "options": [
+                    { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                    { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                    { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                    { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                    { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                    { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+                ]
+            },
+            {
+                "type": "richtext",
+                "id": "description",
+                "label": "Description",
+                "default": "<p>Associez du texte d'accompagnement pour mettre l'accent sur le produit, la collection ou l'article de blog de votre choix.</p>"
+            },
+            {
+                "type": "select",
+                "id": "description_size",
+                "label": "Taille de description",
+                "default": "fs-6",
+                "options": [
+                    { "group": "Description Standard", "value": "fs-1", "label": "Extra Grand" },
+                    { "group": "Description Standard", "value": "fs-2", "label": "Super Grand" },
+                    { "group": "Description Standard", "value": "fs-3", "label": "Très Grand" },
+                    { "group": "Description Standard", "value": "fs-4", "label": "Grand" },
+                    { "group": "Description Standard", "value": "fs-5", "label": "Moyen" },
+                    { "group": "Description Standard", "value": "fs-6", "label": "Petit" } 
+                ]
+            },
+            {
+                "type": "header",
+                "content": "Bouton"
+            },
+            {
+                "type": "text",
+                "id": "btn_text",
+                "label": "Texte du bouton",
+                "default": "Voir le produit",
+                "info": "Laisser vide pour désactiver"
+            },
+            {
+                "type": "url",
+                "id": "btn_url",
+                "label": "URL du bouton"
+            },
+            {
+                "type": "select",
+                "id": "btn_color",
+                "label": "Couleur du bouton",
+                "default": "btn-primary",
+                "options": [
+                    { "group": "Normal", "value": "btn-link", "label": "Lien" },
+                    { "group": "Normal", "value": "btn-light", "label": "Claire" },
+                    { "group": "Normal", "value": "btn-dark", "label": "Sombre" },
+                    { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
+                    { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
+                    { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
+                    { "group": "Normal", "value": "btn-success", "label": "Succès" },
+                    { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+                    { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
+                    { "group": "Normal", "value": "btn-info", "label": "Info" },
+                    { "group": "Contour", "value": "btn-outline-light", "label": "Contour Claire" },
+                    { "group": "Contour", "value": "btn-outline-dark", "label": "Contour Sombre" },
+                    { "group": "Contour", "value": "btn-outline-primary", "label": "Contour Primaire" },
+                    { "group": "Contour", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
+                    { "group": "Contour", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
+                    { "group": "Contour", "value": "btn-outline-success", "label": "Contour Succès" },
+                    { "group": "Contour", "value": "btn-outline-danger", "label": "Contour Danger" },
+                    { "group": "Contour", "value": "btn-outline-warning", "label": "Contour Avertissement" },
+                    { "group": "Contour", "value": "btn-outline-info", "label": "Contour Info" }
+                ]
+            },
+            {
+                "type": "select",
+                "id": "btn_size",
+                "label": "Taille du bouton",
+                "default": "btn-md",
+                "options": [
+                    { "value": "btn-sm", "label": "Petit" },
+                    { "value": "btn-md", "label": "Normal" },
+                    { "value": "btn-lg", "label": "Large" }
+                ]
+            }
+          ]
+        },
+        {
+          "type": "image",
+          "name": "Image",
+          "settings": [
+            {
+              "type": "image_picker",
+              "id": "image",
+              "label": "Image du bloc"
+            },
+            {
+                "type": "url",
+                "id": "image_link",
+                "label": "Lien image",
+                "info": "Utilisez cette option si vous préférez avoir un lien en cliquant sur l'image entière."
+            }
+          ]
+        },
+        {
+          "type": "image_text",
+          "name": "Image Texte",
+          "settings": [
+            {
+                "type": "header",
+                "content": "Image"
+            },
+            {
+              "type": "image_picker",
+              "id": "image",
+              "label": "Image du bloc"
+            },
+            {
+                "type": "header",
+                "content": "Texte"
+            },
+            {
+                "type": "text",
+                "id": "title",
+                "label": "Titre",
+                "default": "Titre de la carte"
+            },
+            {
+                "type": "select",
+                "id": "heading_tag",
+                "label": "Balise titre (SEO)",
+                "default": "h5",
+                "options": [
+                    { "value": "h1", "label": "h1" },
+                    { "value": "h2", "label": "h2" },
+                    { "value": "h3", "label": "h3" },
+                    { "value": "h4", "label": "h4" },
+                    { "value": "h5", "label": "h5" },
+                    { "value": "h6", "label": "h6" },
+                    { "value": "span", "label": "Aucune" }
+                ]
+            },
+            {
+                "type": "select",
+                "id": "title_size",
+                "label": "Taille du titre",
+                "default": "h4",
+                "options": [
+                    { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                    { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                    { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                    { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                    { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                    { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+                ]
+            },
+            {
+                "type": "richtext",
+                "id": "description",
+                "label": "Description",
+                "default": "<p>Associez du texte d'accompagnement pour mettre l'accent sur le produit, la collection ou l'article de blog de votre choix.</p>"
+            },
+            {
+                "type": "select",
+                "id": "description_size",
+                "label": "Taille de description",
+                "default": "fs-6",
+                "options": [
+                    { "group": "Description Standard", "value": "fs-1", "label": "Extra Grand" },
+                    { "group": "Description Standard", "value": "fs-2", "label": "Super Grand" },
+                    { "group": "Description Standard", "value": "fs-3", "label": "Très Grand" },
+                    { "group": "Description Standard", "value": "fs-4", "label": "Grand" },
+                    { "group": "Description Standard", "value": "fs-5", "label": "Moyen" },
+                    { "group": "Description Standard", "value": "fs-6", "label": "Petit" } 
+                ]
+            },
+            {
+                "type": "header",
+                "content": "Bouton"
+            },
+            {
+                "type": "text",
+                "id": "btn_text",
+                "label": "Texte du bouton",
+                "default": "Voir le produit",
+                "info": "Laisser vide pour désactiver"
+            },
+            {
+                "type": "url",
+                "id": "btn_url",
+                "label": "URL du bouton"
+            },
+            {
+                "type": "select",
+                "id": "btn_color",
+                "label": "Couleur du bouton",
+                "default": "btn-primary",
+                "options": [
+                    { "group": "Normal", "value": "btn-link", "label": "Lien" },
+                    { "group": "Normal", "value": "btn-light", "label": "Claire" },
+                    { "group": "Normal", "value": "btn-dark", "label": "Sombre" },
+                    { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
+                    { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
+                    { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
+                    { "group": "Normal", "value": "btn-success", "label": "Succès" },
+                    { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+                    { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
+                    { "group": "Normal", "value": "btn-info", "label": "Info" },
+                    { "group": "Contour", "value": "btn-outline-light", "label": "Contour Claire" },
+                    { "group": "Contour", "value": "btn-outline-dark", "label": "Contour Sombre" },
+                    { "group": "Contour", "value": "btn-outline-primary", "label": "Contour Primaire" },
+                    { "group": "Contour", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
+                    { "group": "Contour", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
+                    { "group": "Contour", "value": "btn-outline-success", "label": "Contour Succès" },
+                    { "group": "Contour", "value": "btn-outline-danger", "label": "Contour Danger" },
+                    { "group": "Contour", "value": "btn-outline-warning", "label": "Contour Avertissement" },
+                    { "group": "Contour", "value": "btn-outline-info", "label": "Contour Info" }
+                ]
+            },
+            {
+                "type": "select",
+                "id": "btn_size",
+                "label": "Taille du bouton",
+                "default": "btn-md",
+                "options": [
+                    { "value": "btn-sm", "label": "Petit" },
+                    { "value": "btn-md", "label": "Normal" },
+                    { "value": "btn-lg", "label": "Large" }
+                ]
+            }
+          ]
+        },
+        {
+          "type": "video",
+          "name": "Vidéo",
+          "settings": [
+                {
+                    "type": "video",
+                    "id": "video",
+                    "label": "Vidéo"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "autoplay",
+                    "label": "Autoplay",
+                    "default": true
+                },
+                {
+                    "type": "checkbox",
+                    "id": "loop",
+                    "label": "Loop",
+                    "info": "(Vidéo en boucle)",
+                    "default": true
+                },
+                {
+                    "type": "checkbox",
+                    "id": "muted",
+                    "label": "Mute",
+                    "info": "(Vidéo muette)",
+                    "default": true
+                },
+                {
+                    "type": "checkbox",
+                    "id": "controls",
+                    "label": "Contrôles",
+                    "default": true
+                }
+            ]
+        },
+        {
+            "type": "collection",
+            "name": "Collection",
+            "settings": [
+                {
+                    "type": "collection",
+                    "id": "collection",
+                    "label": "Collection"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "img",
+                    "label": "Image",
+                    "info": "Si vous préférez utiliser une autre image"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Titre",
+                    "info": "Si vous préférez utiliser un autre titre"
+                },
+                {
+                    "type": "select",
+                    "id": "heading_tag",
+                    "label": "Balise titre (SEO)",
+                    "default": "h5",
+                    "options": [
+                        { "value": "h1", "label": "h1" },
+                        { "value": "h2", "label": "h2" },
+                        { "value": "h3", "label": "h3" },
+                        { "value": "h4", "label": "h4" },
+                        { "value": "h5", "label": "h5" },
+                        { "value": "h6", "label": "h6" },
+                        { "value": "span", "label": "Aucune" }
+                    ]
+                },
+                {
+                    "type": "select",
+                    "id": "title_size",
+                    "label": "Taille du titre",
+                    "default": "h5",
+                    "options": [
+                        { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                        { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                        { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                        { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                        { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                        { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "product",
+            "name": "Produit",
+            "settings": [
+              {
+                  "type": "header",
+                  "content": "Produit"
+              },
+              {
+                "type": "product",
+                "id": "product",
+                "label": "Produit"
+              },
+              {
+                  "type": "checkbox",
+                  "id": "product_show_sale_badge",
+                  "label": "Afficher le badge de vente",
+                  "default": true
+              },
+              {
+                  "type": "select",
+                  "id": "product_sale_badge_color",
+                  "label": "Couleur du badge de vente",
+                  "default": "bg-success text-white",
+                  "options": [
+                      { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+                      { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+                      { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+                      { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
+                      { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+                      { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Sombre" },
+                      { "group": "Par défaut", "value": "", "label": "Corps (body)" },
+                      { "group": "Alerte", "value": "bg-success text-white", "label": "Succès" },
+                      { "group": "Alerte", "value": "bg-warning text-dark", "label": "Avertissement" },
+                      { "group": "Alerte", "value": "bg-danger text-white", "label": "Danger" },
+                      { "group": "Alerte", "value": "bg-info text-white", "label": "Info" }
+                  ]
+              },
+              {
+                  "type": "select",
+                  "id": "heading_tag",
+                  "label": "Balise titre (SEO)",
+                  "default": "h3",
+                  "options": [
+                      { "value": "h1", "label": "h1" },
+                      { "value": "h2", "label": "h2" },
+                      { "value": "h3", "label": "h3" },
+                      { "value": "h4", "label": "h4" },
+                      { "value": "h5", "label": "h5" },
+                      { "value": "h6", "label": "h6" },
+                      { "value": "span", "label": "Aucune" }
+                  ]
+              },
+              {
+                "type": "select",
+                "id": "product_title_size",
+                "label": "Taille du titre",
+                "default": "h5",
+                "options": [
+                    { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                    { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                    { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                    { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                    { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                    { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+                ]
+            },
+            {
+                "type": "select",
+                "id": "product_title_truncate",
+                "label": "Tronquer le titre",
+                "default": "",
+                "info": "Utile si les titres de vos produits sont longs",
+                "options": [
+                    { "value": "", "label": "Non (default)" },
+                    { "value": "text-truncate", "label": "Une ligne" }
+                ]
+            },
+            {
+                "type": "checkbox",
+                "id": "product_show_vendor",
+                "label": "Afficher le distributeur",
+                "default": true
+            },
+            {
+                "type": "header",
+                "content": "Bouton"
+            },
+            {
+                "type": "text",
+                "id": "btn_text",
+                "label": "Texte du bouton",
+                "default": "Voir le produit",
+                "info": "Laisser vide pour désactiver"
+            },
+            {
+                "type": "url",
+                "id": "btn_url",
+                "label": "URL du bouton"
+            },
+            {
+                "type": "select",
+                "id": "btn_color",
+                "label": "Couleur du bouton",
+                "default": "btn-primary",
+                "options": [
+                    { "group": "Normal", "value": "btn-link", "label": "Lien" },
+                    { "group": "Normal", "value": "btn-light", "label": "Claire" },
+                    { "group": "Normal", "value": "btn-dark", "label": "Sombre" },
+                    { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
+                    { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
+                    { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
+                    { "group": "Normal", "value": "btn-success", "label": "Succès" },
+                    { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+                    { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
+                    { "group": "Normal", "value": "btn-info", "label": "Info" },
+                    { "group": "Contour", "value": "btn-outline-light", "label": "Contour Claire" },
+                    { "group": "Contour", "value": "btn-outline-dark", "label": "Contour Sombre" },
+                    { "group": "Contour", "value": "btn-outline-primary", "label": "Contour Primaire" },
+                    { "group": "Contour", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
+                    { "group": "Contour", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
+                    { "group": "Contour", "value": "btn-outline-success", "label": "Contour Succès" },
+                    { "group": "Contour", "value": "btn-outline-danger", "label": "Contour Danger" },
+                    { "group": "Contour", "value": "btn-outline-warning", "label": "Contour Avertissement" },
+                    { "group": "Contour", "value": "btn-outline-info", "label": "Contour Info" }
+                ]
+            },
+            {
+                "type": "select",
+                "id": "btn_size",
+                "label": "Taille du bouton",
+                "default": "btn-md",
+                "options": [
+                    { "value": "btn-sm", "label": "Petit" },
+                    { "value": "btn-md", "label": "Normal" },
+                    { "value": "btn-lg", "label": "Large" }
+                ]
+            }
+          ]
+        },
+        {
+          "type": "accordion",
+          "name": "Rangée réductible",
+          "settings": [
+            {
+                "type": "checkbox",
+                "id": "open_first_item",
+                "label": "Ouvrir le premier élément par défaut",
+                "default": true
+            },
+            {
+                "type": "header",
+                "content": "item 1"
+            },
+            {
+                "type": "text",
+                "id": "title_1",
+                "label": "Titre",
+                "default": "Rangée réductible 1"
+            },
+            {
+                "type": "richtext",
+                "id": "description_1",
+                "label": "Description"
+            },
+            {
+                "type": "html",
+                "id": "icon_1",
+                "label": "Icône",
+                "info": "Vous pouvez obtenir des icônes svg à partir de bibliothèques telles que [Bootstrap Icons](https://icons.getbootstrap.com)"
+            },
+            {
+                "type": "header",
+                "content": "item 2"
+            },
+            {
+                "type": "text",
+                "id": "title_2",
+                "label": "Titre",
+                "default": "Rangée réductible 2"
+            },
+            {
+                "type": "richtext",
+                "id": "description_2",
+                "label": "Description",
+                "default": "<p>Ajouter une description ou injecter un méta-champ</p>"
+            },
+            {
+                "type": "html",
+                "id": "icon_2",
+                "label": "Icône",
+                "info": "Vous pouvez obtenir des icônes svg à partir de bibliothèques telles que [Bootstrap Icons](https://icons.getbootstrap.com)"
+            },
+            {
+                "type": "header",
+                "content": "item 3"
+            },
+            {
+                "type": "text",
+                "id": "title_3",
+                "label": "Titre",
+                "default": "Rangée réductible 3"
+            },
+            {
+                "type": "richtext",
+                "id": "description_3",
+                "label": "Description",
+                "default": "<p>Ajouter une description ou injecter un méta-champ</p>"
+            },
+            {
+                "type": "html",
+                "id": "icon_3",
+                "label": "Icône",
+                "info": "Vous pouvez obtenir des icônes svg à partir de bibliothèques telles que [Bootstrap Icons](https://icons.getbootstrap.com)"
+            },
+            {
+                "type": "header",
+                "content": "item 4"
+            },
+            {
+                "type": "text",
+                "id": "title_4",
+                "label": "Titre",
+                "default": "Rangée réductible 4"
+
+            },
+            {
+                "type": "richtext",
+                "id": "description_4",
+                "label": "Description",
+                "default": "<p>Ajouter une description ou injecter un méta-champ</p>"
+            },
+            {
+                "type": "html",
+                "id": "icon_4",
+                "label": "Icône",
+                "info": "Vous pouvez obtenir des icônes svg à partir de bibliothèques telles que [Bootstrap Icons](https://icons.getbootstrap.com)"
+            },
+            {
+                "type": "header",
+                "content": "item 5"
+            },
+            {
+                "type": "text",
+                "id": "title_5",
+                "label": "Titre",
+                "default": "Rangée réductible 5"
+            },
+            {
+                "type": "richtext",
+                "id": "description_5",
+                "label": "Description",
+                "default": "<p>Ajouter une description ou injecter un méta-champ</p>"
+            },
+            {
+                "type": "html",
+                "id": "icon_5",
+                "label": "Icône",
+                "info": "Vous pouvez obtenir des icônes svg à partir de bibliothèques telles que [Bootstrap Icons](https://icons.getbootstrap.com)"
+            }
+          ]
+        },
+        {
+          "type": "contact_form",
+          "name": "Formulaire de contact",
+          "settings": [
+            {
+                "type": "header",
+                "content": "Texte"
+            },
+            {
+                "type": "text",
+                "id": "title",
+                "label": "Titre",
+                "default": "Contact"
+            },
+            {
+                "type": "select",
+                "id": "heading_tag",
+                "label": "Balise titre (SEO)",
+                "default": "h2",
+                "options": [
+                    { "value": "h1", "label": "h1" },
+                    { "value": "h2", "label": "h2" },
+                    { "value": "h3", "label": "h3" },
+                    { "value": "h4", "label": "h4" },
+                    { "value": "h5", "label": "h5" },
+                    { "value": "h6", "label": "h6" },
+                    { "value": "span", "label": "Aucune" }
+                ]
+            },
+            {
+                "type": "select",
+                "id": "title_size",
+                "label": "Taille du titre",
+                "default": "h4",
+                "options": [
+                    { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                    { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                    { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                    { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                    { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                    { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+                ]
+            },
+            {
+                "type": "richtext",
+                "id": "description",
+                "label": "Description",
+                "default": "<p>Un membre de notre équipe vous répondra sous 24 à 48 heures.</p>"
+            },
+            {
+                "type": "select",
+                "id": "description_size",
+                "label": "Taille de description",
+                "default": "fs-5",
+                "options": [
+                    { "group": "Description Standard", "value": "fs-1", "label": "Extra Grand" },
+                    { "group": "Description Standard", "value": "fs-2", "label": "Super Grand" },
+                    { "group": "Description Standard", "value": "fs-3", "label": "Très Grand" },
+                    { "group": "Description Standard", "value": "fs-4", "label": "Grand" },
+                    { "group": "Description Standard", "value": "fs-5", "label": "Moyen" },
+                    { "group": "Description Standard", "value": "fs-6", "label": "Petit" } 
+                ]
+            },
+            {
+                "type": "header",
+                "content": "Bouton"
+            },
+            {
+                "type": "select",
+                "id": "btn_color",
+                "label": "Couleur du bouton",
+                "default": "btn-primary",
+                "options": [
+                    { "group": "Normal", "value": "btn-link", "label": "Lien" },
+                    { "group": "Normal", "value": "btn-light", "label": "Claire" },
+                    { "group": "Normal", "value": "btn-dark", "label": "Sombre" },
+                    { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
+                    { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
+                    { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
+                    { "group": "Normal", "value": "btn-success", "label": "Succès" },
+                    { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+                    { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
+                    { "group": "Normal", "value": "btn-info", "label": "Info" },
+                    { "group": "Contour", "value": "btn-outline-light", "label": "Contour Claire" },
+                    { "group": "Contour", "value": "btn-outline-dark", "label": "Contour Sombre" },
+                    { "group": "Contour", "value": "btn-outline-primary", "label": "Contour Primaire" },
+                    { "group": "Contour", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
+                    { "group": "Contour", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
+                    { "group": "Contour", "value": "btn-outline-success", "label": "Contour Succès" },
+                    { "group": "Contour", "value": "btn-outline-danger", "label": "Contour Danger" },
+                    { "group": "Contour", "value": "btn-outline-warning", "label": "Contour Avertissement" },
+                    { "group": "Contour", "value": "btn-outline-info", "label": "Contour Info" }
+                ]
+            },
+            {
+                "type": "select",
+                "id": "btn_size",
+                "label": "Taille du bouton",
+                "default": "btn-md",
+                "options": [
+                    { "value": "btn-sm", "label": "Petit" },
+                    { "value": "btn-md", "label": "Normal" },
+                    { "value": "btn-lg", "label": "Large" }
+                ]
+            }
+          ]
+        },
+        {
+          "type": "liquid_code",
+          "name": "HTML/Liquid code",
+          "settings": [
+            {
+                "type": "liquid",
+                "id": "liquid",
+                "label": "HTML code",
+                "default": "<p class=\"bg-light rounded border p-4\">Date du jour : <b>{{ 'now' | date: \"%d %b, %Y\" }}</b></p>",
+                "info": "Remarque: Vous pouvez utiliser les codes HTML et Liquid."
+            },
+            {
+                "type": "checkbox",
+                "id": "disable_card_display",
+                "label": "Désactiver les éléments de bordure de la carte",
+                "default": false,
+                "info": "Activez cette option pour masquer les éléments de bordure de la carte."
+            }
+          ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Collage Dynamique",
+            "category": "General"
+        }
+    ]
+}
+{% endschema %}

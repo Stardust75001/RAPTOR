@@ -1,0 +1,50 @@
+{% if settings.show_compte_rebours_panier and cart.item_count > 0 %}
+    <div class="d-flex align-items-center justify-content-center border-bottom rte small text-center bg-light px-3 py-3 ">
+        <span id="text_before">{{ settings.text_after }}&nbsp;</span>
+        <div style="font-weight: bold; color:{{ settings.clock_color }};">
+            <span id="clockdiv"></span>
+        </div>
+        <span id="text_after">&nbsp;{{ settings.text_before }}</span>
+    </div>
+    
+    <script>
+      var time_in_minutes = parseInt("{{ settings.timer_minutes }}");
+      var current_time = Date.parse(new Date());
+      var deadline = new Date(current_time + time_in_minutes * 60 * 1000);
+      var endMessage = "{{ settings.end_message }}"; // Récupération du message de fin configuré
+    
+      function time_remaining(endtime) {
+        var t = Date.parse(endtime) - Date.parse(new Date());
+        var seconds = Math.floor((t / 1000) % 60);
+        var minutes = Math.floor((t / 1000 / 60) % 60);
+        return {
+          'total': t,
+          'minutes': minutes,
+          'seconds': seconds
+        };
+      }
+    
+      function run_clock(id, endtime) {
+        var clock = document.querySelector(id);
+        var textBefore = document.getElementById('text_before');
+        var textAfter = document.getElementById('text_after');
+        
+        function update_clock() {
+          var t = time_remaining(endtime);
+          if (t.seconds <= 9) {
+            t.seconds = "0" + t.seconds;
+          }
+          clock.innerHTML = t.minutes + ':' + t.seconds;
+          if(t.total <= 0){
+            clearInterval(timeinterval);
+            clock.innerHTML = endMessage; // Affichage du message de fin
+            textBefore.style.display = 'none'; // Cache le texte avant le compteur
+            textAfter.style.display = 'none'; // Cache le texte après le compteur
+          }
+        }
+        update_clock();
+        var timeinterval = setInterval(update_clock, 1000);
+      }
+      run_clock('#clockdiv', deadline);
+    </script>
+{% endif %}

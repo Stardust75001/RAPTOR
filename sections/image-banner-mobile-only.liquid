@@ -1,0 +1,115 @@
+{% comment %}
+Section : Image + boutons (Mobile uniquement < 768px)
+{% endcomment %}
+
+{% liquid
+  assign custom_class = section.settings.custom_class
+%}
+
+<section class="image-banner-mobile-only {{ custom_class }}">
+  {% if section.settings.image_mobile %}
+    <img src="{{ section.settings.image_mobile | image_url: width: 800 }}"
+         alt="{{ section.settings.title | escape }}"
+         loading="lazy"
+         class="image-banner-img">
+  {% endif %}
+
+  <div class="image-banner-overlay">
+    {% if section.settings.title %}
+      <h2 class="image-banner-title">{{ section.settings.title }}</h2>
+    {% endif %}
+    {% if section.settings.text %}
+      <p class="image-banner-description">{{ section.settings.text }}</p>
+    {% endif %}
+    <div class="btn-group">
+      {% if section.settings.btn_primary_label and section.settings.btn_primary_url %}
+        <a href="{{ section.settings.btn_primary_url }}" class="btn btn-primary">{{ section.settings.btn_primary_label }}</a>
+      {% endif %}
+      {% if section.settings.btn_secondary_label and section.settings.btn_secondary_url %}
+        <a href="{{ section.settings.btn_secondary_url }}" class="btn btn-secondary">{{ section.settings.btn_secondary_label }}</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+.image-banner-mobile-only {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .image-banner-mobile-only {
+    display: block;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .image-banner-img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+  }
+
+  .image-banner-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+    width: 90%;
+    padding: 0 12px;
+  }
+
+  .image-banner-title {
+    font-size: 22px;
+    line-height: 1.3;
+    margin-bottom: 12px;
+  }
+
+  .image-banner-description {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 18px;
+  }
+
+  .btn-group {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn-group .btn {
+    font-size: 12px;
+    padding: 8px 14px;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Image Mobile + Boutons",
+  "settings": [
+    { "type": "image_picker", "id": "image_mobile", "label": "Image mobile" },
+    { "type": "text", "id": "title", "label": "Titre", "default": "Un espace dédié à l’élégance et l’innovation." },
+    { "type": "textarea", "id": "text", "label": "Description", "default": "Sélections raffinées, soins premium et gourmandises uniques." },
+    { "type": "text", "id": "btn_primary_label", "label": "Texte du bouton principal", "default": "ENTREZ" },
+    { "type": "url", "id": "btn_primary_url", "label": "Lien du bouton principal" },
+    { "type": "text", "id": "btn_secondary_label", "label": "Texte du second bouton", "default": "À PROPOS" },
+    { "type": "url", "id": "btn_secondary_url", "label": "Lien du second bouton" },
+    { "type": "text", "id": "custom_class", "label": "Classe CSS personnalisée", "default": "image-banner" }
+  ],
+  "presets": [
+    {
+      "name": "Image + boutons (Mobile)",
+      "category": "Bannières"
+    }
+  ]
+}
+{% endschema %}

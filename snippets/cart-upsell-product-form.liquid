@@ -1,0 +1,40 @@
+<div class="form-wrapper">
+    {% form 'product', product, onsubmit: 'handleAddToCartFormSubmit(this, event)' %}
+        {% if product.has_only_default_variant %}
+            <input type="hidden" name="id" value="{{ product.first_available_variant.id }}">
+        {% else %}
+            <select 
+                class="form-select form-select-sm w-100 mb-3" 
+                name="id" 
+                aria-label="{{ 'product.select_variant' | t }}"
+                onchange="handleProductItemVariantChange(this, event)">
+                {% for variant in product.variants %}
+                    <option 
+                        value="{{ variant.id }}"
+                        data-compare-at-price="{{ variant.compare_at_price }}"
+                        data-price="{{ variant.price }}"
+                        {% if variant.image %}
+                            data-variant-image="{{ variant.image | image_url: width: img_width, height: img_height, crop: 'center' }}"
+                        {% endif %}
+                        >
+                        {{ variant.title }}
+                    </option>
+                {% endfor %}
+            </select>
+        {% endif %}
+        <button
+            class="btn-atc btn btn-sm btn-primary w-100 text-nowrap" 
+            type="submit"
+            name="add"
+            data-text-add-to-cart="{{ 'product.add' | t }}"
+            {% unless product.available %}
+                disabled
+            {% endunless %}>
+            {% if product.available %}
+                {{ 'product.add' | t }}
+            {% else %}
+                {{ 'product.sold_out' | t }}
+            {% endif %}
+        </button>
+    {% endform %}
+</div>

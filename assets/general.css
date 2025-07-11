@@ -1,0 +1,1143 @@
+/* ========================================================================
+   INFORMATIONS GÉNÉRALES SUR LE SITE
+   Propriété de © 2019/2024 Shopiweb.fr
+   Pour plus d'informations, visitez : https://www.shopiweb.fr
+   ======================================================================== */
+
+/* =====================
+   Présentation générale
+   ===================== */
+#main {
+  transition: all 0.2s ease-out;
+}
+
+#main::after {
+  z-index: 1019;
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.25);
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s linear;
+}
+
+#main.main-hidden {
+  position: relative;
+}
+
+#main.main-hidden::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* =====================
+   Blog/Article
+   ===================== */
+.article-item img {
+  transition: all 0.2s ease-out;
+}
+
+.article-item a:hover img {
+  opacity: 0.75;
+}
+
+/* =====================
+   Article précédent/suivant
+   ===================== */
+#article-prev-next-prev,
+#article-prev-next-next {
+  position: fixed;
+  top: 50%;
+  transition: all 0.2s ease-out;
+  z-index: 9;
+}
+
+#article-prev-next-prev {
+  left: 0;
+  transform: translate(-100%, -50%);
+}
+
+.show #article-prev-next-prev {
+  transform: translate(-50%, -50%);
+}
+
+.show #article-prev-next-prev:hover,
+.show #article-prev-next-prev:focus {
+  transform: translate(0, -50%);
+}
+
+#article-prev-next-next {
+  right: 0;
+  transform: translate(100%, -50%);
+}
+
+.show #article-prev-next-next {
+  transform: translate(50%, -50%);
+}
+
+.show #article-prev-next-next:hover,
+.show #article-prev-next-next:focus {
+  transform: translate(0, -50%);
+}
+
+#article-prev-next-prev img {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+#article-prev-next-next img {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+@media (max-width: 1599px) {
+  #article-prev-next img {
+    max-width: 60px;
+  }
+}
+
+/* =====================
+   Page de recherche
+   ===================== */
+@media (max-width: 991px) {
+  #search-header .btn {
+    width: 100%;
+  }
+}
+
+@media (min-width: 992px) {
+  #search-header .form-select {
+    width: auto;
+    min-width: 160px;
+  }
+}
+
+/* =====================
+   Quantité d'emballage (plus/moins)
+   ===================== */
+.quantity-wrapper {
+  position: relative;
+  max-width: 120px;
+  flex-shrink: 0;
+}
+
+.quantity-wrapper .btn {
+  position: absolute;
+  top: 0;
+  padding: 0;
+  width: 36px;
+  height: 100%;
+  box-shadow: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quantity-wrapper .btn:focus-visible {
+  box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+.quantity-wrapper .btn[data-mode="minus"] {
+  left: 0;
+}
+
+.quantity-wrapper .btn[data-mode="plus"] {
+  right: 0;
+}
+
+.quantity-wrapper .form-control {
+  text-align: center;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+/* =====================
+   Remplacements SplideJS
+   ===================== */
+.splide__arrow {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 12H6M12 5l-7 7 7 7'/%3E%3C/svg%3E");
+  background-size: 60%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: rgba(var(--bs-dark-rgb), 0.75);
+  width: 2rem;
+  height: 2rem;
+  transition: all 0.2s ease-out;
+  opacity: 1;
+}
+
+@media (min-width: 576px) {
+  .splide__arrow {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+}
+
+.splide__arrow:not([disabled]):hover {
+  background-color: var(--bs-primary);
+  opacity: 1;
+  background-position: 40% 50%;
+}
+
+.splide.is-focus-in .splide__arrow:focus,
+.splide__arrow:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 0.125rem rgba(var(--bs-primary-rgb), 0.5);
+}
+
+.splide__arrow--next {
+  transform: rotate(180deg) translateY(50%);
+}
+
+.splide__arrow:disabled {
+  opacity: 0 !important;
+}
+
+.splide__arrow svg {
+  display: none;
+}
+
+.splide__track--nav > .splide__list > .splide__slide {
+  border: 1px solid transparent;
+}
+
+.splide__track--nav > .splide__list > .splide__slide.is-active {
+  border: 1px solid var(--bs-primary);
+}
+
+body .splide__video,
+body .splide__video iframe,
+body .splide__video__wrapper {
+  border-radius: var(--bs-border-radius);
+  overflow: hidden;
+}
+
+body .splide__video__play {
+  background-color: var(--bs-body-color);
+}
+
+body .splide__video__play:after {
+  border-left-color: var(--bs-body-bg);
+}
+
+/* =====================
+   Galerie Glightbox
+   ===================== */
+@media (max-width: 768px) {
+  body .glightbox-clean .gprev,
+  body .glightbox-clean .gnext {
+    top: 45%;
+    width: 32px;
+    height: 38px;
+    border-radius: 0.125rem;
+  }
+  body .glightbox-clean .gprev {
+    left: 1rem;
+  }
+  body .glightbox-clean .gnext {
+    right: 1rem;
+  }
+  body .glightbox-clean .gprev svg,
+  body .glightbox-clean .gnext svg {
+    width: 20px;
+  }
+}
+
+/* =====================
+   Comptes à rebours
+   ===================== */
+ul.timer-countdown {
+  display: flex;
+  margin: 0;
+}
+
+ul.timer-countdown li {
+  border-radius: .25rem;
+  padding: .075rem .35rem;
+  margin: 0 0.125rem;
+  font-size: .7rem;
+  font-weight: bold;
+  min-width: 20px;
+  min-height: 18px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bs-light-lighten-5);
+  color: var(--bs-dark);
+  border: 1px solid var(--bs-dark);
+  border-radius: var(--bs-border-radius);
+}
+
+.text-white ul.timer-countdown li {
+  background: white;
+  color: var(--bs-dark);
+  border-color: transparent;
+}
+
+/* =====================
+   Liste de souhaits - divers
+   ===================== */
+.wishlist-icon {
+  position: relative;
+}
+
+.wishlist-icon .badge {
+  position: absolute;
+  top: 2px;
+  right: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =====================
+   Offcanvas liste de souhaits
+   ===================== */
+#offcanvas-wishlist .product-item {
+  position: relative;
+}
+
+#offcanvas-wishlist .product-item .product-item-title {
+  margin-right: 2.25rem;
+}
+
+#offcanvas-wishlist .product-item .spr-badge {
+  margin: 0 0 0.25rem;
+}
+
+#offcanvas-wishlist .product-item .btn-remove {
+  position: absolute;
+  top: 0.5rem;
+  right: -0.25rem;
+  display: flex;
+  color: var(--bs-dark);
+  opacity: 0.75;
+  border: none;
+}
+
+#offcanvas-wishlist .product-item .btn-remove:hover,
+#offcanvas-wishlist .product-item .btn-remove:focus {
+  opacity: 1;
+}
+
+#offcanvas-wishlist-empty {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+#offcanvas-wishlist-empty svg {
+  animation: offcanvas-animation-liste-de-souhaits-vide 1s linear infinite alternate;
+}
+
+@keyframes offcanvas-animation-liste-de-souhaits-vide {
+  from {
+    transform: translateX(-0.5rem);
+  }
+  to {
+    transform: translateX(0.5rem);
+  }
+}
+
+/* =====================
+   Offcanvas menu
+   ===================== */
+#offcanvas-menu {
+  max-width: 300px;
+}
+
+#offcanvas-menu .offcanvas-header a {
+  color: currentColor;
+}
+
+#offcanvas-menu-nav .nav-link {
+  color: var(--bs-body-color);
+  border-bottom: 1px solid var(--bs-border-color);
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  font-weight: 500;
+  position: relative;
+}
+
+#offcanvas-menu-nav .nav-link[aria-expanded]::after {
+  content: "";
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='5' x2='12' y2='19'%3E%3C/line%3E%3Cline x1='5' y1='12' x2='19' y2='12'%3E%3C/line%3E%3C/svg%3E");
+  background-size: cover;
+  transition: all 0.2s ease-out;
+}
+
+#offcanvas-menu-nav .nav-link[aria-expanded="true"]::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'%3E%3C/line%3E%3C/svg%3E");
+}
+
+#offcanvas-menu-nav .nav-link.active {
+  color: var(--bs-primary);
+}
+
+#offcanvas-menu-nav .nav {
+  padding: 0.5rem 0;
+  background-color: var(--bs-light);
+}
+
+#offcanvas-menu-nav .dropdown-item {
+  padding: 0.5rem 1rem;
+}
+
+#offcanvas-menu-nav .dropdown-item.active {
+  color: var(--bs-primary);
+}
+
+#offcanvas-menu-nav .megamenu-block a {
+  display: block;
+  text-align: center;
+  color: currentColor;
+  text-decoration: none;
+  font-size: 0.875rem;
+  padding: 1rem;
+}
+
+#offcanvas-menu-nav .megamenu-block + .megamenu-block a {
+  padding-top: 0.25rem;
+}
+
+#offcanvas-menu-utilities-nav .nav-link {
+  color: var(--bs-body-color);
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+}
+
+#offcanvas-menu-utilities-nav .nav-link.active {
+  color: var(--bs-primary);
+}
+
+#offcanvas-menu-utilities-nav .wishlist-count-badge {
+  background-color: var(--bs-primary);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.25rem;
+}
+
+#offcanvas-menu .offcanvas-footer-lang-currency {
+  border-top: 1px solid var(--bs-border-color);
+}
+
+#offcanvas-menu .offcanvas-footer {
+  padding: 0.25rem 0.5rem 0.5rem;
+  background-color: var(--bs-light);
+  border-top: 1px solid var(--bs-border-color);
+}
+
+#offcanvas-menu .social-icons .nav-link {
+  color: var(--bs-dark);
+}
+
+/* =====================
+   Offcanvas recherche
+   ===================== */
+#offcanvas-search .form-control-wrapper {
+  position: relative;
+}
+
+#offcanvas-search .form-control-wrapper svg.icon-search {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.75;
+}
+
+#offcanvas-search .form-control-wrapper .form-control {
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+}
+
+#offcanvas-search .form-control-wrapper .btn-search-by-voice {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.75;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease-out;
+}
+
+#offcanvas-search .form-control-wrapper .btn-search-by-voice.speech-started {
+  animation: animation-recherche-vocale 1s linear infinite alternate;
+}
+
+@keyframes animation-recherche-vocale {
+  to {
+    opacity: 0.25;
+  }
+}
+
+#offcanvas-search .form-control-wrapper .btn-search-by-voice:hover,
+#offcanvas-search .form-control-wrapper .btn-search-by-voice:focus {
+  opacity: 1;
+}
+
+#offcanvas-search .form-control-wrapper .btn-search-by-voice:focus-visible {
+  box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+.search-predictive-results-title {
+  border-bottom: 1px solid var(--bs-border-color);
+  padding-bottom: 0.5rem;
+}
+
+#search-predictive .product-item .spr-badge {
+  margin-bottom: 0.25rem;
+}
+
+/* =====================
+   Sélecteur de langue/devise
+   ===================== */
+.language-selector .dropdown-menu,
+.currency-selector .dropdown-menu {
+  max-height: 360px;
+  overflow: auto;
+}
+
+/* =====================
+   Loox
+    https://apps.shopify.com/product-reviews
+   ===================== */
+.loox-rating svg.loox-icon {
+  width: 0.9em;
+  height: 0.9em;
+}
+
+.loox-rating .loox-rating-label {
+  font-size: 0.9em;
+}
+
+/* =====================
+   JudgeMe
+    https://apps.shopify.com/judgeme
+   ===================== */
+body .jdgm-prev-badge {
+  font-size: 0.9em;
+}
+
+.product-item .jdgm-prev-badge {
+  margin-bottom: 0.25rem;
+}
+
+body .jdgm-rev-widg {
+  max-width: 1320px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.page-type-product .jdgm-widget {
+  width: 100%;
+  /*padding-right: var(--bs-gutter-x, .75rem);*/
+  /*padding-left: var(--bs-gutter-x, .75rem);*/
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@media (min-width: 576px) {
+  .page-type-product .jdgm-widget {
+    max-width: 540px;
+  }
+}
+
+@media (min-width: 768px) {
+  .page-type-product .jdgm-widget {
+    max-width: 720px;
+  }
+}
+
+@media (min-width: 992px) {
+  .page-type-product .jdgm-widget {
+    max-width: 960px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .page-type-product .jdgm-widget {
+    max-width: 1140px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .page-type-product .jdgm-widget {
+    max-width: 1320px;
+  }
+}
+
+.jdgm-rev__pic-img {
+  border-radius: var(--bs-border-radius) !important;
+  padding: 0.25rem;
+  background-color: var(--bs-body-bg);
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  max-width: 100%;
+  height: auto;
+}
+
+.jdgm-gallery__thumbnail {
+  border-radius: var(--bs-border-radius) !important;
+  padding: 0.25rem;
+  background-color: var(--bs-body-bg);
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  max-width: 100%;
+  height: auto;
+}
+
+.jdgm-prev-badge__text {
+  opacity: 0.75;
+  margin-left: 0.25rem !important;
+}
+
+/* =====================
+   ShopiTrust
+    Product Reviews App Shopiweb
+   ===================== */
+.page-type-product .stp-star a {
+  color: var(--bs-body-color);
+}
+
+body .spt-badge-caption {
+  font-size: 0.875rem;
+  opacity: 0.75;
+  vertical-align: bottom;
+}
+
+/* =====================
+   noUiSlider
+    https://refreshless.com/nouislider/
+   ===================== */
+body .noUi-horizontal {
+  height: 8px;
+}
+
+body .noUi-horizontal .noUi-handle {
+  width: 22px;
+  height: 22px;
+  right: -11px;
+  top: -8px;
+  border-radius: 50%;
+  box-shadow: none;
+  background-color: var(--bs-body-bg);
+  border: 1.5px solid var(--bs-body-color);
+}
+
+body .noUi-handle::before,
+body .noUi-handle::after {
+  background-color: var(--bs-body-color);
+  height: 8px;
+  width: 1.5px;
+  left: 7px;
+  top: 5px;
+}
+
+body .noUi-handle::after {
+  left: 11px;
+}
+
+body .noUi-target {
+  box-shadow: none;
+  background-color: var(--bs-light);
+  border: 1px solid var(--bs-border-color);
+  padding: 0 11px;
+}
+
+body .noUi-connect {
+  background-color: var(--bs-body-color);
+}
+
+/* =====================
+   Shopify Abonnements App
+   ===================== */
+body .shopify_subscriptions_app__title {
+  font-family: var(--bs-headings-font-family);
+  font-size: 1.25rem;
+  margin: 0 0 0.5rem;
+}
+
+body .shopify_subscriptions_app_block_label ul {
+  padding: 0.25rem 0 0;
+}
+
+body .shopify_subscriptions_fieldset label {
+  display: flex;
+  align-items: center;
+}
+
+body .shopify_subscriptions_fieldset input[type="radio"] {
+  margin: 0 0.75rem 0 0;
+}
+
+body .shopify_subscriptions_app_policy {
+  margin: 0.25rem 0 2rem;
+  opacity: 0.75;
+  text-align: center;
+  font-size: 0.925rem;
+}
+
+/* =====================
+   Placeholder SVG
+   ===================== */
+.placeholder-svg {
+  height: auto;
+  width: 100%;
+}
+
+/* =====================
+   Bouton Whatsapp
+   ===================== */
+/* Loading spinner */
+.eg-loading-spinner {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.eg-loading-spinner {
+  display: block !important;
+  position: relative;
+  margin: 0 auto;
+  border-top: 3px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 3px solid rgba(255, 255, 255, 0.2);
+  border-right: 3px solid rgba(255, 255, 255, 0.2);
+  border-left: 3px solid #ffffff;
+  transform: translateZ(0);
+  animation: animation-eg-chargement-spinner 1s infinite linear;
+}
+
+@keyframes animation-eg-chargement-spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Typing spinner */
+.eg-typing-spinner {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  animation: animation-eg-typage-spinner 1s linear infinite alternate;
+}
+
+@keyframes animation-eg-typage-spinner {
+  0% {
+    background-color: rgba(0, 0, 0, 1);
+    box-shadow: 12px 0px 0px 0px rgba(0, 0, 0, 0.2),
+      24px 0px 0px 0px rgba(0, 0, 0, 0.2);
+  }
+  25% {
+    background-color: rgba(0, 0, 0, 0.4);
+    box-shadow: 12px 0px 0px 0px rgba(0, 0, 0, 2),
+      24px 0px 0px 0px rgba(0, 0, 0, 0.2);
+  }
+  75% {
+    background-color: rgba(0, 0, 0, 0.4);
+    box-shadow: 12px 0px 0px 0px rgba(0, 0, 0, 0.2),
+      24px 0px 0px 0px rgba(0, 0, 0, 2);
+  }
+}
+
+/* Wrapper */
+.eg-whatsapp-wrapper {
+  position: fixed;
+  bottom: 2.2rem;
+  left: 1rem;
+  z-index: 9;
+  transition: all 0.4s ease-out;
+}
+@media (max-width: 480px) {
+  .eg-whatsapp-wrapper {
+    z-index: 1023 !important;
+  }
+}
+
+/* Button styling */
+#eg-whatsapp-button {
+  border: transparent;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  transition: all 0.2s ease-out;
+  border: 1px solid white;
+  cursor: pointer;
+}
+
+#eg-whatsapp-button:hover,
+#eg-whatsapp-button:focus {
+  opacity: 0.9;
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.25);
+}
+
+#eg-whatsapp-button::after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: red;
+  opacity: 0;
+  transform: scale(0);
+  animation: showEgWhatsAppDot 2s ease-out both;
+}
+
+@keyframes showEgWhatsAppDot {
+  90% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+#eg-whatsapp-button-text {
+  border-radius: 50rem;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: bold;
+  color: black !important;
+  position: absolute;
+  top: 50%;
+  left: 54px;
+  white-space: nowrap;
+  transform: translateY(-50%);
+  background: white;
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.125);
+}
+
+/* Dialog styling */
+#eg-whatsapp-dialog {
+  visibility: hidden;
+  position: absolute;
+  bottom: 56px;
+  background: white;
+  border-radius: 1.25rem;
+  width: 360px;
+  height: 480px;
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.125);
+  display: flex;
+  flex-direction: column;
+  max-width: calc(100vw - 28px);
+  max-height: 60vh;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease-out;
+}
+
+.eg-whatsapp-button-left #eg-whatsapp-dialog {
+  left: 0;
+}
+
+.eg-whatsapp-button-right #eg-whatsapp-dialog {
+  right: 0;
+}
+
+.eg-whatsapp-dialog-visible #eg-whatsapp-dialog {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#eg-whatsapp-dialog-header {
+  padding: 1rem 1rem;
+  border-radius: 1rem 1rem 0 0;
+  color: white;
+  line-height: normal;
+  display: flex;
+  align-items: center;
+}
+
+#eg-whatsapp-dialog-close {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: white;
+  position: absolute;
+  top: 0;
+  right: 0;
+  opacity: 0.6;
+  transition: all 0.2s ease-out;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+#eg-whatsapp-dialog-close:hover,
+#eg-whatsapp-dialog-close:focus {
+  opacity: 1;
+}
+
+#eg-whatsapp-dialog-header-img-wrapper {
+  margin-right: 1rem;
+  position: relative;
+}
+
+#eg-whatsapp-dialog-header-img-wrapper::after {
+  content: "";
+  position: absolute;
+  bottom: 4px;
+  right: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+}
+
+#eg-whatsapp-dialog-header-img {
+  border-radius: 50%;
+}
+
+#eg-whatsapp-dialog-label {
+  margin: 0;
+  color: white;
+  font-size: 18px;
+}
+
+#eg-whatsapp-dialog-subtitle {
+  font-size: 0.85em;
+  margin: 0;
+  opacity: 0.8;
+}
+
+#eg-whatsapp-dialog-body {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  overflow: auto;
+  flex: 1;
+  padding: 16px;
+}
+
+#eg-whatsapp-dialog-msg {
+  display: inline-block;
+  background-color: white;
+  border-radius: 0 1rem 1rem 1rem;
+  padding: 8px 12px;
+  margin: 0 64px 12px 4px;
+  line-height: normal;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.125);
+  position: relative;
+  color: #121212;
+  min-width: 60px;
+}
+
+#eg-whatsapp-dialog-msg::after {
+  content: "";
+  border-top: 0px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-right: 8px solid white;
+  position: absolute;
+  top: 0;
+  left: -8px;
+}
+
+#eg-whatsapp-dialog-msg-typing {
+  margin: 2px;
+}
+
+#eg-whatsapp-dialog-msg-text p {
+  margin: 0;
+}
+
+#eg-whatsapp-dialog-footer {
+  display: flex;
+  padding: 12px 6px 12px 16px;
+  background: linear-gradient(#fff, #f0f2f5);
+}
+
+#eg-whatsapp-dialog-user-input {
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid #d1d7e0;
+  background-color: white;
+  box-shadow: none;
+  padding: 8px 12px;
+  outline: none;
+  font-size: 15px;
+  transition: all 0.2s ease-out;
+}
+
+#eg-whatsapp-dialog-user-input:focus {
+  border-color: #94a2b8;
+}
+
+#eg-whatsapp-dialog-btn {
+  margin-left: 6px;
+  background: transparent;
+  color: #121212;
+  border-color: transparent;
+  display: flex;
+  align-items: center;
+  opacity: 0.5;
+  transition: all 0.2s ease-out;
+  cursor: pointer;
+}
+
+#eg-whatsapp-dialog-btn:hover,
+#eg-whatsapp-dialog-btn:focus {
+  opacity: 1;
+}
+
+#eg-whatsapp-dialog-btn .eg-loading-spinner {
+  border-top-color: rgba(0, 0, 0, 0.2);
+  border-bottom-color: rgba(0, 0, 0, 0.2);
+  border-right-color: rgba(0, 0, 0, 0.2);
+  border-left-color: rgba(0, 0, 0, 1);
+}
+
+/* =====================
+   Cookie Shopiweb
+   ===================== */
+.cookie-popup {
+  position: fixed;
+  left: 0px;
+  bottom: 0px;
+  width: auto;
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3em;
+  box-shadow: rgb(0 0 0 / 15%) 0px 4px 24px, rgb(0 0 0 / 5%) 0px 2px 6px;
+}
+@media (min-width: 450px) {
+  .cookie-popup {
+    left: 1rem;
+    bottom: 6rem;
+    width: 400px;
+  }
+}
+.container-cook {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  text-align: left;
+  border: none;
+  padding: 1rem;
+}
+.hidepops {
+  display: none;
+}
+.illus-cookies {
+  position: relative;
+  float: right;
+}
+.title-cookies {
+  margin: 0px 0px 10px !important;
+  font-size: 32px !important;
+  line-height: 1.25 !important;
+  font-weight: 700 !important;
+  text-align: left !important;
+  clear: none !important;
+}
+.title-cookies small {
+  font-size: 70% !important;
+  font-weight: 500 !important;
+  display: block !important;
+}
+.title-cookies span {
+  display: block !important;
+}
+.copyright-cookies-shopiweb {
+  position: relative;
+  display: inline-flex;
+  -webkit-box-pack: center;
+  justify-content: center;
+  width: 100%;
+  overflow: hidden;
+}
+.buttons-cook {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* Responsive */
+@media only screen and (max-width: 749px) {
+  .buttons-cook {
+    padding-left: 0;
+  }
+  .title-cookies small {
+    font-size: 60% !important;
+  }
+  .title-cookies span {
+    font-size: 28px;
+  }
+}
+
+/* =====================
+   Pop-up Premium modal
+   ===================== */  
+@keyframes shopibtns {
+  0% {
+    box-shadow: 0 0 5px #198754;
+  }
+  50% {
+    box-shadow: 0 0 15px #198754;
+  }
+  100% {
+    box-shadow: 0 0 5px #198754;
+  }
+}
+
+/* =====================
+   Barre de progression
+   ===================== */
+.scroll-progress-bar-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 2075;
+}
+
+.scroll-progress-bar-container {
+  background-color: rgba(150, 150, 150, 0.6);
+  height: 5px;
+  width: 100%;
+}
+
+.scroll-progress-bar {
+  background-color: var(--bs-primary);
+  height: 5px;
+  width: 0%;
+}

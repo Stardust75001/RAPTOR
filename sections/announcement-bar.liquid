@@ -1,0 +1,299 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid 
+    assign pt = section.settings.pt | prepend: 'pt-'
+    assign pb = section.settings.pb | prepend: 'pb-'
+
+    assign bg_color = section.settings.bg_color
+
+    if section.settings.bg_gradient
+        assign bg_color = bg_color | append: ' bg-gradient'
+    endif
+%}
+
+{% assign expiration_time = section.settings.expiration_time | date: '%s' %}
+
+
+{% if section.settings.homepage == false or template.name == 'index' %}
+    <section 
+        id="announcement-bar-{{ section.id }}" 
+        class="announcement-bar enter-view {{ bg_color }} {{ section.settings.font_size }} {{ section.settings.text_transform }} {% if section.settings.sticky %}sticky-announcement-bar{% endif %}"
+        {% if section.settings.expiration_time  != blank %}
+          data-expiration-time="{{ expiration_time }}"
+        {% endif %}>
+        <div 
+            class="animate__animated animate__fast opacity-0"
+            data-animate-class="animate__fadeInDown">
+            <div 
+  id="carousel-{{ section.id }}" 
+  class="carousel slide container-fluid mx-auto {% if bg_color contains 'text-dark' %}carousel-dark{% endif %}" 
+  data-bs-ride="{% if section.settings.autoplay %}carousel{% else %}false{% endif %}">
+                <div class="carousel-inner w-100 text-center">rousel-inner d-flex justify-content-center text-center mx-auto w-100">
+                    {% for block in section.blocks %}
+                        {% capture countdown_timer %}
+                            {% if block.settings.countdown_timer == blank %}
+                            {% else %}
+                            {% assign block_expiration_time = block.settings.countdown_timer | date: '%s' %}
+                                <span class="visually-hidden">
+                                    {{ 'general.countdown_timer.expires' | t }}
+                                </span>
+                                <ul 
+                                    class="timer-countdown list-unstyled" 
+                                    data-time="{{ block_expiration_time }}"
+                                    data-text-d="{{ 'general.countdown_timer.d' | t }}"
+                                    data-text-h="{{ 'general.countdown_timer.h' | t }}"
+                                    data-text-m="{{ 'general.countdown_timer.m' | t }}"
+                                    data-text-s="{{ 'general.countdown_timer.s' | t }}"
+                                    data-text-days="{{ 'general.countdown_timer.days' | t }}"
+                                    data-text-hours="{{ 'general.countdown_timer.hours' | t }}"
+                                    data-text-minutes="{{ 'general.countdown_timer.minutes' | t }}"
+                                    data-text-seconds="{{ 'general.countdown_timer.seconds' | t }}"
+                                    hidden>
+                                    <li data-days></li>
+                                    <li data-hours></li>
+                                    <li data-minutes></li>
+                                    <li data-seconds></li>
+                                </ul>
+                            {% endif %}
+                        {% endcapture %}
+                        <div 
+                            class="carousel-item {% if forloop.first == true %}active{% endif %}" 
+                            data-index="{{ forloop.index0 }}"
+                            {{ block.shopify_attributes }}>
+                            {% if block.settings.url == blank %}
+                                <div class="rte text-center lh-sm {{ pt }} {{ pb }}">
+                                    {{ block.settings.description }}
+                                    {{ countdown_timer }}
+                                </div>
+                            {% else %}
+                                <a href="{{ block.settings.url }}" class="{{ pt }} {{ pb }}">
+                                    <div class="rte text-center lh-sm {{ pt }} {{ pb }}">
+                                        {{ block.settings.description }}
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="ms-2" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M5 12h13M12 5l7 7-7 7"/>
+                                        </svg>
+                                        {{ countdown_timer }}
+                                    </div>
+                                </a>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+                {% if section.settings.controls and section.blocks.size > 1 %}
+                    <button 
+                        class="carousel-control carousel-control-prev" 
+                        type="button" 
+                        data-bs-target="#carousel-{{ section.id }}" 
+                        data-bs-slide="prev">
+                        <span class="carousel-control-icon carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">
+                            {{ 'general.accessibility.previous' | t }}
+                        </span>
+                    </button>
+                    <button 
+                        class="carousel-control carousel-control-next" 
+                        type="button" 
+                        data-bs-target="#carousel-{{ section.id }}" 
+                        data-bs-slide="next">
+                        <span class="carousel-control-icon carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">
+                            {{ 'general.accessibility.next' | t }}
+                        </span>
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+{% endif %}
+
+{% unless section.settings.expiration_time == blank %}
+    <script>
+        const section = document.querySelector('#announcement-bar-{{ section.id }}')
+
+        let expirationTime = section.dataset.expirationTime
+        
+        if (expirationTime.length) {
+            expirationTime = Number(expirationTime)
+        
+            if (expirationTime <= Date.now() / 1000) {
+                section.remove()
+            }
+        }
+    </script>
+{% endunless %}
+
+{% schema %}
+{
+  "name": "🏆 Barre d'Annonces",
+  "settings": [
+    {
+      "type": "header",
+      "content": "🏆 Application Barre d'annonces",
+      "info": "👉 Version de l'application Shopiweb Premium"
+    },
+    {
+        "type": "paragraph",
+        "content": "Documentation FR : [Barre d'annonces by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/sections\/barre-dannonces)"
+    },
+    {
+      "type": "header",
+      "content": "Général"
+    },
+    {
+      "type": "checkbox",
+      "id": "homepage",
+      "label": "Afficher uniquement sur la page d'accueil",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky",
+      "label": "Coller en haut (Sticky)",
+      "default": false
+    },
+    {
+        "type": "select",
+        "id": "bg_color",
+        "label": "Couleur d'arrière-plan",
+        "default": "bg-dark text-white",
+        "options": [
+            { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+            { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+            { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+            { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
+            { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+            { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Sombre" },
+            { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" },
+            { "group": "Alerte", "value": "bg-success text-white", "label": "Succès" },
+            { "group": "Alerte", "value": "bg-warning text-dark", "label": "Avertissement" },
+            { "group": "Alerte", "value": "bg-danger text-white", "label": "Danger" },
+            { "group": "Alerte", "value": "bg-info text-white", "label": "Info" }
+        ]
+    },
+    {
+        "type": "checkbox",
+        "id": "bg_gradient",
+        "label": "Dégradé d'arrière-plan",
+        "default": false,
+        "info": "Ne s'applique pas aux couleurs claires"
+    },
+    {
+        "type": "text",
+        "id": "max_width",
+        "label": "Largeur maximale (px)",
+        "default": "600"
+    },
+    {
+        "type": "select",
+        "id": "font_size",
+        "label": "Taille du texte",
+        "default": "fs-6",
+        "options": [
+            { "value": "", "label": "Normal" },
+            { "value": "fs-6", "label": "Petit" }
+        ]
+    },
+    {
+        "type": "select",
+        "id": "text_transform",
+        "label": "Transformation du texte",
+        "default": "text-capitalize",
+        "options": [
+            { "value": "", "label": "Normal" },
+            { "value": "text-capitalize", "label": "Capitale" },
+            { "value": "text-lowercase", "label": "Minuscule" },
+            { "value": "text-uppercase", "label": "Majuscule" }
+
+        ]
+    },
+    {
+      "type": "text",
+      "id": "expiration_time",
+      "label": "Date d'expiration",
+      "info": "Masquer complètement la section de la barre d'annonces si ce délai est atteint en utilisant le format suivant : 2024-03-17 11h10am. Laisser vide pour désactiver"
+    },
+    {
+        "type": "header",
+        "content": "Carrousel",
+        "info": "Ne s'affichera pas si vous publiez une seule diapositive"
+    },
+    {
+        "type": "checkbox",
+        "id": "controls",
+        "label": "Flèches",
+        "info": "Boutons Précédent/Suivant",
+        "default": true
+    },
+    {
+        "type": "checkbox",
+        "id": "autoplay",
+        "label": "Lecture automatique",
+        "info": "Toutes les 5 secondes",
+        "default": true
+    },
+    {
+        "type": "header",
+        "content": "Espacement"
+    },
+    {
+        "type": "range",
+        "id": "pt",
+        "label": "Marge supérieure",
+        "min": 0,
+        "max": 6,
+        "step": 1,
+        "default": 3
+    },
+    {
+        "type": "range",
+        "id": "pb",
+        "label": "Marge inférieure",
+        "min": 0,
+        "max": 6,
+        "step": 1,
+        "default": 3
+    }
+  ],
+    "blocks": [
+      {
+        "type": "Announcement",
+        "name": "Annonce",
+        "settings": [
+          {
+              "type": "header",
+              "content": "🏆 Bloc Annonce",
+              "info": "👉 Bloc Version Shopiweb Premium"
+          },
+          {
+              "type": "richtext",
+              "id": "description",
+              "label": "Description"
+          },
+          {
+              "type": "url",
+              "id": "url",
+              "label": "Lien"
+          },
+          {
+              "type": "header",
+              "content": "🏆 Application Compte à rebours",
+              "info": "👉 Application Version Shopiweb Premium"
+          },
+          {
+              "type": "text",
+              "id": "countdown_timer",
+              "label": "Compte à rebours",
+              "info": "Affichez un compte à rebours animé en utilisant le format suivant : 2024-03-17 11h10am. Laisser vide pour désactiver"
+          }
+      ]
+    }
+  ]
+}
+{% endschema %}

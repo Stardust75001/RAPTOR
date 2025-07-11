@@ -1,0 +1,44 @@
+{% liquid 
+    assign current_variant = product.selected_or_first_available_variant
+
+    assign mt = block.settings.mt | prepend: 'mt-'
+    assign mb = block.settings.mb | prepend: 'mb-'
+%}
+
+<div class="product-price fs-5 fs-lg-4 {{ mt }} {% unless block.settings.taxes_included %} {{ mb }} {% endunless %}" {{ block.shopify_attributes }}>
+    {% if current_variant.compare_at_price > current_variant.price %}
+        <span class="product-price-final me-3">
+            <span class="visually-hidden">
+                {{ 'product.price_sale' | t }} &nbsp;
+            </span>
+            {{ current_variant.price | money }}
+        </span>
+        <span class="product-price-compare text-muted">
+            <span class="visually-hidden">
+                {{ 'product.price_regular' | t }} &nbsp;
+            </span>
+            <s>{{ current_variant.compare_at_price | money }}</s>
+        </span>
+    {% else %}
+        <span class="product-price-final">
+            {{ current_variant.price | money }}
+        </span>
+    {% endif %}
+    {% if current_variant.available and current_variant.compare_at_price > current_variant.price %}
+        <span class="price-badge-sale badge">
+            {{ 'product.save' | t }} {{ current_variant.compare_at_price | minus: current_variant.price | times: 100 | divided_by: current_variant.compare_at_price | round | append: '%' }}
+        </span>    
+    {% endif %}
+    {% unless current_variant.available %}
+        <span class="price-badge-sold-out badge">
+            {{ 'product.sold_out' | t }}
+        </span>        
+    {% endunless %}
+</div>
+{% if block.settings.taxes_included %}
+    <div class="product-tax text-muted small mt-n2 {{ mb }}">
+        {{ 'product.include_taxes' | t }}
+    </div>
+{% endif %}
+
+{{ form | payment_terms }}

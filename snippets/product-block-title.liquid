@@ -1,0 +1,21 @@
+{% liquid 
+    assign mt = block.settings.mt | prepend: 'mt-'
+    assign mb = block.settings.mb | prepend: 'mb-'
+%}
+
+<{{ block.settings.heading_tag }} class="title mb-3 {{ block.settings.title_size }} {{ mt }} {{ mb }} {{ block.settings.text_align }}" {{ block.shopify_attributes }}>
+    {{ product.title }} {{ block.settings.title_next }}
+    {% if block.settings.show_custom_svg_h2 %}
+        {% if settings.custom_svg_h2 != blank %}
+          <div class="h2_svg mb-4">
+            <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {{ settings.custom_svg_h2 }}</span>
+          </div>
+        {% else %}
+          {% if settings.svg_h2 != 'none' %}
+            <div class="h2_svg mb-4">
+              <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {% render 'svg-subtitle', svg_h2: settings.svg_h2 %}</span>
+            </div>
+          {% endif %}
+        {% endif %}
+    {% endif %}
+</{{ block.settings.heading_tag }}>

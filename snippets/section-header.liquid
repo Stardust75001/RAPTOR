@@ -1,0 +1,96 @@
+{% liquid 
+    assign heading_tag = section.settings.heading_tag
+
+    assign img_width = section.settings.brand_image_size
+%}
+
+{% style %}
+#background-text-{{ section.id }} {
+    font-size: calc(2em * {{ section.settings.title_overlay_size }});
+}
+{% endstyle %}
+
+{% unless section.settings.subtitle_img == blank %}
+    <div 
+        class="animate__animated animate__faster opacity-0"
+        {% if settings.effect_apply_caption_enable %}
+          data-animate-class="{{ settings.animation_caption_name }}"
+          style="animation-delay: 1200ms;"
+        {% endif %}>
+            <img
+                class="img-fluid mb-5"
+                src="{{ section.settings.subtitle_img.src | image_url: width: img_width }}"
+                alt="{{ section.settings.subtitle_img.alt | escape }}"
+                width="{{ img_width }}"
+                height="auto"
+                loading="lazy">
+        </div>
+{% endunless %}
+
+{% unless section.settings.subtitle == blank %}
+    <div 
+        class="animate__animated animate__faster opacity-0"
+        {% if settings.effect_apply_caption_enable %}
+          data-animate-class="{{ settings.animation_caption_name }}"
+          style="animation-delay: 1000ms;"
+        {% endif %}>
+            <p class="subtitle text-uppercase fw-500 mb-3 {{ section.settings.subtitle_size }}"
+                style="color:{{ section.settings.color_caption }};">
+                {{ section.settings.subtitle }}
+            </p>
+    </div>
+{% endunless %} 
+
+{% unless section.settings.title == blank %}
+    <div class="overlay-text-container my-4" style="position: relative;">
+  
+        {% unless section.settings.title_overlay == blank %}
+            <div id="background-text-{{ section.id }}" class="background-text-overlay d-none d-lg-block animate__animated animate__faster opacity-0"
+                {% if settings.effect_apply_title_enable %}
+                  data-animate-class="{{ settings.animation_title_name }}"
+                  style="animation-delay: 0ms; color:{{ section.settings.color_title_overlay }};"
+                {% endif %}>
+                {{ section.settings.title_overlay }}
+            </div>
+        {% endunless %}
+      
+        <{{ heading_tag }} class="title mb-4 {{ section.settings.title_size }} animate__animated animate__faster opacity-0"
+            {% if settings.effect_apply_title_enable %}
+              data-animate-class="{{ settings.animation_title_name }}"
+              style="animation-delay: 200ms;"
+            {% endif %}>
+            {{ section.settings.title }}
+            {% if settings.custom_svg_h2 != blank %}
+                <div class="h2_svg animate__animated animate__faster opacity-0"
+                    {% if settings.effect_apply_svg_enable %} 
+                      data-animate-class="{{ settings.animation_svg_name }}"
+                      style="animation-delay: 400ms;"
+                    {% endif %}
+                >
+                    <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {{ settings.custom_svg_h2 }}</span>
+                </div>
+            {% else %}
+                {% if settings.svg_h2 != 'none' %}
+                    <div class="h2_svg mb-4 animate__animated animate__faster opacity-0"
+                        {% if settings.effect_apply_svg_enable %} 
+                          data-animate-class="{{ settings.animation_svg_name }}"
+                          style="animation-delay: 400ms;"
+                        {% endif %}
+                    >
+                        <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {% render 'svg-subtitle', svg_h2: settings.svg_h2 %}</span>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </{{ heading_tag }}>
+    </div>
+{% endunless %}
+
+{% unless section.settings.description == blank %}
+    <div class="description rte text-muted {% if section.settings.title_overlay %}mt-lg-6{% else %}mt-0{% endif %} mb-5 {{ section.settings.description_size }} animate__animated animate__faster opacity-0"
+        {% if settings.effect_apply_description_enable %} 
+          data-animate-class="{{ settings.animation_description_name }}"
+          style="animation-delay: 600ms;"
+        {% endif %}>
+        {{ section.settings.description }}
+    </div>
+{% endunless %}

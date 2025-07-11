@@ -1,0 +1,496 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid 
+    assign pt = section.settings.pt | prepend: 'pt-'
+    assign pb = section.settings.pb | prepend: 'pb-'
+    assign mt = section.settings.mt | prepend: 'mt-'
+    assign mb = section.settings.mb | prepend: 'mb-'
+
+    case section.settings.product_img_orientation
+        when 'square'
+            assign img_width  = 600
+            assign img_height = 600
+        when 'landscape'
+            assign img_width  = 600
+            assign img_height = 480
+        when 'portrait'
+            assign img_width  = 480
+            assign img_height = 600
+    endcase
+%}
+
+<div 
+    id="cart" 
+    class="{{ section.settings.bg_color }} {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+    <div class="container">
+        <div class="mx-auto" style="max-width: {{ section.settings.max_width }}px;">
+            {% if cart.item_count == 0 %}
+                <div id="template-cart-empty" class="text-center">
+                    <h1 class=" {{ section.settings.title_size }}">
+                        {{ 'cart.title' | t }}
+                        {% if settings.custom_svg_h2 != blank %}
+                          <div class="h2_svg">
+                            <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {{ settings.custom_svg_h2 }}</span>
+                          </div>
+                        {% else %}
+                          {% if settings.svg_h2 != 'none' %}
+                            <div class="h2_svg mb-4">
+                              <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {% render 'svg-subtitle', svg_h2: settings.svg_h2 %}</span>
+                            </div>
+                          {% endif %}
+                        {% endif %}
+                    </h1>
+                    <div class="mb-6 rte lead">
+                        {{ 'cart.empty_html' | t }}
+                    </div>
+                    <a href="{{ routes.all_products_collection_url }}" class="btn btn-primary mb-5">
+                        ← {{ 'cart.continue_shopping' | t }}
+                    </a>
+                </div>
+            {% else %}
+                <div class="text-center mb-10">
+                    <h1 class="mb-3">
+                        {{ 'cart.title' | t }}
+                        {% if settings.custom_svg_h2 != blank %}
+                          <div class="h2_svg">
+                            <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {{ settings.custom_svg_h2 }}</span>
+                          </div>
+                        {% else %}
+                          {% if settings.svg_h2 != 'none' %}
+                            <div class="h2_svg mb-4">
+                              <span style="fill:{{ settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {% render 'svg-subtitle', svg_h2: settings.svg_h2 %}</span>
+                            </div>
+                          {% endif %}
+                        {% endif %}
+                    </h1>
+                    <a 
+                        href="{{ routes.all_products_collection_url }}" 
+                        class="btn btn-outline-secondary btn-sm">
+                        ← {{ 'cart.continue_shopping' | t }}
+                    </a>
+                </div>
+                <div class="row">
+                    <div class="col-lg-7">
+                        <ul class="product-listing list-unstyled mb-6">
+                            {% for line_item in cart.items %}
+                                <li class="product-item pb-6 mb-6 {% unless forloop.last %}border-bottom{% endunless %}"
+                                    data-cart-line-item
+                                    data-product-id="{{ line_item.product.id }}"
+                                    data-product-handle="{{ line_item.product.handle }}">
+                                    <div class="row align-items-center mx-n3">
+                                        <div class="col-5 col-lg-4 px-3">
+                                            <a class="" href="{{ line_item.url }}">
+                                                <img 
+                                                    class="product-item-img img-fluid me-4 rounded {{ section.settings.product_img_thumbnail }} {{ section.settings.product_shadow_sp }} {{ section.settings.product_border_color }}"
+                                                    style="border-width: {{ section.settings.product_border_width }}px;"
+                                                    src="{{ line_item.image | image_url: width: img_width, height: img_height, crop: 'center' }}"
+                                                    alt="{{ line_item.image.alt | escape }}" 
+                                                    width="{{ img_width }}"
+                                                    height="{{ img_height }}"
+                                                    loading="lazy">
+                                            </a>
+                                        </div>
+                                        <div class="col-7 col-lg-8 px-3">
+                                            <h3 class="product-item-title mb-3 {{ section.settings.product_title_size }}">
+                                                <a class="" href="{{ line_item.url }}">
+                                                    {{ line_item.product.title }}
+                                                </a>
+                                            </h3>
+                                            {% unless line_item.product.has_only_default_variant %}
+                                                <small class="d-block text-muted mt-n1 mb-2">
+                                                    {{ line_item.variant.title }}
+                                                </small>
+                                            {% endunless %}
+                                            {% unless line_item.selling_plan_allocation == empty %}
+                                                <small class="d-block text-muted mt-n1 mb-2">
+                                                    {{ line_item.selling_plan_allocation.selling_plan.name }}
+                                                </small>
+                                            {% endunless %}
+                                            {% unless line_item.properties == empty %}
+                                                <ul class="list-unstyled mt-n1 mb-2 text-muted small">
+                                                    {% for property in line_item.properties %}
+                                                        {% assign first_character_in_key = property.first | slice: 0 %}
+                                                        {% unless first_character_in_key == '_' %} 
+                                                            <li>
+                                                                {% if property.last contains 'https' %}
+                                                                    {{ property.first }}: <a href="{{ property.last }}" target="_blank">{{ 'cart.view_file' | t }}</a>
+                                                                {% else %}
+                                                                    {{ property.first }}: {{ property.last }}
+                                                                {% endif %}
+                                                            </li>
+                                                        {% endunless %}
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endunless %}
+                                            <p class="product-item-price mt-3 mb-4">
+                                                {% if line_item.original_line_price != line_item.final_line_price %}
+                                                    <span class="product-item-price-final">
+                                                        <span class="visually-hidden">
+                                                            {{ 'product.price_sale' | t }} &nbsp;
+                                                        </span>
+                                                        {{ line_item.final_line_price | money }}
+                                                    </span>
+                                                    <span class="product-item-price-compare text-muted ms-1">
+                                                        <span class="visually-hidden">
+                                                            {{ 'product.price_regular' | t }} &nbsp;
+                                                        </span>
+                                                        <s>
+                                                            {{ line_item.original_line_price | money }}
+                                                        </s>
+                                                    </span>
+                                                {% elsif line_item.variant.compare_at_price > line_item.variant.price %}
+                                                    <span class="product-item-price-final">
+                                                        <span class="visually-hidden">
+                                                            {{ 'product.price_sale' | t }} &nbsp;
+                                                        </span>
+                                                        {{ line_item.final_line_price | money }}
+                                                    </span>
+                                                    <span class="product-item-price-compare text-muted ms-1">
+                                                        <span class="visually-hidden">
+                                                            {{ 'product.price_regular' | t }} &nbsp;
+                                                        </span>
+                                                        <s>
+                                                            {{ line_item.variant.compare_at_price | times: line_item.quantity | money }}
+                                                        </s>
+                                                    </span>
+                                                {% else %}
+                                                    <span class="product-item-price-final">
+                                                        {{ line_item.original_line_price | money }}
+                                                    </span>
+                                                {% endif %}
+                                            </p>
+                                            <div class="d-flex align-items-center">
+                                                <div class="quantity-wrapper">
+                                                    <button 
+                                                        class="btn"
+                                                        type="button"
+                                                        data-mode="minus"
+                                                        onclick="onClickQtyPlusMinus(this)" 
+                                                        aria-label="{{ 'general.accessibility.decrease_qty' | t }}">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                                                        </svg>
+                                                    </button>
+                                                    <input 
+                                                        id="updates_{{ line_item.key }}"
+                                                        class="form-control" 
+                                                        name="updates[]"
+                                                        type="text"
+                                                        value="{{ line_item.quantity }}"
+                                                        data-line-item-key="{{ line_item.key }}"
+                                                        data-min-qty="0"
+                                                        aria-label="{{ 'cart.quantity' | t }}"
+                                                        onchange="handleCartQuantityChange(this)">
+                                                    <button 
+                                                        class="btn btn-plus"
+                                                        type="button"
+                                                        data-mode="plus"
+                                                        onclick="onClickQtyPlusMinus(this)"
+                                                        aria-label="{{ 'general.accessibility.increase_qty' | t }}">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                            <line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                                <button 
+                                                    class="btn ms-2"
+                                                    type="button"
+                                                    data-remove-line-item
+                                                    data-line-item-key="{{ line_item.key }}"
+                                                    onclick="handleCartItemRemoval(this)"
+                                                    aria-label="{{ 'cart.remove' | t }}">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="opacity-60" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                        <polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line>
+                                                    </svg>
+                                                </button>
+                                            </div>   
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="px-xl-8 h-100">
+                            <div id="cart-summary" class="card {{ section.settings.product_shadow_sp }} {{ section.settings.product_border_color }}"
+                                  style="border-width: {{ section.settings.product_border_width }}px;">
+                                <h2 class="h4 card-header">
+                                    {{ 'cart.summary' | t }}
+                                </h2>
+                                <div class="card-body">
+                                    {% if settings.cart_notice_show %}
+                                        <div class="cart-notice description rte small text-center">
+                                            {{ settings.cart_notice }}
+                                        </div>
+                                        <hr class="my-4">
+                                    {% endif %}
+                                    {% if settings.cart_goal_enable and cart.item_count > 0 %}
+                                        <div class="pb-3">
+                                            {% render 'cart-goal' %}
+                                        </div>
+                                    {% endif %}
+                                    {% render 'cart-testimonials' %}
+                                    {% render 'cart-upsell' %}
+                                    <hr class="">
+                                    {% if section.settings.show_note %}
+                                        {% render 'cart-note' %}
+                                    {% endif %}
+                                    {% if section.settings.show_shipping_rates %}
+                                        <button 
+                                            class="btn btn-sm w-100 mb-5 d-flex align-items-center justify-content-center {{ settings.cart_drawer_shipping_rates_btn_color }}"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#shipping-rates-modal">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-truck me-3" viewBox="0 0 16 16">
+                                                <path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5v-7zm1.294 7.456A1.999 1.999 0 0 1 4.732 11h5.536a2.01 2.01 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456zM12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12v4zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"></path>
+                                            </svg>
+                                            {{ 'cart.shipping_rates.button_label' | t }}
+                                        </button>
+                                    {% endif %}
+                                    <hr class="">
+                                    <p id="cart-subtotal" class="d-flex justify-content-between mb-4 fs-5">
+                                        <span class="text-muted">
+                                            {{ 'cart.subtotal' | t }}: 
+                                        </span>
+                                        <span>
+                                            {% if cart.items_subtotal_price > cart.total_price %}
+                                                <b>
+                                                    {{ cart.total_price | money }}
+                                                </b>
+                                                <span class="visually-hidden">
+                                                    {{ 'cart.subtotal_regular' | t }} &nbsp;
+                                                </span>
+                                                <s class="opacity-75 ms-2">
+                                                    {{ cart.items_subtotal_price | money }}
+                                                </s>
+                                                <span class="visually-hidden">
+                                                    {{ 'cart.subtotal_discounted' | t }} &nbsp;
+                                                </span>
+                                            {% else %}
+                                                <b>
+                                                    {{ cart.total_price | money }}
+                                                </b>
+                                            {% endif %}
+                                        </span>
+                                    </p>
+
+                                    <form action="{{ routes.cart_url }}" class="" method="post">
+                                        <button 
+                                            class="btn-checkout btn btn-primary w-100 py-3 fs-5 d-flex align-items-center justify-content-center" 
+                                            name="checkout" 
+                                            type="submit" 
+                                            onclick="handleCheckoutButtonClick(this)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="me-3" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                            </svg>
+                                            {{ 'cart.checkout' | t }}
+                                        </button>
+                                    </form>
+                                    {% if settings.cart_shipping_protect_show %}
+                                        {% render 'cart-shipping-protection' %}
+                                    {% endif %}
+                                    {% if section.settings.show_taxes_shipping %}
+                                        <p 
+                                            id="taxes-shipping-at-checkout" 
+                                            class="text-muted text-center fs-6 fst-italic mt-4 mb-n1">
+                                            {{ 'cart.taxes_shipping_at_checkout_html' | t }}
+                                        </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% if section.settings.show_shipping_rates %}
+    {% render 'cart-shipping-rates-modal' %}
+{% endif %}
+
+{% schema %}
+{
+    "name": "Panier",
+    "settings": [
+        {
+            "type": "header",
+            "content": "General"
+        },
+        {
+            "type": "select",
+            "id": "bg_color",
+            "label": "Couleur de l'arrière plan",
+            "default": "bg-body text-body",
+            "options": [
+                { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
+                { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+                { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" }
+            ]
+        },
+        {
+            "type": "text",
+            "id": "max_width",
+            "label": "Largeur maximale de la page (px)",
+            "info": "Empêcher la section de devenir trop grande.",
+            "default": "1000"
+        },
+        {
+            "type": "checkbox",
+            "id": "show_note",
+            "label": "Afficher la note",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_shipping_rates",
+            "label": "Afficher la fonction 'Tarifs d'expédition'",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_testimonial",
+            "label": "Afficher le témoignage",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_taxes_shipping",
+            "label": "Afficher 'Taxes incluses et frais d'expédition...'",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Produit"
+        },
+        {
+            "type": "select",
+            "id": "product_img_orientation",
+            "label": "Image orientation",
+            "default": "square",
+            "options": [
+                { "value": "square", "label": "Carré" },
+                { "value": "landscape", "label": "Paysage" },
+                { "value": "portrait", "label": "Portrait" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "product_img_thumbnail",
+            "label": "Bordure de l'image",
+            "default": "img-thumbnail",
+            "options": [
+                { "value": "", "label": "Aucune" },
+                { "value": "img-thumbnail", "label": "Bordure" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "product_border_color",
+            "label": "Couleur de la bordure",
+            "options": [
+                { "value": "", "label": "Default" },
+                { "value": "border-primary", "label": "Primaire" },
+                { "value": "border-secondary", "label": "Secondaire" },
+                { "value": "border-tertiary", "label": "Tertiaire" },
+                { "value": "border-dark", "label": "Sombre" },
+                { "value": "border-success", "label": "Succès" },
+                { "value": "border-warning", "label": "Avertissement" },
+                { "value": "border-danger", "label": "Danger" },
+                { "value": "border-info", "label": "Info" }
+            ],
+            "default": ""
+        },
+        {
+            "type": "range",
+            "id": "product_border_width",
+            "label": "Largeur de la bordure",
+            "min": 0,
+            "max": 10,
+            "step": 1,
+            "default": 1
+        },
+        {
+            "type": "select",
+            "id": "product_shadow_sp",
+            "label": "Ombre",
+            "options": [
+                { "value": "shadow-none", "label": "Aucune" },
+                { "value": "shadow-1", "label": "Ombre légère" },
+                { "value": "shadow-2", "label": "Ombre partiel" },
+                { "value": "shadow-3", "label": "Ombre profonde" },
+                { "value": "shadow-4", "label": "Ombre totale" }
+            ],
+            "default": "shadow-1"
+        },
+        {
+            "type": "select",
+            "id": "product_title_size",
+            "label": "Taille du titre",
+            "default": "h6",
+            "options": [
+                { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Espacement de la section"
+        },
+        {
+            "type": "range",
+            "id": "pt",
+            "label": "Padding supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "pb",
+            "label": "Padding inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mt",
+            "label": "Marge supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mb",
+            "label": "Marge inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        }
+    ],
+    "templates": ["cart"], 
+    "presets": [
+        {
+            "name": "Panier",
+            "category": "Cart"
+        }
+    ]
+}
+{% endschema %}

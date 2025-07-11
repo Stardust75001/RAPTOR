@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="origin">
+  
+  <title>{{ page_title }}</title>
+  
+  {{ content_for_header }}
+  
+  <link href="{{ 'vendor-bootstrap.min.css' | asset_url }}" rel="stylesheet">
+  <link href="{{ 'checkout.css' | asset_url }}" rel="stylesheet">
+  
+  {{ checkout_html_classes }}
+  {{ checkout_stylesheets }}
+  {{ checkout_scripts }}
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-7">
+        <div class="checkout-main">
+          {{ content_for_layout }}
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="checkout-sidebar bg-light">
+          {{ content_for_order_summary }}
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="{{ 'checkout.js' | asset_url }}"></script>
+</body>
+</html>

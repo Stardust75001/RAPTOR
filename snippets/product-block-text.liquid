@@ -1,0 +1,17 @@
+{% liquid 
+    assign mt = block.settings.mt | prepend: 'mt-'
+    assign mb = block.settings.mb | prepend: 'mb-'
+%}
+
+  <div class="product-block-text {{ mt }} {{ mb }} {{ block.settings.text_align }}" {{ block.shopify_attributes }}>
+    {% unless block.settings.title == blank %}
+        <h2 class="title {{ block.settings.title_size }}">
+            {{ block.settings.title }}
+        </h2>
+    {% endunless %}
+    {% unless block.settings.description == blank %}
+        <div class="description rte">
+            {{ block.settings.description }}
+        </div>
+    {% endunless %}
+  </div>

@@ -1,0 +1,157 @@
+{% liquid 
+    assign size_chart_block = section.blocks | where: 'type', 'size_chart' | first
+
+    assign mt = block.settings.mt | prepend: 'mt-'
+    assign mb = block.settings.mb | prepend: 'mb-'
+
+    assign variants_available_arr = product.variants | map: 'available'
+    assign variants_option1_arr = product.variants | map: 'option1'
+    assign variants_option2_arr = product.variants | map: 'option2'
+    assign variants_option3_arr = product.variants | map: 'option3' %}
+
+{% unless product.has_only_default_variant %}
+    <div class="product-variant-selector {{ mt }} {{ mb }}" {{ block.shopify_attributes }}>
+        <ul 
+            class="product-options list-unstyled mb-6" 
+            aria-label="{{ 'product.product_options' | t }}">
+            {% for option in product.options_with_values %}
+                <div class="product-option-wrapper">
+                    {% if settings.color_swatches_names contains option.name and settings.color_swatches_show %}
+                        <h4 
+                            class="color-swatches-title title d-flex h6 mb-3"
+                            aria-hidden="true">
+                            {{ option.name }}: 
+                            <span class="text-muted ms-2">
+                                {{ option.selected_value }}
+                            </span>
+                        </h4>
+                        <ul class="color-swatches list-unstyled mx-n1 mb-5" aria-label="{{ option.name }}">
+                            {% for value in option.values %}
+                                <li class="p-1">
+                                    <input 
+                                        class="product-option visually-hidden" 
+                                        type="radio" 
+                                        name="option-{{ option.name | handleize }}" 
+                                        id="option-{{ option.name | handleize }}-{{ value | handleize }}" 
+                                        value="{{ value | escape }}"
+                                        data-product-id="{{ product.id }}"
+                                        onchange="handleProductOptionChange(this, event)"
+                                        {% if option.selected_value == value %}checked{% endif %}>
+                                    <label
+                                        data-bs-toggle="tooltip" 
+                                        title="{{ value | escape }}" 
+                                        for="option-{{ option.name | handleize }}-{{ value | handleize }}">
+                                        {% if settings.color_swatches_use_variant_images %}
+                                                {% liquid
+                                                    for variant in product.variants
+                                                        assign option_position = option.position | minus: 1
+                                                        if variant.options[option_position] == value 
+                                                            assign variant_image = variant.image 
+                                                        endif
+                                                    endfor %}
+                                            <img
+                                                class="img-fluid"
+                                                src="{{ variant_image | image_url: width: 128, height: 128, crop: 'center' }}"
+                                                alt=" {{ value | escape }}"
+                                                width="64"
+                                                height="64"
+                                                loading="lazy"
+                                                aria-hidden="true">
+                                        {% else %}
+                                            {% assign swatch_img = value | handleize | prepend: 'swatch-' | append: '.png' %}
+                                            <img
+                                                class="img-fluid"
+                                                src="{{ swatch_img | image_url: '30x30', crop: 'center' }}"
+                                                alt=" {{ value | escape }}"
+                                                width="30"
+                                                height="30"
+                                                loading="lazy"
+                                                aria-hidden="true">
+                                        {% endif %}
+                                    </label>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% elsif settings.size_buttons_names contains option.name and settings.size_buttons_show %}
+                        <h4 class="size-buttons-title title d-flex h6 mb-2" aria-hidden="true">
+                            {{ option.name }}: 
+                            <span class="text-muted ms-3">
+                                {{ option.selected_value }}
+                            </span>
+                        </h4>
+                        <ul class="size-buttons list-unstyled mx-n2 mb-4" aria-label="{{ option.name }}">
+                            {% for value in option.values %}
+                                {% liquid
+                                    assign option_disabled = true
+                                
+                                    for option1_name in variants_option1_arr
+                                        case option.position
+                                            when 1
+                                                if variants_option1_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                                                    assign option_disabled = false
+                                                endif
+                                            when 2
+                                                if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                                                    assign option_disabled = false
+                                                endif
+                                            when 3
+                                                if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == product.selected_or_first_available_variant.option2 and variants_option3_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                                                    assign option_disabled = false
+                                                endif
+                                        endcase
+                                    endfor
+                                  %}
+                                <li class="p-2">
+                                    <input 
+                                        class="product-option visually-hidden" 
+                                        type="radio" 
+                                        name="option-{{ option.name | handleize }}" 
+                                        id="option-{{ option.name | handleize }}-{{ value | handleize }}" 
+                                        value="{{ value | escape }}"
+                                        data-product-id="{{ product.id }}"
+                                        onchange="handleProductOptionChange(this, event)"
+                                        {% if option.selected_value == value %}checked{% endif %}>
+                                    <label for="option-{{ option.name | handleize }}-{{ value | handleize }}" class="rounded {% if option_disabled %}disabled{% endif %}">
+                                        {{ value }}
+                                    </label>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        {% if size_chart_block %}
+                            <button 
+                                class="btn btn-sm px-4 mb-2 d-flex align-items-center {{ size_chart_block.settings.btn_color }}"
+                                data-bs-target="#size-chart-modal"
+                                data-bs-toggle="modal"
+                                type="button">
+                                    {% unless size_chart_block.settings.icon == blank %}
+                                        <div class="me-3">
+                                            {{ size_chart_block.settings.icon }}
+                                        </div>
+                                    {% endunless %}
+                                {{ size_chart_block.settings.title }}
+                            </button>
+                        {% endif %}
+                    {% else %}
+                        <li class="input-group mb-4">
+                            <label class="input-group-text" for="product-option-{{ option.name | handleize }}">
+                                {{ option.name }}
+                            </label>
+                            <select 
+                                id="product-option-{{ option.name | handleize }}" 
+                                class="product-option form-select"
+                                data-product-handle="{{ product.handle }}"
+                                data-product-id="{{ product.id }}"
+                                onchange="handleProductOptionChange(this, event)">
+                                {% for value in option.values %}
+                                    <option value="{{ value | escape }}" {% if value == option.selected_value %}selected{% endif %}>
+                                        {{ value }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </li>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </ul>
+    </div>
+{% endunless %}

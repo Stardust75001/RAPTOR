@@ -1,0 +1,27 @@
+{% liquid 
+    assign mt = block.settings.mt | prepend: 'mt-'
+    assign mb = block.settings.mb | prepend: 'mb-'
+    
+    assign bg_color = block.settings.bg_color
+
+    if block.settings.bg_gradient
+        assign bg_color = bg_color | append: ' bg-gradient'
+    endif
+
+    assign title_list = block.settings.title | split: ', '
+%}
+
+<div id="marquee-{{ block.id }}"
+     class="product-block-scrolling-text marquee {{ mt }} {{ mb }} overflow-hidden rounded {{ bg_color }} {{ block.settings.separator }}" {{ block.shopify_attributes }}>
+    <ul class="list-unstyled my-3 {{ block.settings.title_size }}"
+        data-animation-duration="{{ block.settings.animation_duration }}"
+        data-marquee-direction="{{ block.settings.scrolling_direction }}"
+        data-section-id="{{ block.id }}"
+        aria-label="{{ block.settings.list_label }}">
+        {% for title in title_list %}
+            <li class="px-{{ block.settings.gap }}">
+                {{ title }}
+            </li>
+        {% endfor %}
+    </ul>
+</div>

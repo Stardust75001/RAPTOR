@@ -1,0 +1,199 @@
+{% assign block = section.blocks | where: 'type', 'bought_together' | first %}
+
+{% style %}
+#bought-product-together .img-badge-bought-sale {
+    background-color: var(--bs-success);
+    position: absolute;
+    top: -0.5rem;
+    right: 0rem;
+    z-index: 1;
+}
+{% endstyle %}
+  
+{% if block %}
+    {% liquid 
+        case block.settings.img_orientation
+            when 'square'
+                assign img_width  = 600
+                assign img_height = 600
+            when 'landscape'
+                assign img_width  = 600
+                assign img_height = 480
+            when 'potrait'
+                assign img_width  = 480
+                assign img_height = 600
+        endcase
+
+        assign metafield_namespace = block.settings.metafield | split: '.' | first
+        assign metafield_key = block.settings.metafield | split: '.' | last
+
+        assign product_handles = product.handle | append: ','
+
+        for product in product.metafields[metafield_namespace][metafield_key].value
+            assign product_handles = product_handles | append: product.handle | append: ','
+        endfor
+        
+        assign product_handles = product_handles | split: ','
+
+        assign mt = block.settings.mt | prepend: 'mt-'
+        assign mb = block.settings.mb | prepend: 'mb-'
+    %}
+
+    {% if product_handles.size > 1 %}
+        <div 
+            id="bought-product-together"
+            class="{{ mt }} {{ mb }}" {{ block.shopify_attributes }}>
+            <h2 
+                id="bought-together-title"
+                class="title text-center {{ block.settings.title_size }}">
+                {{ block.settings.title }}
+            </h2>
+            <ul class="product-listing list-unstyled row row-cols-1 row-cols-xl-2 mb-3" aria-labelledby="bought-together-title">
+                {% for handle in product_handles limit: block.settings.limit %}
+                    {% liquid
+                        assign product = all_products[handle]
+                        assign total_compare_at_price = product.first_available_variant.compare_at_price | default: product.first_available_variant.price | plus: total_compare_at_price
+                        assign total_price = product.first_available_variant.price | plus: total_price 
+                    %}
+                    {% if product.available %}
+                        <li class="product-item py-5">
+                            <div class="row align-items-center mx-n3">
+                                <div class="col-5 col-xl-4 px-3">
+                                    <a class="product-item-img-wrapper link-dark position-relative d-block" href="{{ product.url }}">
+                                        {% if product.available and product.compare_at_price > product.price %}
+                                            <span class="img-badge-bought-sale badge">
+                                                {% comment %}{{ 'product.save' | t }}{% endcomment %} -{{ product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price | round | append: '%' }}
+                                            </span>    
+                                        {% endif %}
+                                        <img 
+                                            class="product-item-img img-fluid rounded {{ block.settings.img_thumbnail }} {{ block.settings.shadow_sp }} {{ block.settings.border_color }}"
+                                            src="{{ product.featured_image | image_url: width: img_width, height: img_height, crop: 'center' }}" 
+                                            alt="{{ product.featured_image.alt | escape }}"
+                                            width="{{ img_width }}"
+                                            height="{{ img_height }}" 
+                                            loading="lazy">
+                                    </a>
+                                </div>
+                                <div class="col-7 col-xl-8 px-3">
+                                    <div class="">
+                                        <div class="">
+                                            <h3 class="product-item-title h6 mb-3">
+                                                {{ product.title }}
+                                                {% if forloop.first %}
+                                                    <small class="text-primary">
+                                                        ({{ 'product.bought_together.this_item' | t }})
+                                                    </small>
+                                                {% endif %}
+                                            </h3>
+                                            {% render 'product-rating-badge', product: product %}
+                                            <p 
+                                                class="product-item-price mb-0"
+                                                data-compare-at-price="{{ product.first_available_variant.compare_at_price }}"
+                                                data-price="{{ product.first_available_variant.price }}">
+                                                {% if product.first_available_variant.compare_at_price > product.price %}
+                                                    <span class="product-item-price-final me-1">
+                                                        <span class="visually-hidden">
+                                                            {{ 'product.price_sale' | t }} &nbsp;
+                                                        </span>
+                                                        {{ product.first_available_variant.price | money }}
+                                                    </span>
+                                                    <span class="product-item-price-compare text-muted">
+                                                        <span class="visually-hidden">
+                                                            {{ 'product.price_regular' | t }} &nbsp;
+                                                        </span>
+                                                        <s>
+                                                            {{ product.first_available_variant.compare_at_price | money }}
+                                                        </s>
+                                                    </span>
+                                                {% else %}
+                                                    <span class="product-item-price-final">
+                                                        {{ product.first_available_variant.price | money }}
+                                                    </span>
+                                                {% endif %}
+                                            </p>
+                                            {% if product.has_only_default_variant %}
+                                                <input type="hidden" name="id" value="{{ product.first_available_variant.id }}">
+                                            {% else %}
+                                                <select 
+                                                    class="form-select form-select-sm mt-4" 
+                                                    name="id" 
+                                                    aria-label="{{ 'product.select_variant' | t }}"
+                                                    onchange="handleProductItemVariantChange(this, event)">
+                                                    {% for variant in product.variants %}
+                                                        {% if variant.available %}
+                                                            <option 
+                                                                value="{{ variant.id }}"
+                                                                data-compare-at-price="{{ variant.compare_at_price }}"
+                                                                data-price="{{ variant.price }}"
+                                                                {% if variant.image %}
+                                                                    data-variant-image="{{ variant.image | image_url: width: img_width, height: img_height, crop: 'center' }}"
+                                                                {% endif %}
+                                                            >
+                                                                {{ variant.title }}
+                                                            </option>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </select>
+                                            {% endif %}
+                                        </div>
+                                        <div class="mt-4">
+                                            <div class="form-check">
+                                                <input 
+                                                    id="check-bought-together-{{ product.id }}"
+                                                    class="check-bought-together form-check-input" 
+                                                    type="checkbox"
+                                                    checked>
+                                                <label class="form-check-label" for="check-bought-together-{{ product.id }}">
+                                                    {{ 'product.bought_together.select_this' | t }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+            <div 
+                id="bought-together-footer" 
+                class="text-center bg-light p-6 rounded">
+                <p 
+                    id="bought-together-total"
+                    class="mb-3 fw-500" 
+                    aria-live="polite" 
+                    aria-atomic="true"
+                    data-text-total-price="{{ 'product.bought_together.total_price' | t }}">
+                    {{ 'product.bought_together.total_price' | t }}: 
+                    {% if total_compare_at_price > total_price %}
+                        <span class="bought-together-total-price text-success me-2">
+                            <span class="visually-hidden">
+                                {{ 'product.price_sale' | t }} &nbsp;
+                            </span>
+                            {{ total_price | money }}
+                        </span>
+                        <span class="bought-together-total-compare-price text-muted">
+                            <span class="visually-hidden">
+                                {{ 'product.price_regular' | t }} &nbsp;
+                            </span>
+                            <s>
+                                {{ total_compare_at_price | money }}
+                            </s>
+                        </span>
+                    {% else %}
+                        <span class="bought-together-total-price">
+                            {{ total_price | money }}
+                        </span>
+                    {% endif %}
+                </p>
+                <button 
+                    id="add-to-cart-bought-together"
+                    class="btn btn-primary" 
+                    type="button"
+                    data-text-add-to-cart="{{ 'product.bought_together.add_selected_to_cart' | t }}">
+                    {{ 'product.bought_together.add_selected_to_cart' | t }}
+                </button>
+            </div>
+        </div>
+    {% endif %}
+{% endif %}

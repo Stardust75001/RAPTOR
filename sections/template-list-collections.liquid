@@ -1,0 +1,136 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid 
+  assign pt = section.settings.pt | prepend: 'pt-'
+  assign pb = section.settings.pb | prepend: 'pb-'
+  assign mt = section.settings.mt | prepend: 'mt-'
+  assign mb = section.settings.mb | prepend: 'mb-'
+%}
+
+<section 
+  id="list-collections-{{ section.id }}"
+  class="list-collections enter-view overflow-hidden {{ section.settings.bg_color }} {{ section.settings.text_align }} {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+  <div class="container">
+    {% if section.settings.show_breadcrumbs %}
+      <div class="breadcrumbs-wrapper mt-n6 mb-6">
+        {% render 'breadcrumbs' %}
+      </div>
+    {% endif %}
+
+    {% render 'section-header' %}
+
+    <ul class="collection-list list-unstyled row mx-n3 mx-lg-n4 mb-0 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
+      {% for block in section.blocks %}
+        {% unless block.disabled %}
+          {% assign handle = block.settings.collection %}
+          {% if handle != blank %}
+            {% assign collection = collections[handle] %}
+            {% if collection and collection.all_products_count > 0 %}
+              {% render 'collection-item', collection: collection, index: forloop.index %}
+            {% endif %}
+          {% endif %}
+        {% endunless %}
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:sections.list_collections.name",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumbs",
+      "label": "t:sections.list_collections.settings.show_breadcrumbs.label",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "bg_color",
+      "label": "t:sections.list_collections.settings.bg_color.label",
+      "default": "bg-body text-body",
+      "options": [
+        { "value": "bg-white text-dark", "label": "t:sections.colors.white" },
+        { "value": "bg-light text-body", "label": "t:sections.colors.light" },
+        { "value": "bg-body text-body", "label": "t:sections.colors.body" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_align",
+      "label": "t:sections.list_collections.settings.text_align.label",
+      "default": "text-center",
+      "options": [
+        { "value": "text-start", "label": "t:sections.alignment.left" },
+        { "value": "text-center", "label": "t:sections.alignment.center" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "pt",
+      "label": "t:sections.spacing.padding_top",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "pb",
+      "label": "t:sections.spacing.padding_bottom",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "mt",
+      "label": "t:sections.spacing.margin_top",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mb",
+      "label": "t:sections.spacing.margin_bottom",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection_block",
+      "name": "t:sections.list_collections.blocks.collection.name",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "t:sections.list_collections.blocks.collection.settings.collection.label"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 30,
+  "presets": [
+    {
+      "name": "t:sections.list_collections.presets.name",
+      "category": "List collections",
+      "blocks": [
+        { "type": "collection_block" },
+        { "type": "collection_block" },
+        { "type": "collection_block" }
+      ]
+    }
+  ]
+}
+{% endschema %}

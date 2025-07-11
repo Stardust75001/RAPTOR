@@ -1,0 +1,62 @@
+{% comment %}
+  Section : Image avec texte + boutons (multilingue)
+{% endcomment %}
+
+<section class="image-banner-wrapper {{ section.settings.custom_class }}">
+  {% if section.settings.image != blank %}
+    <img
+      src="{{ section.settings.image | image_url: width: 1920 }}"
+      alt="{{ 'custom_sections.image_banner_title' | t | escape }}"
+      loading="lazy"
+      class="image-banner-img">
+  {% endif %}
+
+  <div class="image-banner-overlay">
+    <h2 class="image-banner-title">{{ 'custom_sections.image_banner_title' | t }}</h2>
+    <p class="image-banner-description">{{ 'custom_sections.image_banner_description' | t }}</p>
+
+    <div class="btn-group">
+      <a href="{{ section.settings.btn_primary_url }}" class="btn btn-primary">
+        {{ 'custom_sections.image_banner_btn_primary' | t }}
+      </a>
+      <a href="{{ section.settings.btn_secondary_url }}" class="btn btn-secondary">
+        {{ 'custom_sections.image_banner_btn_secondary' | t }}
+      </a>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Image multilangue",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "url",
+      "id": "btn_primary_url",
+      "label": "Lien du bouton principal"
+    },
+    {
+      "type": "url",
+      "id": "btn_secondary_url",
+      "label": "Lien du second bouton"
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Classe CSS personnalisée",
+      "default": "image-banner"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image multilangue",
+      "category": "Bannières"
+    }
+  ]
+}
+{% endschema %}

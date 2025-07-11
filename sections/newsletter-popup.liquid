@@ -1,0 +1,408 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid 
+    assign pt = section.settings.pt | prepend: 'pt-'
+    assign pb = section.settings.pb | prepend: 'pb-'
+    assign mt = section.settings.mt | prepend: 'mt-'
+    assign mb = section.settings.mb | prepend: 'mb-'
+  
+    case section.settings.img_orientation
+        when 'square'
+            assign img_width  = 900
+            assign img_height = 900
+        when 'landscape'
+            assign img_width  = 900
+            assign img_height = 720
+        when 'potrait'
+            assign img_width  = 720
+            assign img_height = 900
+    endcase
+%}
+
+<div 
+    id="newsletter-popup-modal"
+    class="modal fade" 
+    tabindex="-1" 
+    aria-labelledby="newsletter-popup-modal-label" 
+    aria-hidden="true"
+    data-delay="{{ section.settings.delay }}"
+    data-days-to-wait="{{ section.settings.days_to_wait }}">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="newsletter-popup-modal-label" class="modal-title h5">
+                    {{ section.settings.modal_title }}
+                </h2>
+                <button 
+                    type="button" 
+                    class="btn-close" 
+                    data-bs-dismiss="modal"
+                    aria-label="{{ 'general.accessibility.close' | t }}">
+                </button>
+            </div>
+            <div class="modal-body {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+                <div class="row align-items-center {{ section.settings.img_align_desktop }}">
+                    <div class="col-lg-6 mb-6 mb-lg-0">
+                        {% unless section.settings.image %}
+                            {{ 'detailed-apparel-1' | placeholder_svg_tag: 'placeholder-svg rounded bg-light' }}
+                        {% else %}
+                            <img
+                                class="img-fluid rounded {{ section.settings.img_thumbnail }} {{ section.settings.shadow_sp }} {{ section.settings.border_color }}"
+                                src="{{ section.settings.image.src | image_url: width: img_width, height: img_height, crop: section.settings.img_crop }}"
+                                alt="{{ section.settings.image.alt | escape }}"
+                                width="{{ img_width }}"
+                                height="{{ img_height }}"
+                                loading="lazy">
+                        {% endunless %}
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="text-center">
+                            {% unless section.settings.title == blank %}
+                                <h3 class="title mb-2 {{ section.settings.title_size }}">
+                                    {{ section.settings.title }}
+                                </h3>
+                            {% endunless %}
+                            {% unless section.settings.description == blank %}
+                                <div class="description rte mb-6 {{ section.settings.description_size }}">
+                                    {{ section.settings.description }}
+                                </div>
+                            {% endunless %}
+                            {% form 'customer', id: 'newsletter-popup-form' %}
+                                <input type="hidden" name="contact[tags]" value="newsletter">
+                                {{ form.errors | default_errors }}
+                                {% if form.posted_successfully? %}
+                                    <p class="alert alert-success">
+                                        {{ 'general.newsletter.confirmation_text' | t }}
+                                    </p>
+                                {% endif %}
+                                <div class="newsletter-form">
+                                  {% if section.settings.show_first_name %}
+                                    <div class="newsletter-input-row mb-2">
+                                      <input 
+                                        type="text" 
+                                        name="contact[first_name]" 
+                                        class="form-control newsletter-name-input" 
+                                        placeholder="{{ 'footer.newsletter.first_name_placeholder' | t }}" 
+                                        aria-label="{{ 'footer.newsletter.first_name_placeholder' | t }}" 
+                                        autocorrect="off" 
+                                        autocapitalize="words">
+                                      <input 
+                                        type="email" 
+                                        name="contact[email]" 
+                                        class="form-control newsletter-email-input" 
+                                        value="{% if customer.email != blank %}{{ customer.email }}{% endif %}" 
+                                        placeholder="{{ 'footer.newsletter.email_placeholder' | t }}" 
+                                        aria-label="{{ 'footer.newsletter.email_placeholder' | t }}" 
+                                        autocorrect="off" 
+                                        autocapitalize="off">
+                                    </div>
+                                  {% else %}
+                                    <div class="mb-2">
+                                      <input 
+                                        type="email" 
+                                        name="contact[email]" 
+                                        class="form-control newsletter-email-input" 
+                                        value="{% if customer.email != blank %}{{ customer.email }}{% endif %}" 
+                                        placeholder="{{ 'footer.newsletter.email_placeholder' | t }}" 
+                                        aria-label="{{ 'footer.newsletter.email_placeholder' | t }}" 
+                                        autocorrect="off" 
+                                        autocapitalize="off">
+                                    </div>
+                                  {% endif %}
+                                  <button class="btn {{ section.settings.btn_color }} {{ section.settings.btn_size }} w-100" type="submit" name="commit">
+                                    {{ 'footer.newsletter.submit_button' | t }}
+                                  </button>
+                                </div>
+                                {% unless section.settings.notice == blank %}
+                                    <div class="notice rte mt-4 lh-sm extra-small text-center">
+                                        {{ section.settings.notice }}
+                                    </div>
+                                {% endunless %}
+                            {% endform %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "🏆 Newsletter Popup",
+    "limit": 1,
+    "enabled_on": {
+        "groups": ["footer"]
+    },
+    "settings": [
+        {
+          "type": "header",
+          "content": "🏆 Application Newsletter Popup",
+          "info": "👉 Version de l'application Shopiweb Premium"
+        },
+        {
+            "type": "paragraph", 
+            "content": "Documentation FR : [Newsletter Popup by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/sections\/newsletter-popup)"
+        },
+        {
+            "type": "paragraph",
+            "content": "REMARQUE : comme la fenêtre popup ne s'affichera qu'une seule fois, vous pouvez la déclencher par une URL directe (paramètre). Par exemple : https://my-store.myshopify.com/?newsletter-popup=true. Utile pour les tests ou pour envoyer le lien à vos clients."
+        },
+        {
+            "type": "header",
+            "content": "General"
+        },
+        {
+            "type": "range",
+            "id": "delay",
+            "label": "Délai (sec)",
+            "info": "Le temps d'attente avant l'affichage de la fenêtre popup. (en secondes)",
+            "default": 5,
+            "min": 1,
+            "max": 20,
+            "step": 1
+        },
+        {
+            "type": "range",
+            "id": "days_to_wait",
+            "label": "Jours d'attente",
+            "info": "Nombre de jours à attendre avant d'afficher à nouveau la fenêtre popup.",
+            "default": 3,
+            "min": 1,
+            "max": 30,
+            "step": 1
+        },
+        {
+            "type": "text",
+            "id": "modal_title",
+            "label": "Titre de la popup",
+            "default": "Obtenez 20 % De Réduction En Ce Moment..."
+        },
+        {
+            "type": "inline_richtext",
+            "id": "title",
+            "label": "Titre",
+            "default": "S'abonner à la Newsletter"
+        },
+        {
+            "type": "select",
+            "id": "title_size",
+            "label": "Taille du titre",
+            "default": "h3",
+            "options": [
+                { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+            ]
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Description",
+            "default": "<p>Inscrivez-vous pour recevoir des informations sur nos dernières offres et d'autres sujets importants.</p>"
+        },
+        {
+            "type": "select",
+            "id": "description_size",
+            "label": "Taille de description",
+            "default": "fs-5",
+            "options": [
+                { "group": "Description Standard", "value": "fs-1", "label": "Extra Grand" },
+                { "group": "Description Standard", "value": "fs-2", "label": "Super Grand" },
+                { "group": "Description Standard", "value": "fs-3", "label": "Très Grand" },
+                { "group": "Description Standard", "value": "fs-4", "label": "Grand" },
+                { "group": "Description Standard", "value": "fs-5", "label": "Moyen" },
+                { "group": "Description Standard", "value": "fs-6", "label": "Petit" } 
+            ]
+        },
+        {
+            "type": "select",
+            "id": "input_group_size",
+            "label": "Taille des éléments du formulaire",
+            "default": "",
+            "options": [
+                { "value": "", "label": "Normal" },
+                { "value": "input-group-lg", "label": "Large" }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "show_first_name",
+            "label": "Afficher le champ du prénom",
+            "default": false
+        },
+        {
+            "type": "select",
+            "id": "btn_color",
+            "label": "Couleur du bouton",
+            "default": "btn-primary",
+            "options": [
+                { "group": "Normal", "value": "btn-link", "label": "Lien" },
+                { "group": "Normal", "value": "btn-light", "label": "Claire" },
+                { "group": "Normal", "value": "btn-dark", "label": "Sombre" },
+                { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
+                { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
+                { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
+                { "group": "Normal", "value": "btn-success", "label": "Succès" },
+                { "group": "Normal", "value": "btn-danger", "label": "Danger" },
+                { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
+                { "group": "Normal", "value": "btn-info", "label": "Info" },
+                { "group": "Contour", "value": "btn-outline-light", "label": "Contour Claire" },
+                { "group": "Contour", "value": "btn-outline-dark", "label": "Contour Sombre" },
+                { "group": "Contour", "value": "btn-outline-primary", "label": "Contour Primaire" },
+                { "group": "Contour", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
+                { "group": "Contour", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
+                { "group": "Contour", "value": "btn-outline-success", "label": "Contour Succès" },
+                { "group": "Contour", "value": "btn-outline-danger", "label": "Contour Danger" },
+                { "group": "Contour", "value": "btn-outline-warning", "label": "Contour Avertissement" },
+                { "group": "Contour", "value": "btn-outline-info", "label": "Contour Info" }
+            ]
+        },
+        {
+            "type": "richtext",
+            "id": "notice",
+            "label": "Notice",
+            "default": "<p>En vous inscrivant pour recevoir des courriels, vous acceptez nos conditions général de vente et notre politique de confidentialité</p>"
+        },
+        {
+            "type": "header",
+            "content": "Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+        },
+        {
+            "type": "select",
+            "id": "img_orientation",
+            "label": "Image orientation",
+            "default": "landscape",
+            "options": [
+                { "value": "square", "label": "Carré" },
+                { "value": "landscape", "label": "Paysage" },
+                { "value": "potrait", "label": "Portrait" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "img_crop",
+            "label": "Recadrage de l'image",
+            "default": "center",
+            "options": [
+                { "value": "top", "label": "Haut" },
+                { "value": "center", "label": "Centre" },
+                { "value": "bottom", "label": "Bas" },
+                { "value": "left", "label": "Gauche" },
+                { "value": "right", "label": "Droite" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "img_thumbnail",
+            "label": "Bordure de l'image",
+            "default": "img-thumbnail",
+            "options": [
+                { "value": "", "label": "Aucune" },
+                { "value": "img-thumbnail", "label": "Bordure" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "border_color",
+            "label": "Couleur de la bordure",
+            "options": [
+                { "value": "", "label": "Default" },
+                { "value": "border-primary", "label": "Primaire" },
+                { "value": "border-secondary", "label": "Secondaire" },
+                { "value": "border-tertiary", "label": "Tertiaire" },
+                { "value": "border-dark", "label": "Sombre" },
+                { "value": "border-success", "label": "Succès" },
+                { "value": "border-warning", "label": "Avertissement" },
+                { "value": "border-danger", "label": "Danger" },
+                { "value": "border-info", "label": "Info" }
+            ],
+            "default": ""
+        },
+        {
+            "type": "select",
+            "id": "shadow_sp",
+            "label": "Ombre",
+            "options": [
+                { "value": "shadow-none", "label": "Aucune" },
+                { "value": "shadow-1", "label": "Ombre légère" },
+                { "value": "shadow-2", "label": "Ombre partiel" },
+                { "value": "shadow-3", "label": "Ombre profonde" },
+                { "value": "shadow-4", "label": "Ombre totale" }
+            ],
+            "default": "shadow-1"
+        },
+        {
+            "type": "select",
+            "id": "img_align_desktop",
+            "label": "Alignement de l'image (bureau)",
+            "default": "flex-lg-row",
+            "options": [
+                { "value": "flex-lg-row", "label": "Gauche" },
+                { "value": "flex-lg-row-reverse", "label": "Droite" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "Espacement de la section"
+        },
+        {
+            "type": "range",
+            "id": "pt",
+            "label": "Padding supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "pb",
+            "label": "Padding inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mt",
+            "label": "Marge supérieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "mb",
+            "label": "Marge inférieure",
+            "min": 0,
+            "max": 20,
+            "step": 1,
+            "default": 0
+        }
+    ],
+    "presets": [
+        {
+            "name": "🏆 Newsletter Popup",
+            "category": "Promotional"
+        }
+    ]
+}
+{% endschema %}

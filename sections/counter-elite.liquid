@@ -1,0 +1,1119 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid 
+    assign pt = section.settings.pt | prepend: 'pt-'
+    assign pb = section.settings.pb | prepend: 'pb-'
+    assign mt = section.settings.mt | prepend: 'mt-'
+    assign mb = section.settings.mb | prepend: 'mb-'
+
+    assign bg_color = section.settings.bg_color
+
+    if section.settings.bg_gradient
+        assign bg_color = bg_color | append: ' bg-gradient'
+    endif
+%}
+  
+<section id="counter-elite-{{ section.id }}" 
+         class="counter-elite enter-view {{ bg_color }} {{ pt }} {{ pb }} {{ mt }} {{ mb }}">
+  <div
+    class="countdown-banner-{{ section.id }}-wrapper container mx-auto"
+    style="max-width: {{ section.settings.max_width }}px;">
+
+    <div
+      class="countdown-banner-{{ section.id }}">
+      
+      <div class="countdown-banner-content">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'text' %}
+              <div class="countdown-banner-text-{{ section.id }}-{{ block.id }} {{ block.settings.text_align }}" {{ block.shopify_attributes }}>
+                {% unless block.settings.subtitle_img == blank %}
+                    <div 
+                        class="animate__animated animate__faster opacity-0"
+                        {% if settings.effect_apply_caption_enable %}
+                          data-animate-class="{{ settings.animation_caption_name }}"
+                          style="animation-delay: 1200ms;"
+                        {% endif %}>
+                            <img
+                                class="img-fluid mb-5"
+                                src="{{ block.settings.subtitle_img.src | image_url: width: block.settings.brand_image_size }}"
+                                alt="{{ block.settings.subtitle_img.alt | escape }}"
+                                width="{{ block.settings.brand_image_size }}"
+                                height="auto"
+                                loading="lazy">
+                        </div>
+                {% endunless %}
+                {% unless block.settings.subtitle == blank %}
+                    <div 
+                        class="animate__animated animate__faster opacity-0"
+                        {% if settings.effect_apply_caption_enable %}
+                          data-animate-class="{{ settings.animation_caption_name }}"
+                          style="animation-delay: 1000ms;"
+                        {% endif %}>
+                            <p class="subtitle text-uppercase fw-500 mb-3 {{ block.settings.subtitle_size }}"
+                                style="color:{{ block.settings.color_caption }};">
+                                {{ block.settings.subtitle }}
+                            </p>
+                    </div>
+                {% endunless %} 
+                {% unless block.settings.title == blank %}
+                    <{{ block.settings.heading_tag }} class="title mb-4 {{ block.settings.title_size }} animate__animated animate__faster opacity-0"
+                      {% if settings.effect_apply_title_enable %}
+                        data-animate-class="{{ settings.animation_title_name }}"
+                        style="animation-delay: 200ms;"
+                      {% endif %}
+                    >
+                        {{ block.settings.title }}
+                        {% if settings.custom_svg_h2 != blank %}
+                          <div class="h2_svg animate__animated animate__faster opacity-0"
+                              {% if settings.effect_apply_svg_enable %} 
+                                data-animate-class="{{ settings.animation_svg_name }}"
+                                style="animation-delay: 400ms;"
+                              {% endif %}
+                          >
+                            <span style="fill:{{ block.settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {{ settings.custom_svg_h2 }}</span>
+                          </div>
+                        {% else %}
+                          {% if settings.svg_h2 != 'none' %}
+                            <div class="h2_svg mb-4 animate__animated animate__faster opacity-0"
+                                  {% if settings.effect_apply_svg_enable %} 
+                                    data-animate-class="{{ settings.animation_svg_name }}"
+                                    style="animation-delay: 400ms;"
+                                  {% endif %}>
+                              <span style="fill:{{ block.settings.color_svg_h2 }}; width:{{ settings.width_svg_h2 }}rem;"> {% render 'svg-subtitle', svg_h2: settings.svg_h2 %}</span>
+                            </div>
+                          {% endif %}
+                        {% endif %}
+                    </{{ block.settings.heading_tag }}>
+                {% endunless %}
+                {% unless block.settings.description == blank %}
+                    <div class="description rte text-muted mt-n2 {{ block.settings.description_size }} animate__animated animate__faster opacity-0"
+                         {% if settings.effect_apply_description_enable %} 
+                            data-animate-class="{{ settings.animation_description_name }}"
+                            style="animation-delay: 600ms;"
+                         {% endif %}
+                    >
+                        {{ block.settings.description }}
+                    </div>
+                {% endunless %}
+              </div>
+            {% when 'timer' %}
+              <style>
+                .timer-countdown-{{ section.id }}-{{ block.id }} {
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  flex-grow: 1;
+                  /*margin-top: 16px;*/
+                  /*margin-bottom: 16px;*/
+                  align-items: stretch;
+                }
+                .timer-countdown-{{ section.id }}-{{ block.id }} .time-block {
+                  position: relative;
+                  border-radius: 12px;
+                  /*padding: 20px;*/
+                  padding: 0 1rem;
+                }
+                .timer-countdown-{{ section.id }}-{{ block.id }} .time-block__num,
+                .timer-countdown-{{ section.id }}-{{ block.id }} .time-block__unit {
+                  display: block;
+                  text-align: center;
+                }
+                .timer-countdown-{{ section.id }}-{{ block.id }} .time-block__num {
+                  font-size: 25px;
+                  line-height: 1.2;
+                  font-weight: 700;
+                  margin-bottom: 4px;
+                }
+                .timer-countdown-{{ section.id }}-{{ block.id }} .time-block__unit {
+                  text-transform: uppercase;
+                  margin-top: 6px;
+                  font-size: 10px;
+                }
+                @media (min-width: 750px) {
+                  .timer-countdown-{{ section.id }}-{{ block.id }} .time-block__unit {
+                    font-size: 12px;
+                  }
+                }
+                .timer-countdown-{{ section.id }}-{{ block.id }} .time-divier {
+                  position: relative;
+                  width: 1px;
+                  min-height: 100%;
+                  background-color: var(--color);
+                }
+              </style>
+
+              <div
+                class="timer-countdown-{{ section.id }}-{{ block.id }}"{{ block.shopify_attributes }}
+                style="color: {{ block.settings.color }}; --color: {{ block.settings.color }};"
+              >
+                <div class="time-block">
+                  <span class="time-block__num js-timer-days">00</span>
+                  <span class="time-block__unit">Jours</span>
+                </div>
+                {% comment %} <span class="time-colon">:</span> {% endcomment %}
+                <span class="time-divier"></span>
+                <div class="time-block">
+                  <span class="time-block__num js-timer-hours">00</span>
+                  <span class="time-block__unit">Heures</span>
+                </div>
+                {% comment %} <span class="time-colon">:</span> {% endcomment %}
+                <span class="time-divier"></span>
+                <div class="time-block">
+                  <span class="time-block__num js-timer-minutes">00</span>
+                  <span class="time-block__unit">Minutes</span>
+                </div>
+                {% comment %} <span class="time-colon">:</span> {% endcomment %}
+                <span class="time-divier"></span>
+                <div class="time-block">
+                  <span class="time-block__num js-timer-seconds">00</span>
+                  <span class="time-block__unit">Secondes</span>
+                </div>
+              </div>
+
+              <style>
+                .timer-countdown-completed-text-{{ section.id }}-{{ block.id }} {
+                  display: none;
+                }
+              </style>
+              <div
+                class="timer-countdown-completed-text-{{ section.id }}-{{ block.id }}"
+              >
+                {{ block.settings.timer_completed_text }}
+              </div>
+
+              <script type="text/javascript">
+                (function () {
+
+                  function startTimer() {
+                    const second = 1000,
+                      minute = second * 60,
+                      hour = minute * 60,
+                      day = hour * 24,
+                      wrapper = document.querySelector(
+                        '.timer-countdown-{{ section.id }}-{{ block.id }}'
+                      ),
+                      countDown = new Date('{{ block.settings.year }}-{{ block.settings.month }}-{{ block.settings.day }}T{{ block.settings.hour }}:{{ block.settings.minute }}:00Z').getTime();
+
+                    console.log('start timer, end date:' + countDown)
+                    const interval = setInterval(function () {
+                      let now = new Date().getTime(),
+                        distance = countDown - now,
+                        days = Math.floor(distance / day),
+                        hours = Math.floor((distance % day) / hour),
+                        minutes = Math.floor((distance % hour) / minute),
+                        seconds = Math.floor((distance % minute) / second);
+
+                      (wrapper.querySelector('.js-timer-days').innerText = (
+                        days
+                      )),
+                        (wrapper.querySelector('.js-timer-hours').innerText = (
+                          hours
+                        )),
+                        (wrapper.querySelector('.js-timer-minutes').innerText = (
+                          minutes
+                        )),
+                        (wrapper.querySelector('.js-timer-seconds').innerText = (
+                          seconds
+                        ));
+
+                      if (distance < 0) {
+                        wrapper.querySelector('.js-timer-days').innerText = '00';
+                        wrapper.querySelector('.js-timer-hours').innerText = '00';
+                        wrapper.querySelector('.js-timer-minutes').innerText = '00';
+                        wrapper.querySelector('.js-timer-seconds').innerText = '00';
+                        {% if block.settings.hide_timer_on_completed %}
+                          wrapper.style.display = 'none';
+                        {% endif %}
+                        document.querySelector(
+                          '.timer-countdown-completed-text-{{ section.id }}-{{ block.id }}'
+                        ).style.display = 'block';
+
+                        clearInterval(interval);
+                      }
+
+                    }, second);
+                    document.addEventListener('shopify:section:unload', function (event) {
+                      if (event.detail.sectionId === '{{ section.id }}') clearInterval(interval);
+                    });
+                  }
+                  startTimer()
+                  if (window.Shopify && Shopify.designMode) {
+                    document.addEventListener('shopify:section:load', function (event) {
+                      if (event.detail.sectionId === '{{ section.id }}') {
+                        startTimer();
+                      }
+                    });
+                  }
+                })();
+              </script>
+            {% else %}
+
+          {% endcase %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "🏆 Compteur Elite",
+  "settings": [
+    {
+      "type": "header",
+      "content": "🏆 Application Compteur Elite",
+      "info": "👉 Version de l'application Shopiweb Premium"
+    },
+    {
+        "type": "paragraph", 
+        "content": "Documentation FR : [Compteur Elite by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/sections\/compteur-elite)"
+    },
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+        "type": "select",
+        "id": "bg_color",
+        "label": "Couleur de l'arrière plan",
+        "default": "bg-body text-body",
+        "options": [
+            { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
+            { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
+            { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
+            { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
+            { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
+            { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Sombre" },
+            { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" },
+            { "group": "Alerte", "value": "bg-success text-white", "label": "Succès" },
+            { "group": "Alerte", "value": "bg-warning text-dark", "label": "Avertissement" },
+            { "group": "Alerte", "value": "bg-danger text-white", "label": "Danger" },
+            { "group": "Alerte", "value": "bg-info text-white", "label": "Info" }
+        ]
+    },
+    {
+        "type": "checkbox",
+        "id": "bg_gradient",
+        "label": "Dégradé d'arrière-plan",
+        "default": false,
+        "info": "Ne s'applique pas aux couleurs claires"
+    },
+    {
+        "type": "text",
+        "id": "max_width",
+        "label": "Largeur maximale (px)",
+        "info": "Ajuster la largeur du conteneur (en pixels)",
+        "default": "991"
+    },
+    {
+        "type": "header",
+        "content": "Espacement de la section"
+    },
+    {
+        "type": "range",
+        "id": "pt",
+        "label": "Padding supérieure",
+        "min": 0,
+        "max": 20,
+        "step": 1,
+        "default": 0
+    },
+    {
+        "type": "range",
+        "id": "pb",
+        "label": "Padding inférieure",
+        "min": 0,
+        "max": 20,
+        "step": 1,
+        "default": 0
+    },
+    {
+        "type": "range",
+        "id": "mt",
+        "label": "Marge supérieure",
+        "min": 0,
+        "max": 20,
+        "step": 1,
+        "default": 0
+    },
+    {
+        "type": "range",
+        "id": "mb",
+        "label": "Marge inférieure",
+        "min": 0,
+        "max": 20,
+        "step": 1,
+        "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Texte",
+      "limit": 1,
+      "settings": [
+        {
+            "type": "header",
+            "content": "Texte"
+        },
+        {
+            "type": "select",
+            "id": "text_align",
+            "label": "Alignement du texte",
+            "default": "text-center",
+            "options": [
+                { "value": "text-start", "label": "Gauche" },
+                { "value": "text-center", "label": "Centre" }
+            ]
+        },
+        {
+            "type": "image_picker",
+            "id": "subtitle_img",
+            "label": "Légende Image"
+        },
+        {
+            "type": "text",
+            "id": "brand_image_size",
+            "label": "Image Largeur/Hauteur (px)",
+            "default": "60"
+        },
+        {
+            "type": "text",
+            "id": "subtitle",
+            "label": "Légende Texte"
+        },
+        {
+            "type": "select",
+            "id": "subtitle_size",
+            "label": "Taille de la légende",
+            "default": "fs-5",
+            "options": [
+                { "group": "Légende Standard", "value": "fs-1", "label": "Extra Grand" },
+                { "group": "Légende Standard", "value": "fs-2", "label": "Super Grand" },
+                { "group": "Légende Standard", "value": "fs-3", "label": "Très Grand" },
+                { "group": "Légende Standard", "value": "fs-4", "label": "Grand" },
+                { "group": "Légende Standard", "value": "fs-5", "label": "Moyen" },
+                { "group": "Légende Standard", "value": "fs-6", "label": "Petit" } 
+            ]
+        },
+        {
+            "type": "color",
+            "id": "color_caption",
+            "label": "Couleur de la légende",
+            "default": "#6c757d"
+        },
+        {
+            "type": "inline_richtext",
+            "id": "title",
+            "label": "Titre",
+            "default": "Texte du compteur"
+        },
+        {
+            "type": "select",
+            "id": "heading_tag",
+            "label": "Balise titre (SEO)",
+            "default": "h2",
+            "options": [
+                { "value": "h1", "label": "h1" },
+                { "value": "h2", "label": "h2" },
+                { "value": "h3", "label": "h3" },
+                { "value": "h4", "label": "h4" },
+                { "value": "h5", "label": "h5" },
+                { "value": "h6", "label": "h6" },
+                { "value": "span", "label": "Aucune" }
+            ]
+        },
+        {
+            "type": "select",
+            "id": "title_size",
+            "label": "Taille du titre",
+            "default": "h2",
+            "options": [
+                { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
+                { "group": "Titre Standard", "value": "h2", "label": "Grand" },
+                { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
+                { "group": "Titre Standard", "value": "h4", "label": "Petit" },
+                { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "🏆 Application SVG Sous-titre",
+            "info": "👉 Application Version Shopiweb Premium"
+        },
+        {
+            "type": "color",
+            "id": "color_svg_h2",
+            "label": "Couleur du SVG",
+            "default": "#fff"
+        },
+        {
+            "type": "richtext",
+            "id": "description",
+            "label": "Description (facultatif)",
+            "default": "<p>Ajouter une description facultative à cette section</p>"
+        },
+        {
+            "type": "select",
+            "id": "description_size",
+            "label": "Taille de description",
+            "default": "fs-5",
+            "options": [
+                { "group": "Description Standard", "value": "fs-1", "label": "Extra Grand" },
+                { "group": "Description Standard", "value": "fs-2", "label": "Super Grand" },
+                { "group": "Description Standard", "value": "fs-3", "label": "Très Grand" },
+                { "group": "Description Standard", "value": "fs-4", "label": "Grand" },
+                { "group": "Description Standard", "value": "fs-5", "label": "Moyen" },
+                { "group": "Description Standard", "value": "fs-6", "label": "Petit" } 
+            ]
+        }
+      ]
+    },
+    {
+      "type": "timer",
+      "name": "Minuterie",
+      "limit": 1,
+      "settings": [
+        {
+            "type": "header",
+            "content": "🏆 Bloc Compteur",
+            "info": "👉 Bloc Version Shopiweb Premium"
+        },
+        {
+          "type": "select",
+          "id": "year",
+          "label": "Année",
+          "default": "2024",
+          "options": [
+            {
+              "value": "2022",
+              "label": "2022"
+            },
+            {
+              "value": "2023",
+              "label": "2023"
+            },
+            {
+              "value": "2024",
+              "label": "2024"
+            },
+            {
+              "value": "2025",
+              "label": "2025"
+            },
+            {
+              "value": "2026",
+              "label": "2026"
+            },
+            {
+              "value": "2027",
+              "label": "2027"
+            },
+            {
+              "value": "2028",
+              "label": "2028"
+            },
+            {
+              "value": "2029",
+              "label": "2029"
+            },
+            {
+              "value": "2030",
+              "label": "2030"
+            },
+            {
+              "value": "2031",
+              "label": "2031"
+            },
+            {
+              "value": "2032",
+              "label": "2032"
+            },
+            {
+              "value": "2033",
+              "label": "2033"
+            },
+            {
+              "value": "2034",
+              "label": "2034"
+            },
+            {
+              "value": "2035",
+              "label": "2035"
+            },
+            {
+              "value": "2036",
+              "label": "2036"
+            },
+            {
+              "value": "2037",
+              "label": "2037"
+            },
+            {
+              "value": "2038",
+              "label": "2038"
+            },
+            {
+              "value": "2039",
+              "label": "2039"
+            },
+            {
+              "value": "2040",
+              "label": "2040"
+            },
+            {
+              "value": "2041",
+              "label": "2041"
+            },
+            {
+              "value": "2042",
+              "label": "2042"
+            },
+            {
+              "value": "2043",
+              "label": "2043"
+            },
+            {
+              "value": "2044",
+              "label": "2044"
+            },
+            {
+              "value": "2045",
+              "label": "2045"
+            },
+            {
+              "value": "2046",
+              "label": "2046"
+            },
+            {
+              "value": "2047",
+              "label": "2047"
+            },
+            {
+              "value": "2048",
+              "label": "2048"
+            },
+            {
+              "value": "2049",
+              "label": "2049"
+            },
+            {
+              "value": "2050",
+              "label": "2050"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "month",
+          "label": "Mois",
+          "default": "01",
+          "options": [
+            {
+              "value": "01",
+              "label": "Janvier"
+            },
+            {
+              "value": "02",
+              "label": "Février"
+            },
+            {
+              "value": "03",
+              "label": "Mars"
+            },
+            {
+              "value": "04",
+              "label": "Avril"
+            },
+            {
+              "value": "05",
+              "label": "Mai"
+            },
+            {
+              "value": "06",
+              "label": "Juin"
+            },
+            {
+              "value": "07",
+              "label": "Juillet"
+            },
+            {
+              "value": "08",
+              "label": "Août"
+            },
+            {
+              "value": "09",
+              "label": "Septembre"
+            },
+            {
+              "value": "10",
+              "label": "Octobre"
+            },
+            {
+              "value": "11",
+              "label": "Novembre"
+            },
+            {
+              "value": "12",
+              "label": "Décembre"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "day",
+          "label": "Jour",
+          "default": "01",
+          "options": [
+            {
+              "value": "01",
+              "label": "01"
+            },
+            {
+              "value": "02",
+              "label": "02"
+            },
+            {
+              "value": "03",
+              "label": "03"
+            },
+            {
+              "value": "04",
+              "label": "04"
+            },
+            {
+              "value": "05",
+              "label": "05"
+            },
+            {
+              "value": "06",
+              "label": "06"
+            },
+            {
+              "value": "07",
+              "label": "07"
+            },
+            {
+              "value": "08",
+              "label": "08"
+            },
+            {
+              "value": "09",
+              "label": "09"
+            },
+            {
+              "value": "10",
+              "label": "10"
+            },
+            {
+              "value": "11",
+              "label": "11"
+            },
+            {
+              "value": "12",
+              "label": "12"
+            },
+            {
+              "value": "13",
+              "label": "13"
+            },
+            {
+              "value": "14",
+              "label": "14"
+            },
+            {
+              "value": "15",
+              "label": "15"
+            },
+            {
+              "value": "16",
+              "label": "16"
+            },
+            {
+              "value": "17",
+              "label": "17"
+            },
+            {
+              "value": "18",
+              "label": "18"
+            },
+            {
+              "value": "19",
+              "label": "19"
+            },
+            {
+              "value": "20",
+              "label": "20"
+            },
+            {
+              "value": "21",
+              "label": "21"
+            },
+            {
+              "value": "22",
+              "label": "22"
+            },
+            {
+              "value": "23",
+              "label": "23"
+            },
+            {
+              "value": "24",
+              "label": "24"
+            },
+            {
+              "value": "25",
+              "label": "25"
+            },
+            {
+              "value": "26",
+              "label": "26"
+            },
+            {
+              "value": "27",
+              "label": "27"
+            },
+            {
+              "value": "28",
+              "label": "28"
+            },
+            {
+              "value": "29",
+              "label": "29"
+            },
+            {
+              "value": "30",
+              "label": "30"
+            },
+            {
+              "value": "31",
+              "label": "31"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "hour",
+          "label": "Heure",
+          "default": "00",
+          "options": [
+            { "value": "00", "label": "12 AM" },
+            { "value": "01", "label": "01 AM" },
+            { "value": "02", "label": "02 AM" },
+            { "value": "03", "label": "03 AM" },
+            { "value": "04", "label": "04 AM" },
+            { "value": "05", "label": "05 AM" },
+            { "value": "06", "label": "06 AM" },
+            { "value": "07", "label": "07 AM" },
+            { "value": "08", "label": "08 AM" },
+            { "value": "09", "label": "09 AM" },
+            { "value": "10", "label": "10 AM" },
+            { "value": "11", "label": "11 AM" },
+            { "value": "12", "label": "12 PM" },
+            { "value": "13", "label": "01 PM" },
+            { "value": "14", "label": "02 PM" },
+            { "value": "15", "label": "03 PM" },
+            { "value": "16", "label": "04 PM" },
+            { "value": "17", "label": "05 PM" },
+            { "value": "18", "label": "06 PM" },
+            { "value": "19", "label": "07 PM" },
+            { "value": "20", "label": "08 PM" },
+            { "value": "21", "label": "09 PM" },
+            { "value": "22", "label": "10 PM" },
+            { "value": "23", "label": "11 PM" }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "minute",
+          "label": "Minute",
+          "default": "00",
+          "options": [
+            {
+              "value": "00",
+              "label": "00"
+            },
+            {
+              "value": "01",
+              "label": "01"
+            },
+            {
+              "value": "02",
+              "label": "02"
+            },
+            {
+              "value": "03",
+              "label": "03"
+            },
+            {
+              "value": "04",
+              "label": "04"
+            },
+            {
+              "value": "05",
+              "label": "05"
+            },
+            {
+              "value": "06",
+              "label": "06"
+            },
+            {
+              "value": "07",
+              "label": "07"
+            },
+            {
+              "value": "08",
+              "label": "08"
+            },
+            {
+              "value": "09",
+              "label": "09"
+            },
+            {
+              "value": "10",
+              "label": "10"
+            },
+            {
+              "value": "11",
+              "label": "11"
+            },
+            {
+              "value": "12",
+              "label": "12"
+            },
+            {
+              "value": "13",
+              "label": "13"
+            },
+            {
+              "value": "14",
+              "label": "14"
+            },
+            {
+              "value": "15",
+              "label": "15"
+            },
+            {
+              "value": "16",
+              "label": "16"
+            },
+            {
+              "value": "17",
+              "label": "17"
+            },
+            {
+              "value": "18",
+              "label": "18"
+            },
+            {
+              "value": "19",
+              "label": "19"
+            },
+            {
+              "value": "20",
+              "label": "20"
+            },
+            {
+              "value": "21",
+              "label": "21"
+            },
+            {
+              "value": "22",
+              "label": "22"
+            },
+            {
+              "value": "23",
+              "label": "23"
+            },
+            {
+              "value": "24",
+              "label": "24"
+            },
+            {
+              "value": "25",
+              "label": "25"
+            },
+            {
+              "value": "26",
+              "label": "26"
+            },
+            {
+              "value": "27",
+              "label": "27"
+            },
+            {
+              "value": "28",
+              "label": "28"
+            },
+            {
+              "value": "29",
+              "label": "29"
+            },
+            {
+              "value": "30",
+              "label": "30"
+            },
+            {
+              "value": "31",
+              "label": "31"
+            },
+            {
+              "value": "32",
+              "label": "32"
+            },
+            {
+              "value": "33",
+              "label": "33"
+            },
+            {
+              "value": "34",
+              "label": "34"
+            },
+            {
+              "value": "35",
+              "label": "35"
+            },
+            {
+              "value": "36",
+              "label": "36"
+            },
+            {
+              "value": "37",
+              "label": "37"
+            },
+            {
+              "value": "38",
+              "label": "38"
+            },
+            {
+              "value": "39",
+              "label": "39"
+            },
+            {
+              "value": "40",
+              "label": "40"
+            },
+            {
+              "value": "41",
+              "label": "41"
+            },
+            {
+              "value": "42",
+              "label": "42"
+            },
+            {
+              "value": "43",
+              "label": "43"
+            },
+            {
+              "value": "44",
+              "label": "44"
+            },
+            {
+              "value": "45",
+              "label": "45"
+            },
+            {
+              "value": "46",
+              "label": "46"
+            },
+            {
+              "value": "47",
+              "label": "47"
+            },
+            {
+              "value": "48",
+              "label": "48"
+            },
+            {
+              "value": "49",
+              "label": "49"
+            },
+            {
+              "value": "50",
+              "label": "50"
+            },
+            {
+              "value": "51",
+              "label": "51"
+            },
+            {
+              "value": "52",
+              "label": "52"
+            },
+            {
+              "value": "53",
+              "label": "53"
+            },
+            {
+              "value": "54",
+              "label": "54"
+            },
+            {
+              "value": "55",
+              "label": "55"
+            },
+            {
+              "value": "56",
+              "label": "56"
+            },
+            {
+              "value": "57",
+              "label": "57"
+            },
+            {
+              "value": "58",
+              "label": "58"
+            },
+            {
+              "value": "59",
+              "label": "59"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "hide_timer_on_completed",
+          "label": "Cacher le compteur une fois terminé",
+          "default": false
+        },
+        {
+          "type": "richtext",
+          "id": "timer_completed_text",
+          "label": "Texte de fin du compteur",
+          "default": "<p>Le compte à rebours est terminé !</p>"
+        },
+        {
+          "type": "color",
+          "id": "color",
+          "label": "Couleur",
+          "default": "#FFFFFF"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "category": "Promotional",
+      "name": "🏆 Compteur Elite",
+      "blocks": [
+        {
+          "type": "text"
+        },
+        {
+          "type": "timer"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

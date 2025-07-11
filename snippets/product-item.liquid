@@ -1,0 +1,117 @@
+{% liquid
+    case section.settings.product_img_orientation
+        when 'square'
+            assign img_width  = 600
+            assign img_height = 600
+        when 'landscape'
+            assign img_width  = 600
+            assign img_height = 480
+        when 'potrait'
+            assign img_width  = 480
+            assign img_height = 600
+    endcase
+
+    assign btn_shadow_sp = settings.btn_shadow_sp
+%}
+
+<li class="product-item splide__slide p-3 p-lg-4 mb-5 {% unless section.settings.product_card_style == 'card' %}mb-4{% endunless %}">
+    <div class="{% if section.settings.product_card_style == 'card' %}card {{ section.settings.product_shadow_sp }} {{ section.settings.product_border_color }}{% endif %}">
+        <a  
+            class="product-link position-relative d-block link-dark" 
+            href="{{ product.url | within: collection }}">
+            {% unless product.metafields.shopiweb.custom_badge == blank %}
+                <span 
+                    class="img-badge-custom badge" 
+                    style="background: {{ product.metafields.shopiweb.custom_badge | split: ':' | last }};">
+                    {{ product.metafields.shopiweb.custom_badge | split: ':' | first }}
+                </span>
+            {% endunless %}  
+            {% if section.settings.product_show_sale_badge and product.available and product.compare_at_price > product.price %}
+              <div class="badge-ribbon">
+                <span class="badge-ribbon-sale {{ section.settings.product_sale_badge_color }}">
+                    <svg class="icon icon--price_tag me-2" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" focusable="false" role="presentation"><path fill="currentColor" d="M7.59 1.34a1 1 0 01.7-.29h5.66a1 1 0 011 1v5.66a1 1 0 01-.3.7L7.6 15.5a1 1 0 01-1.42 0L.52 9.83a1 1 0 010-1.42l7.07-7.07zm6.36 6.37l-7.07 7.07-5.66-5.66L8.3 2.05h5.66v5.66z" fill-rule="evenodd"></path>
+                      <path fill="currentColor" d="M9.7 6.3a1 1 0 101.42-1.42 1 1 0 00-1.41 1.41zM9 7a2 2 0 102.83-2.83A2 2 0 009 7z" fill-rule="evenodd"></path></svg>
+                    -{{ product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price | round | append: '%' }}
+                </span>
+              </div>
+            {% endif %}
+            {% unless product.available %}
+                <span class="img-badge-sold-out badge">
+                    {{ 'product.sold_out' | t }}
+                </span>        
+            {% endunless %}
+            {% if section.settings.product_img_mode == 'gallery' %}
+                <div 
+                    id="product-carousel-{{ section.id }}-{{ product.id }}" 
+                    class="product-carousel carousel slide mb-4" 
+                    data-bs-interval="false"
+                    data-bs-touch="false">
+                    <div class="carousel-inner {% unless section.settings.product_card_style == 'card' %} {{ section.settings.product_shadow_sp }} {% endunless %}">
+                        {% for image in product.images limit: 5 %}
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <img
+                                    class="product-item-img img-fluid rounded {{ section.settings.product_img_thumbnail }} {{ section.settings.product_shadow_sp }} {{ section.settings.product_border_color }}"
+                                    src="{{ image.src | image_url: width: img_width, height: img_height, crop: 'center' }}"
+                                    alt="{{ image.alt | escape }}"
+                                    width="{{ img_width }}"
+                                    height="{{ img_height }}"
+                                    loading="lazy">
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% if product.images.size > 1 %}
+                        <div class="carousel-controls">
+                            <button 
+                                class="carousel-control carousel-control-prev" 
+                                type="button" 
+                                data-bs-target="#product-carousel-{{ section.id }}-{{ product.id }}" 
+                                data-bs-slide="prev" 
+                                aria-label="{{ 'general.accessibility.previous' | t }}">
+                                <span class="carousel-control-icon carousel-control-prev-icon"></span>
+                            </button>
+                            <button 
+                                class="carousel-control carousel-control-next" 
+                                type="button" 
+                                data-bs-target="#product-carousel-{{ section.id }}-{{ product.id }}" 
+                                data-bs-slide="next" 
+                                aria-label="{{ 'general.accessibility.next' | t }}">
+                                <span class="carousel-control-icon carousel-control-next-icon"></span>
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            {% elsif section.settings.product_img_mode == 'hover' %}
+                <img 
+                    class="product-item-img img-fluid mb-4 rounded {% unless section.settings.product_card_style == 'card' %} {{ section.settings.product_img_thumbnail }} {{ section.settings.product_shadow_sp }} {{ section.settings.product_border_color }}{% endunless %}"
+                    src="{{ product.featured_image.src | image_url: width: img_width, height: img_height, crop: 'center' }}" 
+                    alt="{{ product.featured_image.alt | escape }}"
+                    width="{{ img_width }}"
+                    height="{{ img_height }}"
+                    loading="lazy">
+                {% if product.images.size > 1 %}
+                    <img 
+                        class="product-item-img product-item-img-hover img-fluid mb-4 rounded {{ section.settings.product_img_thumbnail }} {% unless section.settings.product_card_style == 'card' %} {{ section.settings.product_shadow_sp }} {{ section.settings.product_border_color }}{% endunless %}"
+                        src="{{ product.images[1].src | image_url: width: img_width, height: img_height, crop: 'center' }}" 
+                        alt="{{ product.images[1].alt | escape }}"
+                        width="{{ img_width }}"
+                        height="{{ img_height }}"
+                        loading="lazy">
+                {% endif %}
+            {% else %}
+                <img 
+                    class="product-item-img img-fluid mb-4 rounded {{ section.settings.product_img_thumbnail }} {% unless section.settings.product_card_style == 'card' %} {{ section.settings.product_shadow_sp }} {{ section.settings.product_border_color }}{% endunless %}"
+                    src="{{ product.featured_image.src | image_url: width: img_width, height: img_height, crop: 'center' }}" 
+                    alt="{{ product.featured_image.alt | escape }}"
+                    width="{{ img_width }}"
+                    height="{{ img_height }}"
+                    loading="lazy">
+            {% endif %}
+            <h3 class="product-item-title mb-2 {{ section.settings.product_title_size }} {{ section.settings.product_title_truncate }}">
+                {{ product.title }}
+            </h3>
+        </a>
+        <div class="{% if section.settings.product_card_style == 'card' %}card-body{% endif %}">
+            {% render 'product-rating-badge', product: product %}
+        </div>
+    </div>
+</li>

@@ -1,0 +1,209 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2019/2024 Theme Shopiweb Premium. Tous droits réservés.
+La copie, la modification, la distribution ou l'utilisation
+non autorisée de ce code ou de toute partie de celui-ci est formellement interdite.
+Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
+---------------------------------------------------------
+{% endcomment %}
+
+{% liquid
+    case settings.offcanvas_img_orientation
+        when 'square'
+            assign img_width  = 600
+            assign img_height = 600
+        when 'landscape'
+            assign img_width  = 600
+            assign img_height = 480
+        when 'potrait'
+            assign img_width  = 480
+            assign img_height = 600
+    endcase
+%}
+
+{% if predictive_search.performed %}
+    <div id="search-predictive-results" class="my-6">
+        {% if predictive_search.resources.products.size > 0 %}
+            <h3 
+                id="search-predictive-products" 
+                class="search-predictive-results-title h6 mb-4">
+                {{ 'general.offcanvas_search.title_products' | t }}
+            </h3>
+            <ul 
+                id="search-predictive-results-product-listing" 
+                class="product-listing list-unstyled mb-5"
+                aria-labelledby="search-predictive-products">
+                {% for product in predictive_search.resources.products %}
+                    <li class="product-item py-3">
+                        <div class="row align-items-center mx-n3">
+                            <div class="col-4 px-3">
+                                <a href="{{ product.url }}" class="">
+                                    <img 
+                                        class="product-item-img img-fluid me-3 rounded {{ settings.offcanvas_img_thumbnail }} {{ settings.offcanvas_shadow_sp }} {{ settings.offcanvas_border_color }}"
+                                        src="{{ product.featured_image | image_url: width: img_width, height: img_height, crop: 'center' }}"
+                                        alt="{{ product.featured_image.alt }}"
+                                        width="{{ img_width }}"
+                                        height="{{ img_height }}"
+                                        loading="lazy">
+                                </a>
+                            </div>
+                            <div class="col-8 px-3">
+                                <h4 class="product-item-title h6 mb-1 {{ settings.search_title_truncate }}">
+                                    <a href="{{ product.url }}" class="link-dark">
+                                        {{ product.title }}
+                                    </a>
+                                </h4>
+                                {% render 'product-rating-badge', product: product %}
+                                <p class="product-item-price small mb-3">
+                                    {% if product.first_available_variant.compare_at_price > product.price %}
+                                        <span class="product-item-price-final me-1">
+                                            <span class="visually-hidden">
+                                                {{ 'product.price_sale' | t }} &nbsp;
+                                            </span>
+                                            {{ product.first_available_variant.price | money }}
+                                        </span>
+                                        <span class="product-item-price-compare text-muted">
+                                            <span class="visually-hidden">
+                                                {{ 'product.price_regular' | t }} &nbsp;
+                                            </span>
+                                            <s>
+                                                {{ product.first_available_variant.compare_at_price | money }}
+                                            </s>
+                                        </span>
+                                    {% else %}
+                                        <span class="product-item-price-final">
+                                            {{ product.first_available_variant.price | money }}
+                                        </span>
+                                    {% endif %}
+                                </p>
+                                {% if settings.search_show_atc_form %}
+                                    <div class="form-wrapper">
+                                        {% form 'product', product, onsubmit: 'handleAddToCartFormSubmit(this, event)' %}
+                                            <div class="d-flex">
+                                            {% if product.has_only_default_variant %}
+                                                <input type="hidden" name="id" value="{{ product.first_available_variant.id }}">
+                                            {% else %}
+                                                <select 
+                                                    class="form-select form-select-sm w-100 me-3" 
+                                                    name="id" 
+                                                    aria-label="{{ 'product.select_variant' | t }}"
+                                                    onchange="handleProductItemVariantChange(this, event)">
+                                                    {% for variant in product.variants %}
+                                                        <option 
+                                                            value="{{ variant.id }}"
+                                                            data-compare-at-price="{{ variant.compare_at_price }}"
+                                                            data-price="{{ variant.price }}"
+                                                            {% if variant.image %}
+                                                                data-variant-image="{{ variant.image | image_url: width: img_width, height: img_height, crop: 'center' }}"
+                                                            {% endif %}
+                                                            >
+                                                            {{ variant.title }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            {% endif %}
+                                            <button
+                                                class="btn-atc btn btn-sm btn-primary px-4 flex-shrink-0" 
+                                                type="submit"
+                                                name="add"
+                                                data-text-add-to-cart="{{ 'product.add' | t }}"
+                                                {% unless product.available %}
+                                                    disabled
+                                                {% endunless %}>
+                                                {% if product.available %}
+                                                    {{ 'product.add' | t }}
+                                                {% else %}
+                                                    {{ 'product.sold_out' | t }}
+                                                {% endif %}
+                                            </button>
+                                            </div>
+                                        {% endform %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% if settings.search_collections and predictive_search.resources.collections.size > 0 %}
+            <h3 
+                id="search-predictive-collections" 
+                class="search-predictive-results-title h6 mb-3">
+                {{ 'general.offcanvas_search.title_collections' | t }}
+            </h3>
+            <ul 
+                id="search-predictive-results-collection-list" 
+                class="collection-list list-unstyled d-flex flex-wrap mx-n2 mb-5"
+                aria-labelledby="search-predictive-collections">
+                {% for collection in predictive_search.resources.collections %}
+                    <li class="collection-item p-2">
+                        <a class="btn btn-secondary" href="{{ collection.url }}">
+                            {{ collection.title }} ({{ collection.products_count }})
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% if settings.search_pages and predictive_search.resources.pages.size > 0 %}
+            <h3 
+                id="search-predictive-pages" 
+                class="search-predictive-results-title h6 mb-3">
+                {{ 'general.offcanvas_search.title_pages' | t }}
+            </h3>
+            <ul 
+                id="search-predictive-results-page-list" 
+                class="page-list list-unstyled d-flex flex-wrap mx-n2 mb-5"
+                aria-labelledby="search-predictive-pages">
+                {% for page in predictive_search.resources.pages %}
+                    <li class="page-item p-2">
+                        <a class="btn btn-outline-secondary" href="{{ page.url }}">
+                            {{ page.title }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% if settings.search_articles and predictive_search.resources.articles.size > 0 %}
+            <h3 
+                id="search-predictive-articles" 
+                class="search-predictive-results-title h6 mb-3">
+                {{ 'general.offcanvas_search.title_articles' | t }}
+            </h3>
+            <ul 
+                id="search-predictive-results-article-list" 
+                class="articles-list list-unstyled d-flex flex-wrap mx-n2 mb-5"
+                aria-labelledby="search-predictive-articles">
+                {% for article in predictive_search.resources.articles %}
+                    <li class="article-item py-2">
+                        <div class="card {{ settings.offcanvas_shadow_sp }} {{ settings.offcanvas_border_color }}">
+                            <a href="{{ article.url }}" class="link-dark text-decoration-none">
+                                <div class="row g-0 align-items-center">
+                                    <div class="col-4">
+                                        <img 
+                                            class="img-fluid rounded-start" 
+                                            src="{{ article.image.src | image_url: width: 480, height: 480 }}"
+                                            alt="{{ article.image.alt | escape }}"
+                                            width="480"
+                                            height="480"
+                                            loading="lazy">
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="card-body">
+                                            <h4 class="card-title h6 mb-1">
+                                                {{ article.title }}
+                                            </h4>
+                                            <p class="article-meta text-muted mb-0 small">
+                                                {{ article.author }} @ {{ article.created_at | time_tag: '%b %d, %Y' }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+{% endif %}

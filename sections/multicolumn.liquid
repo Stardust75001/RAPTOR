@@ -1,0 +1,61 @@
+<section class="shop-multicolumn">
+  {% for block in section.blocks %}
+    <div class="column">
+      {% if block.settings.image %}
+        <img src="{{ block.settings.image | image_url: width: 120 }}" alt="{{ block.settings.heading | escape }}" width="32" height="32" loading="lazy">
+      {% endif %}
+      {% if block.settings.heading != blank %}
+        <h3>{{ block.settings.heading }}</h3>
+      {% endif %}
+      {% if block.settings.text != blank %}
+        <p>{{ block.settings.text }}</p>
+      {% endif %}
+    </div>
+  {% endfor %}
+</section>
+
+{% schema %}
+{
+  "name": "Colonnes personnalisées",
+  "max_blocks": 6,
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Colonne",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Icône"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Titre"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texte"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Colonnes personnalisées",
+      "blocks": [
+        {
+          "type": "column"
+        },
+        {
+          "type": "column"
+        },
+        {
+          "type": "column"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

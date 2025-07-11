@@ -1,0 +1,135 @@
+{% comment %}
+Section : Stories Bar Sticky Configurable (dynamique via blocks)
+{% endcomment %}
+
+<div class="stories-bar-wrapper">
+  <style>
+    .tooltip-bubble {
+      opacity: 0;
+      position: absolute;
+      top: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: {{ section.settings.tooltip_bg }};
+      color: white;
+      padding: 6px 12px;
+      font-size: 14px;
+      border-radius: 4px;
+      z-index: 9999;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      max-width: 90vw;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .tooltip-bubble::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: {{ section.settings.tooltip_bg }};
+    }
+    .tooltip-bubble.hover-visible,
+    .tooltip-bubble.tap-visible {
+      opacity: {{ section.settings.tooltip_opacity }};
+      pointer-events: auto;
+    }
+    .animated-stories-link img {
+      width: {{ section.settings.icon_size }}px;
+      height: {{ section.settings.icon_size }}px;
+    }
+    @media (max-width: 768px) {
+      .animated-stories-link img {
+        width: calc({{ section.settings.icon_size }}px / 2);
+        height: calc({{ section.settings.icon_size }}px / 2);
+      }
+    }
+  </style>
+
+  <div class="stories-bar">
+    {% assign lang = request.locale.iso_code %}
+    {% case lang %}
+      {% when 'fr' %}{% assign base_url = '/fr/collections/' %}
+      {% when 'de' %}{% assign base_url = '/de/collections/' %}
+      {% else %}{% assign base_url = '/collections/' %}
+    {% endcase %}
+
+    {% for block in section.blocks %}
+      {% assign title = block.settings.title %}
+      {% assign image = block.settings.image | img_url: 'master' %}
+      {% assign link = block.settings.link %}
+      <a href="{{ link | prepend: base_url }}" class="animated-stories-link">
+        <img src="{{ image }}" alt="{{ title }}">
+        <div class="tooltip-bubble" role="tooltip">
+          {{ title }}
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Stories Bar Sticky",
+  "settings": [
+    {
+      "type": "select",
+      "id": "icon_size",
+      "label": "Taille des icônes (px)",
+      "default": "90",
+      "options": [
+        { "value": "60", "label": "60px" },
+        { "value": "90", "label": "90px" },
+        { "value": "120", "label": "120px" }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "tooltip_bg",
+      "label": "Couleur de fond de l'infobulle",
+      "default": "#0F6378"
+    },
+    {
+      "type": "range",
+      "id": "tooltip_opacity",
+      "label": "Opacité de l'infobulle",
+      "min": 0.1,
+      "max": 1,
+      "step": 0.1,
+      "default": 1
+    }
+  ],
+  "blocks": [
+    {
+      "type": "story",
+      "name": "Story",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Nom de la collection",
+          "default": "SPA"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Icône"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Lien vers la collection"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Stories Bar Sticky",
+      "blocks": []
+    }
+  ]
+}
+{% endschema %}
