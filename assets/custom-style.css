@@ -390,7 +390,7 @@ main {
 .newsletter-terms {
   font-size: 13px;
   margin-top: 8px;
-  color: var(--newsletter-terms-color);
+  color: #333;
   max-width: 100%;
   white-space: nowrap;
   overflow: hidden;
@@ -512,15 +512,16 @@ main {
     font-size: 20px;
   }
 
-  .newsletter-terms {
-    font-size: 10px !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    max-width: 100% !important;
-    line-height: 1.1 !important;
-    padding: 0 5px;
-  }
+ .newsletter-terms {
+  font-size: 10px !important;
+  color: #333 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 100% !important;
+  line-height: 1.1 !important;
+  padding: 0 5px !important;
+}
 
   .newsletter-wrapper {
     padding: 20px 12px;
@@ -543,23 +544,19 @@ main {
     opacity: 1;
   }
 
-  .newsletter-terms {
-    font-size: 9px !important;
-    color: var(--newsletter-terms-color) !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    padding: 0 2px !important;
-  }
+.newsletter-terms {
+  font-size: 13px;
+  color: #333 !important;
+  text-align: center;
+  line-height: 1.2;
+  padding: 0 5px;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: initial;
 }
 
-/* Desktop large (769px+) */
-@media screen and (min-width: 769px) {
-  .newsletter-terms {
-    font-size: 13px;
-    color: #eee;
-    white-space: normal;
-    overflow: visible;
-    text-overflow: initial;
-  }
+.newsletter-terms a {
+  color: inherit !important;
+  text-decoration: underline;
+}
 }
