@@ -1,0 +1,23 @@
+<!-- Snippet product-block.liquid -->
+<div class="product-block" style="margin-top: 2rem;">
+  <h3 class="product-block__title">
+    {{ product.title | escape }}
+  </h3>
+
+  {% if product.description != blank %}
+    <div class="product-block__description">
+      {{ product.description }}
+    </div>
+  {% endif %}
+
+  {% if product.tags.size > 0 %}
+    <div class="product-block__tags">
+      <strong>Tags :</strong>
+      <ul>
+        {% for tag in product.tags %}
+          <li>{{ tag }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+</div>
