@@ -424,14 +424,21 @@ main {
   }
 
   .newsletter-input-row {
+    display: flex !important; /* Force l'affichage côte à côte */
+    flex-direction: row !important; /* Assure la direction horizontale */
+    gap: 8px !important; /* Maintient l'espace entre les champs */
+    width: 100% !important;
     margin-bottom: 5px !important;
+    align-items: stretch !important;
   }
 
   .newsletter-name-input,
   .newsletter-email-input {
+    flex: 1 !important; /* Assure que chaque champ prend la moitié de l'espace */
     font-size: 14px !important;
     padding: 10px 14px !important;
     min-height: 44px !important;
+    box-sizing: border-box !important;
   }
 
   .newsletter-terms {
@@ -477,11 +484,20 @@ main {
 
 /* Responsive supplémentaire pour très petits écrans */
 @media screen and (max-width: 320px) {
+  .newsletter-input-row {
+    display: flex !important; /* Maintient côte à côte même sur très petits écrans */
+    flex-direction: row !important;
+    gap: 6px !important; /* Légèrement réduit l'espace sur très petits écrans */
+    width: 100% !important;
+  }
+
   .newsletter-name-input,
   .newsletter-email-input {
+    flex: 1 !important; /* Chaque champ prend exactement la moitié */
     font-size: 13px !important;
     padding: 9px 12px !important;
     min-height: 40px !important;
+    box-sizing: border-box !important;
   }
   
   .newsletter-name-input::placeholder,
