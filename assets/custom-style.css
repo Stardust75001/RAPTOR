@@ -50,9 +50,9 @@ body, #MainContent, .main-content, .shopify-section {
   box-shadow: var(--shadow-light);
 }
 
-/* === MAIN CONTENT SPACING - VALEURS ORIGINALES === */
+/* === MAIN CONTENT SPACING - VALEURS ORIGINALES RESTAURÉES === */
 main {
-  padding-top: 190px !important; /* Desktop par défaut */
+  padding-top: 360px !important; /* Somme header total : social bar + navbar + stories bar */
 }
 
 /* === TOP SOCIAL BAR === */
@@ -408,24 +408,10 @@ main {
 
 /* === RESPONSIVE DESIGN - VALEURS ORIGINALES RESTAURÉES === */
 
-/* iPad Landscape (1024px) */
-@media screen and (max-width: 1024px) and (min-width: 769px) and (orientation: landscape) {
+/* iPad et tablettes (portrait et paysage) */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
   main {
-    padding-top: 180px !important; /* Légèrement réduit pour landscape */
-  }
-}
-
-/* iPad Portrait (768px - 1024px) */
-@media screen and (max-width: 1024px) and (min-width: 769px) and (orientation: portrait) {
-  main {
-    padding-top: 170px !important; /* Optimisé pour portrait iPad */
-  }
-}
-
-/* Tablettes moyennes (768px) */
-@media screen and (max-width: 768px) and (min-width: 481px) {
-  main {
-    padding-top: 160px !important; /* Social bar (50px) + Navbar (70px) + Stories bar (40px) */
+    padding-top: 260px !important; /* Ajusté pour éviter la barre blanche */
   }
 }
 
@@ -433,6 +419,10 @@ main {
 @media screen and (max-width: 768px) {
   .only-mobile { display: block; }
   .only-desktop { display: none; }
+
+  main {
+    padding-top: 275px !important; /* Ajusté pour mobile sticky compact */
+  }
 
   .top-social-bar {
     flex-direction: row;
@@ -536,26 +526,33 @@ main {
   }
 }
 
-/* Mobile large (481px - 767px) */
-@media screen and (max-width: 767px) and (min-width: 481px) {
-  main {
-    padding-top: 155px !important; /* Version mobile compacte */
-  }
-}
 
-/* Mobile standard (320px - 480px) */
-@media screen and (max-width: 480px) {
-  main {
-    padding-top: 145px !important; /* Social bar (45px) + Navbar (60px) + Stories bar (35px) + marge (5px) */
+
+  .newsletter-name-input,
+  .newsletter-email-input {
+    font-size: 14px !important;
+    padding: 12px 15px !important;
+    min-height: 48px !important;
+  }
+  
+  .newsletter-name-input::placeholder,
+  .newsletter-email-input::placeholder {
+    font-size: 12px;
+    color: #6c757d;
+    opacity: 1;
+  }
+
+  .newsletter-terms {
+    font-size: 9px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    padding: 0 2px !important;
   }
 }
 
 /* Mobile très petit (max 320px) */
 @media screen and (max-width: 320px) {
-  main {
-    padding-top: 140px !important; /* Ultra compact */
-  }
-
   .newsletter-name-input,
   .newsletter-email-input {
     font-size: 14px !important;
