@@ -1,6 +1,9 @@
 name: Shopify Sync to GitHub
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -14,11 +17,12 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Commit Shopify changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.email "bot@shopify.com"
           git config --global user.name "Shopify Bot"
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
           git add .
           git commit -m "Sync from Shopify to GitHub" || echo "Nothing to commit"
           git push origin HEAD
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
