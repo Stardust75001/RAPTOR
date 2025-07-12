@@ -796,3 +796,8 @@ body {
 .scroll-anchor {
   scroll-margin-top: 360px;
 }
+@media screen and (max-width: 600px) {
+  .newsletter-form .btn {
+    margin-top: 10px !important;
+  }
+}
