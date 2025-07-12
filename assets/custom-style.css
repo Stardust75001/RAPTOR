@@ -411,7 +411,7 @@ main {
 /* iPad et tablettes (portrait et paysage) */
 @media screen and (min-width: 768px) and (max-width: 1024px) {
   main {
-    padding-top: 240px !important; /* Exemple pour paysage */
+    padding-top: 200px !important; /* Exemple pour paysage */
     padding-top: 325px !important; /* Spécifique au portrait tablette */
   }
 }
