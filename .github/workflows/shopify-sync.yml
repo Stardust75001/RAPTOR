@@ -1,0 +1,21 @@
+name: Shopify Sync to GitHub
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Commit Shopify changes
+        run: |
+          git config --global user.email "bot@shopify.com"
+          git config --global user.name "shopify[bot]"
+          git add .
+          git commit -m "Sync from Shopify to GitHub" || echo "Nothing to commit"
+          git push origin main
