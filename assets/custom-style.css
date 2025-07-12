@@ -416,8 +416,8 @@ main {
   }
 }
 
-/* Mobile (max 768px) */
-@media screen and (max-width: 768px) {
+/* Mobile (max 767px) */
+@media screen and (max-width: 767px) {
   .only-mobile { display: block; }
   .only-desktop { display: none; }
 
