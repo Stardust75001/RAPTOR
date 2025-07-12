@@ -412,7 +412,7 @@ main {
 @media screen and (min-width: 768px) and (max-width: 1024px) {
   main {
     padding-top: 300px !important; /* Exemple pour paysage */
-    padding-top: 260px !important; /* Spécifique au portrait tablette */
+    padding-top: 285px !important; /* Spécifique au portrait tablette */
   }
 }
 
