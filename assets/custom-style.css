@@ -421,10 +421,6 @@ main {
   .only-mobile { display: block; }
   .only-desktop { display: none; }
 
-  main {
-    padding-top: 255px !important; /* Ajusté pour mobile sticky compact */
-  }
-
   .top-social-bar {
     flex-direction: row;
     justify-content: space-between;
