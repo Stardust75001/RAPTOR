@@ -420,7 +420,7 @@ main {
 /* Tablette en mode paysage */
 @media screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
   main {
-    padding-top: 90px !important;
+    padding-top: 80px !important;
   }
 }
 
