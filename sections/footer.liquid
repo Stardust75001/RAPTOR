@@ -1,737 +1,1520 @@
-{% liquid 
-    assign pt = section.settings.pt | prepend: 'pt-'
-    assign pb = section.settings.pb | prepend: 'pb-'
+/* ========================================================================
+   INFORMATIONS GÉNÉRALES SUR LE SITE
+   Propriété de © 2019/2024 Shopiweb.fr
+   Pour plus d'informations, visitez : https://www.shopiweb.fr
+   ======================================================================== */
 
-    assign bg_color = section.settings.bg_color
+/* =====================
+   Tailles de police variées
+   ===================== */
+/* Styles de texte transformé par le vendor */
+.fs-6 { font-size: 0.825rem !important; }
+.fs-5 { font-size: 1rem !important; }
+.fs-4 { font-size: 1.125rem !important; }
+.fs-3 { font-size: 1.25rem !important; }
+.fs-2 { font-size: 1.5rem !important; }
+.fs-1 { font-size: 1.75rem !important; }
+.fs-7 { font-size: 2rem !important; }
+.fs-8 { font-size: 2.5rem !important; }
+.fs-9 { font-size: 3rem !important; }
+.fs-10 { font-size: 4rem !important; }
+.fs-11 { font-size: 5rem !important; }
+.fs-12 { font-size: 7rem !important; }
 
-    if section.settings.bg_gradient
-        assign bg_color = bg_color | append: ' bg-gradient'
-    endif
-
-    assign about_bg_color = section.settings.about_bg_color
-
-    if section.settings.about_bg_gradient
-        assign about_bg_color = about_bg_color | append: ' bg-gradient'
-    endif
-
-    assign btn_shadow_sp = settings.btn_shadow_sp
-%}
-
-{% style %}  
-/* Image2 SVG */
-    .navbar-brand svg {
-      width: {{ section.settings.logo_svg_height }}%;
-    }
-{% endstyle %} 
-
-<footer id="footer" class="{{ bg_color }} {{ pt }} {{ pb }}">
-  <div class="footer-logo-wrapper d-flex justify-content-center align-items-center">
-  {% if settings.logo %}
-    <img loading="lazy" height="auto" width="auto" src="{{ settings.logo | image_url }}" alt="{{ shop.name }}" class="footer-logo-img">
-  {% endif %}
-</div>
-    <div class="{{ section.settings.container }}">
-        <div id="footer-blocks" class="row mb-10">
-            {% if section.settings.show_about_area %}
-                <div class="col-lg-4">
-                    <div id="footer-about" class="me-xl-10 mb-7 mb-lg-0 rounded {% if section.settings.about_bg_transparent %}bg-transparent{% else %}{{ about_bg_color }}{% endif %}">
-                        <a class="navbar-brand mb-3" href="{{ routes.root_url }}" aria-label="{{ shop.name }}">
-                            {% if section.settings.about_logo != blank %}
-                                {% assign logo_height_x2 = section.settings.about_logo_height | times: 2 %}
-                                <img
-                                    class="img-fluid"
-                                    src="{{ section.settings.about_logo | image_url: height: logo_height_x2 }}" 
-                                    alt="{{ shop.name }}"
-                                    width="{{ section.settings.about_logo_height | times: section.settings.about_logo.aspect_ratio | round }}" 
-                                    height="{{ section.settings.about_logo_height }}"
-                                    loading="lazy">
-                            {% elsif section.settings.about_logo == blank and section.settings.svg_logo_footer != blank %}
-                                {{ section.settings.svg_logo_footer }}
-                            {% else section.settings.about_logo == blank or section.settings.svg_logo_footer == blank %}
-                                <span class="fs-3">
-                                    {{ shop.name }}
-                                </span>
-                            {% endif %}
-                        </a>
-                        {% unless section.settings.about_description == blank %}
-                            <div class="description mb-5 small">
-                                {{ section.settings.about_description }}
-                            </div>
-                        {% endunless %}
-                        {% unless section.settings.about_phone_text == blank %}
-                            <div id="footer-about-phone mb-1">
-                                <a class="rte small d-inline-flex align-items-center" href="{{ section.settings.about_phone_url }}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-telephone-fill me-3" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/>
-                                    </svg>
-                                    {{ section.settings.about_phone_text }}
-                                </a>
-                            </div>
-                        {% endunless %}
-                        {% unless section.settings.about_email_text == blank %}
-                            <div id="footer-about-email mb-1">
-                                <a class="rte small d-inline-flex align-items-center" href="{{ section.settings.about_email_url }}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope-fill me-3" viewBox="0 0 16 16">
-                                        <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0 4.697ZM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757Zm3.436-.586L16 11.801V4.697l-5.803 3.546Z"></path>
-                                    </svg>
-                                    {{ section.settings.about_email_text }}
-                                </a>
-                            </div>
-                        {% endunless %}
-                        {% unless section.settings.about_adresse_text == blank %}
-                            <div id="footer-about-adresse mb-0">
-                                <div class="small rte d-inline-flex align-items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill me-3" viewBox="0 0 16 16">
-                                        <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
-                                    </svg>
-                                    {{ section.settings.about_adresse_text }}
-                                </div>
-                            </div>
-                        {% endunless %}
-                    </div>
-                </div>
-            {% endif %}
-            <div class="{% if section.settings.show_about_area %}col-lg-8{% else %}col-lg-12{% endif %}">
-                <ul class="list-unstyled row mb-0">
-                    {% for block in section.blocks %}
-                        <li class="footer-block col-lg" {{ block.shopify_attributes }}>
-                            <a 
-                                class="nav-link h6 collapsed d-lg-none" 
-                                href="#block-collapse-{{ block.id }}"
-                                data-bs-toggle="collapse"
-                                aria-expanded="false" 
-                                aria-controls="block-collapse-{{ block.id }}"
-                                role="button">
-                                {{ block.settings.title }}
-                            </a>
-                            <h3 class="title d-none d-lg-inline-block {{ block.settings.title_size }}">
-                                <span>
-                                    {{ block.settings.title }}
-                                </span>
-                            </h3>
-                            <div id="block-collapse-{{ block.id }}" class="collapse d-lg-block">
-                                <div class="mt-4 mb-6 my-lg-0">
-                                    {% case block.type %}
-                                        {% when 'richtext' %}
-                                            {% unless block.settings.description == blank %}
-                                                <div class="rte mt-2 small">
-                                                    {{ block.settings.description }}
-                                                </div>
-                                            {% endunless %}
-                                            {% unless block.settings.btn_text == blank %}
-                                                <a class="btn btn-sm w-100 mt-6 {{ block.settings.btn_color }} {{ btn_shadow_sp }} {{ block.settings.btn_size }}" href="{{ block.settings.btn_url }}">
-                                                    {{ block.settings.btn_text }}
-                                                </a>
-                                            {% endunless %}
-                                        {% when 'menu' %}
-                                            <ul class="nav flex-column mb-0">
-                                                {% for link in linklists[block.settings.menu].links %}
-                                                    {% if link.title != ':' %}
-                                                        <li class="nav-item">
-                                                            <a class="nav-link px-0 py-3 py-lg-2" href="{{ link.url }}">
-                                                                {{ link.title }}
-                                                            </a>
-                                                        </li>
-                                                    {% endif %}
-                                                {% endfor %}
-                                            </ul>
-
-                                        {%- when 'image' -%}
-                                            {% unless block.settings.description == blank %}
-                                                <div class="rte mt-2 mb-5 small">
-                                                    {{ block.settings.description }}
-                                                </div>
-                                            {% endunless %}
-                                            {% unless block.settings.image_footer == blank -%}
-                                              {% assign image_height_2x = block.settings.image_footer_height | times: 2 %}
-                                              <a class="d-flex align-items-center" href="{{ block.settings.image_link_url }}">
-                                                  <img
-                                                      class="img-fluid mx-auto d-block rounded mt-4"
-                                                      src= "{{ block.settings.image_footer | image_url: height: image_height_2x }}"
-                                                      alt="{{ shop.name }}"
-                                                      width="{{ block.settings.image_footer_height | times: block.settings.image_footer.aspect_ratio | round }}" 
-                                                      height="{{ block.settings.image_footer_height }}"
-                                                      loading="lazy">
-                                              </a>
-                                            {%- else -%}
-                                              {{ 'detailed-apparel-1' | placeholder_svg_tag: 'placeholder-svg rounded' }}
-                                            {%- endunless -%}
-
-                                      {% when 'newsletter' %}
-  {% unless block.settings.description == blank %}
-    <div class="rte mt-2 mb-3 small">
-      {{ block.settings.description }}
-    </div>
-  {% endunless %}
-
-  {% form 'customer' %}
-    <input type="hidden" name="contact[tags]" value="newsletter">
-    {{ form.errors | default_errors }}
-
-    {% if form.posted_successfully? %}
-      <p class="alert alert-success">
-        {{ 'general.newsletter.confirmation_text' | t }}
-      </p>
-    {% endif %}
-
-    <div class="newsletter-form">
-      <div class="newsletter-input-row">
-        <input 
-          type="text" 
-          name="contact[first_name]" 
-          class="form-control form-control-sm newsletter-name-input" 
-          placeholder="{{ 'general.newsletter.name_placeholder' | t }}"
-          aria-label="{{ 'general.newsletter.name_placeholder' | t }}"
-          autocorrect="off"
-          autocapitalize="words" />
-
-        <input 
-          type="email" 
-          name="contact[email]" 
-          class="form-control form-control-sm newsletter-email-input" 
-          value="{% if customer.email != blank %}{{ customer.email }}{% endif %}" 
-          placeholder="{{ 'general.newsletter.input_label' | t }}" 
-          aria-label="{{ 'general.newsletter.input_label' | t }}" 
-          autocorrect="off" 
-          autocapitalize="off" />
-      </div>
-
-      <button 
-        class="btn btn-sm {{ block.settings.btn_color }} {{ btn_shadow_sp }} {{ block.settings.btn_size }}" 
-        type="submit" 
-        name="commit">
-        {{ 'general.newsletter.submit_button' | t }}
-      </button>
-    </div>
-
-    {% unless block.settings.notice == blank %}
-      <div class="notice rte mt-3 lh-sm extra-small text-center">
-        {{ block.settings.notice }}
-      </div>
-    {% endunless %}
-  {% endform %}
-
-                                    {% endcase %}
-                                </div>
-                            </div>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-        
-        <hr class="d-none d-sm-block mb-7">
-
-        <div id="footer-copyright" class="small text-center">
-            <div class="row align-items-center">
-                <div class="col-lg-4"></div>
-                <div class="col-lg-4 mb-3 mb-lg-0 d-flex flex-column align-items-center">
-                  <div class="footer-social-icons">
-                    <a href="https://www.instagram.com/spencerandthecity/" target="_blank" rel="noopener" aria-label="Instagram">
-  <img height="auto" width="auto" src="{{ 'instagram.png' | asset_url }}" alt="Instagram" class="social-img-icon" loading="lazy">
-</a>
-<a href="https://www.facebook.com/profile.php?id=61573834333893" target="_blank" rel="noopener" aria-label="Facebook">
-  <img height="auto" width="auto" src="{{ 'facebook.png' | asset_url }}" alt="Facebook" class="social-img-icon" loading="lazy">
-</a>
-<a href="https://www.tiktok.com/@thepetsociety_paris" target="_blank" rel="noopener" aria-label="TikTok">
-  <img height="auto" width="auto" src="{{ 'tiktok.png' | asset_url }}" alt="TikTok" class="social-img-icon" loading="lazy">
-</a>
-<a href="https://wa.me/33769238799" target="_blank" rel="noopener" aria-label="WhatsApp">
-  <img height="auto" width="auto" src="{{ 'WhatsApp.png' | asset_url }}" alt="WhatsApp" class="social-img-icon" loading="lazy">
-</a>
-<a href="mailto:hello@thepetsociety.paris" aria-label="Email">
-  <img height="auto" width="auto" src="{{ 'email-icon.png' | asset_url }}" alt="Email" class="social-img-icon" loading="lazy">
-</a>
-                  </div>
-                  <p class="mb-0 small">
-                    &copy; {{ 'now' | date: "%Y" }} {{ shop.name }}. {{ 'general.all_rights_reserved' | t }}
-                  </p>
-                </div>
-                <div class="col-lg-4">
-                    {% if section.settings.show_payment_icons %}
-                        <div class="payment-icons-wrapper">
-                            {% render 'payment-icons' %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        
-        {% if section.settings.language_selector_show or section.settings.currency_selector_show %}
-                <div class="d-flex justify-content-center py-2 mx-4 mt-4 mt-lg-2 mb-2 mb-lg-0">
-                    {% if section.settings.language_selector_show %}
-                        {% render 'language-dropdown' %}
-                    {% endif %}
-                    {% if section.settings.currency_selector_show %}
-                        {% render 'dropdown-currency', btn_color: section.settings.lang_currency_btn_color %}
-                    {% endif %}
-                </div>
-        {% endif %}
-
-        
-    </div>
-</footer>
-
-{% schema %}
-{
-    "name": "Pied de page",
-    "settings": [
-        {
-            "type": "paragraph", 
-            "content": "EN Documentation: [Pied de page by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/pied-de-page\/pied-de-page)"
-        },
-        {
-            "type": "select",
-            "id": "bg_color",
-            "label": "Background color",
-            "default": "bg-dark text-white",
-            "options": [
-                { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
-                { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
-                { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
-                { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "White" },
-                { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Light" },
-                { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Dark" },
-                { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" }
-            ]
-        },
-        {
-            "type": "checkbox",
-            "id": "bg_gradient",
-            "label": "Background gradient",
-            "default": false,
-            "info": "Does not apply to light colors"
-        },
-        {
-            "type": "select",
-            "id": "container",
-            "label": "Conteneur",
-            "default": "container",
-            "options": [
-                { "value": "container", "label": "Conteneur" },
-                { "value": "container-fluid", "label": "Pleine largeur" }
-            ]
-        },
-        {
-            "type": "checkbox",
-            "id": "show_payment_icons",
-            "label": "Show payment icons",
-            "default": true
-        },
-        {
-            "type": "checkbox",
-            "id": "show_social_icons",
-            "label": "Show social icons",
-            "default": true
-        },
-        {
-            "type": "checkbox",
-            "id": "show_powered_by",
-            "label": "Afficher Propulsé par Shopify",
-            "default": true
-        },
-        {
-            "type": "checkbox",
-            "id": "show_theme_by",
-            "label": "Afficher Thème créé par Shopiweb",
-            "default": true
-        },
-        {
-            "type": "checkbox",
-            "id": "language_selector_show",
-            "label": "Show language selector",
-            "default": true
-        },
-        {
-            "type": "checkbox",
-            "id": "currency_selector_show",
-            "label": "Show currency selector",
-            "default": true
-        },
-        {
-            "type": "select",
-            "id": "lang_currency_btn_color",
-            "label": "Button color langue\/devise",
-            "default": "btn-outline-light",
-            "options": [
-                { "group": "Normal", "value": "btn-link", "label": "Link" },
-                { "group": "Normal", "value": "btn-light", "label": "Light" },
-                { "group": "Normal", "value": "btn-dark", "label": "Dark" },
-                { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
-                { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
-                { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
-                { "group": "Normal", "value": "btn-success", "label": "Success" },
-                { "group": "Normal", "value": "btn-danger", "label": "Danger" },
-                { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
-                { "group": "Normal", "value": "btn-info", "label": "Info" },
-                { "group": "Outline", "value": "btn-outline-light", "label": "Contour Claire" },
-                { "group": "Outline", "value": "btn-outline-dark", "label": "Contour Sombre" },
-                { "group": "Outline", "value": "btn-outline-primary", "label": "Contour Primaire" },
-                { "group": "Outline", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
-                { "group": "Outline", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
-                { "group": "Outline", "value": "btn-outline-success", "label": "Success Outline" },
-                { "group": "Outline", "value": "btn-outline-danger", "label": "Contour Danger" },
-                { "group": "Outline", "value": "btn-outline-warning", "label": "Contour Avertissement" },
-                { "group": "Outline", "value": "btn-outline-info", "label": "Contour Info" }
-            ]
-        },
-        {
-            "type": "header",
-            "content": "À propos de nous"
-        },
-        {
-            "type": "checkbox",
-            "id": "show_about_area",
-            "label": "Afficher la zone \"À propos\"",
-            "default": true
-        },
-        {
-            "type": "select",
-            "id": "about_bg_color",
-            "label": "Background color",
-            "default": "bg-dark text-white",
-            "options": [
-                { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
-                { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
-                { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
-                { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "White" },
-                { "group": "Intermédiaire", "value": "bg-light text-dark", "label": "Light" },
-                { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Dark" },
-                { "group": "Par défaut", "value": "", "label": "Corps (body)" }
-            ]
-        },
-        {
-            "type": "checkbox",
-            "id": "about_bg_gradient",
-            "label": "Background gradient",
-            "default": false,
-            "info": "Does not apply to light colors"
-        },
-        {
-            "type": "checkbox",
-            "id": "about_bg_transparent",
-            "label": "Arrière-plan transparent",
-            "default": false
-        },
-        {
-            "type": "image_picker",
-            "id": "about_logo",
-            "label": "Logo"
-        },
-        {
-            "type": "range",
-            "id": "about_logo_height",
-            "label": "Taille du logo image",
-            "min": 20,
-            "max": 100,
-            "step": 2,
-            "default": 40
-        },
-        {
-            "type":"header",
-            "content": "⚙️ SVG Logo",
-            "info": "⚙️ Fonctionnalité 👉 Version Shopiweb Premium"
-        },
-        {
-            "type": "html",
-            "id": "svg_logo_footer",
-            "label": "Logo SVG (recommandé)",
-            "info": "Insérez le code SVG dans cette zone, sinon laisser vide."
-        },
-        {
-            "type": "range",
-            "id": "logo_svg_height",
-            "label": "Taille du logo svg",
-            "min": 1,
-            "max": 100,
-            "step": 1,
-            "default": 50
-        },
-        {
-            "type": "richtext",
-            "id": "about_description",
-            "label": "Description"
-        },
-        {
-            "type": "text",
-            "id": "about_phone_text",
-            "label": "Numéro de téléphone",
-            "default": "+33769238799",
-            "info": "Leave empty to disable"
-        },
-        {
-            "type": "url",
-            "id": "about_phone_url",
-            "label": "tel:+33769238799"
-        },
-        {
-            "type": "text",
-            "id": "about_email_text",
-            "label": "Adresse e-mail",
-            "default": "hello@thepetsociety.paris",
-            "info": "Leave empty to disable"
-        },
-        {
-            "type": "url",
-            "id": "about_email_url",
-            "label": "Lien de l'adresse e-mail"
-        },
-        {
-            "type": "text",
-            "id": "about_adresse_text",
-            "label": "Adresse",
-            "default": "229 rue Saint Honoré - 75001 PARIS",
-            "info": "Leave empty to disable"
-        },
-        {
-            "type": "header",
-            "content": "Espacement de la section"
-        },
-        {
-            "type": "range",
-            "id": "pt",
-            "label": "Top padding",
-            "min": 0,
-            "max": 20,
-            "step": 1,
-            "default": 10
-        },
-        {
-            "type": "range",
-            "id": "pb",
-            "label": "Bottom padding",
-            "min": 0,
-            "max": 20,
-            "step": 1,
-            "default": 10
-        }
-    ],
-    "blocks": [
-        {
-            "type": "richtext",
-            "name": "Texte",
-            "settings": [
-                {
-                    "type": "text",
-                    "id": "title",
-                    "label": "Titre"
-                },
-                {
-                    "type": "select",
-                    "id": "title_size",
-                    "label": "Taille du titre",
-                    "default": "h6",
-                    "options": [
-                        { "group": "Titre Standard", "value": "h1", "label": "Very Large" },
-                        { "group": "Titre Standard", "value": "h2", "label": "Large" },
-                        { "group": "Titre Standard", "value": "h3", "label": "Medium" },
-                        { "group": "Titre Standard", "value": "h4", "label": "Small" },
-                        { "group": "Titre Standard", "value": "h5", "label": "Very Small" },
-                        { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
-                    ]
-                },
-                {
-                    "type": "richtext",
-                    "id": "description",
-                    "label": "Description"
-                },
-                {
-                    "type": "text",
-                    "id": "btn_text",
-                    "label": "Button text",
-                    "info": "Leave empty to disable"
-                },
-                {
-                    "type": "url",
-                    "id": "btn_url",
-                    "label": "URL du bouton"
-                },
-                {
-                    "type": "select",
-                    "id": "btn_color",
-                    "label": "Button color",
-                    "default": "btn-primary",
-                    "options": [
-                        { "group": "Normal", "value": "btn-link", "label": "Link" },
-                        { "group": "Normal", "value": "btn-light", "label": "Light" },
-                        { "group": "Normal", "value": "btn-dark", "label": "Dark" },
-                        { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
-                        { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
-                        { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
-                        { "group": "Normal", "value": "btn-success", "label": "Success" },
-                        { "group": "Normal", "value": "btn-danger", "label": "Danger" },
-                        { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
-                        { "group": "Normal", "value": "btn-info", "label": "Info" },
-                        { "group": "Outline", "value": "btn-outline-light", "label": "Contour Claire" },
-                        { "group": "Outline", "value": "btn-outline-dark", "label": "Contour Sombre" },
-                        { "group": "Outline", "value": "btn-outline-primary", "label": "Contour Primaire" },
-                        { "group": "Outline", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
-                        { "group": "Outline", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
-                        { "group": "Outline", "value": "btn-outline-success", "label": "Success Outline" },
-                        { "group": "Outline", "value": "btn-outline-danger", "label": "Contour Danger" },
-                        { "group": "Outline", "value": "btn-outline-warning", "label": "Contour Avertissement" },
-                        { "group": "Outline", "value": "btn-outline-info", "label": "Contour Info" }
-                    ]
-                },
-                {
-                    "type": "select",
-                    "id": "btn_size",
-                    "label": "Taille du bouton",
-                    "default": "btn-sm",
-                    "options": [
-                        { "value": "btn-sm", "label": "Small" },
-                        { "value": "btn-md", "label": "Normal" },
-                        { "value": "btn-lg", "label": "Large" }
-                    ]
-                }
-            ]
-        },
-        {
-            "type": "menu",
-            "name": "Menu",
-            "settings": [
-                {
-                    "type": "link_list",
-                    "id": "menu",
-                    "label": "Menu"
-                },
-                {
-                    "type": "text",
-                    "id": "title",
-                    "label": "Titre"
-                },
-                {
-                    "type": "select",
-                    "id": "title_size",
-                    "label": "Taille du titre",
-                    "default": "h6",
-                    "options": [
-                        { "group": "Titre Standard", "value": "h1", "label": "Very Large" },
-                        { "group": "Titre Standard", "value": "h2", "label": "Large" },
-                        { "group": "Titre Standard", "value": "h3", "label": "Medium" },
-                        { "group": "Titre Standard", "value": "h4", "label": "Small" },
-                        { "group": "Titre Standard", "value": "h5", "label": "Very Small" },
-                        { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
-                    ]
-                }
-            ]
-        },
-        {
-          "type": "image",
-          "name": "Image",
-          "limit": 1,
-          "settings": [
-            {
-                "type": "text",
-                "id": "title",
-                "label": "Titre"
-            },
-            {
-                "type": "select",
-                "id": "title_size",
-                "label": "Taille du titre",
-                "default": "h6",
-                "options": [
-                    { "group": "Titre Standard", "value": "h1", "label": "Very Large" },
-                    { "group": "Titre Standard", "value": "h2", "label": "Large" },
-                    { "group": "Titre Standard", "value": "h3", "label": "Medium" },
-                    { "group": "Titre Standard", "value": "h4", "label": "Small" },
-                    { "group": "Titre Standard", "value": "h5", "label": "Very Small" },
-                    { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
-                ]
-            },
-            {
-                "type": "richtext",
-                "id": "description",
-                "label": "Description"
-            },
-            {
-              "type": "image_picker",
-              "id": "image_footer",
-              "label": "Image",
-              "info": "Résolution recommandée de (500x500), sinon laisser vide."
-            },
-            {
-                "type": "range",
-                "id": "image_footer_height",
-                "label": "Largeur de l'image",
-                "min": 20,
-                "max": 200,
-                "step": 2,
-                "default": 100
-            },
-            {
-                "type": "url",
-                "id": "image_link_url",
-                "label": "URL de l'image"
-            }
-          ]
-        },
-        {
-            "type": "newsletter",
-            "name": "Newsletter",
-            "limit": 1,
-            "settings": [
-                {
-                    "type": "text",
-                    "id": "title",
-                    "label": "Titre",
-                    "default": "Newsletter"
-                },
-                {
-                    "type": "select",
-                    "id": "title_size",
-                    "label": "Taille du titre",
-                    "default": "h6",
-                    "options": [
-                        { "group": "Titre Standard", "value": "h1", "label": "Very Large" },
-                        { "group": "Titre Standard", "value": "h2", "label": "Large" },
-                        { "group": "Titre Standard", "value": "h3", "label": "Medium" },
-                        { "group": "Titre Standard", "value": "h4", "label": "Small" },
-                        { "group": "Titre Standard", "value": "h5", "label": "Very Small" },
-                        { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
-                    ]
-                },
-                {
-                    "type": "richtext",
-                    "id": "description",
-                    "label": "Description"
-                }, 
-                {
-                    "type": "select",
-                    "id": "btn_color",
-                    "label": "Button color",
-                    "default": "btn-primary",
-                    "options": [
-                        { "group": "Normal", "value": "btn-link", "label": "Link" },
-                        { "group": "Normal", "value": "btn-light", "label": "Light" },
-                        { "group": "Normal", "value": "btn-dark", "label": "Dark" },
-                        { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
-                        { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
-                        { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
-                        { "group": "Normal", "value": "btn-success", "label": "Success" },
-                        { "group": "Normal", "value": "btn-danger", "label": "Danger" },
-                        { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
-                        { "group": "Normal", "value": "btn-info", "label": "Info" },
-                        { "group": "Outline", "value": "btn-outline-light", "label": "Contour Claire" },
-                        { "group": "Outline", "value": "btn-outline-dark", "label": "Contour Sombre" },
-                        { "group": "Outline", "value": "btn-outline-primary", "label": "Contour Primaire" },
-                        { "group": "Outline", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
-                        { "group": "Outline", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
-                        { "group": "Outline", "value": "btn-outline-success", "label": "Success Outline" },
-                        { "group": "Outline", "value": "btn-outline-danger", "label": "Contour Danger" },
-                        { "group": "Outline", "value": "btn-outline-warning", "label": "Contour Avertissement" },
-                        { "group": "Outline", "value": "btn-outline-info", "label": "Contour Info" }
-                    ]
-                },
-                {
-                    "type": "richtext",
-                    "id": "notice",
-                    "label": "Notice",
-                    "default": "<p>En vous inscrivant pour recevoir des courriels, vous acceptez nos conditions général de vente et notre politique de confidentialité.</p>"
-                }
-            ]
-        }
-    ]
+/* Tailles spécifiques pour les points d'arrêt */
+@media (min-width: 576px) {
+  .fs-sm-6 { font-size: 0.825rem !important; }
+  .fs-sm-5 { font-size: 1rem !important; }
+  .fs-sm-4 { font-size: 1.125rem !important; }
+  .fs-sm-3 { font-size: 1.25rem !important; }
+  .fs-sm-2 { font-size: 1.5rem !important; }
+  .fs-sm-1 { font-size: 1.75rem !important; }
+  .fs-sm-7 { font-size: 2rem !important; }
+  .fs-sm-8 { font-size: 2.5rem !important; }
+  .fs-sm-9 { font-size: 3rem !important; }
+  .fs-sm-10 { font-size: 4rem !important; }
+  .fs-sm-11 { font-size: 5rem !important; }
+  .fs-sm-12 { font-size: 7rem !important; }
 }
-{% endschema %}
+
+@media (min-width: 768px) {
+  .fs-md-6 { font-size: 0.825rem !important; }
+  .fs-md-5 { font-size: 1rem !important; }
+  .fs-md-4 { font-size: 1.125rem !important; }
+  .fs-md-3 { font-size: 1.25rem !important; }
+  .fs-md-2 { font-size: 1.5rem !important; }
+  .fs-md-1 { font-size: 1.75rem !important; }
+  .fs-md-7 { font-size: 2rem !important; }
+  .fs-md-8 { font-size: 2.5rem !important; }
+  .fs-md-9 { font-size: 3rem !important; }
+  .fs-md-10 { font-size: 4rem !important; }
+  .fs-md-11 { font-size: 5rem !important; }
+  .fs-md-12 { font-size: 7rem !important; }
+}
+
+@media (min-width: 992px) {
+  .fs-lg-6 { font-size: 0.825rem !important; }
+  .fs-lg-5 { font-size: 1rem !important; }
+  .fs-lg-4 { font-size: 1.125rem !important; }
+  .fs-lg-3 { font-size: 1.25rem !important; }
+  .fs-lg-2 { font-size: 1.5rem !important; }
+  .fs-lg-1 { font-size: 1.75rem !important; }
+  .fs-lg-7 { font-size: 2rem !important; }
+  .fs-lg-8 { font-size: 2.5rem !important; }
+  .fs-lg-9 { font-size: 3rem !important; }
+  .fs-lg-10 { font-size: 4rem !important; }
+  .fs-lg-11 { font-size: 5rem !important; }
+  .fs-lg-12 { font-size: 7rem !important; }
+}
+
+@media (min-width: 1200px) {
+  .fs-xl-6 { font-size: 0.825rem !important; }
+  .fs-xl-5 { font-size: 1rem !important; }
+  .fs-xl-4 { font-size: 1.125rem !important; }
+  .fs-xl-3 { font-size: 1.25rem !important; }
+  .fs-xl-2 { font-size: 1.5rem !important; }
+  .fs-xl-1 { font-size: 1.75rem !important; }
+  .fs-xl-7 { font-size: 2rem !important; }
+  .fs-xl-8 { font-size: 2.5rem !important; }
+  .fs-xl-9 { font-size: 3rem !important; }
+  .fs-xl-10 { font-size: 4rem !important; }
+  .fs-xl-11 { font-size: 5rem !important; }
+  .fs-xl-12 { font-size: 7rem !important; }
+}
+
+@media (min-width: 1400px) {
+  .fs-xxl-6 { font-size: 0.825rem !important; }
+  .fs-xxl-5 { font-size: 1rem !important; }
+  .fs-xxl-4 { font-size: 1.125rem !important; }
+  .fs-xxl-3 { font-size: 1.25rem !important; }
+  .fs-xxl-2 { font-size: 1.5rem !important; }
+  .fs-xxl-1 { font-size: 1.75rem !important; }
+  .fs-xxl-7 { font-size: 2rem !important; }
+  .fs-xxl-8 { font-size: 2.5rem !important; }
+  .fs-xxl-9 { font-size: 3rem !important; }
+  .fs-xxl-10 { font-size: 4rem !important; }
+  .fs-xxl-11 { font-size: 5rem !important; }
+  .fs-xxl-12 { font-size: 7rem !important; }
+}
+
+/* Styles de titre transformé par le vendor */
+.h1, h1 {
+    font-size: calc(1.425rem + 2.1vw);
+}
+@media (min-width: 1200px) {
+    .h1, h1 {
+        font-size: 3rem;
+    }
+}
+
+.h2, h2 {
+    font-size: calc(1.375rem + 1.5vw);
+}
+@media (min-width: 1200px) {
+    .h2, h2 {
+        font-size: 2.5rem;
+    }
+}
+
+.h3, h3 {
+    font-size: calc(1.325rem + .9vw);
+}
+@media (min-width: 1200px) {
+    .h3, h3 {
+        font-size: 2rem;
+    }
+}
+
+.h4, h4 {
+    font-size: calc(1.275rem + .3vw);
+}
+@media (min-width: 1200px) {
+    .h4, h4 {
+        font-size: 1.5rem;
+    }
+}
+
+.h5, h5 {
+    font-size: 1.25rem;
+}
+
+.h6, h6 {
+    font-size: 1rem;
+}
+
+/* Styles de titre display transformé par le vendor */
+.display-1 {
+    font-size: calc(1.625rem + 4.5vw);
+}
+@media (min-width: 1200px) {
+    .display-1 {
+        font-size: 5rem;
+    }
+}
+
+.display-2 {
+    font-size: calc(1.575rem + 3.9vw);
+}
+@media (min-width: 1200px) {
+    .display-2 {
+        font-size: 4.5rem;
+    }
+}
+
+.display-3 {
+    font-size: calc(1.525rem + 3.3vw);
+}
+@media (min-width: 1200px) {
+    .display-3 {
+        font-size: 4rem;
+    }
+}
+
+.display-4 {
+    font-size: calc(1.475rem + 2.7vw);
+}
+@media (min-width: 1200px) {
+    .display-4 {
+        font-size: 3.5rem;
+    }
+}
+
+.display-5 {
+    font-size: calc(1.425rem + 2.1vw);
+}
+@media (min-width: 1200px) {
+    .display-5 {
+        font-size: 3rem;
+    }
+}
+
+.display-6 {
+    font-size: calc(1.375rem + 1.5vw);
+}
+@media (min-width: 1200px) {
+    .display-6 {
+        font-size: 2.5rem;
+    }
+}
+
+/* =====================
+   Boutons (normaux)
+   ===================== */
+.btn {
+    --bs-btn-border-radius: var(--bs-border-radius);
+}
+
+.btn-primary {
+    --bs-btn-bg: var(--bs-primary);
+    --bs-btn-border-color: var(--bs-primary);
+    --bs-btn-hover-bg: var(--bs-primary-darken-5);
+    --bs-btn-hover-border-color: var(--bs-primary-darken-5);
+    --bs-btn-focus-shadow-rgb: var(--bs-primary-rgb);
+    --bs-btn-active-bg: var(--bs-primary-darken-5);
+    --bs-btn-active-border-color: var(--bs-primary-darken-5);
+    --bs-btn-disabled-bg: var(--bs-primary);
+    --bs-btn-disabled-border-color: var(--bs-primary);
+}
+
+.btn-secondary {
+    --bs-btn-bg: var(--bs-secondary);
+    --bs-btn-border-color: var(--bs-secondary);
+    --bs-btn-hover-bg: var(--bs-secondary-darken-5);
+    --bs-btn-hover-border-color: var(--bs-secondary-darken-5);
+    --bs-btn-focus-shadow-rgb: var(--bs-secondary-rgb);
+    --bs-btn-active-bg: var(--bs-secondary-darken-10);
+    --bs-btn-active-border-color: var(--bs-secondary-darken-10);
+    --bs-btn-disabled-bg: var(--bs-secondary);
+    --bs-btn-disabled-border-color: var(--bs-secondary);
+}
+
+.btn-tertiary {
+    --bs-btn-color: rgba(255, 255, 255, 1);
+    --bs-btn-hover-color: rgba(255, 255, 255, 1);
+    --bs-btn-active-color: rgba(255, 255, 255, 1);
+    --bs-btn-disabled-color: rgba(255, 255, 255, 1);
+  
+    --bs-btn-bg: var(--bs-tertiary);
+    --bs-btn-border-color: var(--bs-tertiary);
+    --bs-btn-hover-bg: var(--bs-tertiary-darken-5);
+    --bs-btn-hover-border-color: var(--bs-tertiary-darken-5);
+    --bs-btn-focus-shadow-rgb: var(--bs-tertiary-rgb);
+    --bs-btn-active-bg: var(--bs-tertiary-darken-10);
+    --bs-btn-active-border-color: var(--bs-tertiary-darken-10);
+    --bs-btn-disabled-bg: var(--bs-tertiary);
+    --bs-btn-disabled-border-color: var(--bs-tertiary);
+}
+
+.btn-white {
+    --bs-btn-color: var(--bs-body-color);
+    --bs-btn-bg: rgba(255, 255, 255, 1);
+    --bs-btn-border-color: rgba(255, 255, 255, 1);
+    --bs-btn-hover-color: var(--bs-body-color);
+    --bs-btn-hover-bg: rgba(255, 255, 255, .9);
+    --bs-btn-hover-border-color: rgba(255, 255, 255, .9);
+    --bs-btn-focus-shadow-rgb: 255, 255, 255;
+    --bs-btn-active-color: var(--bs-body-color);
+    --bs-btn-active-bg: rgba(255, 255, 255, .8);
+    --bs-btn-active-border-color: rgba(255, 255, 255, .8);
+    --bs-btn-disabled-bg: rgba(255, 255, 255, 1);
+    --bs-btn-disabled-border-color: rgba(255, 255, 255, 1);
+}
+
+.btn-light {
+    --bs-btn-color: var(--bs-body-color);
+    --bs-btn-bg: var(--bs-light);
+    --bs-btn-border-color: var(--bs-light);
+    --bs-btn-hover-color: var(--bs-body-color);
+    --bs-btn-hover-bg: var(--bs-light-darken-5);
+    --bs-btn-hover-border-color: var(--bs-light-darken-5);
+    --bs-btn-focus-shadow-rgb: var(--bs-light-rgb);
+    --bs-btn-active-bg: var(--bs-light-darken-10);
+    --bs-btn-active-border-color: var(--bs-light-darken-10);
+    --bs-btn-disabled-bg: var(--bs-light);
+    --bs-btn-disabled-border-color: var(--bs-light);
+}
+
+.btn-dark {
+    --bs-btn-bg: var(--bs-dark);
+    --bs-btn-border-color: var(--bs-dark);
+    --bs-btn-hover-bg: var(--bs-dark-darken-5);
+    --bs-btn-hover-border-color: var(--bs-dark-darken-5);
+    --bs-btn-focus-shadow-rgb: var(--bs-dark-rgb);
+    --bs-btn-active-bg: var(--bs-dark-darken-10);
+    --bs-btn-active-border-color: var(--bs-dark-darken-10);
+    --bs-btn-disabled-bg: var(--bs-dark);
+    --bs-btn-disabled-border-color: var(--bs-dark);
+}
+
+
+/* =====================
+   Boutons (contour)
+   ===================== */
+.btn-outline-primary {
+    --bs-btn-color: var(--bs-primary);
+    --bs-btn-border-color: var(--bs-primary);
+    --bs-btn-hover-bg: var(--bs-primary);
+    --bs-btn-hover-border-color: var(--bs-primary);
+    --bs-btn-focus-shadow-rgb: var(--bs-primary-rgb);
+    --bs-btn-active-bg: var(--bs-primary);
+    --bs-btn-active-border-color: var(--bs-primary);
+    --bs-btn-disabled-color: var(--bs-primary);
+    --bs-btn-disabled-border-color: var(--bs-primary);
+}
+
+.btn-outline-secondary {
+    --bs-btn-color: var(--bs-secondary);
+    --bs-btn-border-color: var(--bs-secondary);
+    --bs-btn-hover-bg: var(--bs-secondary);
+    --bs-btn-hover-border-color: var(--bs-secondary);
+    --bs-btn-focus-shadow-rgb: var(--bs-secondary-rgb);
+    --bs-btn-active-bg: var(--bs-secondary);
+    --bs-btn-active-border-color: var(--bs-secondary);
+    --bs-btn-disabled-color: var(--bs-secondary);
+    --bs-btn-disabled-border-color: var(--bs-secondary);
+}
+
+.btn-outline-tertiary {
+    --bs-btn-hover-color: rgba(255, 255, 255, 1);
+    --bs-btn-active-color: rgba(255, 255, 255, 1);
+  
+    --bs-btn-color: var(--bs-tertiary);
+    --bs-btn-border-color: var(--bs-tertiary);
+    --bs-btn-hover-bg: var(--bs-tertiary);
+    --bs-btn-hover-border-color: var(--bs-tertiary);
+    --bs-btn-focus-shadow-rgb: var(--bs-tertiary-rgb);
+    --bs-btn-active-bg: var(--bs-tertiary);
+    --bs-btn-active-border-color: var(--bs-tertiary);
+    --bs-btn-disabled-color: var(--bs-tertiary);
+    --bs-btn-disabled-border-color: var(--bs-tertiary);
+}
+
+.btn-outline-dark {
+    --bs-btn-color: var(--bs-dark);
+    --bs-btn-border-color: var(--bs-dark);
+    --bs-btn-hover-bg: var(--bs-dark);
+    --bs-btn-hover-border-color: var(--bs-dark);
+    --bs-btn-focus-shadow-rgb: var(--bs-dark-rgb);
+    --bs-btn-active-bg: var(--bs-dark);
+    --bs-btn-active-border-color: var(--bs-dark);
+    --bs-btn-disabled-color: var(--bs-dark);
+    --bs-btn-disabled-border-color: var(--bs-dark);
+}
+
+.btn-outline-white {
+    --bs-btn-color: var(--bs-white);
+    --bs-btn-border-color: var(--bs-white);
+    --bs-btn-hover-color: var(--bs-primary);
+    --bs-btn-hover-bg: var(--bs-white);
+    --bs-btn-hover-border-color: var(--bs-white);
+    --bs-btn-focus-shadow-rgb: var(--bs-white-rgb);
+    --bs-btn-active-color: var(--bs-primary);
+    --bs-btn-active-bg: var(--bs-white);
+    --bs-btn-active-border-color: var(--bs-white);
+    --bs-btn-disabled-color: var(--bs-white);
+    --bs-btn-disabled-border-color: var(--bs-white);
+}
+
+/* =====================
+   Badges
+   ===================== */
+.badge {
+    --bs-badge-border-radius: var(--bs-border-radius);
+}
+
+/* =====================
+   Progression
+   ===================== */
+.progress {
+    background-color: var(--bs-light-darken-5);
+}
+
+.progress-bar {
+    background-color: var(--bs-primary);
+}
+
+/* =====================
+   Classes utilitaires diverses
+   ===================== */
+.z-index-1 { z-index: 1;}
+
+.fw-500 { font-weight: 500; }
+.fw-600 { font-weight: 600; }
+
+.lead { font-weight: normal; }
+
+.extra-small { font-size: .7rem; }
+
+.text-current-color { color: currentColor !important; }
+
+.headings-font-family {
+    font-family: var(--bs-headings-font-family);
+}
+
+/* =====================
+   Liens
+   ===================== */
+.link-dark {
+    transition: all .2s ease-out;
+    color: var(--bs-body-color) !important;
+}
+
+.link-dark:hover,
+.link-dark:focus {
+    color: var(--bs-primary) !important;
+}
+
+/* =====================
+   Texte
+   ===================== */
+.bg-primary .text-muted,
+.bg-secondary .text-muted,
+.bg-tertiary .text-muted,
+.bg-dark .text-muted {
+    color: white !important;
+}
+
+.bg-tertiary {
+    --bs-bg-opacity: 1;
+    background-color: rgba(var(--bs-tertiary-rgb),var(--bs-bg-opacity))!important
+}
+
+.border-tertiary {
+    --bs-border-opacity: 1;
+    border-color: rgba(var(--bs-tertiary-rgb),var(--bs-border-opacity))!important;
+}
+
+.text-tertiary {
+    --bs-text-opacity: 1;
+    color: rgba(var(--bs-tertiary-rgb),var(--bs-text-opacity))!important;
+}
+
+.text-bg-tertiary {
+    color: #fff!important;
+    background-color: rgba(var(--bs-tertiary-rgb),var(--bs-bg-opacity,1))!important
+}
+
+/* =====================
+   Conteneur
+   ===================== */
+.container, 
+.container-fluid, 
+.container-lg, 
+.container-md,
+.container-sm, 
+.container-xl, 
+.container-xxl {
+    --bs-gutter-x: 2rem;
+}
+
+/* =====================
+   Formulaires
+   ===================== */
+.form-control,
+.form-select {
+    color: var(--bs-body-color);
+    border-color: var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+}
+
+.form-control:focus,
+.form-select:focus {
+    color: var(--bs-body-color);
+    border-color: rgba(var(--bs-body-color-rgb), .25);
+    box-shadow: 0 0 0 .25rem rgba(var(--bs-body-color-rgb), .125)
+}
+
+.text-white .form-control:focus,
+.text-white .form-select:focus {
+    box-shadow: 0 0 0 .25rem rgba(255, 255, 255, .1)
+}
+
+.input-group-text {
+    background-color: var(--bs-light-darken-5);
+    border-radius: var(--bs-border-radius);
+}
+
+.input-group-sm .form-control, 
+.input-group-lg .form-control,
+.input-group-sm .form-select, 
+.input-group-lg .form-select,
+.input-group-sm .input-group-text,
+.input-group-lg .input-group-text {
+    border-radius: var(--bs-border-radius);
+}
+
+.form-check-input {
+    background-color: var(--bs-body-bg);
+}
+
+.form-check-input:checked {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+
+.form-check-input:focus {
+    border-color: rgba(var(--bs-primary-rgb), .5);
+    box-shadow: 0 0 0 .25rem rgba(var(--bs-primary-rgb), .25);
+}
+
+.form-switch .form-check-input:focus {
+    --bs-form-switch-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23ccc'/%3e%3c/svg%3e")
+}
+
+.form-range:focus::-webkit-slider-thumb {
+    box-shadow: 0 0 0 1px #fff, 0 0 0 .25rem rgba(var(--bs-primary-rgb), .25)
+}
+
+.form-range:focus::-moz-range-thumb {
+    box-shadow: 0 0 0 1px #fff, 0 0 0 .25rem rgba(var(--bs-primary-rgb), .25)
+}
+
+.form-range::-webkit-slider-thumb {
+    background-color: var(--bs-primary);
+}
+
+.form-range::-webkit-slider-thumb:active {
+    background-color: rgba(var(--bs-primary-rgb), .75)
+}
+
+.form-range::-moz-range-thumb {
+    background-color: var(--bs-primary);
+}
+
+.form-range::-moz-slider-thumb:active {
+    background-color: rgba(var(--bs-primary-rgb), .75)
+}
+
+.form-range::-webkit-slider-runnable-track {
+    background-color: var(--bs-light-darken-5);
+}
+
+/* =====================
+   Menu déroulant
+   ===================== */
+.dropdown-menu {
+    --bs-dropdown-border-color: var(--bs-border-color);
+    --bs-dropdown-border-radius: var(--bs-border-radius);
+    --bs-dropdown-link-color: var(--bs-body-color);
+    --bs-dropdown-link-hover-color:var(--bs-body-color);
+    --bs-dropdown-link-hover-bg: var(--bs-light-darken-5);
+    --bs-dropdown-link-active-color: #fff;
+    --bs-dropdown-link-active-bg: var(--bs-primary);
+}
+
+.dropdown-menu.show:not([data-popper-placement]) {
+    animation: animation_menu_deroulant_fade .2s ease-out;
+}
+
+@keyframes animation_menu_deroulant_fade {
+    from { transform: translateY(-.375rem); }
+    to { transform: translateY(0); }
+}
+
+.dropdown-item {
+    transition: background .2s ease-out;
+    font-size: .925rem;
+}
+
+/* =====================
+   Vignette d'image
+   ===================== */
+.img-thumbnail {
+    background-color: var(--bs-body-bg);
+    padding: 0 !important;
+}
+
+/* =====================
+   Alertes
+   ===================== */
+.alert-primary {
+    --bs-alert-color: var(--bs-primary);
+    --bs-alert-bg: rgba(var(--bs-primary-rgb), .125);
+    --bs-alert-border-color: rgba(var(--bs-primary-rgb), .25);
+}
+
+.alert-secondary {
+    --bs-alert-color: var(--bs-secondary);
+    --bs-alert-bg: rgba(var(--bs-secondary-rgb), .125);
+    --bs-alert-border-color: rgba(var(--bs-secondary-rgb), .25);
+}
+
+.alert-tertiary {
+    --bs-alert-color: var(--bs-tertiary);
+    --bs-alert-bg: rgba(var(--bs-tertiary-rgb), .125);
+    --bs-alert-border-color: rgba(var(--bs-tertiary-rgb), .25);
+}
+
+.alert-dark {
+    --bs-alert-color: var(--bs-dark);
+    --bs-alert-bg: rgba(var(--bs-dark-rgb), .125);
+    --bs-alert-border-color: rgba(var(--bs-dark-rgb), .25);
+}
+
+.alert-success {
+    --bs-alert-color: var(--bs-success-darken);
+    --bs-alert-bg: rgba(var(--bs-success-rgb), .125);
+    --bs-alert-border-color: rgba(var(--bs-success-rgb), .25);
+}
+
+.alert-danger {
+    --bs-alert-color: var(--bs-danger-darken);
+    --bs-alert-bg: rgba(var(--bs-danger-rgb), .125);
+    --bs-alert-border-color: rgba(var(--bs-danger-rgb), .25);
+}
+
+.alert-warning {
+    --bs-alert-color: var(--bs-warning-darken);
+    --bs-alert-bg: rgba(var(--bs-warning-rgb), .125);
+    --bs-alert-border-color: rgba(var(--bs-warning-rgb), .25);
+}
+
+.alert-info {
+    --bs-alert-color: var(--bs-info-darken);
+    --bs-alert-bg: rgba(var(--bs-info-rgb), .125);
+    --bs-alert-border-color: rgba(var(--bs-info-rgb), .25);
+}
+
+/* =====================
+   Tabs navigation
+   ===================== */
+.nav-tabs {
+    border-bottom-color: var(--bs-border-color);
+    --bs-nav-tabs-link-active-color: var(--bs-primary);
+}
+
+.nav-pills {
+    --bs-nav-pills-link-active-bg: var(--bs-primary);
+}
+
+.nav {
+    --bs-nav-link-color: var(--bs-body-color);
+    --bs-nav-link-disabled-color: var(--bs-body-color);
+}
+
+/* =====================
+   Bouton de fermeture
+   ===================== */
+.btn-close:focus {
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+/* =====================
+   Offcanvas
+   ===================== */
+.offcanvas {
+    --bs-offcanvas-bg: var(--bs-body-bg);
+}
+
+.offcanvas {
+    border: none !important;
+    box-shadow: 0 0 1.5rem rgba(0, 0, 0, .25);
+}
+
+.offcanvas-backdrop.show {
+    opacity: 1;
+}
+
+.offcanvas.offcanvas-from-top {
+    transform: translateY(-100%);
+}
+
+.offcanvas.offcanvas-from-bottom {
+    transform: translateY(100%);
+}
+
+.offcanvas.show:not(.hiding), 
+.offcanvas.showing {
+    transform: none;
+}
+
+@media (max-width: 575px) {
+    .offcanvas.offcanvas-mobile-full {
+        width: 100%;
+    } 
+}
+
+/* =====================
+   Modal
+   ===================== */
+.modal {
+    --bs-modal-bg: var(--bs-body-bg);
+}
+
+.modal-backdrop.show {
+    opacity: 1;
+}
+
+.modal-content {
+    border-radius: var(--bs-border-radius);
+}
+
+/* =====================
+   Info-bulles (popovers)
+   ===================== */
+.popover {
+    --bs-popover-bg: var(--bs-body-bg);
+    --bs-popover-border-color: var(--bs-border-color);
+    --bs-popover-header-bg: var(--bs-light);
+    --bs-popover-body-color: var(--bs-body-color);
+    --bs-popover-arrow-border: var(--bs-border-color);
+    /* --bs-popover-border-radius: var(--bs-border-radius);
+    --bs-popover-inner-border-radius: var(--bs-border-radius); */
+}
+
+.popover-body p {
+    margin-bottom: 0;
+}
+
+/* =====================
+   Accordéon
+   ===================== */
+.accordion {
+    --bs-accordion-bg: var(--bs-body-bg);
+    --bs-accordion-color: var(--bs-body-color);
+    --bs-accordion-btn-color: var(--bs-body-color);
+    --bs-accordion-btn-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='var%28--bs-body-color%29'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+    --bs-accordion-btn-active-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='var%28--bs-body-color%29'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+    --bs-accordion-btn-focus-border-color: rgba(var(--bs-primary-rgb), 0.5);
+    --bs-accordion-btn-focus-box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+    --bs-accordion-active-color: var(--bs-primary);
+    --bs-accordion-active-bg: var(--bs-light);
+    --bs-accordion-border-radius: var(--bs-border-radius);
+    --bs-accordion-inner-border-radius: var(--bs-border-radius);
+}
+
+.accordion-button:focus {
+    border: none;
+    box-shadow: none;
+}
+
+.accordion-button:focus-visible {
+    box-shadow: 0 0 0 .25rem rgba(255, 255, 255, .1);
+}
+
+/* =====================
+   Tables
+   ===================== */
+.table {
+    --bs-table-striped-bg: rgba(0, 0, 0, 0.025);
+    --bs-table-striped-color: currentColor;
+}
+
+.table-light {
+    --bs-table-bg: var(--bs-light);
+    --bs-table-color: var(--bs-body-color);
+    --bs-table-border-color: var(--bs-border-color);
+}
+
+/* =====================
+   Pagination
+   ===================== */
+.pagination {
+    --bs-pagination-active-bg: var(--bs-primary);
+    --bs-pagination-active-border-color: var(--bs-primary);
+}
+
+/* =====================
+   Spinners
+   ===================== */
+.spinner-border-sm {
+    --bs-spinner-border-width: .15em;
+}
+
+/* =====================
+   Carte
+   ===================== */
+.card {
+    --bs-card-border-radius: var(--bs-border-radius);
+    --bs-card-inner-border-radius: var(--bs-border-radius);
+    --bs-card-bg: var(--bs-body-bg);
+    --bs-card-border-color: var(--bs-border-color);
+    color: var(--bs-body-color);
+    /*--bs-card-color: var(--bs-body-color);*/
+}
+
+.card-header {
+    background-color: var(--bs-light);
+    border-bottom-color: var(--bs-border-color);
+}
+
+/* =====================
+   hr (séparateurs)
+   ===================== */
+hr, .hr {
+    opacity: .1;
+}
+
+/* =====================
+   Ellipse de texte
+   ===================== */
+.text-ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* =====================
+   Fil d'Ariane
+   ===================== */
+.breadcrumb {
+    --bs-breadcrumb-margin-bottom: 0;
+    --bs-breadcrumb-font-size: .875rem;
+    --bs-breadcrumb-item-active-color: rgba(var(--bs-body-color-rgb), .5);
+}
+
+/* =====================
+   Ratio
+   ===================== */
+.ratio-3x4 {
+    --bs-aspect-ratio: calc(4 / 3 * 100%);
+}
+
+.ratio-9x16 {
+    --bs-aspect-ratio: calc(16 / 9 * 100%);
+}
+
+.ratio-9x21 {
+    --bs-aspect-ratio: calc(21 / 9 * 100%);
+}
+
+/* =====================
+   Page reCAPTCHA
+   ===================== */
+.shopify-challenge__container {
+    padding: 2rem;
+}
+
+/* =====================
+   Pages de politique
+   ===================== */
+.shopify-policy__container {
+    margin-top: 2rem !important;
+    margin-bottom: 2rem !important;
+    max-width: 720px !important;
+}
+
+/* =====================
+   Erreurs système de Shopify
+   ===================== */
+.errors ul {
+    margin-bottom: 0;
+}
+
+/* =====================
+   Éditeur de texte riche (rte)
+   ===================== */
+.rte img {
+    max-width: 100%;
+    height: auto;
+}
+
+.rte p:last-child {
+    margin-bottom: 0;
+}
+
+.text-white .rte a:not(.btn) {
+    color: white;
+}
+
+/* =====================
+   Tables pliables
+   ===================== */
+@media (max-width: 991px) {
+    .table-collapsible table { 
+        border: 0; 
+    }
+    .table-collapsible table thead {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+    .table-collapsible table tr {
+        display: block;
+        padding: .5rem 0;
+        border: none;
+        border-bottom: 1px solid var(--bs-dark);
+    }
+    .table-collapsible table tr:first-child {
+        border-top: 1px solid var(--bs-dark);
+    }
+    .table-collapsible table td {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: .95rem;
+        padding: .5rem 0;
+        border: none;
+        border-bottom: 1px solid rgba(0, 0, 0, .1);
+    }
+    .table-collapsible table td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        padding-right: 1rem;
+    }
+    .table-collapsible table td:last-child {
+        border-bottom: 0;
+    }
+}
+
+/* =====================
+   SVG h2 sous-titre
+   ===================== */
+.h2_svg {
+    margin-top: 0.25rem;
+    margin-bottom: 1.5rem;
+    display: block;
+    line-height: 0;
+}
+
+.h2_svg span {
+    display: inline-block;
+}
+
+.h2_svg svg {
+    display: inline-block;
+}
+
+/* =====================
+   Ombre générale
+   ===================== */
+.shadow-1 {
+    border-radius: var(--bs-border-radius)!important;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px!important;
+}
+
+.shadow-2 {
+    border-radius: var(--bs-border-radius)!important;
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px!important;
+}
+
+.shadow-3 {
+    border-radius: var(--bs-border-radius)!important;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px!important;
+}
+
+.shadow-4 {
+    border-radius: var(--bs-border-radius)!important;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px!important;
+}
+
+/* =====================
+   Ombre pilule
+   ===================== */
+.shadow-pill-1 {
+    border-radius: var(--bs-border-radius-pill)!important;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px!important;
+}
+
+.shadow-pill-2 {
+    border-radius: var(--bs-border-radius-pill)!important;
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px!important;
+}
+
+.shadow-pill-3 {
+    border-radius: var(--bs-border-radius-pill)!important;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px!important;
+}
+
+.shadow-pill-4 {
+    border-radius: var(--bs-border-radius-pill)!important;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px!important;
+}
+
+/* =====================
+   Badge solde
+   ===================== */
+.badge-ribbon {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 75px;
+    height: 75px;
+    text-align: right;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.badge-ribbon-sale {
+    position: absolute;
+    top: 19px;
+    right: -21px;
+    display: block;
+    width: 100px;
+    font-size: 0.75em;
+    font-weight: 700;
+    text-align: center;
+    line-height: 20px;
+    white-space: nowrap;
+    transform: rotate(45deg);
+    box-shadow: rgb(0, 0, 0) 0px 3px 10px -5px;
+}
+
+.badge-ribbon span:before {
+    content: "";
+    position: absolute;
+    left: 0px;
+    top: 100%;
+    z-index: -1;
+    border-left: 3px solid #888888;
+    border-right: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+    border-top: 3px solid #888888;
+}
+
+.badge-ribbon span:after {
+    content: "";
+    position: absolute;
+    right: 0px;
+    top: 100%;
+    z-index: -1;
+    border-left: 3px solid transparent;
+    border-right: 3px solid #888888;
+    border-bottom: 3px solid transparent;
+    border-top: 3px solid #888888;
+}
+
+.badge-ribbon svg {
+    transform: rotate(45deg);
+}
+
+/* =====================
+   Bouton de retour en haut général
+   ===================== */
+#btn-scroll-top {
+    position: fixed;
+    bottom: 1rem;
+    z-index: 1020;
+    opacity: 0;
+    display: flex;
+    padding: 0.5rem 0.5rem;
+    transform: translateY(100%);
+    transition: all .2s ease-out;
+}
+
+#btn-scroll-top.btn-show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (max-width: 575px) {
+    #btn-scroll-top {
+        padding: .25rem .5rem;
+    }
+    #btn-scroll-top svg {
+        width: 20px;
+        height: 20px;
+    }
+    #btn-scroll-top[data-mobile-position="left"] { left: 1rem; }
+    #btn-scroll-top[data-mobile-position="center"] { left: 50%; transform: translateX(-50%); }
+    #btn-scroll-top[data-mobile-position="right"] { right: 1rem; }
+}
+
+@media (min-width: 576px) {
+    #btn-scroll-top[data-desktop-position="left"] { left: 1rem; }
+    #btn-scroll-top[data-desktop-position="center"] { left: 50%; transform: translateX(-50%); }
+    #btn-scroll-top[data-desktop-position="right"] { right: 1rem; }
+}
+
+/* =====================
+   Image de fond overlay
+   ===================== */
+.background-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 0;
+}
+
+.background-overlay-blur {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    backdrop-filter: blur(0px);
+    z-index: 0;
+}
+
+/* ========================================================================
+   CUSTOM STYLING - STICKY HEADER & INTERACTIVE ELEMENTS
+   ======================================================================== */
+
+/* Sticky Header Styles */
+.header-sticky {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.header-sticky .header-logo img {
+  max-height: 40px;
+  transition: max-height 0.3s ease;
+}
+
+.header-sticky .main-navigation a {
+  font-size: 14px;
+  padding: 8px 12px;
+}
+
+/* Body padding when header is sticky */
+body.sticky-header-active {
+  padding-top: 80px;
+}
+
+/* Social Media Bar */
+.social-media-bar {
+  position: fixed;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.social-media-bar:hover {
+  opacity: 1;
+}
+
+.social-media-bar a {
+  display: block;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.social-media-bar a:hover {
+  transform: translateX(5px) scale(1.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.social-media-bar img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+/* Flag/Language Selector */
+.flag-selector {
+  position: relative;
+  display: inline-block;
+}
+
+.flag-selector .current-flag {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background: #fff;
+  transition: all 0.3s ease;
+}
+
+.flag-selector .current-flag:hover {
+  border-color: #007bff;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
+}
+
+.flag-selector .flag-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 150px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: 1050;
+}
+
+.flag-selector:hover .flag-dropdown,
+.flag-selector.active .flag-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.flag-dropdown a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  text-decoration: none;
+  color: #333;
+  transition: background-color 0.2s ease;
+}
+
+.flag-dropdown a:hover {
+  background-color: #f8f9fa;
+}
+
+.flag-dropdown img {
+  width: 20px;
+  height: 15px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+/* Stories Bar */
+.stories-bar {
+  display: flex;
+  gap: 15px;
+  padding: 20px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.stories-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.story-item {
+  flex-shrink: 0;
+  text-align: center;
+  cursor: pointer;
+}
+
+.story-avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  padding: 3px;
+  margin-bottom: 8px;
+  transition: transform 0.3s ease;
+}
+
+.story-item:hover .story-avatar {
+  transform: scale(1.1);
+}
+
+.story-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+}
+
+.story-label {
+  font-size: 12px;
+  color: #666;
+  max-width: 70px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Tooltips */
+.tooltip-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-content {
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 1060;
+}
+
+.tooltip-content::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: rgba(0, 0, 0, 0.9);
+}
+
+.tooltip-wrapper:hover .tooltip-content {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Newsletter Form Enhancement */
+.newsletter-form {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Container pour les champs nom et email côte à côte */
+.newsletter-input-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+/* Cas où seul le champ email est présent */
+.newsletter-input-row input:only-child {
+  flex: 1;
+  max-width: 100%;
+}
+
+.newsletter-name-input,
+.newsletter-email-input {
+  flex: 1;
+  padding: 15px 20px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  background: #fff;
+  border-radius: 8px;
+}
+
+.newsletter-input-group {
+  position: relative;
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.newsletter-form input[type="email"] {
+  flex: 1;
+  padding: 15px 20px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  background: #fff;
+}
+
+.newsletter-form input[type="email"]:focus {
+  box-shadow: inset 0 0 0 2px #007bff;
+}
+
+.newsletter-form button {
+  padding: 15px 25px;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.newsletter-form button:hover {
+  background: #0056b3;
+}
+
+.newsletter-form .success-message,
+.newsletter-form .error-message {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.newsletter-form .success-message {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.newsletter-form .error-message {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f1b0b7;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .social-media-bar {
+    position: fixed;
+    left: auto;
+    right: 20px;
+    top: auto;
+    bottom: 20px;
+    transform: none;
+    flex-direction: row;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 10px;
+    border-radius: 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .social-media-bar a {
+    width: 35px;
+    height: 35px;
+  }
+
+  .social-media-bar img {
+    width: 16px;
+    height: 16px;
+  }
+
+  .header-sticky .header-logo img {
+    max-height: 35px;
+  }
+
+  body.sticky-header-active {
+    padding-top: 70px;
+  }
+
+  .stories-bar {
+    padding: 15px 0;
+    gap: 10px;
+  }
+
+  .story-avatar {
+    width: 60px;
+    height: 60px;
+  }
+
+  .story-label {
+    font-size: 11px;
+    max-width: 60px;
+  }
+
+  .newsletter-form {
+    max-width: 100%;
+  }
+
+  .newsletter-input-row {
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .newsletter-name-input,
+  .newsletter-email-input {
+    padding: 12px 15px;
+    font-size: 14px;
+  }
+
+  .newsletter-input-group {
+    flex-direction: column;
+  }
+
+  .newsletter-form input[type="email"],
+  .newsletter-form button {
+    padding: 12px 15px;
+  }
+}
+
+/* Accessibility Improvements */
+@media (prefers-reduced-motion: reduce) {
+  .header-sticky,
+  .social-media-bar a,
+  .flag-selector .current-flag,
+  .flag-selector .flag-dropdown,
+  .story-avatar,
+  .tooltip-content,
+  .newsletter-form input[type="email"],
+  .newsletter-form button {
+    transition: none;
+  }
+}
+
+/* Focus states for keyboard navigation */
+.social-media-bar a:focus,
+.flag-selector .current-flag:focus,
+.flag-dropdown a:focus,
+.story-item:focus,
+.newsletter-form input[type="email"]:focus,
+.newsletter-form button:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .header-sticky {
+    background: #fff;
+    border-bottom: 2px solid #000;
+  }
+
+  .social-media-bar a {
+    border: 2px solid #000;
+  }
+
+  .flag-selector .current-flag,
+  .flag-selector .flag-dropdown {
+    border-color: #000;
+  }
+}
