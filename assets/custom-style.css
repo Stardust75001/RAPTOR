@@ -376,7 +376,7 @@ main {
   .newsletter-name-input,
   .newsletter-email-input {
     font-size: 13px;
-     width: 45% !important;
+     width: 75% !important;
     padding: 8px;
   }
 }
