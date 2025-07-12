@@ -13,7 +13,7 @@
 }
 
 main {
-  padding-top: 190px !important; /* Social bar (60px) + Navbar (80px) + Stories bar (50px) */
+  padding-top: 360px !important;
 }
 
 /* === Top Social Bar === */
@@ -81,27 +81,17 @@ main {
   gap: 8px;
 }
 
-/* === Dropdown langue - MINIMAL === */
-.language-dropdown {
-  position: relative;
-}
-
 .flag-link {
   display: flex;
   align-items: center;
   text-decoration: none;
-  padding: 6px 10px;
-  border-radius: 6px;
-  transition: all 0.3s ease;
-  min-height: 44px;
-  min-width: 44px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
 }
 
-.flag-link:hover,
-.flag-link:focus {
-  background-color: rgba(255, 255, 255, 0.2);
-  transform: translateY(-1px);
-  outline: none;
+.flag-link:hover {
+  background-color: #e0e0e0;
 }
 
 /* === Stories Bar === */
@@ -220,154 +210,6 @@ main {
   border: none;
 }
 
-/* === Image Banner === */
-.image-banner-wrapper {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  margin: 0 !important;
-  padding: 0 !important;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-.image-banner-img {
-  width: 100% !important;
-  height: auto !important;
-  object-fit: cover !important;
-  display: block;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-.image-banner-overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  color: white;
-  padding: 0 20px;
-  width: 90%;
-  z-index: 2;
-}
-
-.image-banner-title {
-  font-size: 32px;
-  margin-bottom: 16px;
-  line-height: 1.2;
-  font-weight: 700;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-}
-
-.image-banner-description {
-  font-size: 18px;
-  margin-bottom: 24px;
-  line-height: 1.4;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-}
-
-.btn-group {
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-top: 20px;
-}
-
-.btn-group .btn {
-  padding: 12px 24px;
-  font-size: 16px;
-  text-transform: uppercase;
-  border-radius: 6px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.btn-group .btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
-}
-
-/* === Newsletter Optimisation Hauteur & Alignement === */
-.newsletter-wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 24px 16px !important; /* Réduit de 32px à 24px */
-  background-color: #8c735b;
-  text-align: center;
-  margin: 0 !important;
-}
-
-.newsletter-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px !important; /* Réduit de 10px à 8px */
-  width: 100%;
-  max-width: 380px;
-  margin: 0 auto;
-}
-
-.newsletter-form .form-fields {
-  margin-bottom: 8px !important; /* Réduit l'espacement avec le bouton */
-}
-
-/* === Newsletter : Hauteur compacte + bouton aligné === */
-.newsletter-input-row {
-  display: flex;
-  gap: 6px;
-  width: 100%;
-  margin: 0 !important;
-  align-items: stretch;
-}
-
-.newsletter-name-input,
-.newsletter-email-input {
-  flex: 1;
-  padding: 10px 14px !important;
-  border: 1px solid #dee2e6 !important;
-  border-radius: 6px !important;
-  font-size: 14px !important;
-  min-height: 42px !important;
-  background: #fff !important;
-  box-sizing: border-box !important;
-}
-
-/* Bouton identique aux champs, sans espace */
-.newsletter-form .btn {
-  margin: 0 !important;
-  min-height: 40px !important;
-  height: 40px !important;
-  padding: 10px 16px !important;
-  font-size: 13px !important;
-  line-height: 1 !important;
-  font-weight: 600;
-  text-transform: uppercase;
-  border-radius: 6px;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  box-shadow: none;
-  border: none;
-}
-
-/* "By signing up..." sur une seule ligne en mobile */
-.newsletter-terms {
-  font-size: 11px;
-  color: #eee;
-  margin-top: 10px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-  text-align: center;
-}
-
 /* === Affichage conditionnel Desktop / Mobile === */
 .only-mobile {
   display: none;
@@ -377,7 +219,6 @@ main {
   display: block;
 }
 
-/* === RESPONSIVE MOBILE === */
 @media screen and (max-width: 768px) {
   .only-mobile {
     display: block;
@@ -387,26 +228,24 @@ main {
     display: none;
   }
 
-  /* Réduction de l'espace header pour mobile */
+  main {
+    padding-top: 275px !important;
+  }
+
   .top-social-bar {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 6px 8px;
-    height: 45px;
+    padding: 8px 10px;
   }
 
   .stories-bar {
-    padding: 3px 6px;
-  }
-
-  .stories-bar-wrapper {
-    padding: 6px 0;
+    padding: 4px 8px;
   }
 
   .animated-stories-link img {
-    width: 45px;
-    height: 45px;
+    width: 50px;
+    height: 50px;
   }
 
   .tooltip-bubble {
@@ -414,69 +253,15 @@ main {
     left: 50%;
     transform: translate(-50%, 0);
     font-size: 12px;
-    padding: 4px 8px;
+    padding: 5px 10px;
   }
 
-  /* Newsletter mobile optimisée */
-  .newsletter-wrapper {
-    padding: 16px 12px !important; /* Plus compact sur mobile */
-  }
-
-  .newsletter-form {
-    gap: 1px !important; /* Ultra compact sur mobile - réduit de 3px à 1px */
-  }
-
-  newsletter-input-row {
-  display: flex;
-  gap: 6px;
-  width: 100%;
-  margin: 0 !important;
-  align-items: stretch;
-}
-
-.newsletter-name-input,
-.newsletter-email-input {
-  flex: 1;
-  padding: 10px 14px !important;
-  border: 1px solid #dee2e6 !important;
-  border-radius: 6px !important;
-  font-size: 14px !important;
-  min-height: 40px !important;
-  height: 40px !important;
-  background: #fff !important;
-  box-sizing: border-box !important;
-}
-
-  /* Bouton Subscribe de même hauteur que les champs sur mobile */
-  .newsletter-form .btn {
-    min-height: 44px !important; /* Même hauteur que les champs */
-    padding: 10px 20px !important; /* Ajuste le padding pour correspondre */
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  .newsletter-terms {
-    font-size: 10px;
-    margin-top: 2px !important; /* Réduit l'espace de 4px à 2px sur mobile */
-  }
-
-  /* Optimisation hero image mobile */
   .image-banner-title {
-    font-size: 22px;
-    margin-bottom: 10px;
-    line-height: 1.2;
+    font-size: 24px;
   }
 
   .image-banner-description {
     font-size: 14px;
-    margin-bottom: 16px;
-    line-height: 1.3;
-  }
-
-  .btn-group {
-    gap: 8px;
-    margin-top: 12px;
   }
 
   .btn-group .btn {
@@ -497,392 +282,130 @@ main {
   }
 }
 
-/* Responsive supplémentaire pour très petits écrans */
-@media screen and (max-width: 320px) {
-  .newsletter-input-row {
-    display: flex !important; /* Maintient côte à côte même sur très petits écrans */
-    flex-direction: row !important;
-    gap: 6px !important; /* Légèrement réduit l'espace sur très petits écrans */
-    width: 100% !important;
-    margin-bottom: 1px !important; /* Ultra compact pour très petits écrans - réduit de 2px à 1px */
-  }
-
-  .newsletter-name-input,
-  .newsletter-email-input {
-    flex: 1 !important; /* Chaque champ prend exactement la moitié */
-    font-size: 13px !important;
-    padding: 9px 12px !important;
-    min-height: 40px !important;
-    box-sizing: border-box !important;
-  }
-
-  /* Bouton Subscribe de même hauteur sur très petits écrans */
-  .newsletter-wrapper .newsletter-form .btn {
-    min-height: 40px !important; /* Même hauteur que les champs sur très petits écrans */
-    padding: 9px 16px !important;
-  }
-  
-  .newsletter-name-input::placeholder,
-  .newsletter-email-input::placeholder {
-    font-size: 12px;
-    color: #6c757d;
-    opacity: 1;
-  }
-
-  .newsletter-wrapper {
-    padding: 14px 10px !important;
-  }
-
-  .newsletter-terms {
-    font-size: 9px;
-    margin-top: 1px !important; /* Ultra compact pour très petits écrans - réduit de 3px à 1px */
-  }
-}
-
-/* === Ajustement du padding-top pour main selon les tailles d'écran === */
-/* Desktop large (1025px et plus) */
-main {
-  padding-top: 190px !important;
-}
-
-/* iPad Landscape (1024px) */
-@media screen and (max-width: 1024px) and (min-width: 769px) and (orientation: landscape) {
-  main {
-    padding-top: 180px !important;
-  }
-}
-
-/* iPad Portrait (768px - 1024px) */
-@media screen and (max-width: 1024px) and (min-width: 769px) and (orientation: portrait) {
-  main {
-    padding-top: 170px !important;
-  }
-}
-
-/* Tablettes moyennes (768px) */
-@media screen and (max-width: 768px) and (min-width: 481px) {
-  main {
-    padding-top: 160px !important;
-  }
-}
-
-/* Mobile large (481px - 767px) */
-@media screen and (max-width: 767px) and (min-width: 481px) {
-  main {
-    padding-top: 155px !important;
-  }
-}
-
-/* Mobile standard (320px - 480px) */
-@media screen and (max-width: 480px) {
-  main {
-    padding-top: 145px !important;
-  }
-}
-
-/* Très petits écrans (max 320px) */
-@media screen and (max-width: 320px) {
-  main {
-    padding-top: 140px !important;
-  }
-}
-
-/* === Wishlist Share Buttons === */
-#wishlist-share-dropdown .dropdown-menu {
-  min-width: 180px;
-}
-
-#wishlist-share-dropdown .dropdown-item {
-  padding: 0.5rem 1rem;
-  transition: all 0.2s ease;
-}
-
-#wishlist-share-dropdown .dropdown-item:hover {
-  background-color: var(--bs-light);
-  transform: translateX(2px);
-}
-
-#wishlist-share-dropdown .dropdown-item svg {
-  transition: all 0.2s ease;
-  opacity: 0.7;
-}
-
-#wishlist-share-dropdown .dropdown-item:hover svg {
-  opacity: 1;
-  transform: scale(1.1);
-}
-
-.btn[data-share-copy].btn-success {
-  background-color: var(--bs-success) !important;
-  border-color: var(--bs-success) !important;
-  color: white !important;
-}
-
-@media (max-width: 576px) {
-  #wishlist-share-dropdown .dropdown-menu {
-    min-width: 160px;
-    font-size: 0.9rem;
-  }
-  
-  #wishlist-share-dropdown .dropdown-item {
-    padding: 0.4rem 0.8rem;
-  }
-  
-  #wishlist-share-dropdown .dropdown-item svg {
-    width: 14px;
-    height: 14px;
-  }
-}
-
-#wishlist-share-dropdown .dropdown-item:focus-visible {
-  box-shadow: 0 0 0 .25rem rgba(var(--bs-primary-rgb),.25);
-  outline: none;
-  background-color: var(--bs-primary);
-  color: white;
-}
-
-#wishlist-share-dropdown .dropdown-item:focus-visible svg {
-  opacity: 1;
-}
-
-.dropdown-item.loading {
-  opacity: 0.6;
-  pointer-events: none;
-  position: relative;
-}
-
-.dropdown-item.loading::after {
-  content: '';
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 12px;
-  height: 12px;
-  border: 2px solid #dee2e6;
-  border-top: 2px solid #6c757d;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: translateY(-50%) rotate(0deg); }
-  100% { transform: translateY(-50%) rotate(360deg); }
-}
-
-.dropdown-item.btn-success {
-  background-color: var(--bs-success) !important;
-  color: white !important;
-  animation: successPulse 0.3s ease-out;
-}
-
-.dropdown-item.btn-danger {
-  background-color: var(--bs-danger) !important;
-  color: white !important;
-  animation: errorShake 0.5s ease-out;
-}
-
-@keyframes successPulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.02); }
-  100% { transform: scale(1); }
-}
-
-@keyframes errorShake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-2px); }
-  75% { transform: translateX(2px); }
-}
-
-.share-feedback {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 10000;
-  padding: 12px 16px;
-  background: var(--bs-success);
-  color: white;
-  border-radius: 6px;
-  transform: translateX(100%);
-  transition: transform 0.3s ease;
-  font-size: 14px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.share-feedback.show {
-  transform: translateX(0);
-}
-
-.share-feedback.error {
-  background: var(--bs-danger);
-}
-
-.offcanvas-header .dropdown .btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-/* === ÉLIMINATION DES ESPACES ENTRE SECTIONS === */
-body {
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-#MainContent,
-.main-content {
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-.shopify-section {
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-.shopify-section:first-child,
-.image-banner-section,
+/* === Image Banner === */
 .image-banner-wrapper {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-  border-top: none !important;
-}
-
-.shopify-section:last-child,
-.footer-section,
-.newsletter-wrapper {
-  margin-bottom: 0 !important;
-  padding-bottom: 0 !important;
-  border-bottom: none !important;
-}
-
-.section-spacing,
-.section-margin,
-.page-margin {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
   margin: 0 !important;
   padding: 0 !important;
+  background: transparent !important;
 }
 
-.container,
-.container-fluid {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+.image-banner-img {
+  width: 100% !important;
+  height: auto !important;
+  object-fit: contain !important;
+  display: block;
 }
 
-/* === Boutons et Carousel === */
-.btn-inline-auto {
-  display: inline-block;
-  width: auto !important;
-  min-width: 50px;
-  padding: 8px 16px;
+.image-banner-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 0%);
   text-align: center;
-  font-size: 13px;
+  color: white;
+  padding: 0 20px;
+  width: 90%;
+}
+
+.image-banner-title {
+  font-size: 28px;
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.image-banner-description {
+  font-size: 16px;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.btn-group {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-group .btn {
+  padding: 10px 18px;
+  font-size: 14px;
   text-transform: uppercase;
   border-radius: 4px;
-  white-space: nowrap;
 }
-
-.carousel-caption .btn-wrapper {
-  display: flex !important;
+/* === Bloc newsletter stylisé (centré responsive et compact mobile) === */
+.newsletter-wrapper {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.carousel-caption .btn-wrapper .btn {
-  display: inline-flex !important;
-  justify-content: center;
-  align-items: center;
-  padding: 8px 16px;
-  font-size: 13px;
-  white-space: nowrap;
+  padding: 32px 16px;
+  background-color: #8c735b;
   text-align: center;
-  border-radius: 4px;
-  box-sizing: border-box;
-  width: auto !important;
-  min-width: 100px;
-  max-width: 160px;
 }
 
-.scroll-anchor {
-  scroll-margin-top: 360px;
+.newsletter-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 380px;
+  margin: 0 auto;
 }
-@media screen and (max-width: 600px) {
-  .newsletter-name-input,
-  .newsletter-email-input,
-  .newsletter-form .btn {
-    min-height: 38px !important;
-    padding: 8px 12px !important;
-    font-size: 12px !important;
-  }
 
-  .newsletter-form {
-    gap: 0 !important;
-  }
+/* ===== NEWSLETTER STYLES ADDITIONNELS ===== */
 
-  .newsletter-wrapper {
-    padding: 14px 10px !important;
-  }
-
-  .newsletter-terms {
-    margin-top: 2px !important;
-    font-size: 10px;
-  }
+/* Ajustements spécifiques pour les termes de la newsletter */
+.newsletter-terms {
+  font-size: 11px;
+  margin-top: 14px;
+  text-align: center;
+  color: #eee;
+  max-width: 100%;
 }
-@media screen and (max-width: 600px) {
-  .newsletter-name-input,
-  .newsletter-email-input,
-  .newsletter-form .btn {
-    min-height: 36px !important;
-    height: 36px !important;
-    font-size: 12px !important;
-    padding: 8px 12px !important;
-  }
 
-  .newsletter-form {
-    gap: 0 !important;
-  }
-
-  .newsletter-wrapper {
-    padding: 12px 10px !important;
-  }
-
-  .newsletter-terms {
-    margin-top: 2px !important;
-    font-size: 10px;
-  }
-}
-@media screen and (max-width: 1024px) {
-  .newsletter-name-input,
-  .newsletter-email-input,
-  .newsletter-form .btn {
-    min-height: 36px !important;
-    height: 36px !important;
-    font-size: 12px !important;
-    padding: 8px 12px !important;
-  }
-
+/* Responsive supplémentaire pour mobile très petit */
+@media screen and (max-width: 320px) {
   .newsletter-input-row {
-    gap: 6px !important;
-    margin: 0 !important;
+    gap: 6px;
   }
-
-  .newsletter-form {
-    gap: 0 !important;
-    width: 100% !important;
-    max-width: 100% !important;
+  
+  .newsletter-name-input,
+  .newsletter-email-input {
+    font-size: 13px;
+    padding: 8px;
   }
+}
 
-  .newsletter-wrapper {
-    padding: 12px 10px !important;
-  }
-
+@media screen and (min-width: 769px) {
   .newsletter-terms {
-    margin-top: 2px !important;
-    font-size: 10px;
+    display: inline-block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-width: 100%;
+  }
+}
+/* === Ajustement du padding-top pour main selon les tailles d'écran === */
+
+/* Desktop large (par défaut) */
+main {
+  padding-top: 360px !important; /* Somme header total : social bar + navbar + stories bar */
+}
+
+/* iPad et tablettes (portrait et paysage) */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  main {
+    padding-top: 260px !important; /* Ajusté pour éviter la barre blanche */
+  }
+}
+
+/* Mobile (jusqu'à 767px) */
+@media screen and (max-width: 767px) {
+  main {
+    padding-top: 275px !important; /* Ajusté pour mobile sticky compact */
   }
 }
