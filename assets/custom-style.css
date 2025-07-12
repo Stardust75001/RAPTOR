@@ -338,13 +338,14 @@ main {
 }
 
 .newsletter-form .btn {
-  margin-top: 12px !important; /* Réserve un espace clair au-dessus du bouton */
-  padding: 12px 20px !important;
-  font-size: 14px;
+  margin-top: 4px !important; /* Espace minimal entre champs et bouton */
+  padding: 10px 16px !important;
+  font-size: 13px;
+  line-height: 1.1;
   font-weight: 600;
   text-transform: uppercase;
   border-radius: 6px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* "By signing up..." sur une seule ligne en mobile */
@@ -798,6 +799,8 @@ body {
 }
 @media screen and (max-width: 600px) {
   .newsletter-form .btn {
-    margin-top: 0px !important;
+    margin-top: 2px !important;
+    padding: 9px 14px !important;
+    font-size: 12px;
   }
 }
