@@ -804,9 +804,24 @@ body {
   scroll-margin-top: 360px;
 }
 @media screen and (max-width: 600px) {
+  .newsletter-name-input,
+  .newsletter-email-input,
   .newsletter-form .btn {
+    min-height: 38px !important;
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+  }
+
+  .newsletter-form {
+    gap: 0 !important;
+  }
+
+  .newsletter-wrapper {
+    padding: 14px 10px !important;
+  }
+
+  .newsletter-terms {
     margin-top: 2px !important;
-    padding: 9px 14px !important;
-    font-size: 12px;
+    font-size: 10px;
   }
 }
