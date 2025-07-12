@@ -291,13 +291,13 @@ main {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
 }
 
-/* === NEWSLETTER - VERSION OPTIMISÉE === */
+/* === Newsletter Optimisation Hauteur & Alignement === */
 .newsletter-wrapper {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 20px 16px !important; /* Réduit significativement de 32px à 20px */
+  padding: 24px 16px !important; /* Réduit de 32px à 24px */
   background-color: #8c735b;
   text-align: center;
   margin: 0 !important;
@@ -307,17 +307,21 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px !important; /* Réduit encore plus de 4px à 2px */
+  gap: 8px !important; /* Réduit de 10px à 8px */
   width: 100%;
   max-width: 380px;
   margin: 0 auto;
+}
+
+.newsletter-form .form-fields {
+  margin-bottom: 8px !important; /* Réduit l'espacement avec le bouton */
 }
 
 .newsletter-input-row {
   display: flex;
   gap: 8px;
   width: 100%;
-  margin-bottom: 2px !important; /* Réduit l'espace avant le bouton de 4px à 2px */
+  margin-bottom: 0 !important; /* Supprime espace bas inutile */
   align-items: stretch;
 }
 
@@ -329,36 +333,26 @@ main {
   border-radius: 8px !important;
   font-size: 15px !important;
   min-height: 48px !important;
-  line-height: 1.4 !important;
-  box-sizing: border-box !important;
   background: #fff !important;
-  transition: all 0.3s ease !important;
-}
-
-.newsletter-name-input:focus,
-.newsletter-email-input:focus {
-  border-color: #007bff !important;
-  box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25) !important;
-  outline: none !important;
+  box-sizing: border-box !important;
 }
 
 .newsletter-form .btn {
-  margin-top: 0 !important; /* Supprime tout espace au-dessus du bouton */
+  margin-top: 0 !important;
   padding: 12px 20px !important;
   font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
   border-radius: 6px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
 }
 
-/* "By signing up..." optimisé - toujours sur une seule ligne */
+/* "By signing up..." sur une seule ligne en mobile */
 .newsletter-terms {
   font-size: 11px;
   color: #eee;
-  margin-top: 4px !important; /* Réduit encore de 6px à 4px */
-  white-space: nowrap !important; /* Force sur une seule ligne */
+  margin-top: 10px;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
