@@ -369,15 +369,18 @@ main {
 
 /* Responsive supplémentaire pour mobile très petit */
 @media screen and (max-width: 320px) {
-  .newsletter-input-row {
-    gap: 6px;
-  }
+  .ewsletter-input-row {
+  display: flex;
+  gap: 6px;
+  justify-content: space-between;
+}
   
   .newsletter-name-input,
   .newsletter-email-input {
     font-size: 13px;
-     width: 75% !important;
     padding: 8px;
+    flex: 1 1 0 !important;
+    min-width: 0 !important; /* évite débordement */
   }
 }
 
