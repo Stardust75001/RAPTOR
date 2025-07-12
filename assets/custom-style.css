@@ -798,6 +798,6 @@ body {
 }
 @media screen and (max-width: 600px) {
   .newsletter-form .btn {
-    margin-top: 5px !important;
+    margin-top: 0px !important;
   }
 }
