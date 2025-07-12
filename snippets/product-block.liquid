@@ -1,23 +1,22 @@
-<!-- Snippet product-block.liquid -->
-<div class="product-block" style="margin-top: 2rem;">
+<div class="product-block" style="margin: 2rem 0;">
   <h3 class="product-block__title">
     {{ product.title | escape }}
   </h3>
 
-  {% if product.description != blank %}
-    <div class="product-block__description">
-      {{ product.description }}
+  {% if product.featured_image %}
+    <div class="product-block__image" style="margin: 1rem 0;">
+      <img src="{{ product.featured_image | img_url: 'medium' }}" alt="{{ product.title | escape }}" loading="lazy" />
     </div>
   {% endif %}
 
-  {% if product.tags.size > 0 %}
-    <div class="product-block__tags">
-      <strong>Tags :</strong>
-      <ul>
-        {% for tag in product.tags %}
-          <li>{{ tag }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
+  <div class="product-block__price" style="margin-bottom: 1rem;">
+    <strong>{{ product.price | money }}</strong>
+  </div>
+
+  <form method="post" action="/cart/add">
+    <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+    <button type="submit" class="btn" style="padding: 10px 20px; background-color: #000; color: #fff; border: none; cursor: pointer;">
+      Ajouter au panier
+    </button>
+  </form>
 </div>
