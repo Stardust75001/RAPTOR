@@ -12,6 +12,10 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
+main {
+  padding-top: 190px !important; /* Social bar (60px) + Navbar (80px) + Stories bar (50px) */
+}
+
 /* === Top Social Bar === */
 .top-social-bar {
   display: flex;
@@ -77,17 +81,28 @@
   gap: 8px;
 }
 
+/* === Dropdown langue - MINIMAL === */
+.language-dropdown {
+  position: relative;
+}
+
+/* === Drapeaux rectangulaires arrondis === */
 .flag-link {
   display: flex;
   align-items: center;
   text-decoration: none;
-  padding: 4px 8px;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  min-height: 44px;
+  min-width: 44px;
 }
 
-.flag-link:hover {
-  background-color: #e0e0e0;
+.flag-link:hover,
+.flag-link:focus {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+  outline: none;
 }
 
 /* === Stories Bar === */
@@ -224,6 +239,530 @@
     display: none;
   }
 
+  /* Réduction de l'espace header pour mobile */
+  .top-social-bar {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 8px; /* Réduit de 8px 10px */
+    height: 45px; /* Réduit de 60px */
+  }
+
+  .stories-bar {
+    padding: 3px 6px; /* Réduit de 4px 8px */
+  }
+
+  .stories-bar-wrapper {
+    padding: 6px 0; /* Réduit de 10px 0 */
+  }
+
+  .animated-stories-link img {
+    width: 45px; /* Réduit de 50px */
+    height: 45px; /* Réduit de 50px */
+  }
+
+  .tooltip-bubble {
+    top: 120%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    font-size: 12px;
+    padding: 4px 8px; /* Réduit */
+  }
+
+  /* Optimisation hero image mobile */
+  .image-banner-title {
+    font-size: 22px; /* Réduit de 24px */
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  .image-banner-description {
+    font-size: 14px;
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+
+  .btn-group {
+    gap: 8px; /* Réduit */
+    margin-top: 12px;
+  }
+
+  .btn-group .btn {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+
+  .social-img-icon,
+  .footer-social-icons img,
+  .footer-social-icons svg {
+    width: 30px !important;
+    height: 30px !important;
+  }
+
+  .flag-icon {
+    width: 24px !important;
+    height: 18px !important;
+  }
+}
+
+/* === Image Banner === */
+.image-banner-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  /* Élimination complète des espaces */
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.image-banner-img {
+  width: 100% !important;
+  height: auto !important;
+  object-fit: cover !important; /* Changed from contain to cover for better fit */
+  display: block;
+  margin: 0 !important;
+  padding: 0 !important;
+  /* Assure un affichage sans espace */
+}
+
+.image-banner-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centrage parfait */
+  text-align: center;
+  color: white;
+  padding: 0 20px;
+  width: 90%;
+  z-index: 2;
+}
+
+.image-banner-title {
+  font-size: 32px;
+  margin-bottom: 16px;
+  line-height: 1.2;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Meilleure lisibilité */
+}
+
+.image-banner-description {
+  font-size: 18px;
+  margin-bottom: 24px;
+  line-height: 1.4;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.btn-group {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.btn-group .btn {
+  padding: 12px 24px;
+  font-size: 16px;
+  text-transform: uppercase;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.btn-group .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+/* ===== NEWSLETTER STYLES ORIGINAUX ===== */
+.newsletter-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 32px 16px;
+  background-color: #8c735b;
+  text-align: center;
+}
+
+.newsletter-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 380px;
+  margin: 0 auto;
+}
+
+/* Ajustements spécifiques pour les termes de la newsletter */
+.newsletter-terms {
+  font-size: 11px;
+  margin-top: 14px;
+  text-align: center;
+  color: #eee;
+  max-width: 100%;
+}
+
+/* === NEWSLETTER DESKTOP === */
+.newsletter-input-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 10px;
+  align-items: stretch;
+}
+
+.newsletter-name-input,
+.newsletter-email-input {
+  flex: 1;
+  padding: 15px 20px !important;
+  border: 1px solid #dee2e6 !important;
+  border-radius: 8px !important;
+  font-size: 16px !important;
+  min-height: 56px !important;
+  line-height: 1.4 !important;
+  box-sizing: border-box !important;
+  background: #fff !important;
+  transition: all 0.3s ease !important;
+}
+
+.newsletter-name-input:focus,
+.newsletter-email-input:focus {
+  border-color: #007bff !important;
+  box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25) !important;
+  outline: none !important;
+}
+
+/* Responsive supplémentaire pour mobile très petit */
+@media screen and (max-width: 320px) {
+  .newsletter-name-input,
+  .newsletter-email-input {
+    font-size: 14px !important;
+    padding: 12px 15px !important;
+    min-height: 48px !important;
+  }
+  
+  .newsletter-name-input::placeholder,
+  .newsletter-email-input::placeholder {
+    font-size: 12px;
+    color: #6c757d;
+    opacity: 1;
+  }
+}
+
+@media screen and (min-width: 769px) {
+  .newsletter-terms {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+}
+
+/* === NEWSLETTER MOBILE - CORRECTION MINIMALE === */
+@media screen and (max-width: 768px) {
+  /* Maintient les champs côte à côte comme desktop */
+  .newsletter-input-row {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 8px !important;
+    width: 100% !important;
+    margin-bottom: 10px !important;
+    align-items: stretch !important;
+  }
+  
+  .newsletter-name-input,
+  .newsletter-email-input {
+    flex: 1 !important;
+    padding: 12px 16px !important;
+    border: 1px solid #dee2e6 !important;
+    border-radius: 8px !important;
+    font-size: 14px !important;
+    min-height: 48px !important; /* Légèrement réduit pour mobile */
+    line-height: 1.4 !important;
+    box-sizing: border-box !important;
+    background: #fff !important;
+  }
+  
+  /* Section newsletter plus compacte sur mobile */
+  .newsletter-wrapper {
+    padding: 24px 16px !important; /* Réduit de 32px à 24px */
+  }
+  
+  .newsletter-form {
+    gap: 8px !important; /* Réduit de 10px à 8px */
+  }
+}
+
+/* === Ajustement du padding-top pour main selon les tailles d'écran === */
+/* Calculs précis basés sur la hauteur réelle du header sticky */
+
+/* Desktop large (1025px et plus) */
+main {
+  padding-top: 190px !important; /* Social bar (60px) + Navbar (80px) + Stories bar (50px) */
+}
+
+/* iPad Landscape (1024px) */
+@media screen and (max-width: 1024px) and (min-width: 769px) and (orientation: landscape) {
+  main {
+    padding-top: 180px !important; /* Légèrement réduit pour landscape */
+  }
+}
+
+/* iPad Portrait (768px - 1024px) */
+@media screen and (max-width: 1024px) and (min-width: 769px) and (orientation: portrait) {
+  main {
+    padding-top: 170px !important; /* Optimisé pour portrait iPad */
+  }
+}
+
+/* Tablettes moyennes (768px) */
+@media screen and (max-width: 768px) and (min-width: 481px) {
+  main {
+    padding-top: 160px !important; /* Social bar (50px) + Navbar (70px) + Stories bar (40px) */
+  }
+}
+
+/* Mobile large (481px - 767px) */
+@media screen and (max-width: 767px) and (min-width: 481px) {
+  main {
+    padding-top: 155px !important; /* Version mobile compacte */
+  }
+}
+
+/* Mobile standard (320px - 480px) */
+@media screen and (max-width: 480px) {
+  main {
+    padding-top: 145px !important; /* Social bar (45px) + Navbar (60px) + Stories bar (35px) + marge (5px) */
+  }
+}
+
+/* Très petits écrans (max 320px) */
+@media screen and (max-width: 320px) {
+  main {
+    padding-top: 140px !important; /* Ultra compact */
+  }
+}
+
+/* =====================
+   Wishlist Share Buttons
+   ===================== */
+#wishlist-share-dropdown .dropdown-menu {
+    min-width: 180px;
+}
+
+#wishlist-share-dropdown .dropdown-item {
+    padding: 0.5rem 1rem;
+    transition: all 0.2s ease;
+}
+
+#wishlist-share-dropdown .dropdown-item:hover {
+    background-color: var(--bs-light);
+    transform: translateX(2px);
+}
+
+#wishlist-share-dropdown .dropdown-item svg {
+    transition: all 0.2s ease;
+    opacity: 0.7;
+}
+
+#wishlist-share-dropdown .dropdown-item:hover svg {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* États de chargement pour les boutons de partage */
+.btn[data-share-copy].btn-success {
+    background-color: var(--bs-success) !important;
+    border-color: var(--bs-success) !important;
+    color: white !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    #wishlist-share-dropdown .dropdown-menu {
+        min-width: 160px;
+        font-size: 0.9rem;
+    }
+    
+    #wishlist-share-dropdown .dropdown-item {
+        padding: 0.4rem 0.8rem;
+    }
+    
+    #wishlist-share-dropdown .dropdown-item svg {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+/* Focus visible pour accessibilité */
+#wishlist-share-dropdown .dropdown-item:focus-visible {
+    box-shadow: 0 0 0 .25rem rgba(var(--bs-primary-rgb),.25);
+    outline: none;
+    background-color: var(--bs-primary);
+    color: white;
+}
+
+#wishlist-share-dropdown .dropdown-item:focus-visible svg {
+    opacity: 1;
+}
+
+/* =====================
+   États visuels améliorés pour les boutons de partage
+   ===================== */
+.dropdown-item.loading {
+    opacity: 0.6;
+    pointer-events: none;
+    position: relative;
+}
+
+.dropdown-item.loading::after {
+    content: '';
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    border: 2px solid #dee2e6;
+    border-top: 2px solid #6c757d;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: translateY(-50%) rotate(0deg); }
+    100% { transform: translateY(-50%) rotate(360deg); }
+}
+
+.dropdown-item.btn-success {
+    background-color: var(--bs-success) !important;
+    color: white !important;
+    animation: successPulse 0.3s ease-out;
+}
+
+.dropdown-item.btn-danger {
+    background-color: var(--bs-danger) !important;
+    color: white !important;
+    animation: errorShake 0.5s ease-out;
+}
+
+@keyframes successPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+@keyframes errorShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    75% { transform: translateX(2px); }
+}
+
+/* Message de confirmation accessible */
+.share-feedback {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    padding: 12px 16px;
+    background: var(--bs-success);
+    color: white;
+    border-radius: 6px;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.share-feedback.show {
+    transform: translateX(0);
+}
+
+.share-feedback.error {
+    background: var(--bs-danger);
+}
+
+/* Animation pour le bouton de partage principal */
+.offcanvas-header .dropdown .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* === ÉLIMINATION DES ESPACES ENTRE SECTIONS === */
+/* Suppression de tous les margins/paddings indésirables */
+
+/* Page principale sans espaces */
+body {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#MainContent,
+.main-content {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Sections collées sans espaces */
+.shopify-section {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Hero section parfaitement collée au header */
+.shopify-section:first-child,
+.image-banner-section,
+.image-banner-wrapper {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  border-top: none !important;
+}
+
+/* Footer collé à la section précédente */
+.shopify-section:last-child,
+.footer-section,
+.newsletter-wrapper {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+  border-bottom: none !important;
+}
+
+/* Élimination des espaces Shopify par défaut */
+.section-spacing,
+.section-margin,
+.page-margin {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Container sans espaces parasites */
+.container,
+.container-fluid {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* === Affichage conditionnel Desktop / Mobile === */
+.only-mobile {
+  display: none;
+}
+.only-desktop {
+  display: block;
+}
+@media screen and (max-width: 768px) {
+  .only-mobile {
+    display: block;
+  }
+  .only-desktop {
+    display: none;
+  }
+
   main {
     padding-top: 275px !important;
   }
@@ -264,18 +803,6 @@
     padding: 8px 16px;
     font-size: 12px;
   }
-
-  .social-img-icon,
-  .footer-social-icons img,
-  .footer-social-icons svg {
-    width: 30px !important;
-    height: 30px !important;
-  }
-
-  .flag-icon {
-    width: 24px !important;
-    height: 18px !important;
-  }
 }
 
 /* === Image Banner === */
@@ -287,14 +814,12 @@
   padding: 0 !important;
   background: transparent !important;
 }
-
 .image-banner-img {
   width: 100% !important;
   height: auto !important;
   object-fit: contain !important;
   display: block;
 }
-
 .image-banner-overlay {
   position: absolute;
   top: 50%;
@@ -305,26 +830,22 @@
   padding: 0 20px;
   width: 90%;
 }
-
 .image-banner-title {
   font-size: 28px;
   margin-bottom: 12px;
   line-height: 1.3;
 }
-
 .image-banner-description {
   font-size: 16px;
   margin-bottom: 20px;
   line-height: 1.5;
 }
-
 .btn-group {
   display: flex;
   justify-content: center;
   gap: 12px;
   flex-wrap: wrap;
 }
-
 .btn-group .btn {
   padding: 10px 18px;
   font-size: 14px;
@@ -332,167 +853,13 @@
   border-radius: 4px;
 }
 
-/* === Bloc newsletter stylisé (centré responsive et compact mobile) === */
-.newsletter-wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 32px 16px;
-  background-color: #8c735b;
-  text-align: center;
-}
-
-.newsletter-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  max-width: 380px;
-  margin: 0 auto;
-}
-
-/* Gestion des champs côte à côte et individuels */
-.newsletter-form .newsletter-input-row {
-  display: flex;
-  gap: 10px;
-  width: 100%;
-}
-
-.newsletter-form input[type="text"],
-.newsletter-form input[type="email"],
-.newsletter-name-input,
-.newsletter-email-input {
-  padding: 10px;
-  font-size: 15px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  width: 100%;
-  box-sizing: border-box;
-  text-align: left;
-  background-color: #fff;
-  color: #000;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.newsletter-form input[type="text"]:focus,
-.newsletter-form input[type="email"]:focus,
-.newsletter-name-input:focus,
-.newsletter-email-input:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
-  outline: none;
-}
-
-.newsletter-form button {
-  padding: 10px 16px;
-  font-size: 15px;
-  border-radius: 5px;
-  background-color: #333;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  width: 100%;
-  max-width: 380px;
-  transition: background-color 0.3s ease;
-}
-
-.newsletter-form button:hover {
-  background-color: #555;
-}
-
-.newsletter-terms {
-  font-size: 11px;
-  margin-top: 14px;
-  text-align: center;
-  line-height: 1.4;
-  color: #eee;
-  max-width: 380px;
-}
-
-.newsletter-wrapper .newsletter-label {
-  color: #fff;
-  font-size: 13px;
-  font-weight: 500;
-  margin-bottom: 6px;
-  text-align: left;
-}
-
-.newsletter-wrapper .newsletter-field-group {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-/* Responsive pour les labels dans newsletter-wrapper */
-@media screen and (max-width: 480px) {
-  .newsletter-wrapper .newsletter-label {
-    font-size: 12px;
-    margin-bottom: 4px;
-  }
-  
-  .newsletter-wrapper .newsletter-input-row {
-    flex-direction: column;
-    gap: 12px;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .newsletter-wrapper {
-    padding: 24px 12px;
-  }
-
-  .newsletter-form {
-    gap: 8px;
-  }
-
-  /* En mobile, afficher les champs en colonne */
-  .newsletter-form .newsletter-input-row {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .newsletter-form input[type="text"],
-  .newsletter-form input[type="email"],
-  .newsletter-form button,
-  .newsletter-name-input,
-  .newsletter-email-input {
-    font-size: 14px;
-    padding: 9px;
-    max-width: 100%;
-  }
-
-  .newsletter-terms {
-    font-size: 11px;
-    margin-top: 14px;
-    text-align: center;
-    color: #eee;
-    max-width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-}
-
-@media screen and (min-width: 769px) {
-  .newsletter-terms {
-    display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-  }
-}
-
 /* === Padding pour main selon écran === */
 main {
   padding-top: 360px !important;
 }
-
 @media screen and (min-width: 768px) and (max-width: 1024px) {
   main {
-    padding-top: 195px !important; /* réduit depuis 230px */
+    padding-top: 195px !important;
   }
 
   .stories-bar-wrapper {
@@ -500,12 +867,12 @@ main {
     border-bottom: none !important;
   }
 }
-
 @media screen and (max-width: 767px) {
   main {
     padding-top: 294px !important;
   }
 }
+
 /* === Boutons inline auto === */
 .btn-inline-auto {
   display: inline-block;
@@ -528,7 +895,6 @@ main {
   gap: 10px;
   margin-top: 20px;
 }
-
 .carousel-caption .btn-wrapper .btn {
   display: inline-flex !important;
   justify-content: center;
