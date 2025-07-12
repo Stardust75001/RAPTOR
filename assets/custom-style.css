@@ -421,7 +421,7 @@ main {
   .only-desktop { display: none; }
 
   main {
-    padding-top: 260px !important; /* Ajusté pour mobile sticky compact */
+    padding-top: 255px !important; /* Ajusté pour mobile sticky compact */
   }
 
   .top-social-bar {
