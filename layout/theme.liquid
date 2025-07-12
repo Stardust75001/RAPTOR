@@ -93,6 +93,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   {{ settings.code_javascript }}
   {{ settings.code_head }}
   {% render 'shogun-head' %}
+    <!-- Cloudflare Web Analytics -->
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "dd9a7f4efd834e3ebc1bbe39953c2b6b"}'></script>
+  <!-- End Cloudflare Web Analytics -->
 </head>
 
 <body class="{{ request.page_type | prepend: 'page-type-' }}">
