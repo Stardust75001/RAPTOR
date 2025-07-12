@@ -121,23 +121,25 @@
     "load_more": "Collection load_more",
     "load_previous": "Collection load_previous"
   },
-  "product": {
-    "sold_out": "Sold out",
-    "price_sale": "Sale price",
-    "price_regular": "Regular price",
-    "price_from": "From ",
-    "color_options": "Color options",
-    "color_swatches": "Color Swatches",
-    "in_stock": "In stock",
-    "out_of_stock": "Out of stock",
-    "product": "Product",
-    "product_added_to_cart": "Product added to cart",
-    "remove": "Remove",
-    "wishlist": {
-      "add_to_wishlist": "Add to wishlist",
-      "remove_from_wishlist": "Remove from wishlist",
-      "btn_label": "Add to wishlist"
-    },
+"product": {
+  "select_variant": "Select a variant",
+  "add_to_cart": "Add to cart",
+  "sold_out": "Sold out",
+  "price_sale": "Sale price",
+  "price_regular": "Regular price",
+  "price_from": "From",
+  "color_options": "Color options",
+  "color_swatches": "Color swatches",
+  "in_stock": "In stock",
+  "out_of_stock": "Out of stock",
+  "product": "Product",
+  "product_added_to_cart": "Product added to cart",
+  "remove": "Remove",
+  "wishlist": {
+    "add_to_wishlist": "Add to wishlist",
+    "remove_from_wishlist": "Remove from wishlist",
+    "btn_label": "Add to wishlist"
+  },
     "bundle": {
       "custom_bundle": {
         "add_to_bundle": "Add to bundle",
