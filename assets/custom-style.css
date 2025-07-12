@@ -338,20 +338,22 @@ main {
   box-sizing: border-box !important;
 }
 
-/* Bouton parfaitement aligné avec les champs */
+/* Bouton identique aux champs, sans espace */
 .newsletter-form .btn {
   margin: 0 !important;
-  min-height: 42px !important; /* même hauteur que les champs */
+  min-height: 40px !important;
+  height: 40px !important;
   padding: 10px 16px !important;
   font-size: 13px !important;
   line-height: 1 !important;
   font-weight: 600;
   text-transform: uppercase;
   border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: none;
+  border: none;
 }
 
 /* "By signing up..." sur une seule ligne en mobile */
