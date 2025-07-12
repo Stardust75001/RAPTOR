@@ -15,15 +15,9 @@
   --z-tooltip: 99999;
   --z-offcanvas: 1050;
   
-  /* Responsive spacing */
-  --main-padding-desktop: 190px;
-  --main-padding-tablet: 170px;
-  --main-padding-mobile: 145px;
-  
   /* Newsletter colors */
   --btn-primary: #007bff;
   --btn-primary-hover: #0056b3;
-  --text-muted: #888;
 }
 
 /* === RESET ET BASE === */
@@ -56,9 +50,9 @@ body, #MainContent, .main-content, .shopify-section {
   box-shadow: var(--shadow-light);
 }
 
-/* === MAIN CONTENT SPACING === */
+/* === MAIN CONTENT SPACING - VALEURS ORIGINALES === */
 main {
-  padding-top: var(--main-padding-desktop) !important;
+  padding-top: 190px !important; /* Desktop par défaut */
 }
 
 /* === TOP SOCIAL BAR === */
@@ -408,197 +402,30 @@ main {
   text-decoration: underline;
 }
 
-/* === BOUTONS ET ÉLÉMENTS UTILITAIRES === */
-.btn-inline-auto {
-  display: inline-block;
-  width: auto !important;
-  min-width: 50px;
-  padding: 8px 16px;
-  text-align: center;
-  font-size: 13px;
-  text-transform: uppercase;
-  border-radius: 4px;
-  white-space: nowrap;
-}
-
-.carousel-caption .btn-wrapper {
-  display: flex !important;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.carousel-caption .btn-wrapper .btn {
-  display: inline-flex !important;
-  justify-content: center;
-  align-items: center;
-  padding: 8px 16px;
-  font-size: 13px;
-  white-space: nowrap;
-  text-align: center;
-  border-radius: 4px;
-  box-sizing: border-box;
-  width: auto !important;
-  min-width: 100px;
-  max-width: 160px;
-}
-
-/* === OFFCANVAS === */
-.offcanvas {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  right: -100%;
-  width: 400px;
-  max-width: 90%;
-  background-color: #fff;
-  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.15);
-  z-index: var(--z-offcanvas);
-  transition: right var(--transition-base);
-}
-
-.offcanvas.show {
-  right: 0;
-}
-
-.offcanvas .offcanvas-body {
-  overflow-y: auto;
-  height: calc(100% - 60px);
-}
-
-.offcanvas-header .dropdown .btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-/* === WISHLIST SHARE BUTTONS === */
-#wishlist-share-dropdown .dropdown-menu {
-  min-width: 180px;
-}
-
-#wishlist-share-dropdown .dropdown-item {
-  padding: 0.5rem 1rem;
-  transition: all 0.2s ease;
-}
-
-#wishlist-share-dropdown .dropdown-item:hover {
-  background-color: var(--bs-light);
-  transform: translateX(2px);
-}
-
-#wishlist-share-dropdown .dropdown-item svg {
-  transition: all 0.2s ease;
-  opacity: 0.7;
-}
-
-#wishlist-share-dropdown .dropdown-item:hover svg {
-  opacity: 1;
-  transform: scale(1.1);
-}
-
-.btn[data-share-copy].btn-success {
-  background-color: var(--bs-success) !important;
-  border-color: var(--bs-success) !important;
-  color: white !important;
-}
-
-#wishlist-share-dropdown .dropdown-item:focus-visible {
-  box-shadow: 0 0 0 .25rem rgba(var(--bs-primary-rgb),.25);
-  outline: none;
-  background-color: var(--bs-primary);
-  color: white;
-}
-
-/* États de chargement et feedback */
-.dropdown-item.loading {
-  opacity: 0.6;
-  pointer-events: none;
-  position: relative;
-}
-
-.dropdown-item.loading::after {
-  content: '';
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 12px;
-  height: 12px;
-  border: 2px solid #dee2e6;
-  border-top: 2px solid #6c757d;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: translateY(-50%) rotate(0deg); }
-  100% { transform: translateY(-50%) rotate(360deg); }
-}
-
-.dropdown-item.btn-success {
-  background-color: var(--bs-success) !important;
-  color: white !important;
-  animation: successPulse 0.3s ease-out;
-}
-
-.dropdown-item.btn-danger {
-  background-color: var(--bs-danger) !important;
-  color: white !important;
-  animation: errorShake 0.5s ease-out;
-}
-
-@keyframes successPulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.02); }
-  100% { transform: scale(1); }
-}
-
-@keyframes errorShake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-2px); }
-  75% { transform: translateX(2px); }
-}
-
-.share-feedback {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 10000;
-  padding: 12px 16px;
-  background: var(--bs-success);
-  color: white;
-  border-radius: 6px;
-  transform: translateX(100%);
-  transition: transform var(--transition-base);
-  font-size: 14px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.share-feedback.show {
-  transform: translateX(0);
-}
-
-.share-feedback.error {
-  background: var(--bs-danger);
-}
-
 /* === AFFICHAGE CONDITIONNEL === */
 .only-mobile { display: none; }
 .only-desktop { display: block; }
 
-/* === RESPONSIVE DESIGN === */
+/* === RESPONSIVE DESIGN - VALEURS ORIGINALES RESTAURÉES === */
 
-/* Tablettes (768px - 1024px) */
-@media screen and (min-width: 768px) and (max-width: 1024px) {
-  main { 
-    padding-top: var(--main-padding-tablet) !important; 
+/* iPad Landscape (1024px) */
+@media screen and (max-width: 1024px) and (min-width: 769px) and (orientation: landscape) {
+  main {
+    padding-top: 180px !important; /* Légèrement réduit pour landscape */
   }
-  
-  .stories-bar-wrapper {
-    margin-bottom: 0 !important;
-    border-bottom: none !important;
+}
+
+/* iPad Portrait (768px - 1024px) */
+@media screen and (max-width: 1024px) and (min-width: 769px) and (orientation: portrait) {
+  main {
+    padding-top: 170px !important; /* Optimisé pour portrait iPad */
+  }
+}
+
+/* Tablettes moyennes (768px) */
+@media screen and (max-width: 768px) and (min-width: 481px) {
+  main {
+    padding-top: 160px !important; /* Social bar (50px) + Navbar (70px) + Stories bar (40px) */
   }
 }
 
@@ -606,10 +433,6 @@ main {
 @media screen and (max-width: 768px) {
   .only-mobile { display: block; }
   .only-desktop { display: none; }
-
-  main {
-    padding-top: var(--main-padding-mobile) !important;
-  }
 
   .top-social-bar {
     flex-direction: row;
@@ -674,7 +497,7 @@ main {
     height: 18px !important;
   }
 
-  /* Newsletter mobile */
+  /* Newsletter mobile - CHAMPS CÔTE À CÔTE COMME AVANT */
   .newsletter-input-row {
     display: flex !important;
     flex-direction: row !important;
@@ -711,25 +534,28 @@ main {
   .newsletter-wrapper {
     padding: 20px 12px;
   }
+}
 
-  /* Wishlist responsive */
-  #wishlist-share-dropdown .dropdown-menu {
-    min-width: 160px;
-    font-size: 0.9rem;
+/* Mobile large (481px - 767px) */
+@media screen and (max-width: 767px) and (min-width: 481px) {
+  main {
+    padding-top: 155px !important; /* Version mobile compacte */
   }
-  
-  #wishlist-share-dropdown .dropdown-item {
-    padding: 0.4rem 0.8rem;
-  }
-  
-  #wishlist-share-dropdown .dropdown-item svg {
-    width: 14px;
-    height: 14px;
+}
+
+/* Mobile standard (320px - 480px) */
+@media screen and (max-width: 480px) {
+  main {
+    padding-top: 145px !important; /* Social bar (45px) + Navbar (60px) + Stories bar (35px) + marge (5px) */
   }
 }
 
 /* Mobile très petit (max 320px) */
 @media screen and (max-width: 320px) {
+  main {
+    padding-top: 140px !important; /* Ultra compact */
+  }
+
   .newsletter-name-input,
   .newsletter-email-input {
     font-size: 14px !important;
