@@ -409,10 +409,18 @@ main {
 /* === RESPONSIVE DESIGN - VALEURS ORIGINALES RESTAURÉES === */
 
 /* iPad et tablettes (portrait et paysage) */
-@media screen and (min-width: 768px) and (max-width: 1024px) {
+
+/* Tablette en mode portrait */
+@media screen and (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
   main {
-    padding-top: 100px !important; /* Exemple pour paysage */
-    padding-top: 325px !important; /* Spécifique au portrait tablette */
+    padding-top: 325px !important;
+  }
+}
+
+/* Tablette en mode paysage */
+@media screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  main {
+    padding-top: 90px !important;
   }
 }
 
