@@ -307,7 +307,7 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px !important; /* Réduit encore plus de 6px à 4px */
+  gap: 2px !important; /* Réduit encore plus de 4px à 2px */
   width: 100%;
   max-width: 380px;
   margin: 0 auto;
@@ -317,7 +317,7 @@ main {
   display: flex;
   gap: 8px;
   width: 100%;
-  margin-bottom: 4px !important; /* Réduit l'espace avant le bouton de 6px à 4px */
+  margin-bottom: 2px !important; /* Réduit l'espace avant le bouton de 4px à 2px */
   align-items: stretch;
 }
 
@@ -357,7 +357,7 @@ main {
 .newsletter-terms {
   font-size: 11px;
   color: #eee;
-  margin-top: 6px !important; /* Réduit encore de 8px à 6px */
+  margin-top: 4px !important; /* Réduit encore de 6px à 4px */
   white-space: nowrap !important; /* Force sur une seule ligne */
   overflow: hidden;
   text-overflow: ellipsis;
@@ -420,7 +420,7 @@ main {
   }
 
   .newsletter-form {
-    gap: 3px !important; /* Encore plus compact sur mobile - réduit de 5px à 3px */
+    gap: 1px !important; /* Ultra compact sur mobile - réduit de 3px à 1px */
   }
 
   .newsletter-input-row {
@@ -428,7 +428,7 @@ main {
     flex-direction: row !important; /* Assure la direction horizontale */
     gap: 8px !important; /* Maintient l'espace entre les champs */
     width: 100% !important;
-    margin-bottom: 3px !important; /* Réduit l'espace avant le bouton de 5px à 3px */
+    margin-bottom: 1px !important; /* Réduit l'espace avant le bouton de 3px à 1px */
     align-items: stretch !important;
   }
 
@@ -443,7 +443,7 @@ main {
 
   .newsletter-terms {
     font-size: 10px;
-    margin-top: 4px !important; /* Réduit l'espace de 6px à 4px sur mobile */
+    margin-top: 2px !important; /* Réduit l'espace de 4px à 2px sur mobile */
   }
 
   /* Optimisation hero image mobile */
@@ -489,7 +489,7 @@ main {
     flex-direction: row !important;
     gap: 6px !important; /* Légèrement réduit l'espace sur très petits écrans */
     width: 100% !important;
-    margin-bottom: 2px !important; /* Très compact pour très petits écrans */
+    margin-bottom: 1px !important; /* Ultra compact pour très petits écrans - réduit de 2px à 1px */
   }
 
   .newsletter-name-input,
@@ -514,7 +514,7 @@ main {
 
   .newsletter-terms {
     font-size: 9px;
-    margin-top: 3px !important; /* Ultra compact pour très petits écrans */
+    margin-top: 1px !important; /* Ultra compact pour très petits écrans - réduit de 3px à 1px */
   }
 }
 
