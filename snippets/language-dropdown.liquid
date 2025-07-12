@@ -1,0 +1,169 @@
+{% comment %}
+Dropdown sélecteur de langue avec drapeaux
+Affiche toutes les langues supportées même si seulement 3 sont actives
+{% endcomment %}
+
+{% liquid
+  assign current_language = request.locale.iso_code
+  assign available_languages = localization.available_languages
+  
+  # Définir toutes les langues supportées avec leurs drapeaux
+  assign all_languages = 'fr,en,de,es,it,pt,nl,pl,sv,da' | split: ','
+%}
+
+{% comment %} Toujours afficher la dropdown même avec peu de langues actives {% endcomment %}
+<div class="dropdown language-dropdown">
+  <button 
+    class="btn btn-link dropdown-toggle d-flex align-items-center p-2" 
+    type="button" 
+    id="languageDropdown" 
+    data-bs-toggle="dropdown" 
+    aria-expanded="false"
+    aria-label="{{ 'general.accessibility.language_selector' | t }}">
+    
+    {% case current_language %}
+      {% when 'fr' %}
+        <img src="{{ 'flag-fr.svg' | asset_url }}" alt="Français" width="20" height="15" class="me-2">
+        <span class="d-none d-md-inline">FR</span>
+      {% when 'en' %}
+        <img src="{{ 'flag-en.svg' | asset_url }}" alt="English" width="20" height="15" class="me-2">
+        <span class="d-none d-md-inline">EN</span>
+      {% when 'de' %}
+        <img src="{{ 'flag-de.svg' | asset_url }}" alt="Deutsch" width="20" height="15" class="me-2">
+        <span class="d-none d-md-inline">DE</span>
+      {% when 'es' %}
+        <img src="{{ 'flag-es.svg' | asset_url }}" alt="Español" width="20" height="15" class="me-2">
+        <span class="d-none d-md-inline">ES</span>
+      {% when 'it' %}
+        <img src="{{ 'flag-it.svg' | asset_url }}" alt="Italiano" width="20" height="15" class="me-2">
+        <span class="d-none d-md-inline">IT</span>
+      {% when 'pt' %}
+        <img src="{{ 'flag-pt.svg' | asset_url }}" alt="Português" width="20" height="15" class="me-2">
+        <span class="d-none d-md-inline">PT</span>
+      {% when 'nl' %}
+        <img src="{{ 'flag-nl.svg' | asset_url }}" alt="Nederlands" width="20" height="15" class="me-2">
+        <span class="d-none d-md-inline">NL</span>
+      {% when 'pl' %}
+        <img src="{{ 'flag-pl.svg' | asset_url }}" alt="Polski" width="20" height="15" class="me-2">
+        <span class="d-none d-md-inline">PL</span>
+      {% when 'sv' %}
+        <img src="{{ 'flag-sv.svg' | asset_url }}" alt="Svenska" width="20" height="15" class="me-2">
+        <span class="d-none d-md-inline">SV</span>
+      {% when 'da' %}
+        <img src="{{ 'flag-da.svg' | asset_url }}" alt="Dansk" width="20" height="15" class="me-2">
+        <span class="d-none d-md-inline">DA</span>
+      {% else %}
+        <img src="{{ 'flag-en.svg' | asset_url }}" alt="English" width="20" height="15" class="me-2">
+        <span class="d-none d-md-inline">{{ current_language | upcase }}</span>
+    {% endcase %}
+  </button>
+  
+  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+    {% comment %} Afficher d'abord les langues actives {% endcomment %}
+    {% for language in available_languages %}
+      <li>
+        <a class="dropdown-item d-flex align-items-center {% if language.iso_code == current_language %}active{% endif %}" 
+           href="{{ language.root_url }}{{ request.path }}">
+          
+          {% case language.iso_code %}
+            {% when 'fr' %}
+              <img src="{{ 'flag-fr.svg' | asset_url }}" alt="Français" width="20" height="15" class="me-2">
+              <span>Français</span>
+            {% when 'en' %}
+              <img src="{{ 'flag-en.svg' | asset_url }}" alt="English" width="20" height="15" class="me-2">
+              <span>English</span>
+            {% when 'de' %}
+              <img src="{{ 'flag-de.svg' | asset_url }}" alt="Deutsch" width="20" height="15" class="me-2">
+              <span>Deutsch</span>
+            {% when 'es' %}
+              <img src="{{ 'flag-es.svg' | asset_url }}" alt="Español" width="20" height="15" class="me-2">
+              <span>Español</span>
+            {% when 'it' %}
+              <img src="{{ 'flag-it.svg' | asset_url }}" alt="Italiano" width="20" height="15" class="me-2">
+              <span>Italiano</span>
+            {% when 'pt' %}
+              <img src="{{ 'flag-pt.svg' | asset_url }}" alt="Português" width="20" height="15" class="me-2">
+              <span>Português</span>
+            {% when 'nl' %}
+              <img src="{{ 'flag-nl.svg' | asset_url }}" alt="Nederlands" width="20" height="15" class="me-2">
+              <span>Nederlands</span>
+            {% when 'pl' %}
+              <img src="{{ 'flag-pl.svg' | asset_url }}" alt="Polski" width="20" height="15" class="me-2">
+              <span>Polski</span>
+            {% when 'sv' %}
+              <img src="{{ 'flag-sv.svg' | asset_url }}" alt="Svenska" width="20" height="15" class="me-2">
+              <span>Svenska</span>
+            {% when 'da' %}
+              <img src="{{ 'flag-da.svg' | asset_url }}" alt="Dansk" width="20" height="15" class="me-2">
+              <span>Dansk</span>
+            {% else %}
+              <img src="{{ 'flag-en.svg' | asset_url }}" alt="{{ language.endonym_name }}" width="20" height="15" class="me-2">
+              <span>{{ language.endonym_name }}</span>
+          {% endcase %}
+        </a>
+      </li>
+    {% endfor %}
+    
+    {% comment %} Ajouter un séparateur si nécessaire et les autres langues non actives {% endcomment %}
+    {% if available_languages.size < all_languages.size %}
+      {% unless available_languages.size == 0 %}
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header small text-muted">{{ 'language.other_languages' | t | default: 'Autres langues' }}</li>
+      {% endunless %}
+      
+      {% for lang_code in all_languages %}
+        {% assign lang_is_active = false %}
+        {% for active_lang in available_languages %}
+          {% if active_lang.iso_code == lang_code %}
+            {% assign lang_is_active = true %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+        
+        {% unless lang_is_active %}
+          <li>
+            <a class="dropdown-item d-flex align-items-center text-muted" 
+               href="#" 
+               onclick="return false;"
+               title="{{ 'language.not_available' | t | default: 'Langue non disponible' }}">
+              
+              {% case lang_code %}
+                {% when 'fr' %}
+                  <img src="{{ 'flag-fr.svg' | asset_url }}" alt="Français" width="20" height="15" class="me-2">
+                  <span>Français</span>
+                {% when 'en' %}
+                  <img src="{{ 'flag-en.svg' | asset_url }}" alt="English" width="20" height="15" class="me-2">
+                  <span>English</span>
+                {% when 'de' %}
+                  <img src="{{ 'flag-de.svg' | asset_url }}" alt="Deutsch" width="20" height="15" class="me-2">
+                  <span>Deutsch</span>
+                {% when 'es' %}
+                  <img src="{{ 'flag-es.svg' | asset_url }}" alt="Español" width="20" height="15" class="me-2">
+                  <span>Español</span>
+                {% when 'it' %}
+                  <img src="{{ 'flag-it.svg' | asset_url }}" alt="Italiano" width="20" height="15" class="me-2">
+                  <span>Italiano</span>
+                {% when 'pt' %}
+                  <img src="{{ 'flag-pt.svg' | asset_url }}" alt="Português" width="20" height="15" class="me-2">
+                  <span>Português</span>
+                {% when 'nl' %}
+                  <img src="{{ 'flag-nl.svg' | asset_url }}" alt="Nederlands" width="20" height="15" class="me-2">
+                  <span>Nederlands</span>
+                {% when 'pl' %}
+                  <img src="{{ 'flag-pl.svg' | asset_url }}" alt="Polski" width="20" height="15" class="me-2">
+                  <span>Polski</span>
+                {% when 'sv' %}
+                  <img src="{{ 'flag-sv.svg' | asset_url }}" alt="Svenska" width="20" height="15" class="me-2">
+                  <span>Svenska</span>
+                {% when 'da' %}
+                  <img src="{{ 'flag-da.svg' | asset_url }}" alt="Dansk" width="20" height="15" class="me-2">
+                  <span>Dansk</span>
+              {% endcase %}
+              <small class="ms-auto text-muted">{{ 'language.soon' | t | default: 'bientôt' }}</small>
+            </a>
+          </li>
+        {% endunless %}
+      {% endfor %}
+    {% endif %}
+  </ul>
+</div>
