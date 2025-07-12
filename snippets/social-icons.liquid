@@ -17,20 +17,36 @@
     </a>
   </div>
 
-  {% assign current_path = request.path | remove_first: '/fr' | remove_first: '/de' %}
+  {% comment %} Sélecteur de langue avec drapeaux {% endcomment %}
+  {% assign current_path = request.path | remove_first: '/fr' | remove_first: '/de' | remove_first: '/nl' | remove_first: '/it' | remove_first: '/sv' | remove_first: '/da' | remove_first: '/es' %}
   {% if current_path == '' or current_path == '/' %}
     {% assign current_path = '' %}
   {% endif %}
 
-  <div class="language-selector-right">
+  <div class="language-selector">
     <a href="/{{ current_path }}" aria-label="English">
-      <img src="{{ 'flag-en.png' | asset_url }}" alt="English" class="flag-icon" loading="lazy">
+      <img src="https://cdn.shopify.com/s/files/1/0861/3180/2460/files/flag-en.svg?v=1752307342" alt="English" width="40" height="40" class="flag-icon" loading="lazy">
     </a>
     <a href="/fr{{ current_path }}" aria-label="Français">
-      <img src="{{ 'flag-fr.png' | asset_url }}" alt="Français" class="flag-icon" loading="lazy">
+      <img src="https://cdn.shopify.com/s/files/1/0861/3180/2460/files/flag-fr.svg?v=1752307342" alt="Français" width="40" height="40" class="flag-icon" loading="lazy">
     </a>
     <a href="/de{{ current_path }}" aria-label="Deutsch">
-      <img src="{{ 'flag-de.png' | asset_url }}" alt="Deutsch" class="flag-icon" loading="lazy">
+      <img src="https://cdn.shopify.com/s/files/1/0861/3180/2460/files/flag-de.svg?v=1752307342" alt="Deutsch" width="40" height="40" class="flag-icon" loading="lazy">
+    </a>
+    <a href="/nl{{ current_path }}" aria-label="Nederlands">
+      <img src="https://cdn.shopify.com/s/files/1/0861/3180/2460/files/flag-nl.svg?v=1752307754" alt="Nederlands" width="40" height="40" class="flag-icon" loading="lazy">
+    </a>
+    <a href="/it{{ current_path }}" aria-label="Italiano">
+      <img src="https://cdn.shopify.com/s/files/1/0861/3180/2460/files/flag-it.svg?v=1752307342" alt="Italiano" width="40" height="40" class="flag-icon" loading="lazy">
+    </a>
+    <a href="/sv{{ current_path }}" aria-label="Svenska">
+      <img src="https://cdn.shopify.com/s/files/1/0861/3180/2460/files/flag-sv.svg?v=1752308292" alt="Svenska" width="40" height="40" class="flag-icon" loading="lazy">
+    </a>
+    <a href="/da{{ current_path }}" aria-label="Dansk">
+      <img src="https://cdn.shopify.com/s/files/1/0861/3180/2460/files/flag-da.svg?v=1752307342" alt="Dansk" width="40" height="40" class="flag-icon" loading="lazy">
+    </a>
+    <a href="/es{{ current_path }}" aria-label="Español">
+      <img src="https://cdn.shopify.com/s/files/1/0861/3180/2460/files/flag-es.svg?v=1752307464" alt="Español" width="40" height="40" class="flag-icon" loading="lazy">
     </a>
   </div>
 </div>
