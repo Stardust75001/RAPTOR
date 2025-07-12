@@ -389,7 +389,7 @@ main {
 .newsletter-terms {
   font-size: 13px;
   margin-top: 8px;
-  color: #eee;
+  color: #eee !important; /* uniforme sur tous les écrans */
   max-width: 100%;
   white-space: nowrap;
   overflow: hidden;
@@ -398,7 +398,7 @@ main {
 }
 
 .newsletter-terms a {
-  color: inherit;
+  color: inherit !important; /* hérite de #eee */
   text-decoration: underline;
 }
 
