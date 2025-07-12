@@ -14,9 +14,28 @@
   </div>
 
   <form method="post" action="/cart/add">
-    <input type="hidden" name="id" value="{{ product.variants.first.id }}">
-    <button type="submit" class="btn" style="padding: 10px 20px; background-color: #000; color: #fff; border: none; cursor: pointer;">
-      Ajouter au panier
-    </button>
+    {% if product.variants.size > 1 %}
+      <label for="product-variant">
+        {{ 'product.select_variant' | t }}
+      </label>
+      <select name="id" id="product-variant" required style="margin-bottom: 1rem;">
+        {% for variant in product.variants %}
+          <option value="{{ variant.id }}">
+            {{ variant.title }} — {{ variant.price | money }}
+            {% if variant.available == false %} ({{ 'product.sold_out' | t }}){% endif %}
+          </option>
+        {% endfor %}
+      </select>
+    {% else %}
+      <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+    {% endif %}
+
+    {% if product.available %}
+      <button type="submit" class="btn" style="padding: 10px 20px; background-color: #000; color: #fff; border: none; cursor: pointer;">
+        {{ 'product.add_to_cart' | t }}
+      </button>
+    {% else %}
+      <p style="color: red;">{{ 'product.sold_out' | t }}</p>
+    {% endif %}
   </form>
 </div>
