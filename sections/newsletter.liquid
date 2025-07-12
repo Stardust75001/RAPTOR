@@ -36,72 +36,41 @@ Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
                 <input type="hidden" name="contact[accepts_marketing]" value="true">
                 {{ form.errors | default_errors }}
                 
-                <div class="newsletter-form" role="form" aria-labelledby="newsletter-heading-{{ section.id }}">
-                  <!-- Status messages pour l'accessibilité -->
-                  <div id="newsletter-status-{{ section.id }}" aria-live="polite" aria-atomic="true" class="sr-only"></div>
-                  
+                <div class="newsletter-form">
                   <div class="newsletter-input-row">
                     {% if section.settings.show_first_name %}
-                      <div class="newsletter-field-group">
-                        <input 
-                          id="newsletter-name-{{ section.id }}"
-                          type="text" 
-                          name="contact[first_name]" 
-                          class="newsletter-name-input" 
-                          placeholder="{{ 'footer.newsletter.first_name_placeholder' | t }}" 
-                          aria-label="{{ 'footer.newsletter.first_name_placeholder' | t }}"
-                          aria-describedby="newsletter-description-{{ section.id }} newsletter-name-error-{{ section.id }}"
-                          autocorrect="off" 
-                          autocapitalize="words"
-                          autocomplete="given-name"
-                          data-validation="name"
-                          maxlength="50">
-                        <div id="newsletter-name-error-{{ section.id }}" class="newsletter-error-message" aria-hidden="true"></div>
-                      </div>
+                      <input 
+                        type="text" 
+                        name="contact[first_name]" 
+                        class="form-control newsletter-name-input" 
+                        placeholder="{{ 'general.newsletter.name_placeholder' | t }}" 
+                        aria-label="{{ 'general.newsletter.name_placeholder' | t }}" 
+                        autocorrect="off" 
+                        autocapitalize="off">
                     {% endif %}
 
-                    <div class="newsletter-field-group">
-                      <input 
-                        id="newsletter-email-{{ section.id }}"
-                        type="email" 
-                        name="contact[email]" 
-                        class="newsletter-email-input" 
-                        value="{{ customer.email }}" 
-                        placeholder="{{ 'footer.newsletter.email_placeholder' | t }}" 
-                        aria-label="{{ 'footer.newsletter.email_placeholder' | t }}"
-                        aria-describedby="newsletter-description-{{ section.id }} newsletter-email-error-{{ section.id }}"
-                        aria-required="true"
-                        aria-invalid="false"
-                        autocorrect="off" 
-                        autocapitalize="off" 
-                        autocomplete="email"
-                        data-validation="email"
-                        required>
-                      <div id="newsletter-email-error-{{ section.id }}" class="newsletter-error-message" aria-hidden="true"></div>
-                    </div>
+                    <input 
+                      type="email" 
+                      name="contact[email]" 
+                      class="form-control newsletter-email-input" 
+                      value="{{ customer.email }}" 
+                      placeholder="{{ 'general.newsletter.input_label' | t }}" 
+                      aria-label="{{ 'general.newsletter.input_label' | t }}" 
+                      autocorrect="off" 
+                      autocapitalize="off" 
+                      required>
                   </div>
 
                   <button 
-                    class="btn {{ section.settings.btn_color }} newsletter-submit-btn" 
+                    class="btn {{ section.settings.btn_color }} w-100" 
                     type="submit" 
-                    name="commit"
-                    id="newsletter-submit-{{ section.id }}"
-                    aria-describedby="newsletter-description-{{ section.id }}"
-                    data-submit-text="{{ 'footer.newsletter.submit_button' | t }}"
-                    data-loading-text="{{ 'general.loading' | t | default: 'Chargement...' }}">
-                    <span class="btn-text">{{ 'footer.newsletter.submit_button' | t }}</span>
-                    <span class="btn-loader" aria-hidden="true" style="display: none;">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="12" cy="12" r="3" fill="currentColor">
-                          <animate attributeName="opacity" values="1;0;1" dur="1s" repeatCount="indefinite"/>
-                        </circle>
-                      </svg>
-                    </span>
+                    name="commit">
+                    {{ 'general.newsletter.submit_button' | t }}
                   </button>
                 </div>
 
                 {% unless section.settings.notice == blank %}
-                  <div id="newsletter-description-{{ section.id }}" class="notice rte mt-3 lh-sm extra-small text-center newsletter-terms">
+                  <div class="notice rte mt-3 lh-sm extra-small text-center newsletter-terms">
                     {{ section.settings.notice }}
                   </div>
                 {% endunless %}
@@ -119,7 +88,7 @@ Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
     "settings": [
         {
             "type": "paragraph", 
-            "content": "Documentation FR : [Newsletter by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/sections\/newsletter)"
+            "content": "EN Documentation: [Newsletter by Shopiweb](https:\/\/www.docs.shopiweb.fr\/theme-premium\/documentation\/sections\/newsletter)"
         },
         {
             "type": "header",
@@ -128,24 +97,24 @@ Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
         {
             "type": "select",
             "id": "bg_color",
-            "label": "Couleur de l'arrière plan",
+            "label": "Background color",
             "default": "bg-dark text-white",
             "options": [
                 { "group": "Principal", "value": "bg-primary text-white", "label": "Primaire" },
                 { "group": "Principal", "value": "bg-secondary text-white", "label": "Secondaire" },
                 { "group": "Principal", "value": "bg-tertiary text-white", "label": "Tertiaire" },
-                { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "Blanc" },
-                { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Claire" },
-                { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Sombre" },
+                { "group": "Intermédiaire", "value": "bg-white text-dark", "label": "White" },
+                { "group": "Intermédiaire", "value": "bg-light text-body", "label": "Light" },
+                { "group": "Intermédiaire", "value": "bg-dark text-white", "label": "Dark" },
                 { "group": "Par défaut", "value": "bg-body text-body", "label": "Corps (body)" }
             ]
         },
         {
             "type": "checkbox",
             "id": "bg_gradient",
-            "label": "Dégradé d'arrière-plan",
+            "label": "Background gradient",
             "default": false,
-            "info": "Ne s'applique pas aux couleurs claires"
+            "info": "Does not apply to light colors"
         },
         {
             "type": "select",
@@ -162,7 +131,7 @@ Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
             "id": "max_width",
             "label": "Largeur maximale du conteneur (px)",
             "default": "960",
-            "info": "Laisser vide pour désactiver"
+            "info": "Leave empty to disable"
         },
         {
             "type": "select",
@@ -176,12 +145,12 @@ Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
         },
         {
             "type": "header",
-            "content": "En-tête de la section"
+            "content": "Section header"
         },
         {
             "type": "image_picker",
             "id": "subtitle_img",
-            "label": "Légende Image"
+            "label": "Image caption"
         },
         {
             "type": "text",
@@ -192,33 +161,33 @@ Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
         {
             "type": "text",
             "id": "subtitle",
-            "label": "Légende Texte"
+            "label": "Text caption"
         },
         {
             "type": "select",
             "id": "subtitle_size",
-            "label": "Taille de la légende",
+            "label": "Caption size",
             "default": "fs-5",
             "options": [
                 { "group": "Légende Standard", "value": "fs-1", "label": "Extra Grand" },
                 { "group": "Légende Standard", "value": "fs-2", "label": "Super Grand" },
-                { "group": "Légende Standard", "value": "fs-3", "label": "Très Grand" },
-                { "group": "Légende Standard", "value": "fs-4", "label": "Grand" },
-                { "group": "Légende Standard", "value": "fs-5", "label": "Moyen" },
-                { "group": "Légende Standard", "value": "fs-6", "label": "Petit" } 
+                { "group": "Légende Standard", "value": "fs-3", "label": "Very Large" },
+                { "group": "Légende Standard", "value": "fs-4", "label": "Large" },
+                { "group": "Légende Standard", "value": "fs-5", "label": "Medium" },
+                { "group": "Légende Standard", "value": "fs-6", "label": "Small" } 
             ]
         },
         {
             "type": "color",
             "id": "color_caption",
-            "label": "Couleur de la légende",
+            "label": "Caption color",
             "default": "#6c757d"
         },
         {
             "type": "text",
             "id": "title_overlay",
             "label": "Titre overlay",
-            "info": "Visible sur ordinateur, masqué sur mobile pour optimiser la lisibilité."
+            "info": "Visible on desktop, hidden on mobile to optimize readability."
         },
         {
             "type": "select",
@@ -226,22 +195,22 @@ Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
             "label": "Taille du titre overlay",
             "default": "3",
             "options": [
-                { "group": "Titre Overlay", "value": "4", "label": "Grand" },
-                { "group": "Titre Overlay", "value": "3", "label": "Moyen" },
-                { "group": "Titre Overlay", "value": "2", "label": "Petit" }
+                { "group": "Titre Overlay", "value": "4", "label": "Large" },
+                { "group": "Titre Overlay", "value": "3", "label": "Medium" },
+                { "group": "Titre Overlay", "value": "2", "label": "Small" }
             ]
         },
         {
             "type": "color",
             "id": "color_title_overlay",
-            "label": "Couleur du titre overlay",
+            "label": "Overlay title color",
             "default": "#000000"
         },
         {
             "type": "inline_richtext",
             "id": "title",
             "label": "Titre",
-            "default": "S'abonner à la newsletter"
+            "default": "Subscribe to newsletter"
         },
         {
             "type": "select",
@@ -268,11 +237,11 @@ Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
                 { "group": "Titre Supérieur", "value": "display-2", "label": "Extra Grand" },
                 { "group": "Titre Supérieur", "value": "display-3", "label": "Ultra Grand" },
                 { "group": "Titre Supérieur", "value": "display-4", "label": "Super Grand" },
-                { "group": "Titre Standard", "value": "h1", "label": "Très Grand" },
-                { "group": "Titre Standard", "value": "h2", "label": "Grand" },
-                { "group": "Titre Standard", "value": "h3", "label": "Moyen" },
-                { "group": "Titre Standard", "value": "h4", "label": "Petit" },
-                { "group": "Titre Standard", "value": "h5", "label": "Très Petit" },
+                { "group": "Titre Standard", "value": "h1", "label": "Very Large" },
+                { "group": "Titre Standard", "value": "h2", "label": "Large" },
+                { "group": "Titre Standard", "value": "h3", "label": "Medium" },
+                { "group": "Titre Standard", "value": "h4", "label": "Small" },
+                { "group": "Titre Standard", "value": "h5", "label": "Very Small" },
                 { "group": "Titre Standard", "value": "h6", "label": "Super Petit" }
             ]
         },
@@ -280,7 +249,7 @@ Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
             "type": "richtext",
             "id": "description",
             "label": "Description",
-            "default": "<p>Inscrivez-vous pour recevoir des informations sur nos dernières offres et d'autres sujets importants.</p>"
+            "default": "<p>Sign up to receive information about our latest offers and other important topics.</p>"
         },
         {
             "type": "select",
@@ -290,16 +259,16 @@ Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
             "options": [
                 { "group": "Description Standard", "value": "fs-1", "label": "Extra Grand" },
                 { "group": "Description Standard", "value": "fs-2", "label": "Super Grand" },
-                { "group": "Description Standard", "value": "fs-3", "label": "Très Grand" },
-                { "group": "Description Standard", "value": "fs-4", "label": "Grand" },
-                { "group": "Description Standard", "value": "fs-5", "label": "Moyen" },
-                { "group": "Description Standard", "value": "fs-6", "label": "Petit" } 
+                { "group": "Description Standard", "value": "fs-3", "label": "Very Large" },
+                { "group": "Description Standard", "value": "fs-4", "label": "Large" },
+                { "group": "Description Standard", "value": "fs-5", "label": "Medium" },
+                { "group": "Description Standard", "value": "fs-6", "label": "Small" } 
             ]
         },
         {
             "type": "select",
             "id": "input_group_size",
-            "label": "Taille des éléments du formulaire",
+            "label": "Form element size",
             "default": "",
             "options": [
                 { "value": "", "label": "Normal" },
@@ -309,47 +278,47 @@ Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
         {
             "type": "checkbox",
             "id": "show_first_name",
-            "label": "Afficher le champ du prénom",
+            "label": "Show first name field",
             "default": true
         },
         {
             "type": "text",
             "id": "first_name_placeholder",
-            "label": "Indication pour le prénom",
-            "default": "Entrer votre prénom"
+            "label": "First name placeholder",
+            "default": "Enter your first name"
         },
         {
             "type": "select",
             "id": "btn_color",
-            "label": "Couleur du bouton",
+            "label": "Button color",
             "default": "btn-primary",
             "options": [
-                { "group": "Normal", "value": "btn-link", "label": "Lien" },
-                { "group": "Normal", "value": "btn-light", "label": "Claire" },
-                { "group": "Normal", "value": "btn-dark", "label": "Sombre" },
+                { "group": "Normal", "value": "btn-link", "label": "Link" },
+                { "group": "Normal", "value": "btn-light", "label": "Light" },
+                { "group": "Normal", "value": "btn-dark", "label": "Dark" },
                 { "group": "Normal", "value": "btn-primary", "label": "Primaire" },
                 { "group": "Normal", "value": "btn-secondary", "label": "Secondaire" },
                 { "group": "Normal", "value": "btn-tertiary", "label": "Tertiaire" },
-                { "group": "Normal", "value": "btn-success", "label": "Succès" },
+                { "group": "Normal", "value": "btn-success", "label": "Success" },
                 { "group": "Normal", "value": "btn-danger", "label": "Danger" },
                 { "group": "Normal", "value": "btn-warning", "label": "Avertissement" },
                 { "group": "Normal", "value": "btn-info", "label": "Info" },
-                { "group": "Contour", "value": "btn-outline-light", "label": "Contour Claire" },
-                { "group": "Contour", "value": "btn-outline-dark", "label": "Contour Sombre" },
-                { "group": "Contour", "value": "btn-outline-primary", "label": "Contour Primaire" },
-                { "group": "Contour", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
-                { "group": "Contour", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
-                { "group": "Contour", "value": "btn-outline-success", "label": "Contour Succès" },
-                { "group": "Contour", "value": "btn-outline-danger", "label": "Contour Danger" },
-                { "group": "Contour", "value": "btn-outline-warning", "label": "Contour Avertissement" },
-                { "group": "Contour", "value": "btn-outline-info", "label": "Contour Info" }
+                { "group": "Outline", "value": "btn-outline-light", "label": "Contour Claire" },
+                { "group": "Outline", "value": "btn-outline-dark", "label": "Contour Sombre" },
+                { "group": "Outline", "value": "btn-outline-primary", "label": "Contour Primaire" },
+                { "group": "Outline", "value": "btn-outline-secondary", "label": "Contour Secondaire" },
+                { "group": "Outline", "value": "btn-outline-tertiary", "label": "Contour Tertiaire" },
+                { "group": "Outline", "value": "btn-outline-success", "label": "Success Outline" },
+                { "group": "Outline", "value": "btn-outline-danger", "label": "Contour Danger" },
+                { "group": "Outline", "value": "btn-outline-warning", "label": "Contour Avertissement" },
+                { "group": "Outline", "value": "btn-outline-info", "label": "Contour Info" }
             ]
         },
         {
             "type": "richtext",
             "id": "notice",
             "label": "Notice",
-            "default": "<p>En vous inscrivant pour recevoir des courriels, vous acceptez nos conditions général de vente et notre politique de confidentialité</p>"
+            "default": "<p>By signing up to receive emails, you agree to our terms of sale and privacy policy</p>"
         },
         {
             "type": "header",
@@ -358,7 +327,7 @@ Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
         {
             "type": "range",
             "id": "pt",
-            "label": "Padding supérieure",
+            "label": "Top padding",
             "min": 0,
             "max": 20,
             "step": 1,
@@ -367,7 +336,7 @@ Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
         {
             "type": "range",
             "id": "pb",
-            "label": "Padding inférieure",
+            "label": "Bottom padding",
             "min": 0,
             "max": 20,
             "step": 1,
@@ -376,7 +345,7 @@ Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
         {
             "type": "range",
             "id": "mt",
-            "label": "Marge supérieure",
+            "label": "Top margin",
             "min": 0,
             "max": 20,
             "step": 1,
@@ -385,7 +354,7 @@ Les contrevenants seront poursuivis dans toute la mesure permise par la loi.
         {
             "type": "range",
             "id": "mb",
-            "label": "Marge inférieure",
+            "label": "Bottom margin",
             "min": 0,
             "max": 20,
             "step": 1,
