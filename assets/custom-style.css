@@ -426,23 +426,26 @@ main {
     gap: 1px !important; /* Ultra compact sur mobile - réduit de 3px à 1px */
   }
 
-  .newsletter-input-row {
-    display: flex !important; /* Force l'affichage côte à côte */
-    flex-direction: row !important; /* Assure la direction horizontale */
-    gap: 8px !important; /* Maintient l'espace entre les champs */
-    width: 100% !important;
-    margin-bottom: 1px !important; /* Réduit l'espace avant le bouton de 3px à 1px */
-    align-items: stretch !important;
-  }
+  newsletter-input-row {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+  margin: 0 !important;
+  align-items: stretch;
+}
 
-  .newsletter-name-input,
-  .newsletter-email-input {
-    flex: 1 !important; /* Assure que chaque champ prend la moitié de l'espace */
-    font-size: 14px !important;
-    padding: 10px 14px !important;
-    min-height: 44px !important;
-    box-sizing: border-box !important;
-  }
+.newsletter-name-input,
+.newsletter-email-input {
+  flex: 1;
+  padding: 10px 14px !important;
+  border: 1px solid #dee2e6 !important;
+  border-radius: 6px !important;
+  font-size: 14px !important;
+  min-height: 40px !important;
+  height: 40px !important;
+  background: #fff !important;
+  box-sizing: border-box !important;
+}
 
   /* Bouton Subscribe de même hauteur que les champs sur mobile */
   .newsletter-form .btn {
