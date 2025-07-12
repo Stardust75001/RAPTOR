@@ -544,6 +544,7 @@ main {
 
   .newsletter-terms {
     font-size: 9px !important;
+    color: #eee !important; /* AJOUT ICI */
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
@@ -569,6 +570,7 @@ main {
 
   .newsletter-terms {
     font-size: 9px !important;
+    color: #eee !important; /* AJOUT ICI */
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
